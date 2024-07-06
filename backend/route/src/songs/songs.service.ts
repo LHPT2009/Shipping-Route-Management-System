@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { DeleteResult, In, Repository, UpdateResult } from 'typeorm';
 import {
   paginate,
   Pagination,
@@ -10,21 +10,34 @@ import { Song } from './song.entity';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateSongDto } from './dto/update-song-dto';
+import { Artist } from 'src/artists/artist.entity';
 
 @Injectable()
 export class SongsService {
   constructor(
     @InjectRepository(Song)
     private songsRepository: Repository<Song>,
+    @InjectRepository(Artist)
+    private artistsRepository: Repository<Artist>,
   ) {}
 
-  create(songDTO: CreateSongDTO): Promise<Song> {
+  async create(songDTO: CreateSongDTO): Promise<Song> {
     const song = new Song();
     song.title = songDTO.title;
     song.artists = songDTO.artists;
     song.duration = songDTO.duration;
     song.lyrics = songDTO.lyrics;
     song.releasedDate = songDTO.releasedDate;
+
+    console.log(songDTO.artists);
+
+    // find all the artits on the based on ids
+    const artists = await this.artistsRepository.findByIds(songDTO.artists);
+    // const artists = await this.artistsRepository.findBy({ id: In(songDTO.artists) })
+
+    console.log(artists);
+    //set the relation with artist and songs
+    song.artists = artists;
 
     return this.songsRepository.save(song);
   }

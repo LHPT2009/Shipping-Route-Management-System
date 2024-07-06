@@ -6,9 +6,10 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { SongsController } from './songs/songs.controller';
 import { SongsModule } from './songs/songs.module';
 import { Song } from './songs/song.entity';
-import { DataSource } from 'typeorm';
-import { SongsService } from './songs/songs.service';
-import { TestService } from './songs/test.service';
+import { Artist } from './artists/artist.entity';
+import { User } from './users/user.entity';
+import { Playlist } from './playlists/playlist.entity';
+import { PlayListModule } from './playlists/playlists.module';
 // import { DataSource } from 'typeorm';
 
 @Module({
@@ -20,17 +21,18 @@ import { TestService } from './songs/test.service';
       port: 5432,
       username: 'postgres',
       password: 'aB123789#',
-      entities: [Song],
+      entities: [Song, Artist, User, Playlist],
       synchronize: true,
     }),
     SongsModule,
+    PlayListModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
-  constructor(private dataSource: DataSource) {
-    console.log('dbName ', dataSource.driver.database);
+  constructor(/*private dataSource: DataSource*/) {
+    // console.log('dbName ', dataSource.driver.database);
   }
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware).forRoutes('songs'); // option no 1
