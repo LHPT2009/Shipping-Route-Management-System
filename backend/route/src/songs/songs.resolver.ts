@@ -5,14 +5,24 @@ import { CreateSongInput, Song } from '../graphql';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { UpdateSongDTO } from './dto/update-song-dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { GraphQLError } from 'graphql';
+import { GraphQLAuthGaurd } from 'src/auth/gql-auth-guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver()
 export class SongResolver {
   constructor(private songsService: SongsService) {}
 
   @Query('songs')
+  @UseGuards(GraphQLAuthGaurd)
   async getSongs(): Promise<Song[]> {
     return this.songsService.getSongs();
+
+    // throw new GraphQLError('Unable to fetch the songs', {
+    //     extensions: {
+    //       code: 'INTERNAL_SERVER_ERROR',
+    //     },
+    //   });
   }
 
   @Query('song')

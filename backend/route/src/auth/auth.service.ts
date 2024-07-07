@@ -21,7 +21,7 @@ export class AuthService {
   async login(
     loginDTO: LoginDTO,
   ): Promise<
-    { accessToken: string } | { validate2FA: string; message: string }
+    { accessToken: string }
   > {
     const user = await this.userService.findOne(loginDTO); // 1.
 
