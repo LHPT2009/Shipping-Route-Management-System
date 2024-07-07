@@ -3,7 +3,7 @@ import { DevConfigService } from './common/providers/DevConfigService';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello I am learning Nest.js Fundamentals';
+  getHello(req): string {
+    return req;
   }
 }

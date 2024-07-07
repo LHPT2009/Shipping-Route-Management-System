@@ -4,28 +4,47 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { SongsController } from './songs/songs.controller';
-import { SongsModule } from './songs/songs.module';
+
+//entities
 import { Song } from './songs/song.entity';
 import { Artist } from './artists/artist.entity';
 import { User } from './users/user.entity';
-import { Playlist } from './playlists/playlist.entity';
-import { PlayListModule } from './playlists/playlists.module';
-// import { DataSource } from 'typeorm';
+
+//modules
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { ArtistsModule } from './artists/artists.module';
+import { SongsModule } from './songs/songs.module';
+
+//graphql
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      database: 'spotify-clone',
+      database: 'test',
       host: 'localhost',
       port: 5432,
       username: 'postgres',
       password: 'aB123789#',
-      entities: [Song, Artist, User, Playlist],
+      entities: [Song, Artist, User],
       synchronize: true,
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      typePaths: ['./**/*.graphql'],
+      definitions: {
+        path: join(process.cwd(), 'src/graphql.ts'),
+        outputAs: 'class',
+      },
+    }),
     SongsModule,
-    PlayListModule,
+    AuthModule,
+    UsersModule,
+    ArtistsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
