@@ -1,0 +1,40 @@
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+type Query {
+  login(loginInput: LoginInput!): LoginResponse!
+}
+
+type Mutation {
+  signup(signupInput: SignupInput!): SignupResponse!
+}
+
+input SignupInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type SignupResponse {
+  # statusCode: Int!
+  # error: String!
+  email: String!
+}
+
+type LoginResponse {
+  accessToken: String!
+}
+
+
