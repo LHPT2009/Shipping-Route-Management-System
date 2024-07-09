@@ -42,6 +42,7 @@ import formatError from './utils/exception/format-error';
         outputAs: 'class',
       },
       formatError: formatError,
+      includeStacktraceInErrorResponses: false,
       context: ({ req }) => ({ req }),
     }),
     SongsModule,

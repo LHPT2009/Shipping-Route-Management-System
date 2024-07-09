@@ -15,7 +15,7 @@ import { Enable2FAType } from './types';
 
 import { UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
-import { SignupInput } from 'src/graphql';
+import { SignupInput, SignupResponse } from 'src/graphql';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +28,7 @@ export class AuthController {
   signup(
     @Body()
     userDTO: SignupInput,
-  ): Promise<User> {
+  ): Promise<SignupResponse> {
     return this.userService.create(userDTO);
   }
 

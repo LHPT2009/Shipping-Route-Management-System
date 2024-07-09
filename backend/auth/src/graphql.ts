@@ -62,7 +62,8 @@ export abstract class IMutation {
 }
 
 export class SignupResponse {
-    message: string;
+    success: boolean;
+    message: string[];
 }
 
 export class LoginResponse {

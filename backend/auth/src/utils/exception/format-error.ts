@@ -14,7 +14,7 @@ export default function formatError(formattedError, error) {
             let result = errorMessage.substring(startIndex, endIndex).split('.')[1];
             return `Please provide valid input for ${result}`;
         }
-        return formattedError.message;
+        return formattedError.error.message;
     }
 
     return formattedError.message;

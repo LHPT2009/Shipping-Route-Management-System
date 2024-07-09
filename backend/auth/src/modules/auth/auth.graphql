@@ -29,7 +29,8 @@ input LoginInput {
 }
 
 type SignupResponse {
-  message: String!
+  success: Boolean!
+  message: [String!]!
 }
 
 type LoginResponse {
