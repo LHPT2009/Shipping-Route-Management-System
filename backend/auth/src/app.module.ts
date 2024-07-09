@@ -21,7 +21,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import formatError from './utils/exception/format-error';
-import { NonEmptyStringScalar } from './utils/exception/validation-graphql/non-empty-string';
 
 @Module({
   imports: [

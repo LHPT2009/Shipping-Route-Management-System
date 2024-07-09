@@ -10,6 +10,8 @@ import { error } from 'console';
 import { LoginInput, SignupInput } from 'src/graphql';
 import { GraphQLError } from 'graphql';
 import { passwordStrength } from 'check-password-strength'
+import nonEmptyString from 'src/utils/exception/validation/non-empty-string';
+import validEmail from 'src/utils/exception/validation/valid-email';
 
 @Injectable()
 export class UsersService {
@@ -20,38 +22,54 @@ export class UsersService {
 
   async create(userDTO: SignupInput): Promise<any> {
 
-    if(userDTO.lastName === null || userDTO.lastName === undefined || userDTO.lastName === '') {
+    if(nonEmptyString(userDTO.lastName)) {
       throw new GraphQLError('Please provide your lastName',);
     }
 
-    if(userDTO.firstName === null || userDTO.firstName === undefined || userDTO.firstName === '') {
+    if(nonEmptyString(userDTO.firstName)) {
       throw new GraphQLError('Please provide your firstName');
     }
 
+    if(nonEmptyString(userDTO.email) || !validEmail(userDTO.email)) {
+      throw new GraphQLError('Please provide your valid email');
+    }
+
     const userIsExist = await this.userRepository.findOneBy({ email: userDTO.email });
+
     if(userIsExist) {
       throw new GraphQLError('Email is already in use');
     }
 
-    console.log(passwordStrength(userDTO.password).value);
+    if(nonEmptyString(userDTO.password)) {
+      throw new GraphQLError('Please provide your password');
+    }
 
-    // const user = new User();
-    // user.firstName = userDTO.firstName;
-    // user.lastName = userDTO.lastName;
-    // user.email = userDTO.email;
+    if(nonEmptyString(userDTO.passwordConfirm)) {
+      throw new GraphQLError('Please provide your confirmPassword');
+    }
 
-    // const salt = await bcrypt.genSalt(); // 2.
-    // user.password = await bcrypt.hash(userDTO.password, salt); // 3.
+    if(userDTO.password !== userDTO.passwordConfirm) {
+      throw new GraphQLError('Password and password confirm do not match');
+    }
 
-    // const savedUser = await this.userRepository.save(user);
-    // delete savedUser.password;
-    // return savedUser;
-    // throw new NotFoundException({
-    //   statusCode: HttpStatus.NOT_FOUND,
-    //   error: 'Not implemented'
-    // });
+    if(passwordStrength(userDTO.password).value === 'Too weak') {
+      throw new GraphQLError('Password is too weak');
+    }
 
-    throw new GraphQLError('a');
+    const user = new User();
+    user.firstName = userDTO.firstName;
+    user.lastName = userDTO.lastName;
+    user.email = userDTO.email;
+
+    const salt = await bcrypt.genSalt(); // 2.
+    user.password = await bcrypt.hash(userDTO.password, salt); // 3.
+
+    const savedUser = await this.userRepository.save(user);
+    delete savedUser.password;
+
+    return {
+      message: "User created successfully, please check your email to verify your account",
+    };
 
   }
 

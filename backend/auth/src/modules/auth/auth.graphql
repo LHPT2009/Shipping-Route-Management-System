@@ -20,6 +20,7 @@ input SignupInput {
   lastName: String!
   email: String!
   password: String!
+  passwordConfirm: String!
 }
 
 input LoginInput {
@@ -28,9 +29,7 @@ input LoginInput {
 }
 
 type SignupResponse {
-  # statusCode: Int!
-  # error: String!
-  email: String!
+  message: String!
 }
 
 type LoginResponse {

@@ -13,6 +13,7 @@ export class SignupInput {
     lastName: string;
     email: string;
     password: string;
+    passwordConfirm: string;
 }
 
 export class LoginInput {
@@ -61,7 +62,7 @@ export abstract class IMutation {
 }
 
 export class SignupResponse {
-    email: string;
+    message: string;
 }
 
 export class LoginResponse {
