@@ -9,6 +9,7 @@ import { Enable2FAType, PayloadType } from './types';
 import * as speakeasy from 'speakeasy';
 import { UpdateResult } from 'typeorm';
 import { LoginInput } from 'src/graphql';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {

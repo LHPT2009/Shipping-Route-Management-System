@@ -21,9 +21,12 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import formatError from './utils/exception/format-error';
+import { ConfigModule } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       database: 'test',
@@ -45,6 +48,7 @@ import formatError from './utils/exception/format-error';
       includeStacktraceInErrorResponses: false,
       context: ({ req }) => ({ req }),
     }),
+    
     SongsModule,
     AuthModule,
     UsersModule,

@@ -10,20 +10,23 @@ import { error } from 'console';
 import { LoginInput, SignupInput, SignupResponse } from 'src/graphql';
 import { GraphQLError } from 'graphql';
 import { passwordStrength } from 'check-password-strength'
-import nonEmptyString from 'src/utils/exception/validation/non-empty-string';
-import validEmail from 'src/utils/exception/validation/valid-email';
+import nonEmptyString from 'src/utils/validation/non-empty-string';
+import validEmail from 'src/utils/validation/valid-email';
+import { EmailService } from 'src/modules/email/email.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>, // 1.
+    private userRepository: Repository<User>,
+    private emailService: EmailService // 1.
   ) { }
 
   async create(userDTO: SignupInput): Promise<SignupResponse> {
 
+    console.log(process.env.A);
     const errorMessage: string[] = await this.validateUser(userDTO);
-    
+
     if (errorMessage.length > 0) {
       return {
         success: false,
@@ -31,16 +34,26 @@ export class UsersService {
       };
     }
 
-    const user = new User();
-    user.firstName = userDTO.firstName;
-    user.lastName = userDTO.lastName;
-    user.email = userDTO.email;
+    // const user = new User();
+    // user.firstName = userDTO.firstName;
+    // user.lastName = userDTO.lastName;
+    // user.email = userDTO.email;
 
-    const salt = await bcrypt.genSalt(); // 2.
-    user.password = await bcrypt.hash(userDTO.password, salt); // 3.
+    // const salt = await bcrypt.genSalt(); // 2.
+    // user.password = await bcrypt.hash(userDTO.password, salt); // 3.
 
-    const savedUser = await this.userRepository.save(user);
-    delete savedUser.password;
+    // const savedUser = await this.userRepository.save(user);
+    // delete savedUser.password;
+
+    const verifyCode = Math.floor(100000 + Math.random() * 900000);
+
+    // console.log(this.emailService.mailTransport());
+
+    await this.emailService.sendEmail(
+      userDTO.email,
+      `How to Send Emails with Nodemailer`,
+      'Your verify code is [' + verifyCode + ']'
+    );
 
     return {
       success: true,
