@@ -19,6 +19,9 @@ export class User {
   @Exclude()
   password: string;
 
+  @Column()
+  active: boolean;
+
   /**
    * A user can create many playLists
    */

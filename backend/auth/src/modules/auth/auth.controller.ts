@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Request,
   UseGuards,
@@ -32,6 +34,10 @@ export class AuthController {
     return this.userService.create(userDTO);
   }
 
+  @Get('confirm/:token')
+  confirm(@Param('token') token: string,) {
+    return this.userService.confirmEmail(token);
+  }
   // @Post('login')
   // // @UseGuards(JwtAuthGuard)
   // login(

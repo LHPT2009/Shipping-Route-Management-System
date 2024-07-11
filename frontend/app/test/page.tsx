@@ -9,6 +9,8 @@ import { revalidatePath } from "next/cache";
 import testHandle from "../../lib/route";
 // import { GET } from '../api/route'
 
+// export const dynamic = 'force-dynamic'
+
 export default function Home() {
   // const count = useAppSelector((state: RootState) => state.counter.value);
   const dispatch = useAppDispatch();
@@ -16,6 +18,14 @@ export default function Home() {
   fetch('https://pokeapi.co/api/v2/pokemon/ditto', { next: { revalidate: 2 } }).then((response: any) => {
     console.log('-------fetch-----------');
   })
+
+  fetch('https://pokeapi.co/api/v2/pokemon/ditto',).then((response: any) => {
+    console.log('-------fetch-----------');
+  })
+
+  // fetch('https://pokeapi.co/api/v2/pokemon/ditto',{ cache: 'no-store' },).then((response: any) => {
+  //   console.log('-------fetch-----------');
+  // })
 
 
   return (
