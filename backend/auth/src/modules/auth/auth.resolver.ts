@@ -13,7 +13,7 @@ export class AuthResolver {
     private authService: AuthService,
   ) {}
 
-  @Mutation((SignupInput) => SignupResponse)
+  @Mutation((SignupInput) => SignupResponse)  
   signup(
     @Args('signupInput')
     signupInput: SignupInput,
