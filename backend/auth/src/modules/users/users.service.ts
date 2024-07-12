@@ -2,18 +2,15 @@ import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedE
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { CreateUserDTO } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
-import { v4 as uuid4 } from 'uuid';
-import { last, NotFoundError } from 'rxjs';
-import { error } from 'console';
-import { LoginInput, SignupInput, SignupResponse } from 'src/graphql';
-import { GraphQLError } from 'graphql';
 import { passwordStrength } from 'check-password-strength'
 import nonEmptyString from 'src/utils/validation/non-empty-string';
 import validEmail from 'src/utils/validation/valid-email';
 import { EmailService } from 'src/modules/email/email.service';
 import { JwtService } from '@nestjs/jwt';
+import { SignupInput } from './dto/signup.input';
+import { SignupResponse } from './dto/signup.response';
+import { LoginInput } from '../auth/dto/login.input';
 
 @Injectable()
 export class UsersService {
@@ -68,35 +65,26 @@ export class UsersService {
   }
 
   async confirmEmail(token: string): Promise<any> {
-    try {
-      const { email } = this.jwtService.verify(token);
 
-      const user = await this.userRepository.findOne({ where: { email } });
-      if (!user) {
-        return {
-          success: false,
-          message: ["User not found"],
-        };
-      }
-      else {
-        user.active = true;
-        await this.userRepository.save(user);
+    const { email } = this.jwtService.verify(token);
 
-        return {
-          success: true,
-          message: ["Account has been verified"],
-        };
+    const user = await this.userRepository.findOne({ where: { email } });
 
-      }
+    if (!user) {
+      return {
+        success: false,
+        message: ["User not found"],
+      };
+    }
+    
+    else {
+      user.active = true;
+      await this.userRepository.save(user);
 
-      // const user = await this.usersService.updateConfirm(email, true);
-      // if (user) {
-      //   return 'Your email has been verified successfully.';
-      // } else {
-      //   throw new NotFoundException('User not found');
-      // }
-
-    } catch (error) {
+      return {
+        success: true,
+        message: ["Account has been verified"],
+      };
 
     }
   }

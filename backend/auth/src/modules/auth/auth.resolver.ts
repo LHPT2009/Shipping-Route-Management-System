@@ -1,12 +1,10 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
-import {
-  SignupResponse,
-  SignupInput,
-  LoginInput,
-  LoginResponse,
-} from 'src/graphql';
 import { UsersService } from 'src/modules/users/users.service';
 import { AuthService } from './auth.service';
+import { SignupInput } from './dto/signup.input';
+import { SignupResponse } from './dto/signup.response';
+import { LoginInput } from './dto/login.input';
+import { LoginResponse } from './dto/login.response';
 
 @Resolver()
 export class AuthResolver {
@@ -15,15 +13,15 @@ export class AuthResolver {
     private authService: AuthService,
   ) {}
 
-  @Mutation('signup')
-  singupUser(
+  @Mutation((SignupInput) => SignupResponse)
+  signup(
     @Args('signupInput')
     signupInput: SignupInput,
   ): Promise<SignupResponse> {
     return this.userService.create(signupInput);
   }
-  @Query('login')
-  loginUser(
+  @Query((LoginInput) => LoginResponse)
+  login(
     @Args('loginInput')
     loginInput: LoginInput,
   ): Promise<LoginResponse> {
