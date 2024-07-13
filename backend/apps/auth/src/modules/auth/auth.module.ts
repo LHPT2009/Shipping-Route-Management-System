@@ -5,10 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { authConstants } from './auth.constants';
 import { JwtStrategy } from './jwt-strategy';
 import { AuthResolver } from './auth.resolver';
-import { UsersService } from 'src/modules/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/modules/users/user.entity';
 import { EmailService } from '../email/email.service';
+import { User } from '../users/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [

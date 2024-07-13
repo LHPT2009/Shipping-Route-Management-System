@@ -5,7 +5,8 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { UsersService } from 'src/modules/users/users.service';
+import { UsersService } from '../users/users.service';
+
 
 @Controller('auth')
 export class AuthController {

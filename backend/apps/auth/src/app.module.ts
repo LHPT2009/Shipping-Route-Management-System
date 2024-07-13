@@ -15,7 +15,7 @@ import { UsersModule } from './modules/users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -42,9 +42,16 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     //   context: ({ req }) => ({ req }),
     // }),
 
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    // }),
+
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
     }),
     
     // SongsModule,

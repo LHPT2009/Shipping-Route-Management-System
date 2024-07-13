@@ -4,13 +4,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { passwordStrength } from 'check-password-strength'
-import nonEmptyString from 'src/utils/validation/non-empty-string';
-import validEmail from 'src/utils/validation/valid-email';
-import { EmailService } from 'src/modules/email/email.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignupInput } from './dto/signup.input';
 import { SignupResponse } from './dto/signup.response';
 import { LoginInput } from '../auth/dto/login.input';
+import { EmailService } from '../email/email.service';
+import nonEmptyString from '../../utils/validation/non-empty-string';
+import validEmail from '../../utils/validation/valid-email';
 
 @Injectable()
 export class UsersService {
