@@ -3,8 +3,8 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
 import { LoginInput } from './dto/login.input';
-import { LoginResponse } from './dto/login.response';
 import { UsersService } from '../users/users.service';
+import { LoginResponse } from './types/login.types';
 
 @Injectable()
 export class AuthService {

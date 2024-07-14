@@ -1,14 +1,19 @@
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { IntrospectAndCompose } from '@apollo/gateway';
+import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { authContext } from './auth.context';
+
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
+      server: {
+        context: authContext,
+      },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [
@@ -26,6 +31,17 @@ import { AppService } from './app.service';
             // },
           ],
         }),
+        buildService({ url }) {
+          return new RemoteGraphQLDataSource({
+            url,
+            willSendRequest({ request, context }) {
+              request.http.headers.set(
+                'accessToken',
+                context.accessToken ? context.accessToken : null,
+              );
+            },
+          });
+        },
       },
     }),
   ],

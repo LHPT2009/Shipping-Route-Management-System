@@ -6,7 +6,7 @@ import * as bcrypt from 'bcryptjs';
 import { passwordStrength } from 'check-password-strength'
 import { JwtService } from '@nestjs/jwt';
 import { SignupInput } from './dto/signup.input';
-import { SignupResponse } from './dto/signup.response';
+import { SignupResponse } from './types/signup.types';
 import { LoginInput } from '../auth/dto/login.input';
 import { EmailService } from '../email/email.service';
 import nonEmptyString from '../../utils/validation/non-empty-string';

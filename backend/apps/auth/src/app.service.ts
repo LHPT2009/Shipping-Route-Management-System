@@ -3,7 +3,7 @@ import { DevConfigService } from './common/providers/DevConfigService';
 
 @Injectable()
 export class AppService {
-  getHello(req): string {
-    return req;
+  getHello(): string {
+    return 'Hello World!';
   }
 }
