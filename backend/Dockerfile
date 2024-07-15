@@ -6,4 +6,3 @@ RUN npm install
 FROM base-stage as build-stage
 WORKDIR /usr/app
 COPY . .
-RUN npm run build

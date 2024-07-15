@@ -19,7 +19,7 @@ import { authContext } from './auth.context';
           subgraphs: [
             {
               name: 'auth',
-              url: 'http://localhost:5010/graphql',
+              url: 'http://auth_service_container:5010/graphql',
             },
             // {
             //   name: 'routes',

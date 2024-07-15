@@ -17,6 +17,7 @@ import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { databaseConfig } from './config/database.config';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { databaseConfig } from './config/database.config';
       },
     }),
     
+    HealthModule,
     AuthModule,
     UsersModule,
   ],
