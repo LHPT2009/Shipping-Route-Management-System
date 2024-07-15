@@ -48,7 +48,7 @@ export class UsersService {
       email: userDTO.email,
     });
 
-    const url = `${process.env.URL}/auth/confirm/${token}`;
+    const url = `${process.env.AUTH_URL}/auth/confirm/${token}`;
 
     await this.emailService.sendEmail(
       userDTO.email,

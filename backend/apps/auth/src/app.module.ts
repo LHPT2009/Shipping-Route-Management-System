@@ -16,36 +16,21 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
+import { databaseConfig } from './config/database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      database: 'test',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'aB123789#',
+      database: process.env.POSTGRES_DB,
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      username:  process.env.POSTGRES_USER,
+      password:  process.env.POSTGRES_PASSWORD,
       entities: [User],
       synchronize: true,
     }),
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    //   typePaths: ['./**/*.graphql'],
-    //   definitions: {
-    //     path: join(process.cwd(), 'src/graphql.ts'),
-    //     outputAs: 'class',
-    //   },
-    //   formatError: formatError,
-    //   includeStacktraceInErrorResponses: false,
-    //   context: ({ req }) => ({ req }),
-    // }),
-
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    // }),
 
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
@@ -54,7 +39,6 @@ import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederat
       },
     }),
     
-    // SongsModule,
     AuthModule,
     UsersModule,
   ],

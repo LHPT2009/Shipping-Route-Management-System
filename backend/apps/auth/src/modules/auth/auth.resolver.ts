@@ -16,7 +16,7 @@ export class AuthResolver {
   ) {}
 
   @Mutation((SignupInput) => SignupResponse)
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   signup(
     @Args('signupInput')
     signupInput: SignupInput,
