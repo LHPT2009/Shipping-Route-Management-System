@@ -1,0 +1,18 @@
+# Stage 1: Base Stage
+FROM node:alpine3.20 AS base-stage
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm install
+
+# Stage 2: Build Stage
+FROM base-stage AS build-stage
+WORKDIR /usr/app
+COPY . .
+RUN npm run build
+
+# Stage 3: Final Stage
+FROM node:alpine3.20 AS final-stage
+WORKDIR /usr/app
+COPY --from=build-stage /usr/app ./
+EXPOSE 3000
+CMD ["npm", "start"]
