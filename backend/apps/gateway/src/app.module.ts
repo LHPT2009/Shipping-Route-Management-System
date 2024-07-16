@@ -19,16 +19,16 @@ import { authContext } from './auth.context';
           subgraphs: [
             {
               name: 'auth',
-              url: 'http://auth_service_container:5010/graphql',
+              url: 'http://auth_service:5010/graphql',
             },
-            // {
-            //   name: 'routes',
-            //   url: 'http://localhost:5020/graphql',
-            // },
-            // {
-            //   name: 'notifications',
-            //   url: 'http://localhost:5020/graphql',
-            // },
+            {
+              name: 'route',
+              url: 'http://route_service:5020/graphql',
+            },
+            {
+              name: 'notification',
+              url: 'http://notification_service:5030/graphql',
+            },
           ],
         }),
         buildService({ url }) {

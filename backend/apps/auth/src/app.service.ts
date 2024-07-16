@@ -5,6 +5,6 @@ import { DevConfigService } from './common/providers/DevConfigService';
 export class AppService {
   ///123
   getHello(): string {
-    return 'Hello World!';
+    return 'App service';
   }
 }

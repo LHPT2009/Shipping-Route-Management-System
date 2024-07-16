@@ -3,8 +3,10 @@ version: '3.8'
 name: backend
 
 services:
+
+  # Postgres
   postgres:
-    container_name: postgres_container
+    container_name: postgres
     image: postgres:alpine
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -25,8 +27,9 @@ services:
     networks:
       - backend
 
+  # Auth service
   auth_service:
-    container_name: auth_service_container
+    container_name: auth_service
     build: .
     command: sh -c "npm run start:dev auth"
     depends_on:
@@ -54,8 +57,74 @@ services:
     networks:
       - backend
 
+  # Route service
+  route_service:
+    container_name: route_service
+    build: .
+    command: sh -c "npm run start:dev route"
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+      auth_service:
+        condition: service_healthy
+        restart: true
+    ports:
+      - ${ROUTE_PORT}:${ROUTE_PORT}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:5020/health',
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - .:/usr/app
+    networks:
+      - backend
+
+  # Notification service
+  notification_service:
+    container_name: notification_service
+    build: .
+    command: sh -c "npm run start:dev notification"
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+      route_service:
+        condition: service_healthy
+        restart: true
+    ports:
+      - ${NOTIFICATION_PORT}:${NOTIFICATION_PORT}
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:5030/health',
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - .:/usr/app
+    networks:
+      - backend
+
   gateway:
-    container_name: gateway_container
+    container_name: gateway
     build: .
     command: sh -c "npm run start:dev"
     depends_on:
@@ -63,6 +132,12 @@ services:
         condition: service_healthy
         restart: true
       auth_service:
+        condition: service_healthy
+        restart: true
+      route_service:
+        condition: service_healthy
+        restart: true
+      notification_service:
         condition: service_healthy
         restart: true
     ports:
