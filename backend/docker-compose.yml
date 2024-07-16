@@ -49,8 +49,8 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
-    # volumes:
-    #   - .:/usr/app
+    volumes:
+      - .:/usr/app
     networks:
       - backend
 
@@ -67,14 +67,14 @@ services:
         restart: true
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
-    # volumes:
-    #   - .:/usr/app
+    volumes:
+      - .:/usr/app
     networks:
       - backend
 
 volumes:
   postgresdb: {}
-  # .: {}
+  .: {}
 
 networks:
   backend:
