@@ -5,7 +5,8 @@ import React from "react";
 import type { TableColumnsType } from "antd";
 import BreadcrumbComponent from "@/components/breadcrumb";
 import { DataType } from "@/types/table";
-import { BreadcrumbComponentProps } from "@/types/breadcrumb";
+import { BreadcrumbItem } from "@/types/breadcrumb";
+import HeadBodyComponent from "@/components/headbody";
 
 const columns: TableColumnsType<DataType> = [
   {
@@ -55,7 +56,7 @@ const data: DataType[] = [
   },
 ];
 
-const breadcrumbItems = [
+const breadcrumbItems: BreadcrumbItem[] = [
   { name: "Home", link: "/" },
   { name: "List", link: "/list" },
   { name: "App" },
@@ -64,6 +65,7 @@ const breadcrumbItems = [
 const userPage = () => {
   return (
     <>
+      <HeadBodyComponent />
       <BreadcrumbComponent items={breadcrumbItems} />
       <BodyComponent>
         <TableComponent columns={columns} dataSource={data} />

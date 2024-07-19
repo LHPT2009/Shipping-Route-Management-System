@@ -5,6 +5,7 @@ import FooterComponent from "../footer";
 
 import { Layout } from "antd";
 import { ChildrenComponentProps } from "@/types/children";
+import FloatComponent from "../float";
 
 const { Content } = Layout;
 
