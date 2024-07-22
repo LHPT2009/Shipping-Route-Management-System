@@ -1,21 +1,17 @@
 import React from "react";
 import { Layout, Row, Col, Space } from "antd";
-import DrawerComponent from "../drawer";
-import AvatarComponent from "../dropdown/avatar";
-import NotificationComponent from "../dropdown/notification";
-import LangComponent from "../dropdown/lang";
-import SettingComponent from "../dropdown/setting";
-import logoFull from "@/public/images/logoFull.png";
+import DrawerComponent from "../../drawer";
+import AvatarComponent from "../../dropdown/avatar";
+import NotificationComponent from "../../dropdown/notification";
+import LangComponent from "../../dropdown/lang";
+import SettingComponent from "../../dropdown/setting";
+import logoFull from "@/public/logo/logoFull.png";
 import Image from "next/image";
-import BreadcrumbComponent from "@/components/breadcrumb";
-import { BreadcrumbItem } from "@/types/breadcrumb";
 import { getValueFromScreen, useScreenWidth } from "@/utils/screenUtils";
 
 const { Header } = Layout;
 
-const headerComponent = () => {
-  const breadcrumbItems: BreadcrumbItem[] = [{ name: "Home", link: "/" }];
-
+const HeaderComponent = () => {
   const screenWidth = useScreenWidth();
 
   const extraSmall = true;
@@ -55,15 +51,13 @@ const headerComponent = () => {
               width: "100%",
             }}
           >
-            <Space size="middle" style={{ position: "absolute", top: "-25px" }}>
-              {responsive ? <DrawerComponent /> : <></>}
-              {!responsive ? (
+            <Space size="middle" style={{ display: "flex" }}>
+              {responsive ? (
+                <DrawerComponent />
+              ) : (
                 <>
                   <SettingComponent />{" "}
-                  <BreadcrumbComponent items={breadcrumbItems} />{" "}
                 </>
-              ) : (
-                <></>
               )}
             </Space>
           </Col>
@@ -104,4 +98,4 @@ const headerComponent = () => {
   );
 };
 
-export default headerComponent;
+export default HeaderComponent;

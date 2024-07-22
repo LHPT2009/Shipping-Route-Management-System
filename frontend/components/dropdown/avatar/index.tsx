@@ -1,6 +1,6 @@
 import React from "react";
 import { MenuProps, Dropdown, Avatar } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { UserOutlined  } from "@ant-design/icons";
 import { COLOR } from "@/constant";
 
 const items: MenuProps["items"] = [
@@ -28,7 +28,7 @@ const avatarComponent = () => {
         <Avatar
           shape="circle"
           size="large"
-          icon={<SettingOutlined />}
+          icon={<UserOutlined  />}
           style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
         />
       </Dropdown>

@@ -1,29 +1,48 @@
 "use client";
 
-import type { RootState } from "../lib/store/index";
-import { useAppDispatch, useAppSelector } from "../lib/hooks/hooks";
-import { counterActions } from "../lib/store/counter";
-import { Button, Input, Space } from "antd";
-import BreadcrumbComponent from "@/components/breadcrumb";
-import { BreadcrumbItem } from "@/types/breadcrumb";
-import LayoutComponent from "@/components/layout";
-import HeadBodyComponent from "@/components/headbody";
+// import type { RootState } from "../lib/store/index";
+// import { useAppDispatch, useAppSelector } from "../lib/hooks/hooks";
+// import { counterActions } from "../lib/store/counter";
+import LayoutComponent from "@/components/layout/client";
 import BodyComponent from "@/components/body";
+import MenuComponent from "@/components/menu";
+import { getValueFromScreen, useScreenWidth } from "@/utils/screenUtils";
 
 export default function Home() {
   // const count = useAppSelector((state: RootState) => state.counter.value);
   // const dispatch = useAppDispatch();
 
-  // const breadcrumbItems: BreadcrumbItem[] = [
-  //   { name: "Home", link: "/" },
-  //   { name: "List", link: "/list" },
-  //   { name: "App" },
-  // ];
+  const screenWidth = useScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = getValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   return (
     <div>
       <LayoutComponent>
-        <HeadBodyComponent />
-        {/* <BreadcrumbComponent items={breadcrumbItems} /> */}
+        {!responsive ? (
+          <MenuComponent
+            mode="horizontal"
+            responsive={responsive}
+            defaultSelectedKeys={["1"]}
+          />
+        ) : (
+          <></>
+        )}
         <BodyComponent>asdas</BodyComponent>
       </LayoutComponent>
     </div>
