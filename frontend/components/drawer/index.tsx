@@ -1,20 +1,29 @@
 import React, { useState } from "react";
-import { Drawer, Space, Menu, Col, Row } from "antd";
-import type { MenuProps } from "antd";
-import { MenuOutlined } from "@ant-design/icons";
 import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+  Drawer,
+  Space,
+  Divider,
+  Col,
+  Row,
+  Layout,
+  Avatar,
+  Typography,
+} from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import SettingComponent from "../dropdown/setting";
-import logoFull from "@/public/images/logoFull.png";
+import logoFull from "@/public/logo/logoFull.png";
 import NotificationComponent from "../dropdown/notification";
 import LangComponent from "../dropdown/lang";
+import FooterComponent from "../footer";
 import { COLOR } from "@/constant";
+import MenuComponent from "../menu";
+
+const { Header } = Layout;
 
 const DrawerComponent: React.FC = () => {
+  const { Title } = Typography;
+
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -25,84 +34,79 @@ const DrawerComponent: React.FC = () => {
     setOpen(false);
   };
 
-  const items2: MenuProps["items"] = [
-    UserOutlined,
-    LaptopOutlined,
-    NotificationOutlined,
-  ].map((icon, index) => {
-    const key = String(index + 1);
-
-    return {
-      key: `sub${key}`,
-      icon: React.createElement(icon),
-      label: `subnav ${key}`,
-
-      children: new Array(4).fill(null).map((_, j) => {
-        const subKey = index * 4 + j + 1;
-        return {
-          key: subKey,
-          label: `option${subKey}`,
-        };
-      }),
-    };
-  });
-
   return (
     <>
-      <Space>
-        <MenuOutlined
-          onClick={showDrawer}
-          style={{
-            color: COLOR.PRIMARY,
-            fontSize: "25px",
-            position: "absolute",
-            marginTop: "-30px",
-          }}
-        />
-      </Space>
+      <Avatar
+        shape="square"
+        size="large"
+        icon={<MenuOutlined />}
+        onClick={showDrawer}
+        style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
+      />
       <Drawer
         title={
           <>
-            <Row>
-              <Col
+            <Row style={{ width: "100%" }}>
+              <Header
                 style={{
+                  position: "relative",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
+                  padding: "0px",
                   width: "100%",
-                  marginBottom: "20px",
                 }}
               >
-                <Image width={200} height={50} src={logoFull} alt="Logo" />
-              </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "start",
+                  }}
+                >
+                  <Space size="small" style={{ top: "-35px" }}>
+                    <SettingComponent />
+                    <NotificationComponent />
+                  </Space>
+                </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image width={200} height={50} src={logoFull} alt="Logo" />
+                </Col>
+                <Col
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "end",
+                  }}
+                >
+                  <Space size="middle">
+                    <LangComponent />
+                  </Space>
+                </Col>
+              </Header>
             </Row>
-            <Space
-              size="middle"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-              }}
-            >
-              <SettingComponent />
-              <LangComponent />
-              <NotificationComponent />
-            </Space>
+          </>
+        }
+        footer={
+          <>
+            <FooterComponent />
           </>
         }
         placement="left"
         closable={false}
         onClose={onClose}
         open={open}
+        style={{ width: "80vw" }}
       >
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
-          style={{ height: "100%", borderRight: 0 }}
-          items={items2}
-        />
+        <MenuComponent responsive={true} defaultSelectedKeys={["1"]} />
       </Drawer>
     </>
   );

@@ -1,37 +1,21 @@
 import React from "react";
-import { MenuProps, Dropdown, Avatar } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
-import { COLOR } from "@/constant";
-
-const items: MenuProps["items"] = [
-  {
-    label: <a href="https://www.antgroup.com">1st menu item</a>,
-    key: "0",
-  },
-  {
-    label: <a href="https://www.aliyun.com">2nd menu item</a>,
-    key: "1",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: "3rd menu item",
-    key: "3",
-  },
-];
+import { Select } from 'antd';
+import Image from "next/image";
+import Vietnam from "@/public/country/Vietnam.png"
+import America from "@/public/country/America.png"
+import Korea from "@/public/country/Korea.png"
 
 const langComponent = () => {
   return (
     <>
-      <Dropdown menu={{ items }} trigger={["click"]} arrow={true}>
-        <Avatar
-          shape="circle"
-          size="large"
-          icon={<SettingOutlined />}
-          style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
-        />
-      </Dropdown>
+      <Select
+      defaultValue="1"
+      style={{ width: 80,height:50 ,top:"12px"}}
+    >
+      <Select.Option value="1"><Image src={Vietnam} alt="" style={{height:"30px",width:"40px"}}/></Select.Option>
+      <Select.Option value="2"><Image src={America} alt="" style={{height:"30px",width:"40px"}}/></Select.Option>
+      <Select.Option value="3"><Image src={Korea} alt="" style={{height:"30px",width:"40px"}}/></Select.Option>
+    </Select>
     </>
   );
 };

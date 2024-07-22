@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import HeaderComponent from "../header";
-import FooterComponent from "../footer";
+import HeaderComponent from "../../header/client";
+import FooterComponent from "../../footer";
 
 import { Layout } from "antd";
 import { ChildrenComponentProps } from "@/types/children";
-import FloatComponent from "../float";
 
 const { Content } = Layout;
 
@@ -13,7 +12,7 @@ const LayoutComponent: React.FC<ChildrenComponentProps> = ({
   children,
 }: ChildrenComponentProps) => {
   return (
-    <Layout>
+    <Layout style={{ height: "100vh" }}>
       <HeaderComponent />
       <Content style={{ padding: "0 48px" }}>{children}</Content>
       <FooterComponent />
