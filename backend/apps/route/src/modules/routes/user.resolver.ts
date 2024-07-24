@@ -7,9 +7,9 @@ import { User } from 'apps/auth/src/modules/users/types/user.types';
 export class UsersResolver {
   constructor(private readonly routeService: RouteService) {}
 
-//   @ResolveField((of) => [Route])
-//   async route(@Parent() user: User): Promise<Route[]> {
-//     console.log('route in user')
-//     return await this.routeService.forAuthor(user.id);
-//   }
+  @ResolveField((of) => [Route])
+  route(@Parent() user: User): Promise<Route[]> {
+    console.log('route in user')
+    return this.routeService.forAuthor(user.id);
+  }
 }

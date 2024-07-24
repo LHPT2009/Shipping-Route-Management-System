@@ -10,7 +10,7 @@ import { User } from './types/user.types';
 export class RouteResolver {
   constructor(
     private routeService: RouteService,
-  ) {}
+  ) { }
 
   @Query((returns) => [Route])
   async getRoutes(): Promise<Route[]> {
@@ -22,12 +22,6 @@ export class RouteResolver {
     console.log('user id in  route: ', route.user_id);
     console.log({ __typename: 'User', id: route.user_id })
     return { __typename: 'User', id: route.user_id };
-  }
-
-  @ResolveField((of) => [Route])
-  async route(@Parent() user: User): Promise<Route[]> {
-    console.log('route in user')
-    return await this.routeService.forAuthor(user.id);
   }
 
   @ResolveReference()

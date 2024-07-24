@@ -24,8 +24,4 @@ export class RouteService {
     return await this.routeRepository.findBy({ "user_id": id });
   }
 
-  // getUser(user_id: string): User {
-  //   return { id: "1" } as User;
-  // }
-
 }

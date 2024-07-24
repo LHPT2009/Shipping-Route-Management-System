@@ -2,7 +2,7 @@ import { Args, Mutation, Resolver, Query, ResolveReference, ResolveField, Parent
 import { UsersService } from '../users/users.service';
 import { UseGuards } from '@nestjs/common';
 import { User } from './types/user.types';
-import { Route } from './types/route.types';
+// import { Route } from './types/route.types';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -10,15 +10,9 @@ export class UserResolver {
     private userService: UsersService,
   ) {}
 
-  @Query((returns) => [User])
+  @Query((of) => [User])
   async getUsers(): Promise<User[]> {
     return await this.userService.findAll();
-  }
-
-  @ResolveField((of) => [User])
-  async user(@Parent() route: Route): Promise<User> {
-    console.log('route in user')
-    return await this.userService.findOneById(route.user_id);
   }
 
   @ResolveReference()
