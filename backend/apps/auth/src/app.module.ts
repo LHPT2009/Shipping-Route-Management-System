@@ -38,6 +38,8 @@ import { HealthModule } from './modules/health/health.module';
       autoSchemaFile: {
         federation: 2,
       },
+      // plugins: [ApolloServerPluginInlineTrace()],
+
     }),
     
     HealthModule,
@@ -60,3 +62,7 @@ export class AppModule implements NestModule {
     // consumer.apply(LoggerMiddleware).forRoutes(SongsController); //option no 3
   }
 }
+function ApolloServerPluginInlineTrace(): import("@apollo/server").ApolloServerPlugin<any> {
+  throw new Error('Function not implemented.');
+}
+

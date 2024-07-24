@@ -1,6 +1,6 @@
 export interface PayloadType {
   email: string;
-  userId: number;
+  userId: string;
 }
 
 export type Enable2FAType = {

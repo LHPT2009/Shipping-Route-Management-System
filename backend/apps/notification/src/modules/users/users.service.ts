@@ -33,8 +33,8 @@ export class UsersService {
     }
 
     const user = new User();
-    user.firstName = userDTO.firstName;
-    user.lastName = userDTO.lastName;
+    user.first_name = userDTO.first_name;
+    user.last_name = userDTO.last_name;
     user.email = userDTO.email;
     user.active = false;
 
@@ -93,13 +93,13 @@ export class UsersService {
 
     const errorMessage: string[] = [];
 
-    if (nonEmptyString(userDTO.lastName)) {
+    if (nonEmptyString(userDTO.last_name)) {
       errorMessage.push('Last name is required');
     }
 
-    if (nonEmptyString(userDTO.firstName)) {
+    if (nonEmptyString(userDTO.first_name)) {
       errorMessage.push('First name is required');
-      // return 'Please provide your firstName';
+      // return 'Please provide your first_name';
     }
 
     if (nonEmptyString(userDTO.email) || !validEmail(userDTO.email)) {

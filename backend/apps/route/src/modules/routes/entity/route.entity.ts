@@ -1,27 +1,17 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('routes')
+export class Route {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
-  firstName: string;
+  name: string;
 
   @Column()
-  lastName: string;
-
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  @Exclude()
-  password: string;
-
-  @Column()
-  active: boolean;
-
+  user_id: string;
+  
   /**
    * A user can create many playLists
    */

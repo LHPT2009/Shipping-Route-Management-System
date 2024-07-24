@@ -21,6 +21,16 @@ export class UsersService {
     private jwtService: JwtService,
   ) { }
 
+  findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+  async findOneById(id: string): Promise<User> {
+    const getUserFromDb = await this.userRepository.findOneBy({ id: id });
+    console.log(getUserFromDb);
+    return getUserFromDb;
+  }
+
   async create(userDTO: SignupInput): Promise<SignupResponse> {
 
     const errorMessage: string[] = await this.validateUser(userDTO);
@@ -33,8 +43,8 @@ export class UsersService {
     }
 
     const user = new User();
-    user.firstName = userDTO.firstName;
-    user.lastName = userDTO.lastName;
+    user.first_name = userDTO.first_name;
+    user.last_name = userDTO.last_name;
     user.email = userDTO.email;
     user.active = false;
 
@@ -93,13 +103,13 @@ export class UsersService {
 
     const errorMessage: string[] = [];
 
-    if (nonEmptyString(userDTO.lastName)) {
+    if (nonEmptyString(userDTO.last_name)) {
       errorMessage.push('Last name is required');
     }
 
-    if (nonEmptyString(userDTO.firstName)) {
+    if (nonEmptyString(userDTO.first_name)) {
       errorMessage.push('First name is required');
-      // return 'Please provide your firstName';
+      // return 'Please provide your first_name';
     }
 
     if (nonEmptyString(userDTO.email) || !validEmail(userDTO.email)) {
@@ -148,7 +158,7 @@ export class UsersService {
     return user;
   }
 
-  async findById(id: number): Promise<User> {
+  async findById(id: string): Promise<User> {
     return this.userRepository.findOneBy({ id: id });
   }
 }

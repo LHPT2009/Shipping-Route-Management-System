@@ -4,20 +4,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 //entities
-import { User } from './modules/users/user.entity';
+import { Route } from './modules/routes/entity/route.entity';
 
 //modules
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-
+import { RouteModule } from './modules/routes/route.module';
 
 //graphql
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { databaseConfig } from './config/database.config';
+// import { databaseConfig } from './config/database.config';
 import { HealthModule } from './modules/health/health.module';
+import { User } from './modules/routes/types/user.types';
+import { UsersResolver } from './modules/routes/user.resolver';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { HealthModule } from './modules/health/health.module';
       port: parseInt(process.env.POSTGRES_PORT),
       username:  process.env.POSTGRES_USER,
       password:  process.env.POSTGRES_PASSWORD,
-      entities: [User],
+      entities: [Route],
       synchronize: true,
     }),
 
@@ -38,11 +38,14 @@ import { HealthModule } from './modules/health/health.module';
       autoSchemaFile: {
         federation: 2,
       },
+      // plugins: [ApolloServerPluginInlineTrace()],
+      buildSchemaOptions:{
+        orphanedTypes: [User]
+      }
     }),
     
     HealthModule,
-    AuthModule,
-    UsersModule,
+    RouteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -60,3 +63,7 @@ export class AppModule implements NestModule {
     // consumer.apply(LoggerMiddleware).forRoutes(SongsController); //option no 3
   }
 }
+function ApolloServerPluginInlineTrace(): import("@apollo/server").ApolloServerPlugin<any> {
+  throw new Error('Function not implemented.');
+}
+

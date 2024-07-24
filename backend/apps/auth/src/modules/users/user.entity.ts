@@ -4,13 +4,13 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
-  firstName: string;
+  first_name: string;
 
   @Column()
-  lastName: string;
+  last_name: string;
 
   @Column({ unique: true })
   email: string;
@@ -22,7 +22,4 @@ export class User {
   @Column()
   active: boolean;
 
-  /**
-   * A user can create many playLists
-   */
 }
