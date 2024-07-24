@@ -1,3 +1,4 @@
+import LayoutAuthComponent from "@/components/layout/auth";
 import React, { ReactNode } from "react";
 
 interface AuthLayoutProps {
@@ -5,7 +6,11 @@ interface AuthLayoutProps {
 }
 
 const authLayout: React.FC<AuthLayoutProps> = ({ children }) => {
-  return <>{children}</>;
+  return (
+    <>
+      <LayoutAuthComponent>{children}</LayoutAuthComponent>
+    </>
+  );
 };
 
 export default authLayout;

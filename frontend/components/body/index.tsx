@@ -7,10 +7,11 @@ const bodyComponent: React.FC<ChildrenComponentProps> = ({ children }) => {
     <div
       style={{
         padding: 24,
-        height: "79vh",
+        height: "73vh",
         overflow: "hidden",
         background: COLOR.BACKGROUNDBODY,
         borderRadius: "8px",
+        marginBottom: "50px",
       }}
     >
       {children}

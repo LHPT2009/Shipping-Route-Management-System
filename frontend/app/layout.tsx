@@ -4,7 +4,8 @@ import "./globals.css";
 import { Providers } from "./provider";
 import StyledComponentsRegistry from "@/lib/antd/AntdRegistry";
 import { ConfigProvider } from "antd";
-import { themeConfig } from "@/config/themeConfig";
+// import { themeConfig } from "@/config/themeConfig";
+import { COLOR } from "@/constant";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,30 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <StyledComponentsRegistry>
-          <ConfigProvider theme={themeConfig}>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: COLOR.PRIMARY,
+                borderRadius: 2,
+                colorText: "#000",
+                colorBgContainer: COLOR.BACKGROUND,
+              },
+              components: {
+                Layout: {
+                  headerBg: "#fff",
+                  headerHeight: 80,
+                  footerBg: "#fff",
+                  colorBgLayout: "#fff",
+                },
+                Menu: {
+                  colorBgContainer: "#fff",
+                },
+                Breadcrumb: {
+                  colorText: COLOR.PRIMARY,
+                },
+              },
+            }}
+          >
             <Providers>{children}</Providers>
           </ConfigProvider>
         </StyledComponentsRegistry>
