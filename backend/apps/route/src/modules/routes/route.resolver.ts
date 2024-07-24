@@ -13,6 +13,7 @@ export class RouteResolver {
   ) { }
 
   @Query((returns) => [Route])
+  @UseGuards(AuthGuard)
   async getRoutes(): Promise<Route[]> {
     return await this.routeService.findAll();
   }
@@ -26,7 +27,6 @@ export class RouteResolver {
 
   @ResolveReference()
   resolveReference(reference: { __typename: string; id: string }) {
-    console.log('-------------aaaa---------------');
     return this.routeService.forAuthor(reference.id);
   }
 }

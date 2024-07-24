@@ -17,7 +17,7 @@ import { UsersService } from '../users/users.service';
         expiresIn: '1d',
       },
     }),
-    // ArtistsModule,
+
     TypeOrmModule.forFeature([User]),
   ],
   providers: [AuthService, AuthResolver, UsersService, EmailService],

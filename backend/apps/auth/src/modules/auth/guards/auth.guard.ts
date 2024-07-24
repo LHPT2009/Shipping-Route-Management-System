@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate {
     else {
       // const decoded = this.jwtService.decode(accessToken);
 
+      console.log('accessToken: ', accessToken);
       const decoded = this.jwtService.verify(accessToken, {
         ignoreExpiration: true,
         secret: process.env.ACCESS_TOKEN_SECRET,
