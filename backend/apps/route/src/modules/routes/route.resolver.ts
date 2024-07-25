@@ -13,7 +13,7 @@ export class RouteResolver {
   ) { }
 
   @Query((returns) => [Route])
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async getRoutes(): Promise<Route[]> {
     return await this.routeService.findAll();
   }

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -46,6 +46,9 @@ export class UsersService {
     user.first_name = userDTO.first_name;
     user.last_name = userDTO.last_name;
     user.email = userDTO.email;
+
+    user.address = '';
+    user.phone_number = '';
     user.active = false;
 
     const salt = await bcrypt.genSalt(); // 2.

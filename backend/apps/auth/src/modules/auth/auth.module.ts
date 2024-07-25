@@ -5,8 +5,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from './auth.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailService } from '../email/email.service';
-import { User } from '../users/user.entity';
+import { User } from '../users/entity/user.entity';
 import { UsersService } from '../users/users.service';
+import { Role } from '../users/entity/role.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UsersService } from '../users/users.service';
       },
     }),
 
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Role]),
   ],
   providers: [AuthService, AuthResolver, UsersService, EmailService],
   controllers: [AuthController],

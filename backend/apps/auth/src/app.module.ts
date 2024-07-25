@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 //entities
-import { User } from './modules/users/user.entity';
+import { User } from './modules/users/entity/user.entity';
 
 //modules
 import { AuthModule } from './modules/auth/auth.module';
@@ -18,6 +18,10 @@ import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { databaseConfig } from './config/database.config';
 import { HealthModule } from './modules/health/health.module';
+import { Role } from './modules/users/entity/role.entity';
+import { Permission } from './modules/users/entity/permission.entity';
+import { PermissionRole } from './modules/users/entity/permission_role.entity';
+import { Page } from './modules/users/entity/page.entity';
 
 @Module({
   imports: [
@@ -29,7 +33,7 @@ import { HealthModule } from './modules/health/health.module';
       port: parseInt(process.env.POSTGRES_PORT),
       username:  process.env.POSTGRES_USER,
       password:  process.env.POSTGRES_PASSWORD,
-      entities: [User],
+      entities: [User, Role, Permission, PermissionRole, Page],
       synchronize: true,
     }),
 
