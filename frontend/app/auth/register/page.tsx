@@ -7,30 +7,13 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Button,
-  Typography,
-  Radio,
-  DatePicker,
-} from "antd";
+import { Row, Col, Form, Input, Button, Typography, DatePicker } from "antd";
 import Link from "next/link";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const { Text, Title } = Typography;
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
 
 const registerPage = () => {
   const screenWidth = useScreenWidth();
@@ -52,8 +35,25 @@ const registerPage = () => {
     extraExtraLarge
   );
 
-  const onFinish = (data: any) => {
-    console.log(data);
+  const schema = yup
+    .object({
+      username: yup.string().required("Required Username!!!"),
+      password: yup.string().required("Required Password!!!"),
+      rePassword: yup.string().required("Required RePassword!!!"),
+      fullname: yup.string().required("Required Fullname!!!"),
+      birthday: yup.string().required("Required Birthday!!!"),
+      phoneNumber: yup.string().required("Required PhoneNumber!!!"),
+      email: yup.string().required("Required Email!!!"),
+    })
+    .required();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onFinish = (values: any) => {
+    console.log("Received values of form: ", values);
   };
 
   return (
@@ -79,7 +79,7 @@ const registerPage = () => {
             backgroundColor: COLOR.BACKGROUNDBODY,
           }}
           size="large"
-          onFinish={onFinish}
+          onFinish={handleSubmit(onFinish)}
         >
           <Row gutter={[16, 16]}>
             <Col
@@ -101,74 +101,181 @@ const registerPage = () => {
               <Form.Item
                 label="Username"
                 name="username"
-                rules={[{ required: true, message: "Please input!" }]}
+                help={
+                  errors.username && (
+                    <span style={{ color: "red" }}>
+                      {errors.username?.message}
+                    </span>
+                  )
+                }
               >
-                <Input
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  placeholder="Username..."
-                  prefix={<UserOutlined />}
+                <Controller
+                  name="username"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="username"
+                      {...field}
+                      placeholder={"Username..."}
+                      prefix={<UserOutlined />}
+                      style={{ width: "100%", borderRadius: "8px" }}
+                      size="large"
+                    />
+                  )}
                 />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Please input!" }]}
+                help={
+                  errors.password && (
+                    <span style={{ color: "red" }}>
+                      {errors.password?.message}
+                    </span>
+                  )
+                }
               >
-                <Input
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  placeholder="Password..."
-                  prefix={<LockOutlined />}
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <Input.Password
+                      key="password"
+                      {...field}
+                      placeholder={"Password..."}
+                      prefix={<LockOutlined />}
+                      style={{ width: "100%", borderRadius: "8px" }}
+                      size="large"
+                    />
+                  )}
                 />
               </Form.Item>
               <Form.Item
                 label="RePassword"
                 name="rePassword"
-                rules={[{ required: true, message: "Please input!" }]}
+                help={
+                  errors.password && (
+                    <span style={{ color: "red" }}>
+                      {errors.rePassword?.message}
+                    </span>
+                  )
+                }
               >
-                <Input
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  placeholder="RePassword..."
-                  prefix={<LockOutlined />}
+                <Controller
+                  name="rePassword"
+                  control={control}
+                  render={({ field }) => (
+                    <Input.Password
+                      key="rePassword"
+                      {...field}
+                      placeholder={"RePassword..."}
+                      prefix={<LockOutlined />}
+                      style={{ width: "100%", borderRadius: "8px" }}
+                      size="large"
+                    />
+                  )}
                 />
               </Form.Item>
               <Form.Item
                 label="Fullname"
                 name="fullname"
-                rules={[{ required: true, message: "Please input!" }]}
+                help={
+                  errors.fullname && (
+                    <span style={{ color: "red" }}>
+                      {errors.fullname?.message}
+                    </span>
+                  )
+                }
               >
-                <Input
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  placeholder="Fullname..."
+                <Controller
+                  name="fullname"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="fullname"
+                      {...field}
+                      placeholder={"Fullname..."}
+                      style={{ width: "100%", borderRadius: "8px" }}
+                      size="large"
+                    />
+                  )}
                 />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item label="Birthday" name="Birthday">
-                <DatePicker
-                  style={{ width: "50%", borderRadius: "8px" }}
-                  placeholder="Birthday..."
+              <Form.Item
+                label="Birthday"
+                name="birthday"
+                help={
+                  errors.birthday && (
+                    <span style={{ color: "red" }}>
+                      {errors.birthday?.message}
+                    </span>
+                  )
+                }
+              >
+                <Controller
+                  name="birthday"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      style={{ width: "50%", borderRadius: "8px" }}
+                      placeholder="Birthday..."
+                    />
+                  )}
                 />
               </Form.Item>
               <Form.Item
                 label="PhoneNumber"
                 name="phoneNumber"
-                rules={[{ required: true, message: "Please input!" }]}
+                help={
+                  errors.phoneNumber && (
+                    <span style={{ color: "red" }}>
+                      {errors.phoneNumber?.message}
+                    </span>
+                  )
+                }
               >
-                <Input
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  placeholder="PhoneNumber..."
-                  prefix={<PhoneOutlined />}
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="phoneNumber"
+                      {...field}
+                      placeholder={"PhoneNumber..."}
+                      prefix={<PhoneOutlined />}
+                      style={{ width: "100%", borderRadius: "8px" }}
+                      size="large"
+                    />
+                  )}
                 />
               </Form.Item>
               <Form.Item
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Please input!" }]}
+                help={
+                  errors.email && (
+                    <span style={{ color: "red" }}>
+                      {errors.email?.message}
+                    </span>
+                  )
+                }
               >
-                <Input
-                  style={{ width: "100%", borderRadius: "8px" }}
-                  placeholder="Email..."
-                  prefix={<MailOutlined />}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="email"
+                      {...field}
+                      placeholder={"Email..."}
+                      prefix={<MailOutlined />}
+                      style={{ width: "100%", borderRadius: "8px" }}
+                      size="large"
+                    />
+                  )}
                 />
               </Form.Item>
 
