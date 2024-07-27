@@ -3,26 +3,22 @@
 import type { RootState } from "../../lib/store/index";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks/hooks";
 import { counterActions } from "../../lib/store/counter";
-import { useEffect } from "react";
-import userApi from "../../api/user-api";
+import { fetchRoutes } from "@/query/demo";
+import { useState } from "react";
+
+interface RouteItem {
+  id: number;
+  name: string;
+  user_id: number;
+  // add other properties as needed
+}
 
 export default function Home() {
+  const [listItem, setListItem] = useState<RouteItem[]>([]);
   const count = useAppSelector((state: RootState) => state.counter.value);
   const dispatch = useAppDispatch();
-
-  const fetchUser = async () => {
-    try {
-      const data = await userApi.getDataDemo();
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching bookings:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
+  const datalist = fetchRoutes();
+  datalist.then((a) => setListItem(a));
   return (
     <main>
       <h1 className="text-6xl font-bold">Test page</h1>
@@ -33,14 +29,16 @@ export default function Home() {
       >
         Increment
       </button>
-      <h1>{count}</h1>
-      <button
-        onClick={() => {
-          fetchUser();
-        }}
-      >
-        Click to fetch
-      </button>
+      <h1>Count: {count}</h1>
+      <p>____________________________</p>
+      <ul>
+        Load data:
+        {listItem.map((item, index) => (
+          <li key={index}>
+            {item.id}-{item.name}-{item.user_id}
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
