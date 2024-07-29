@@ -4,7 +4,6 @@ import "./globals.css";
 import { Providers } from "./provider";
 import StyledComponentsRegistry from "@/lib/antd/AntdRegistry";
 import { ConfigProvider } from "antd";
-// import { themeConfig } from "@/config/themeConfig";
 import { COLOR } from "@/constant";
 
 const inter = Inter({ subsets: ["latin"] });
