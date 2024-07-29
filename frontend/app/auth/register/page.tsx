@@ -1,6 +1,6 @@
 "use client";
 import { COLOR } from "@/constant";
-import { getValueFromScreen, useScreenWidth } from "@/utils/screenUtils";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import {
   LockOutlined,
   MailOutlined,
@@ -15,8 +15,8 @@ import * as yup from "yup";
 
 const { Text, Title } = Typography;
 
-const registerPage = () => {
-  const screenWidth = useScreenWidth();
+const RegisterPage = () => {
+  const screenWidth = UseScreenWidth();
 
   const extraSmall = true;
   const small = true;
@@ -25,7 +25,7 @@ const registerPage = () => {
   const extraLarge = false;
   const extraExtraLarge = false;
 
-  const responsive = getValueFromScreen(
+  const responsive = GetValueFromScreen(
     screenWidth,
     extraSmall,
     small,
@@ -63,7 +63,7 @@ const registerPage = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: !responsive ? "83vh" : "auto",
+          height: !responsive ? "100vh" : "auto",
           width: "100vw",
         }}
       >
@@ -300,4 +300,4 @@ const registerPage = () => {
   );
 };
 
-export default registerPage;
+export default RegisterPage;

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import HeaderComponent from "../../header/client";
+import HeaderComponent from "../../header";
 import FooterComponent from "../../footer";
 
 import { Layout } from "antd";

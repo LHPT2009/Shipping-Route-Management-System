@@ -1,20 +1,10 @@
 import React, { useState } from "react";
-import {
-  Drawer,
-  Space,
-  Divider,
-  Col,
-  Row,
-  Layout,
-  Avatar,
-  Typography,
-} from "antd";
+import { Drawer, Space, Divider, Col, Row, Layout, Avatar } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import SettingComponent from "../dropdown/setting";
 import logoFull from "@/public/logo/logoFull.png";
 import NotificationComponent from "../dropdown/notification";
-import LangComponent from "../dropdown/lang";
+import AvatarComponent from "../dropdown/avatar";
 import FooterComponent from "../footer";
 import { COLOR } from "@/constant";
 import MenuComponent from "../menu";
@@ -22,8 +12,6 @@ import MenuComponent from "../menu";
 const { Header } = Layout;
 
 const DrawerComponent: React.FC = () => {
-  const { Title } = Typography;
-
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -65,7 +53,6 @@ const DrawerComponent: React.FC = () => {
                   }}
                 >
                   <Space size="small" style={{ top: "-35px" }}>
-                    <SettingComponent />
                     <NotificationComponent />
                   </Space>
                 </Col>
@@ -88,7 +75,7 @@ const DrawerComponent: React.FC = () => {
                   }}
                 >
                   <Space size="middle">
-                    <LangComponent />
+                    <AvatarComponent />
                   </Space>
                 </Col>
               </Header>

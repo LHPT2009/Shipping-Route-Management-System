@@ -10,7 +10,7 @@ import * as yup from "yup";
 
 const { Title, Text } = Typography;
 
-const loginPage = () => {
+const LoginPage = () => {
   // Validate Yup
   const schema = yup
     .object({
@@ -34,7 +34,7 @@ const loginPage = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "83vh",
+          height: "100vh",
           width: "100vw",
         }}
       >
@@ -150,4 +150,4 @@ const loginPage = () => {
   );
 };
 
-export default loginPage;
+export default LoginPage;

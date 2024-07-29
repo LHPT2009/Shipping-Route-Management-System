@@ -36,18 +36,11 @@ export default function Home() {
       <p>____________________________</p>
       <ul>
         Load data:
-        {/* ex 1: */}
         {listItem.map(({ id, name, user_id }: RouteItem) => (
           <li key={id}>
             {id}-{name}-{user_id}
           </li>
         ))}
-        {/* ex 2:
-        {listItem.map((item: any) => (
-          <li key={item.id}>
-            {item.id}-{item.name}-{item.user_id}
-          </li>
-        ))} */}
       </ul>
     </main>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useScreenWidth = (): number | null => {
+export const UseScreenWidth = (): number | null => {
   const [screenWidth, setScreenWidth] = useState<number | null>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export const useScreenWidth = (): number | null => {
   return screenWidth;
 };
 
-export const getValueFromScreen = (
+export const GetValueFromScreen = (
   screenWidth: number | null,
   extraSmall: boolean,
   small: boolean,
