@@ -4,8 +4,6 @@ import React from "react";
 import { Layout } from "antd";
 import { ChildrenComponentProps } from "@/types/children";
 import { COLOR } from "@/constant";
-import HeaderAuthComponent from "@/components/header/auth";
-import FooterComponent from "@/components/footer";
 
 const { Content } = Layout;
 
@@ -22,7 +20,6 @@ const LayoutAuthComponent: React.FC<ChildrenComponentProps> = ({
         alignItems: "center",
       }}
     >
-      <HeaderAuthComponent />
       <div
         style={{
           display: "flex",
@@ -33,7 +30,6 @@ const LayoutAuthComponent: React.FC<ChildrenComponentProps> = ({
       >
         <Content>{children}</Content>
       </div>
-      <FooterComponent />
     </Layout>
   );
 };
