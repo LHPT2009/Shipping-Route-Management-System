@@ -10,9 +10,4 @@ export class Route {
   @Field()
   name: string;
 
-  @Field()
-  user_id: string;
-
-  @Field(() => User)
-  user?: User;
 }

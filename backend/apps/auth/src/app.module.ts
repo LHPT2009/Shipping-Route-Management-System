@@ -20,8 +20,6 @@ import { databaseConfig } from './config/database.config';
 import { HealthModule } from './modules/health/health.module';
 import { Role } from './modules/users/entity/role.entity';
 import { Permission } from './modules/users/entity/permission.entity';
-import { PermissionRole } from './modules/users/entity/permission_role.entity';
-import { Page } from './modules/users/entity/page.entity';
 
 @Module({
   imports: [
@@ -33,7 +31,7 @@ import { Page } from './modules/users/entity/page.entity';
       port: parseInt(process.env.POSTGRES_PORT),
       username:  process.env.POSTGRES_USER,
       password:  process.env.POSTGRES_PASSWORD,
-      entities: [User, Role, Permission, PermissionRole, Page],
+      entities: [User, Role, Permission],
       synchronize: true,
     }),
 

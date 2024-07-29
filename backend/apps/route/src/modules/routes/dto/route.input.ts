@@ -9,10 +9,4 @@ export class RouteDto {
 
   @Field()
   name: string;
-
-  @Field()
-  user_id: number;
-
-  @Field(() => User)
-  user: User;
 }

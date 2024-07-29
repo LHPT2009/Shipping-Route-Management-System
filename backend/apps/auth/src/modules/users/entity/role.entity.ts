@@ -1,10 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
-import { PermissionRole } from './permission_role.entity';
+import { Permission } from './permission.entity';
+import RoleInterface from '../interface/role.interface';
 
 @Entity('roles')
-export class Role {
+export class Role implements RoleInterface {
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -14,7 +15,18 @@ export class Role {
   @OneToMany(() => User, (user) => user.role)
   user: User;
 
-  @OneToMany(() => PermissionRole, (permission_role) => permission_role.permission)
-  permissionRole: PermissionRole[];
+  @ManyToMany(() => Permission, (permission) => permission.role)
+  @JoinTable({
+    name: "permissions_roles",
+    joinColumn: {
+      name: "role_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "permission_id",
+      referencedColumnName: "id"
+    }
+  })
+  permission: Permission[];
 
 }

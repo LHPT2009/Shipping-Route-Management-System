@@ -20,8 +20,8 @@ export class RouteService {
     return await this.routeRepository.find();
   }
 
-  async forAuthor(id: string): Promise<Route[]> {
-    return await this.routeRepository.findBy({ "user_id": id });
-  }
+  // async forAuthor(id: string): Promise<Route[]> {
+  //   return await this.routeRepository.findBy({ "user_id": id });
+  // }
 
 }

@@ -12,21 +12,21 @@ export class RouteResolver {
     private routeService: RouteService,
   ) { }
 
-  @Query((returns) => [Route])
+  // @Query((returns) => [Route])
   // @UseGuards(AuthGuard)
-  async getRoutes(): Promise<Route[]> {
-    return await this.routeService.findAll();
-  }
+  // async getRoutes(): Promise<Route[]> {
+  //   return await this.routeService.findAll();
+  // }
 
-  @ResolveField((of) => User)
-  user(@Parent() route: Route) {
-    console.log('user id in  route: ', route.user_id);
-    console.log({ __typename: 'User', id: route.user_id })
-    return { __typename: 'User', id: route.user_id };
-  }
+  // @ResolveField((of) => User)
+  // user(@Parent() route: Route) {
+  //   console.log('user id in  route: ', route.user_id);
+  //   console.log({ __typename: 'User', id: route.user_id })
+  //   return { __typename: 'User', id: route.user_id };
+  // }
 
-  @ResolveReference()
-  resolveReference(reference: { __typename: string; id: string }) {
-    return this.routeService.forAuthor(reference.id);
-  }
+  // @ResolveReference()
+  // resolveReference(reference: { __typename: string; id: string }) {
+  //   return this.routeService.forAuthor(reference.id);
+  // }
 }

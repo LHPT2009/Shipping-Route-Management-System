@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmailService } from '../email/email.service';
 import { Route } from './entity/route.entity';
 import { UsersResolver } from './user.resolver';
+import { Transport } from './entity/transport.entity';
+import { Location } from './entity/location.entity';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { UsersResolver } from './user.resolver';
       },
     }),
     // ArtistsModule,
-    TypeOrmModule.forFeature([Route]),
+    TypeOrmModule.forFeature([Route, Location, Transport]),
   ],
   providers: [RouteService, RouteResolver, EmailService, UsersResolver],
   controllers: [RouteController],

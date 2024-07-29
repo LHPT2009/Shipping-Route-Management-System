@@ -18,6 +18,8 @@ import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederat
 import { HealthModule } from './modules/health/health.module';
 import { User } from './modules/routes/types/user.types';
 import { UsersResolver } from './modules/routes/user.resolver';
+import { Location } from './modules/routes/entity/location.entity';
+import { Transport } from './modules/routes/entity/transport.entity';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { UsersResolver } from './modules/routes/user.resolver';
       port: parseInt(process.env.POSTGRES_PORT),
       username:  process.env.POSTGRES_USER,
       password:  process.env.POSTGRES_PASSWORD,
-      entities: [Route],
+      entities: [Route, Location, Transport],
       synchronize: true,
     }),
 

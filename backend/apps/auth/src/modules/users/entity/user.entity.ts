@@ -1,9 +1,10 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.entity';
+import UserInterface from '../interface/user.interface';
 
 @Entity('users')
-export class User {
+export class User implements UserInterface {
   @PrimaryGeneratedColumn()
   id: string;
 

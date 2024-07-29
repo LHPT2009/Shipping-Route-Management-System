@@ -7,8 +7,6 @@ import { EmailService } from '../email/email.service';
 import { UserResolver } from './user.resolver';
 import { Role } from './entity/role.entity';
 import { Permission } from './entity/permission.entity';
-import { PermissionRole } from './entity/permission_role.entity';
-import { Page } from './entity/page.entity';
 // import { RouteResolver } from './route.resolver';
 
 @Module({
@@ -19,7 +17,7 @@ import { Page } from './entity/page.entity';
         expiresIn: '1d',
       },
     }),
-    TypeOrmModule.forFeature([User, Role, Permission, PermissionRole, Page])
+    TypeOrmModule.forFeature([User, Role, Permission])
   ],
   providers: [UsersService, EmailService, UserResolver],
   exports: [UsersService],
