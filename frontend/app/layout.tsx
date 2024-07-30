@@ -22,6 +22,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -33,7 +34,7 @@ export default function RootLayout({
                 borderRadius: 2,
                 colorText: "#000",
                 colorBgContainer: COLOR.BACKGROUND,
-                fontSize: 18,
+                fontSize: 16,
               },
               components: {
                 Layout: {
@@ -48,6 +49,9 @@ export default function RootLayout({
                 Breadcrumb: {
                   colorText: COLOR.PRIMARY,
                 },
+                Button: {
+                  borderRadius: 8
+                }
               },
             }}
           >

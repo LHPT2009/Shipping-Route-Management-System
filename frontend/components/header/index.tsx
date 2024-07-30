@@ -7,6 +7,8 @@ import logoFull from "@/public/logo/logoFull.png";
 import Image from "next/image";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import MenuComponent from "../menu";
+import { Flex } from 'antd';
+
 
 const { Header } = Layout;
 
@@ -36,76 +38,55 @@ const HeaderComponent = () => {
         <Header
           style={{
             position: "sticky",
-            zIndex: 1,
+            zIndex: 100,
             width: "100%",
             display: "flex",
             alignItems: "center",
           }}
         >
-          <Col
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "start",
-              width: "100%",
-            }}
-            span={6}
-          >
-            <Space size="middle" style={{ display: "flex" }}>
-              {responsive ? (
-                <DrawerComponent />
-              ) : (
-                <>
-                  <Image width={200} height={50} src={logoFull} alt="Logo" />
-                </>
-              )}
-            </Space>
-          </Col>
-          <Col
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-            }}
-            span={12}
-          >
-            {!responsive ? (
-              <>
-                <MenuComponent
-                  mode="horizontal"
-                  defaultSelectedKeys={["1"]}
-                  responsive={responsive}
-                />
-              </>
+          <Col span={6}>
+            {responsive ? (
+              <DrawerComponent />
             ) : (
               <>
                 <Image width={200} height={50} src={logoFull} alt="Logo" />
               </>
             )}
           </Col>
-          <Col
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "end",
-              width: "100%",
-              top: "5px",
-            }}
-            span={6}
-          >
-            <Space size="middle">
+          
+          <Col span={12}>
+            <Flex justify='center' align='center' >
               {!responsive ? (
                 <>
-                  <NotificationComponent />
+                  <MenuComponent
+                    mode="horizontal"
+                    defaultSelectedKeys={["1"]}
+                    responsive={responsive}
+                  />
                 </>
               ) : (
-                <></>
+                <>
+                  <Image width={200} height={50} src={logoFull} alt="Logo" />
+                </>
               )}
-
-              <AvatarComponent />
-            </Space>
+            </Flex>
           </Col>
+
+          <Col span={6}>
+            <Flex justify='end' align='end' >
+              <Space size="large" style={{marginTop: "8px"}}>
+                {!responsive ? (
+                  <>
+                    <NotificationComponent />
+                  </>
+                ) : (
+                  <></>
+                )}
+                <AvatarComponent />
+              </Space>
+            </Flex>
+          </Col>
+
         </Header>
       </Row>
     </>

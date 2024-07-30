@@ -12,10 +12,10 @@ const LayoutComponent: React.FC<ChildrenComponentProps> = ({
   children,
 }: ChildrenComponentProps) => {
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout style={{ height: "auto" }}>
       <HeaderComponent />
       <Content style={{ padding: "0 48px" }}>{children}</Content>
-      <FooterComponent />
+      {/* <FooterComponent /> */}
     </Layout>
   );
 };
