@@ -1,7 +1,7 @@
 .footer {
     display: flex;
     flex-direction: column;
-    margin-top: 10rem;
+    margin-top: 5rem;
     border-top: 1px solid #c3c2c2;
 }
 

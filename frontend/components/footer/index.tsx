@@ -52,7 +52,7 @@ const FooterComponent = () => {
       </div>
     </div>
     <div className={classes.footer_foot}>
-      <strong>S-Routing &nbsp; | &nbsp; Route Management System</strong>
+      <strong>S-Routing &nbsp; | &nbsp; Shipping Route Management System</strong>
       <div>Website: <Link href='/'>https://srouting.com</Link></div>
       <div>Copyright © 2024 All rights reserved by Team 06</div>
     </div>
