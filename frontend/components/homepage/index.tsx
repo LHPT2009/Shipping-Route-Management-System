@@ -31,7 +31,7 @@ const HompageComponent: React.FC = () => {
                     fontSize: "1.2rem",
                     padding: "1.6rem 2.7rem",
                 }}>Get started</Button>
-                
+
             </div>
 
         </div>
