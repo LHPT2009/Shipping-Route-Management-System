@@ -1,25 +1,25 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 //entities
-import { Route } from './modules/routes/entity/route.entity';
+import { Route } from './modules/database/entities/routes.entity';
+import { Location } from './modules/database/entities/locations.entity';
+import { Transport } from './modules/database/entities/transports.entity';
 
 //modules
-import { RouteModule } from './modules/routes/route.module';
+import { RoutesModule } from './modules/routes/routes.module';
 
 //graphql
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
-import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-// import { databaseConfig } from './config/database.config';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 import { HealthModule } from './modules/health/health.module';
-import { User } from './modules/routes/types/user.types';
-import { UsersResolver } from './modules/routes/user.resolver';
-import { Location } from './modules/routes/entity/location.entity';
-import { Transport } from './modules/routes/entity/transport.entity';
+import { LocationsModule } from './modules/locations/locations.module';
+import { TransportsModule } from './modules/transports/transports.module';
+import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
   imports: [
@@ -29,8 +29,8 @@ import { Transport } from './modules/routes/entity/transport.entity';
       database: process.env.POSTGRES_DB,
       host: process.env.POSTGRES_HOST,
       port: parseInt(process.env.POSTGRES_PORT),
-      username:  process.env.POSTGRES_USER,
-      password:  process.env.POSTGRES_PASSWORD,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
       entities: [Route, Location, Transport],
       synchronize: true,
     }),
@@ -40,32 +40,21 @@ import { Transport } from './modules/routes/entity/transport.entity';
       autoSchemaFile: {
         federation: 2,
       },
-      // plugins: [ApolloServerPluginInlineTrace()],
-      buildSchemaOptions:{
-        orphanedTypes: [User]
-      }
+      buildSchemaOptions: {
+        // orphanedTypes: [User],
+      },
     }),
-    
+
     HealthModule,
-    RouteModule,
+    RoutesModule,
+    LocationsModule,
+    TransportsModule,
+    DatabaseModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule implements NestModule {
-  constructor(/*private dataSource: DataSource*/) {
-    // console.log('dbName ', dataSource.driver.database);
-  }
-  configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(LoggerMiddleware).forRoutes('songs'); // option no 1
-    // consumer
-    //   .apply(LoggerMiddleware)
-    //   .forRoutes({ path: 'songs', method: RequestMethod.POST }); //option no 2
-
-    // consumer.apply(LoggerMiddleware).forRoutes(SongsController); //option no 3
-  }
+  constructor() {}
+  configure(consumer: MiddlewareConsumer) {}
 }
-function ApolloServerPluginInlineTrace(): import("@apollo/server").ApolloServerPlugin<any> {
-  throw new Error('Function not implemented.');
-}
-
