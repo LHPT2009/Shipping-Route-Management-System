@@ -14,7 +14,7 @@ const LayoutComponent: React.FC<ChildrenComponentProps> = ({
   return (
     <Layout style={{ height: "auto" }}>
       <HeaderComponent />
-      <Content style={{ padding: "0 48px" }}>{children}</Content>
+      <Content>{children}</Content>
       <FooterComponent />
     </Layout>
   );

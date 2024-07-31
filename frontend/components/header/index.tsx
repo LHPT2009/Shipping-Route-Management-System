@@ -33,63 +33,66 @@ const HeaderComponent = () => {
   );
 
   return (
-    <>
-      <Row>
-        <Header
-          style={{
-            position: "sticky",
-            zIndex: 100,
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Col span={6}>
-            {responsive ? (
-              <DrawerComponent />
-            ) : (
-              <>
-                <Image width={200} height={50} src={logoFull} alt="Logo" />
-              </>
-            )}
-          </Col>
-          
-          <Col span={12}>
-            <Flex justify='center' align='center' >
+    <div>
+      <Header
+        style={{
+          position: "fixed",
+          zIndex: 100,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          height: "5.5rem",
+          // padding: "1rem",
+        }}
+      >
+        <Col span={6} style={{ marginBottom: "0.8rem" }}>
+          {responsive ? (
+            <DrawerComponent />
+          ) : (
+            <>
+              <Image width={170} src={logoFull} alt="Logo" />
+            </>
+          )}
+        </Col>
+
+        <Col span={12} style={{ marginBottom: "0.8rem" }}>
+          <Flex justify='center' align='center' >
+
               {!responsive ? (
                 <>
                   <MenuComponent
                     mode="horizontal"
                     defaultSelectedKeys={["1"]}
                     responsive={responsive}
+                    
                   />
                 </>
               ) : (
                 <>
-                  <Image width={200} height={50} src={logoFull} alt="Logo" />
+                  <Image width={170} src={logoFull} alt="Logo" />
                 </>
               )}
-            </Flex>
-          </Col>
+        
+          </Flex>
+        </Col>
 
-          <Col span={6}>
-            <Flex justify='end' align='end' >
-              <Space size="large" style={{marginTop: "8px"}}>
-                {!responsive ? (
-                  <>
-                    <NotificationComponent />
-                  </>
-                ) : (
-                  <></>
-                )}
-                <AvatarComponent />
-              </Space>
-            </Flex>
-          </Col>
+        <Col span={6}>
+          <Flex justify='end' align='end' >
+            <Space size="large">
+              {!responsive ? (
+                <>
+                  <NotificationComponent />
+                </>
+              ) : (
+                <></>
+              )}
+              <AvatarComponent />
+            </Space>
+          </Flex>
+        </Col>
 
-        </Header>
-      </Row>
-    </>
+      </Header>
+    </div>
   );
 };
 
