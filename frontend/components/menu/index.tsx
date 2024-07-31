@@ -22,7 +22,7 @@ const MenuComponent: React.FC<MenuComponentProps> = ({
             display: "flex",
             justifyContent: "center",
             flex: "auto",
-            height: "60px",
+            height: "3.7rem",
           }}
           defaultSelectedKeys={defaultSelectedKeys}
           mode="horizontal"
