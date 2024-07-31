@@ -106,8 +106,6 @@ const HompageComponent: React.FC = () => {
           <img className={styles['img-container']} src={RouteDescription.src} alt="route-description" />
         </div>
 
-
-
       </div>
 
     </div>
