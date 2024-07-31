@@ -66,7 +66,7 @@
     margin: 0 auto;
 }
 
-.title-container, .similar-website-container, .description-container, .team-container, .get-start-container{
+.title-container, .similar-website-container, .description-container, .team-container, .get-started-container{
     width: 74%;
     margin: 0 auto;
 }
@@ -76,3 +76,23 @@
     padding: 6rem 0;
     margin-top: 7rem;
 }
+
+.get-started-container{
+    background: black;
+    color: white;
+    height: 20rem;
+    margin-top: 7rem;
+    border-radius: 1.5rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.get-started-header {
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: -webkit-linear-gradient(45deg,  rgb(114, 229, 255) 20%, rgb(191, 163, 247) 50%, rgb(153, 140, 254) 60%);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+  }

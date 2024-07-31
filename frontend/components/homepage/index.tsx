@@ -174,7 +174,7 @@ const HompageComponent: React.FC = () => {
         </div>
 
         {/* Our team */}
-        <div>
+        <div className={styles['team-container']}>
           <Title style={{
             fontSize: "3rem",
             marginTop: "6rem",
@@ -196,7 +196,7 @@ const HompageComponent: React.FC = () => {
           </Paragraph>
 
           {/* Team members */}
-          <Flex justify="center" align="flex-start" style={{ marginTop: "4.5rem", gap: "4rem" }}>
+          <Flex justify="center" align="flex-start" style={{ marginTop: "4.5rem", gap: "8rem" }}>
 
             <div className={styles['team-card']}>
               <img className={styles['avatar']} src={Tung.src} alt="tung" />
@@ -215,10 +215,39 @@ const HompageComponent: React.FC = () => {
             </div>
 
           </Flex>
-
         </div>
 
+        {/* Get started */}
+        <div className={styles['get-started-container']}>
+          <Flex justify="space-between" align="center" style={{ gap: "2rem", width: "85%" }}>
 
+            <div>
+
+              <h1 className={styles['get-started-header']}>Ready to get started?</h1>
+
+              <Paragraph style={{
+                fontSize: "1.3rem",
+                marginTop: "1.5rem",
+                textAlign: "left",
+                color: "white",
+              }}>Set up your account, then oversee and monitor your routes
+              </Paragraph>
+            </div>
+
+            <Button
+              onClick={clickHandler}
+              type="primary"
+              style={{
+                fontSize: "1.2rem",
+                padding: "2rem 2.7rem",
+                border: "none",
+                color: COLOR.TEXT,
+                fontWeight: 600,
+                background: "linear-gradient(90deg, hsla(191, 88%, 81%, 1) 0%, hsla(260, 72%, 82%, 1) 50%, hsla(247, 73%, 69%, 1) 100%)"
+              }}>Get started
+            </Button>
+          </Flex>
+        </div>
       </div>
 
     </div>
