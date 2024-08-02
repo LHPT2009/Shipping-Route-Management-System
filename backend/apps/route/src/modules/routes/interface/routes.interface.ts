@@ -1,5 +1,5 @@
-import { Transport } from '../entities/transports.entity';
-import { Location } from '../entities/locations.entity';
+import { Transport } from '../../transports/entity/transports.entity';
+import { Location } from '../../locations/entity/locations.entity';
 
 export enum StatusEnum {
   Progress,

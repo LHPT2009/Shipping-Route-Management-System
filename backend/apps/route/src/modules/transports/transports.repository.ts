@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Transport } from '../database/entities/transports.entity';
+import { Transport } from './entity/transports.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 

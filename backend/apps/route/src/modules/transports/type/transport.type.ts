@@ -2,9 +2,7 @@ import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
 import {
   VehicleTypeEnum,
   ShippingTypeEnum,
-  TransportInterface,
 } from '../interface/transports.interface';
-import { RouteType } from './routes.type';
 
 registerEnumType(VehicleTypeEnum, {
   name: 'VehicleTypeEnum',
@@ -15,7 +13,7 @@ registerEnumType(ShippingTypeEnum, {
 });
 
 @ObjectType()
-export class TransportType implements TransportInterface {
+export class Transport {
   @Field(() => ID)
   id: string;
 
@@ -30,7 +28,4 @@ export class TransportType implements TransportInterface {
 
   @Field()
   license_plate: string;
-
-  @Field(() => RouteType, { nullable: true })
-  routes: RouteType;
 }
