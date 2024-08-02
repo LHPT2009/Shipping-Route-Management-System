@@ -1,4 +1,4 @@
-import { Route } from '../entities/routes.entity';
+import { Route } from '../../routes/entity/routes.entity';
 
 export default interface LocationInterface {
   id: string;

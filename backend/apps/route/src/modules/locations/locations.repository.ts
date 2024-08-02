@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Location } from '../database/entities/locations.entity';
+import { Location } from './entity/locations.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 

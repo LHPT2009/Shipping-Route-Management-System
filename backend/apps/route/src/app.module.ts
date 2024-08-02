@@ -2,9 +2,9 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 //entities
-import { Route } from './modules/database/entities/routes.entity';
-import { Location } from './modules/database/entities/locations.entity';
-import { Transport } from './modules/database/entities/transports.entity';
+import { Route } from './modules/routes/entity/routes.entity';
+import { Location } from './modules/locations/entity/locations.entity';
+import { Transport } from './modules/transports/entity/transports.entity';
 
 //modules
 import { RoutesModule } from './modules/routes/routes.module';
@@ -19,7 +19,6 @@ import {
 import { HealthModule } from './modules/health/health.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { TransportsModule } from './modules/transports/transports.module';
-import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
   imports: [
@@ -49,7 +48,6 @@ import { DatabaseModule } from './modules/database/database.module';
     RoutesModule,
     LocationsModule,
     TransportsModule,
-    DatabaseModule,
   ],
   controllers: [],
   providers: [],
