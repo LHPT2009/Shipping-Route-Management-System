@@ -1,7 +1,8 @@
 import { Repository } from 'typeorm';
-import { TransportEntity } from '../database/entities/transports.entity';
+// import { TransportEntity } from './entity/transports.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TransportEntity } from './entity/transports.entity';
 
 @Injectable()
 export class TransportRepository extends Repository<TransportEntity> {

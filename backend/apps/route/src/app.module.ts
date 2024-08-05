@@ -2,9 +2,6 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 //entities
-import { Route } from './modules/database/entities/routes.entity';
-import { Location } from './modules/database/entities/locations.entity';
-import { TransportEntity } from './modules/database/entities/transports.entity';
 
 //modules
 import { RoutesModule } from './modules/routes/routes.module';
@@ -22,6 +19,9 @@ import { TransportsModule } from './modules/transports/transports.module';
 import { DatabaseModule } from './modules/database/database.module';
 // import { KafkaConsumerService } from './kafka_consumer.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { Route } from './modules/routes/entity/routes.entity';
+import { TransportEntity } from './modules/transports/entity/transports.entity';
+import { Location } from './modules/locations/entity/locations.entity';
 
 @Module({
   imports: [
@@ -51,24 +51,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     RoutesModule,
     LocationsModule,
     TransportsModule,
-    DatabaseModule,
-    
-    // ClientsModule.register([
-    //   {
-    //     name: 'KAFKA_SERVICE',
-    //     transport: Transport.KAFKA,
-    //     options: {
-    //       client: {
-    //         clientId: '123',
-    //         brokers: ['kafka:9092'],
-    //       },
-    //       consumer: {
-    //         groupId: 'test',
-    //       },
-    //     },
-    //   }
-
-    // ]),
   ],
   controllers: [],
   providers: [],

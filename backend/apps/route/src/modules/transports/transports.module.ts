@@ -1,11 +1,17 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TransportsService } from './transports.service';
 import { TransportsResolver } from './transports.resolver';
-import { DatabaseModule } from '../database/database.module';
+import { TransportRepository } from './transports.repository';
+import { RoutesModule } from '../routes/routes.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TransportEntity } from './entity/transports.entity';
 
 @Module({
-  imports: [DatabaseModule],
-  providers: [TransportsService, TransportsResolver],
+  imports: [
+    forwardRef(() => RoutesModule),
+    TypeOrmModule.forFeature([TransportEntity]),
+  ],
+  providers: [TransportsService, TransportsResolver, TransportRepository],
   exports: [TransportsService],
 })
 export class TransportsModule {}
