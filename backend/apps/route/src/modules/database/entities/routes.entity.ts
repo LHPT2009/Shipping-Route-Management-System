@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Location } from './locations.entity';
-import { Transport } from './transports.entity';
+import { TransportEntity } from './transports.entity';
 import RouteInterface, { StatusEnum } from '../interface/routes.interface';
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 
@@ -47,10 +47,10 @@ export class Route implements RouteInterface {
   @Column()
   distance: number;
 
-  @Field(() => Transport)
-  @ManyToOne(() => Transport, (transport) => transport.routes, { eager: true })
+  @Field(() => TransportEntity)
+  @ManyToOne(() => TransportEntity, (transport) => transport.routes, { eager: true })
   @JoinColumn({ name: 'transport_id' })
-  transport: Transport;
+  transport: TransportEntity;
 
   @Field(() => StatusEnum)
   @Column({

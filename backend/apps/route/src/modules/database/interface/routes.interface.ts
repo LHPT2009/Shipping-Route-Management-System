@@ -1,4 +1,4 @@
-import { Transport } from '../entities/transports.entity';
+import { TransportEntity } from '../entities/transports.entity';
 import { Location } from '../entities/locations.entity';
 
 export enum StatusEnum {
@@ -15,6 +15,6 @@ export default interface RouteInterface {
   arrival: Location;
   arrival_time: Date;
   distance: number;
-  transport: Transport;
+  transport: TransportEntity;
   status: StatusEnum;
 }

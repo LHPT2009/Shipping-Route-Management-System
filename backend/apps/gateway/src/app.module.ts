@@ -5,10 +5,12 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { authContext } from './auth.context';
+import { KafkaModule } from './kafka.module';
 
 
 @Module({
   imports: [
+    KafkaModule,
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {

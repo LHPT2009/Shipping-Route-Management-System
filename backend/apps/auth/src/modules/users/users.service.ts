@@ -89,7 +89,7 @@ export class UsersService {
         message: ["User not found"],
       };
     }
-    
+
     else {
       user.active = true;
       await this.userRepository.save(user);
@@ -163,5 +163,12 @@ export class UsersService {
 
   async findById(id: string): Promise<User> {
     return this.userRepository.findOneBy({ id: id });
+  }
+
+  async getRole(userId: string): Promise<any> {
+    return {
+      success: true,
+      message: ["Get roles successfully"],
+    };
   }
 }

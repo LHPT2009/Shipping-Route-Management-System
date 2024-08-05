@@ -20,6 +20,9 @@ import { databaseConfig } from './config/database.config';
 import { HealthModule } from './modules/health/health.module';
 import { Role } from './modules/users/entity/role.entity';
 import { Permission } from './modules/users/entity/permission.entity';
+// import { KafkaModule } from './kafka.module';
+// import { KafkaProducerService } from './kafka_producer.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -29,8 +32,8 @@ import { Permission } from './modules/users/entity/permission.entity';
       database: process.env.POSTGRES_DB,
       host: process.env.POSTGRES_HOST,
       port: parseInt(process.env.POSTGRES_PORT),
-      username:  process.env.POSTGRES_USER,
-      password:  process.env.POSTGRES_PASSWORD,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
       entities: [User, Role, Permission],
       synchronize: true,
     }),
@@ -43,13 +46,29 @@ import { Permission } from './modules/users/entity/permission.entity';
       // plugins: [ApolloServerPluginInlineTrace()],
 
     }),
-    
     HealthModule,
     AuthModule,
     UsersModule,
+    // ClientsModule.register([
+    //   {
+    //     name: 'KAFKA_SERVICE',
+    //     transport: Transport.KAFKA,
+    //     options: {
+    //       client: {
+    //         clientId: '123',
+    //         brokers: ['kafka:9092'],
+    //       },
+    //       consumer: {
+    //         groupId: 'test',
+    //       },
+    //     },
+    //   }
+
+    // ]),
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: []
 })
 export class AppModule implements NestModule {
   constructor(/*private dataSource: DataSource*/) {

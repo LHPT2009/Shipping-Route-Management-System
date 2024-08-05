@@ -32,6 +32,17 @@ export class AuthResolver {
     return this.authService.login(loginInput);
   }
 
+  @Query(() => SignupResponse)
+  getRole(
+    // @Args('userId')
+    // userId: LoginInput,
+  ): SignupResponse {
+    return {
+      success: true,
+      message: ['Get ok']
+    };
+  }
+
   // @ResolveReference()
   // resolveReference(reference: { __typename: string; id: string }) {
   //   console.log('resolveReference in auth', reference.id);

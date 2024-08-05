@@ -17,7 +17,7 @@ registerEnumType(ShippingTypeEnum, {
 
 @ObjectType()
 @Entity('transports')
-export class Transport implements TransportInterface {
+export class TransportEntity implements TransportInterface {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: string;
@@ -47,4 +47,5 @@ export class Transport implements TransportInterface {
   @Field(() => Route, { nullable: true })
   @OneToMany(() => Route, (route) => route.transport)
   routes: Route;
+  static KAFKA: TransportEntity;
 }

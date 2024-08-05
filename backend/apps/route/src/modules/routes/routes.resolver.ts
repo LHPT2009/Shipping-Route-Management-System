@@ -10,15 +10,24 @@ import {
 import { RoutesService } from './routes.service';
 // import { RouteType } from '../database/types/routes.type';
 import { Route } from '../database/entities/routes.entity';
+import { MessageStore } from './messages.store';
 
 @Resolver(() => Route)
 export class RoutesResolver {
-  constructor(private routesService: RoutesService) {}
+  constructor(
+    private routesService: RoutesService,
+    private readonly messageStore: MessageStore
+  ) {}
 
-  @Query(() => Route)
-  async getRoutes(): Promise<Route[]> {
-    return this.routesService.findAll();
-  }
+  // @Query(() => Route)
+  // async getRoutes(): Promise<Route[]> {
+  //   return this.routesService.findAll();
+  // }
+  
+  // @Query(() => [String])
+  // async getMessages(@Args('topic') topic: string): Promise<any[]> {
+  //   return this.messageStore.getMessages(topic);
+  // }
 
   // @Query((returns) => [Route])
   // @UseGuards(AuthGuard)
