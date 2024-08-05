@@ -25,7 +25,7 @@ const LayoutAuthComponent: React.FC<ChildrenComponentProps> = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: COLOR.BACKGROUND,
+          background: "linear-gradient(45deg, #e0f2fe, #ede9fe)"
         }}
       >
         <Content>{children}</Content>
