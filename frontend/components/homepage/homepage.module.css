@@ -125,7 +125,7 @@
 .for-manager-header {
     font-size: 1rem;
     font-weight: 700;
-    background: -webkit-linear-gradient(45deg, rgb(72, 203, 250) 10%, rgb(184, 152, 248) 30%, rgb(125, 109, 246) 70% );
+    background: -webkit-linear-gradient(45deg, rgb(29, 195, 255) 20%, rgb(104, 84, 253) 60% );
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
@@ -142,4 +142,13 @@
     font-size: 1rem;
     font-weight: 700;
     color: #7048e8;
+}
+
+.for-top-title-header{
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: -webkit-linear-gradient(45deg, rgb(27, 194, 255) 35%, rgb(116, 97, 255) 50% );
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    margin-top: 10rem;
 }

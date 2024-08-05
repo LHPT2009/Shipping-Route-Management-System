@@ -47,11 +47,12 @@ const HompageComponent: React.FC = () => {
 
         {/* Title */}
         <div className={styles['title-container']}>
-          <Title level={4} style={{ color: COLOR.PRIMARY, marginTop: "10rem", }}>For shipping route management services</Title>
+
+          <h5 className={styles['for-top-title-header']}>For shipping route management services</h5>
 
           <Title style={{
             fontSize: "4.5rem",
-            marginTop: "1rem",
+            marginTop: "2rem",
             fontWeight: 700,
             color: COLOR.TEXT
           }}>Be the best route management business in your town</Title>
