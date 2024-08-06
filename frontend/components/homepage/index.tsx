@@ -27,13 +27,14 @@ import BuildingIcon from '../../public/svg/homepage/building.svg';
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 
 
 const { Title, Text, Paragraph } = Typography;
 
 const HompageComponent: React.FC = () => {
-
+  
   const router = useRouter();
 
   const clickHandler = () => {
@@ -107,7 +108,7 @@ const HompageComponent: React.FC = () => {
         </div>
 
         {/* Description customers*/}
-        <div className={styles['description-container']} style={{ marginTop: "6rem", border: "2px solid #e9ecef" }}>
+        <div className={styles['description-container']} style={{ marginTop: "6rem", border: "2px solid #dee2e6" }}>
           <img className={styles['img-container-customer']} src={Map.src} alt="route-description" />
           <div className={styles['content-container-customer']}>
 
@@ -147,11 +148,11 @@ const HompageComponent: React.FC = () => {
         </div>
 
         {/* Description managers*/}
-        <div className={styles['description-container']} style={{ marginTop: "6rem" }}>
+        <div className={styles['description-container']} style={{ marginTop: "6rem", border: "2px solid #dee2e6" }}>
           <div className={styles['content-container']}>
 
-            <div className={styles['for-manager-container']}>
-              <h5 className={styles['for-manager-header']}>For managers</h5>
+            <div className={styles['for-customer-container']}>
+              <h5 className={styles['for-customer-header']}>For managers</h5>
             </div>
 
             <Title style={{

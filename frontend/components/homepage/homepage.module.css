@@ -1,11 +1,12 @@
 .wrapper {
-    width: 100%;
-    margin-top: 4rem;
+    width: 90rem;
+    /* width: 100vw; */
+    margin: 4rem auto;
     text-align: center;
 }
 
 .body-container {
-    height: 100%;
+    /* height: 100%; */
 }
 
 .img-routing {
@@ -32,7 +33,8 @@
 }
 
 .content-container {
-    background: linear-gradient(90deg, rgb(209, 247, 255) 0%, rgb(236, 228, 251) 50%, rgb(217, 212, 251) 100%);
+    /* background: linear-gradient(90deg, rgb(209, 247, 255) 0%, rgb(236, 228, 251) 50%, rgb(217, 212, 251) 100%); */
+    background: white;
     width: 60%;
     border-radius: 1.7rem 0 0 1.7rem;
     padding: 5rem 4rem;
@@ -114,7 +116,7 @@
     -webkit-background-clip: text;
 }
 
-.for-manager-container{
+.for-manager-container {
     padding: 0.5rem 1.5rem;
     background: white;
     display: flex;
@@ -125,12 +127,12 @@
 .for-manager-header {
     font-size: 1rem;
     font-weight: 700;
-    background: -webkit-linear-gradient(45deg, rgb(2, 157, 229) 20%, rgb(104, 84, 253) 60% );
+    background: -webkit-linear-gradient(45deg, rgb(2, 157, 229) 20%, rgb(104, 84, 253) 60%);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
 
-.for-customer-container{
+.for-customer-container {
     padding: 0.5rem 1.5rem;
     background: linear-gradient(90deg, rgb(193, 244, 254) 0%, rgb(236, 228, 251) 50%, rgb(202, 195, 253) 100%);
     display: flex;
@@ -144,10 +146,10 @@
     color: #352f93;
 }
 
-.for-top-title-header{
+.for-top-title-header {
     font-size: 1.5rem;
     font-weight: 700;
-    background: -webkit-linear-gradient(45deg, rgb(2, 157, 229) 35%, rgb(116, 97, 255) 50% );
+    background: -webkit-linear-gradient(45deg, rgb(2, 157, 229) 35%, rgb(116, 97, 255) 50%);
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
     margin-top: 10rem;
