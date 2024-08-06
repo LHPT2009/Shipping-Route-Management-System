@@ -1,27 +1,34 @@
-import { Args, Mutation, Resolver, Query, ResolveReference } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Resolver,
+  Query,
+  ResolveReference,
+} from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignupInput } from './dto/signup.input';
 import { SignupResponse } from './types/signup.types';
 import { LoginInput } from './dto/login.input';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginResponse } from './types/login.types';
+import { ResponseUnion } from '../../common/dto/responseUnion';
 // import { User } from './types/user.types';
 
 @Resolver()
 export class AuthResolver {
   constructor(
-    private userService: UsersService,
+    private userService: UserService,
     private authService: AuthService,
   ) {}
 
-  @Mutation((SignupInput) => SignupResponse)
+  @Mutation(() => ResponseUnion)
   // @UseGuards(AuthGuard)
   signup(
     @Args('signupInput')
     signupInput: SignupInput,
-  ): Promise<SignupResponse> {
+  ): Promise<typeof ResponseUnion> {
     return this.userService.create(signupInput);
   }
   @Query((LoginInput) => LoginResponse)

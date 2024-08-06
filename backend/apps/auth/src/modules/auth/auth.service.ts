@@ -3,19 +3,17 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
 import { LoginInput } from './dto/login.input';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { LoginResponse } from './types/login.types';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UsersService,
+    private userService: UserService,
     private jwtService: JwtService,
   ) {}
 
-  async login(
-    loginDTO: LoginInput,
-  ): Promise<LoginResponse> {
+  async login(loginDTO: LoginInput): Promise<LoginResponse> {
     const user = await this.userService.findOne(loginDTO); // 1.
 
     const passwordMatched = await bcrypt.compare(

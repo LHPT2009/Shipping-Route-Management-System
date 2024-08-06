@@ -2,14 +2,15 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 //entities
-import { Route } from './modules/routes/entity/routes.entity';
-import { Location } from './modules/locations/entity/locations.entity';
-import { Transport } from './modules/transports/entity/transports.entity';
+import { RouteEntity } from './modules/route/entity/routes.entity';
+import { LocationEntity } from './modules/location/entity/locations.entity';
+import { TransportEntity } from './modules/transport/entity/transports.entity';
 
 //modules
-import { RoutesModule } from './modules/routes/routes.module';
+import { RouteModule } from './modules/route/route.module';
 
 //graphql
+import { GraphQLError } from 'graphql';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from '@nestjs/config';
 import {
@@ -17,8 +18,9 @@ import {
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
 import { HealthModule } from './modules/health/health.module';
-import { LocationsModule } from './modules/locations/locations.module';
-import { TransportsModule } from './modules/transports/transports.module';
+import { LocationModule } from './modules/location/location.module';
+import { TransportModule } from './modules/transport/transport.module';
+import { ResponseErrorDto } from './common/dto/responseError.dto';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { TransportsModule } from './modules/transports/transports.module';
       port: parseInt(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
-      entities: [Route, Location, Transport],
+      entities: [RouteEntity, LocationEntity, TransportEntity],
       synchronize: true,
     }),
 
@@ -42,12 +44,44 @@ import { TransportsModule } from './modules/transports/transports.module';
       buildSchemaOptions: {
         // orphanedTypes: [User],
       },
+      // formatError: (error: GraphQLError) => {
+      //   const originalError = error.extensions?.exception as {
+      //     response?: { statusCode: number; message: string[]; error: string };
+      //   };
+
+      //   const responseError = new ResponseErrorDto();
+
+      //   if (
+      //     originalError?.response?.statusCode === 400 &&
+      //     Array.isArray(originalError.response.message)
+      //   ) {
+      //     // Format validation error messages
+      //     const formattedMessages = originalError.response.message
+      //       .map((msg) => {
+      //         // Customize how you want to format the message here if needed
+      //         return msg;
+      //       })
+      //       .join(', ');
+
+      //     responseError.setStatus(originalError.response.statusCode);
+      //     responseError.setMessage(formattedMessages);
+      //     responseError.setError(
+      //       originalError.response.error || 'Validation Error',
+      //     );
+      //   } else {
+      //     responseError.setStatus(500); // Default status code if not provided
+      //     responseError.setMessage(`${error.name} - ${error.message}`);
+      //     responseError.setError('Internal Server Error');
+      //   }
+
+      //   return responseError;
+      // },
     }),
 
     HealthModule,
-    RoutesModule,
-    LocationsModule,
-    TransportsModule,
+    RouteModule,
+    LocationModule,
+    TransportModule,
   ],
   controllers: [],
   providers: [],
