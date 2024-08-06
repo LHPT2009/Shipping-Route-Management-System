@@ -12,6 +12,8 @@ import styles from "./login.module.scss";
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { passwordRegex } from "@/utils/validation/password.regex";
+import { emailRegex } from "@/utils/validation/email.regex";
 
 const { Title, Text } = Typography;
 
@@ -35,14 +37,20 @@ const LoginPage = () => {
     extraLarge,
     extraExtraLarge
   );
-  
+
   // Validate Yup
   const schema = yup
     .object({
-      username: yup.string().required("Please enter your email"),
-      password: yup.string().required("Please enter your password"),
+      username: yup
+        .string()
+        .required("Please enter your username"),
+      password: yup
+        .string()
+        .required("Please enter your password"),
     })
     .required();
+  
+  //useFrom hook
   const {
     control,
     handleSubmit,
@@ -52,8 +60,8 @@ const LoginPage = () => {
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
-  return (
 
+  return (
     <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
       <Form
         initialValues={{ remember: true }}

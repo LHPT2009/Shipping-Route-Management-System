@@ -1,13 +1,9 @@
 .wrapper {
-    width: 90rem;
-    /* width: 100vw; */
     margin: 4rem auto;
     text-align: center;
 }
 
-.body-container {
-    /* height: 100%; */
-}
+
 
 .img-routing {
     width: 31%;
@@ -85,8 +81,9 @@
 .similar-website-container,
 .description-container,
 .team-container,
-.get-started-container {
-    width: 74%;
+.get-started-container,
+.support-content {
+    width: 66rem;
     margin: 0 auto;
 }
 

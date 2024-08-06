@@ -16,6 +16,8 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
+import { emailRegex } from "@/utils/validation/email.regex";
+import { passwordRegex } from "@/utils/validation/password.regex";
 
 const { Text, Title } = Typography;
 
@@ -41,13 +43,24 @@ const RegisterPage = () => {
 
   const schema = yup
     .object({
-      fullname: yup.string().required("Please enter your fullname"),
-      birthday: yup.string().required("Please enter your birthday"),
-      phoneNumber: yup.string().required("Please enter your phone number"),
-      username: yup.string().required("Please enter your username"),
-      email: yup.string().required("Please enter your email"),
-      password: yup.string().required("Please enter your username"),
-      confirmPassword: yup.string().required("Please enter your confirm password"),
+      username: yup
+        .string()
+        .required("Please enter your username"),
+
+      email: yup
+        .string()
+        .matches(emailRegex, { message: "Please enter a valid email" })
+        .required("Please enter your email"),
+
+      password: yup
+        .string()
+        .matches(passwordRegex, { message: "Please enter a stronger password (Min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit)" })
+        .required("Please enter your password"),
+
+      confirmPassword: yup
+        .string()
+        .oneOf([yup.ref("password")], "Confirm password must match password")
+        .required("Please enter your confirm password"),
     })
     .required();
   const {
@@ -89,37 +102,11 @@ const RegisterPage = () => {
           marginTop: "0.9rem"
         }}>Fill out the form below to get started using S-Routing</Paragraph>
 
-        {/* Fullname */}
-        <Form.Item
-          label="Fullname"
-          name="fullname"
-          style={{ paddingBottom: errors.fullname ? "1rem" : 0, marginTop: "2rem", marginBottom: "1rem" }}
-          help={
-            errors.fullname && (
-              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.fullname?.message}</span>
-            )
-          }
-        >
-          <Controller
-            name="fullname"
-            control={control}
-            render={({ field }) => (
-              <Input
-                key="fullname"
-                {...field}
-                placeholder={"Enter your fullname"}
-                prefix={<FormOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
-                style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
-              />
-            )}
-          />
-        </Form.Item>
-
         {/* Username */}
         <Form.Item
           label="Username"
           name="username"
-          style={{ paddingBottom: errors.username ? "1rem" : 0, marginBottom: "1rem" }}
+          style={{ paddingBottom: errors.username ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "2rem" }}
           help={
             errors.username && (
               <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.username?.message}</span>
@@ -145,7 +132,7 @@ const RegisterPage = () => {
         <Form.Item
           label="Email"
           name="email"
-          style={{ paddingBottom: errors.email ? "1rem" : 0, marginBottom: "1rem" }}
+          style={{ paddingBottom: errors.email ? "1rem" : 0, marginBottom: "1.2rem" }}
           help={
             errors.email && (
               <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.email?.message}</span>
@@ -171,7 +158,7 @@ const RegisterPage = () => {
         <Form.Item
           label="Password"
           name="password"
-          style={{ paddingBottom: errors.password ? "1rem" : 0, marginBottom: "1rem" }}
+          style={{ paddingBottom: errors.password ? "1rem" : 0, marginBottom: "1.2rem" }}
           help={
             errors.password && (
               <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.password?.message}</span>
@@ -182,22 +169,24 @@ const RegisterPage = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input
+              <Input.Password
                 key="password"
                 {...field}
                 placeholder={"Enter your password"}
                 prefix={<LockOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                type="password"
                 style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
               />
             )}
           />
         </Form.Item>
 
+
         {/* Confirm Password */}
         <Form.Item
           label="Confirm password"
           name="confirmPassword"
-          style={{ paddingBottom: errors.confirmPassword ? "1rem" : 0, marginBottom: "1rem" }}
+          style={{ paddingBottom: errors.confirmPassword ? "1rem" : 0, marginBottom: "1.2rem" }}
           help={
             errors.confirmPassword && (
               <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.confirmPassword?.message}</span>
@@ -208,8 +197,9 @@ const RegisterPage = () => {
             name="confirmPassword"
             control={control}
             render={({ field }) => (
-              <Input
+              <Input.Password
                 key="confirmPassword"
+                type="password"
                 {...field}
                 placeholder={"Enter your password again"}
                 prefix={<LockOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
