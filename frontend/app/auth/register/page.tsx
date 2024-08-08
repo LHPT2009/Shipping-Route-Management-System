@@ -2,16 +2,22 @@
 import { COLOR } from "@/constant";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import {
+  FormOutlined,
+  KeyOutlined,
   LockOutlined,
   MailOutlined,
   PhoneOutlined,
+  SignatureOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Row, Col, Form, Input, Button, Typography, DatePicker } from "antd";
+import { Row, Col, Form, Input, Button, Typography, DatePicker, Flex, Checkbox } from "antd";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Paragraph from "antd/es/typography/Paragraph";
+import { emailRegex } from "@/utils/validation/email.regex";
+import { passwordRegex } from "@/utils/validation/password.regex";
 
 const { Text, Title } = Typography;
 
@@ -37,15 +43,27 @@ const RegisterPage = () => {
 
   const schema = yup
     .object({
-      username: yup.string().required("Required Username!!!"),
-      password: yup.string().required("Required Password!!!"),
-      rePassword: yup.string().required("Required RePassword!!!"),
-      fullname: yup.string().required("Required Fullname!!!"),
-      birthday: yup.string().required("Required Birthday!!!"),
-      phoneNumber: yup.string().required("Required PhoneNumber!!!"),
-      email: yup.string().required("Required Email!!!"),
+      username: yup
+        .string()
+        .required("Please enter your username"),
+
+      email: yup
+        .string()
+        .matches(emailRegex, { message: "Please enter a valid email" })
+        .required("Please enter your email"),
+
+      password: yup
+        .string()
+        .matches(passwordRegex, { message: "Please enter a stronger password (Min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit)" })
+        .required("Please enter your password"),
+
+      confirmPassword: yup
+        .string()
+        .oneOf([yup.ref("password")], "Confirm password must match password")
+        .required("Please enter your confirm password"),
     })
     .required();
+
   const {
     control,
     handleSubmit,
@@ -57,246 +75,176 @@ const RegisterPage = () => {
   };
 
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: !responsive ? "100vh" : "auto",
-          width: "100vw",
-        }}
-      >
-        <Form
-          layout="vertical"
-          initialValues={{ remember: true }}
-          style={{
-            width: "1000px",
-            height: "auto",
-            padding: "24px",
-            margin: "24px",
-            borderRadius: "8px",
-            backgroundColor: COLOR.BACKGROUNDBODY,
-          }}
-          size="large"
-          onFinish={handleSubmit(onFinish)}
-        >
-          <Row gutter={[16, 16]}>
-            <Col
-              xs={24}
-              sm={24}
-              md={24}
-              lg={24}
-              xl={24}
-              xxl={24}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Title level={1}>Register</Title>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item
-                label="Username"
-                name="username"
-                help={
-                  errors.username && (
-                    <span style={{ color: "red" }}>
-                      {errors.username?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="username"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      key="username"
-                      {...field}
-                      placeholder={"Username..."}
-                      prefix={<UserOutlined />}
-                      style={{ width: "100%", borderRadius: "8px" }}
-                      size="large"
-                    />
-                  )}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Password"
-                name="password"
-                help={
-                  errors.password && (
-                    <span style={{ color: "red" }}>
-                      {errors.password?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <Input.Password
-                      key="password"
-                      {...field}
-                      placeholder={"Password..."}
-                      prefix={<LockOutlined />}
-                      style={{ width: "100%", borderRadius: "8px" }}
-                      size="large"
-                    />
-                  )}
-                />
-              </Form.Item>
-              <Form.Item
-                label="RePassword"
-                name="rePassword"
-                help={
-                  errors.password && (
-                    <span style={{ color: "red" }}>
-                      {errors.rePassword?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="rePassword"
-                  control={control}
-                  render={({ field }) => (
-                    <Input.Password
-                      key="rePassword"
-                      {...field}
-                      placeholder={"RePassword..."}
-                      prefix={<LockOutlined />}
-                      style={{ width: "100%", borderRadius: "8px" }}
-                      size="large"
-                    />
-                  )}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Fullname"
-                name="fullname"
-                help={
-                  errors.fullname && (
-                    <span style={{ color: "red" }}>
-                      {errors.fullname?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="fullname"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      key="fullname"
-                      {...field}
-                      placeholder={"Fullname..."}
-                      style={{ width: "100%", borderRadius: "8px" }}
-                      size="large"
-                    />
-                  )}
-                />
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-              <Form.Item
-                label="Birthday"
-                name="birthday"
-                help={
-                  errors.birthday && (
-                    <span style={{ color: "red" }}>
-                      {errors.birthday?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="birthday"
-                  control={control}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      style={{ width: "50%", borderRadius: "8px" }}
-                      placeholder="Birthday..."
-                    />
-                  )}
-                />
-              </Form.Item>
-              <Form.Item
-                label="PhoneNumber"
-                name="phoneNumber"
-                help={
-                  errors.phoneNumber && (
-                    <span style={{ color: "red" }}>
-                      {errors.phoneNumber?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="phoneNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      key="phoneNumber"
-                      {...field}
-                      placeholder={"PhoneNumber..."}
-                      prefix={<PhoneOutlined />}
-                      style={{ width: "100%", borderRadius: "8px" }}
-                      size="large"
-                    />
-                  )}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Email"
-                name="email"
-                help={
-                  errors.email && (
-                    <span style={{ color: "red" }}>
-                      {errors.email?.message}
-                    </span>
-                  )
-                }
-              >
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      key="email"
-                      {...field}
-                      placeholder={"Email..."}
-                      prefix={<MailOutlined />}
-                      style={{ width: "100%", borderRadius: "8px" }}
-                      size="large"
-                    />
-                  )}
-                />
-              </Form.Item>
 
-              <Form.Item label="Click here to complete">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ width: "100%", borderRadius: "8px" }}
-                >
-                  Submit
-                </Button>
-                <Text>
-                  {" "}
-                  back <Link href="/auth/login">login now!</Link>
-                </Text>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </div>
-    </>
+    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+      <Form
+        layout="vertical"
+        initialValues={{ remember: true }}
+        style={{
+          width: "35rem",
+          height: "auto",
+          padding: "3rem 3rem 1rem 3rem",
+          margin: "2rem 0",
+          borderRadius: "1rem",
+          backgroundColor: COLOR.BACKGROUNDBODY,
+          textAlign: "left",
+        }}
+        onFinish={handleSubmit(onFinish)}
+      >
+        <Title style={{
+          fontSize: "2.2rem",
+          fontWeight: 700,
+          color: COLOR.TEXT,
+          marginBottom: 0
+        }}>Create your account</Title>
+
+        <Paragraph style={{
+          fontSize: "1.1rem",
+          marginTop: "0.9rem"
+        }}>Fill out the form below to get started using S-Routing</Paragraph>
+
+        {/* Username */}
+        <Form.Item
+          label="Username"
+          name="username"
+          style={{ paddingBottom: errors.username ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "2rem" }}
+          help={
+            errors.username && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.username?.message}</span>
+            )
+          }
+        >
+          <Controller
+            name="username"
+            control={control}
+            render={({ field }) => (
+              <Input
+                key="username"
+                {...field}
+                placeholder={"Enter your username"}
+                prefix={<UserOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
+              />
+            )}
+          />
+        </Form.Item>
+
+        {/* Email */}
+        <Form.Item
+          label="Email"
+          name="email"
+          style={{ paddingBottom: errors.email ? "1rem" : 0, marginBottom: "1.2rem" }}
+          help={
+            errors.email && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.email?.message}</span>
+            )
+          }
+        >
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <Input
+                key="email"
+                {...field}
+                placeholder={"Enter your email"}
+                prefix={<MailOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
+              />
+            )}
+          />
+        </Form.Item>
+
+        {/* Password */}
+        <Form.Item
+          label="Password"
+          name="password"
+          style={{ paddingBottom: errors.password ? "1rem" : 0, marginBottom: "1.2rem" }}
+          help={
+            errors.password && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.password?.message}</span>
+            )
+          }
+        >
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <Input.Password
+                key="password"
+                {...field}
+                placeholder={"Enter your password"}
+                prefix={<LockOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                type="password"
+                style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
+              />
+            )}
+          />
+        </Form.Item>
+
+
+        {/* Confirm Password */}
+        <Form.Item
+          label="Confirm password"
+          name="confirmPassword"
+          style={{ paddingBottom: errors.confirmPassword ? "1rem" : 0, marginBottom: "1.2rem" }}
+          help={
+            errors.confirmPassword && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.confirmPassword?.message}</span>
+            )
+          }
+        >
+          <Controller
+            name="confirmPassword"
+            control={control}
+            render={({ field }) => (
+              <Input.Password
+                key="confirmPassword"
+                type="password"
+                {...field}
+                placeholder={"Enter your password again"}
+                prefix={<LockOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
+              />
+            )}
+          />
+        </Form.Item>
+
+        <Form.Item style={{ display: "flex", alignItems: "flex-start", marginTop: "1.5rem" }}>
+          <Checkbox>
+            I understand and agree to {" "}
+            <span style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Terms</span> and {" "}
+            <span style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Privacy Policy </span>
+          </Checkbox>
+        </Form.Item>
+
+        {/* Button register*/}
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "2rem" }}
+          >
+            Register
+          </Button>
+        </Form.Item>
+
+        <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
+          <Text style={{ fontSize: "0.95rem", color: "grey" }}>
+            Already have an account? {" "}
+            <Link href={"/auth/login"} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Login</Link>
+          </Text>
+        </Form.Item>
+      </Form>
+    </Flex>
+
+    // <DatePicker
+    //   {...field}
+    //   style={{ width: "50%", borderRadius: "8px" }}
+    //   placeholder="Birthday..."
+    // />
+
   );
 };
 

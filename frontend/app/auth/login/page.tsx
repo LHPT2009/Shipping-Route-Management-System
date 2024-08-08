@@ -11,17 +11,46 @@ import styles from "./login.module.scss";
 
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { passwordRegex } from "@/utils/validation/password.regex";
+import { emailRegex } from "@/utils/validation/email.regex";
 
 const { Title, Text } = Typography;
 
 const LoginPage = () => {
+
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   // Validate Yup
   const schema = yup
     .object({
-      username: yup.string().required("Please enter your email"),
-      password: yup.string().required("Please enter your password"),
+      username: yup
+        .string()
+        .required("Please enter your username"),
+      password: yup
+        .string()
+        .required("Please enter your password"),
     })
     .required();
+  
+  //useFrom hook
   const {
     control,
     handleSubmit,
@@ -31,15 +60,15 @@ const LoginPage = () => {
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
-  return (
 
-    <Flex justify="center" align="center" style={{ minHeight: "100vh", width: "100vw" }}>
+  return (
+    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
       <Form
         initialValues={{ remember: true }}
         style={{
-          width: "35.5%",
-          height: "42rem",
-          padding: "3rem",
+          width: "35rem",
+          padding: "3rem 3rem 1rem 3rem",
+          margin: "2rem 0",
           borderRadius: "1rem",
           backgroundColor: COLOR.BACKGROUNDBODY,
           textAlign: "left",
@@ -75,7 +104,7 @@ const LoginPage = () => {
               <Input
                 key="username"
                 {...field}
-                placeholder={"Enter your email address"}
+                placeholder={"Enter your username or email"}
                 prefix={<UserOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
                 style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
               />
