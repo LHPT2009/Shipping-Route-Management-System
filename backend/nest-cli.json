@@ -10,7 +10,7 @@
     "watchAssets": true
   },
   "monorepo": true,
-  "root": "apps/gateway",
+  "root": "apps/gateway", 
   "projects": {
     "gateway": {
       "type": "application",
@@ -18,7 +18,9 @@
       "entryFile": "main",
       "sourceRoot": "apps/gateway/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/gateway/tsconfig.app.json"
+        "tsConfigPath": "apps/gateway/tsconfig.app.json",
+        "assets": ["**/*.proto"],
+        "watchAssets": true  
       }
     },
     "auth": {
@@ -27,7 +29,9 @@
       "entryFile": "main",
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/auth/tsconfig.app.json"
+        "tsConfigPath": "apps/auth/tsconfig.app.json",
+        "assets": ["**/*.proto"],
+        "watchAssets": true
       }
     },
     "route": {
@@ -36,7 +40,9 @@
       "entryFile": "main",
       "sourceRoot": "apps/route/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/route/tsconfig.app.json"
+        "tsConfigPath": "apps/route/tsconfig.app.json",
+        "assets": ["**/*.proto"],
+        "watchAssets": true
       }
     },
     "notification": {
@@ -45,7 +51,9 @@
       "entryFile": "main",
       "sourceRoot": "apps/notification/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/notification/tsconfig.app.json"
+        "tsConfigPath": "apps/notification/tsconfig.app.json",
+        "assets": ["**/*.proto"],
+        "watchAssets": true
       }
     }
   }

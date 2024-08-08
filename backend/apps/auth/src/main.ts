@@ -1,27 +1,28 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-
+// import auth from "../../../dist/apps/auth/protos/auth";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  console.log("dirname: ", join(__dirname, 'protos/auth.proto'));
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.GRPC,
+    options: {
+      package: 'auth',
+      protoPath: ('./protos/auth.proto'),
+      url: 'localhost:50051',
+    },
+  });
+
+  await app.startAllMicroservices();
+
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
-
-  // app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.GRPC,
-  //   options: {
-  //     package: 'users',
-  //     protoPath: join(__dirname, 'protos/users.proto'),
-  //     url: 'localhost:50051',
-  //   },
-  // });
-  // await app.startAllMicroservices();
-  
   await app.listen(5010);
 }
 bootstrap();
 
-//factory
-//strategies

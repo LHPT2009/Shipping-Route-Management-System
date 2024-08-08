@@ -6,12 +6,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { authContext } from './auth.context';
 import { KafkaModule } from './kafka.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
-
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     KafkaModule,
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
@@ -23,15 +22,15 @@ import { join } from 'path';
           subgraphs: [
             {
               name: 'auth',
-              url: 'http://auth_service:5010/graphql',
+              url: `${process.env.AUTH_URL}:5010/graphql`,
             },
             {
               name: 'route',
-              url: 'http://route_service:5020/graphql',
+              url: `${process.env.ROUTE_URL}:5020/graphql`,
             },
             {
               name: 'notification',
-              url: 'http://notification_service:5030/graphql',
+              url: `${process.env.NOTIFICATION_URL}:5030/graphql`,
             },
           ],
         }),

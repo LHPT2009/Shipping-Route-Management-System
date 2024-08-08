@@ -1,0 +1,18 @@
+
+syntax = "proto3";
+
+package auth;
+
+service UserService {
+  rpc GetUserRoleById(UserId) returns (UserRole) {}
+}
+
+message UserId {
+  int32 id = 1;
+}
+
+message UserRole {
+  int32 id = 1;
+  string role = 2;
+  repeated string permissions = 3;
+}
