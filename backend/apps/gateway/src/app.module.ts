@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { authContext } from './auth.context';
 import { KafkaModule } from './kafka.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { join } from 'path';
 
 
 @Module({
@@ -46,6 +48,16 @@ import { KafkaModule } from './kafka.module';
         },
       },
     }),
+    // ClientsModule.register([
+    //   {
+    //     name: 'AUTH_PACKAGE',
+    //     transport: Transport.GRPC,
+    //     options: {
+    //       package: 'auth',
+    //       protoPath: join(__dirname, 'protos/auth.proto'),
+    //     },
+    //   },
+    // ]),
   ],
   controllers: [AppController],
   providers: [AppService],
