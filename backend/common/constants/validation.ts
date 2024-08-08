@@ -1,0 +1,16 @@
+export enum VALIDATION {
+    REQUIRED_FIELD = 'This field is required.',
+    INVALID_EMAIL = 'The email address provided is invalid.',
+    INVALID_PASSWORD = 'Password must contain at least 8 characters, including a number and a special character.',
+    PASSWORDS_DO_NOT_MATCH = 'Passwords do not match.',
+    STRING_TOO_SHORT = 'The provided string is too short.',
+    STRING_TOO_LONG = 'The provided string is too long.',
+    NUMBER_TOO_SMALL = 'The provided number is too small.',
+    NUMBER_TOO_LARGE = 'The provided number is too large.',
+    INVALID_DATE = 'The date provided is invalid.',
+    DATE_OUT_OF_RANGE = 'The provided date is out of allowed range.',
+    INVALID_PHONE_NUMBER = 'The phone number provided is invalid.',
+    INVALID_URL = 'The URL provided is invalid.',
+    INVALID_FORMAT = 'The input format is invalid.',
+    UNAUTHORIZED_ACTION = 'You are not authorized to perform this action.',
+}

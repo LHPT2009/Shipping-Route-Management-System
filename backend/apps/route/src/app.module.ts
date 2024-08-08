@@ -1,10 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 //entities
+import { RouteEntity } from './modules/route/entity/routes.entity';
+import { LocationEntity } from './modules/location/entity/locations.entity';
+import { TransportEntity } from './modules/transport/entity/transports.entity';
 
 //modules
-import { RoutesModule } from './modules/routes/routes.module';
+import { RouteModule } from './modules/route/route.module';
 
 //graphql
 import { GraphQLModule } from '@nestjs/graphql';
@@ -14,14 +17,9 @@ import {
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
 import { HealthModule } from './modules/health/health.module';
-import { LocationsModule } from './modules/locations/locations.module';
-import { TransportsModule } from './modules/transports/transports.module';
-import { DatabaseModule } from './modules/database/database.module';
-// import { KafkaConsumerService } from './kafka_consumer.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { Route } from './modules/routes/entity/routes.entity';
-import { TransportEntity } from './modules/transports/entity/transports.entity';
-import { Location } from './modules/locations/entity/locations.entity';
+import { LocationModule } from './modules/location/location.module';
+import { TransportModule } from './modules/transport/transport.module';
+import CustomFormatError from '../../../common/exception/validation/custom-format-error';
 
 @Module({
   imports: [
@@ -33,7 +31,7 @@ import { Location } from './modules/locations/entity/locations.entity';
       port: parseInt(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
-      entities: [Route, Location, TransportEntity],
+      entities: [RouteEntity, LocationEntity, TransportEntity],
       synchronize: true,
     }),
 
@@ -45,17 +43,15 @@ import { Location } from './modules/locations/entity/locations.entity';
       buildSchemaOptions: {
         // orphanedTypes: [User],
       },
+      formatError: CustomFormatError,
     }),
 
     HealthModule,
-    RoutesModule,
-    LocationsModule,
-    TransportsModule,
+    RouteModule,
+    LocationModule,
+    TransportModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  constructor() {}
-  configure(consumer: MiddlewareConsumer) {}
-}
+export class AppModule { }

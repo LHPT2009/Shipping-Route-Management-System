@@ -5,14 +5,16 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { authContext } from './auth.context';
+<<<<<<< HEAD
+=======
 import { KafkaModule } from './kafka.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+>>>>>>> d5bead99d7808f1774c0b4b87dca8fcbfa2ee858
 
 
 @Module({
   imports: [
-    KafkaModule,
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {
