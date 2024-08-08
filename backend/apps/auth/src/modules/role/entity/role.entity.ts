@@ -17,10 +17,10 @@ export class RoleEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => UserEntity, (user) => user.role)
+  @OneToMany(() => UserEntity, (user) => user.roles)
   users: UserEntity[];
 
-  @ManyToMany(() => PermissionEntity, (permission) => permission.role)
+  @ManyToMany(() => PermissionEntity, (permission) => permission.roles)
   @JoinTable({
     name: 'permissions_roles',
     joinColumn: {

@@ -22,4 +22,4 @@ import { RoleModule } from '../role/role.module';
   providers: [UserService, EmailService, UserResolver, UserRepository],
   exports: [UserService],
 })
-export class UserModule {}
+export class UserModule { }

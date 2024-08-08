@@ -3,7 +3,6 @@ import {
   IsString,
   IsEmail,
   IsBoolean,
-  IsOptional,
 } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 

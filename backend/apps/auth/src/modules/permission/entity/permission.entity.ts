@@ -28,5 +28,5 @@ export class PermissionEntity implements PermissionInterface {
       referencedColumnName: 'id',
     },
   })
-  role: RoleEntity[];
+  roles: RoleEntity[];
 }

@@ -3,11 +3,11 @@ import { PermissionService } from './permission.service';
 import { Permission } from './type/permission.type';
 import { CreatePermissionDto } from './dto/permission-create.dto';
 import { UpdatePermissionDto } from './dto/permission-update.dto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
+import { ResponseUnion } from 'common/response/responseUnion';
 
 @Resolver(() => Permission)
 export class PermissionResolver {
-  constructor(private permissionService: PermissionService) {}
+  constructor(private permissionService: PermissionService) { }
 
   @Query(() => ResponseUnion)
   async getPermissions(): Promise<typeof ResponseUnion> {

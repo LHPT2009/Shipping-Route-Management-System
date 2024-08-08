@@ -1,15 +1,15 @@
-import { IsNotEmpty, IsString, IsArray, IsOptional } from 'class-validator';
-import { Field, InputType } from '@nestjs/graphql';
+import { IsNotEmpty, IsString } from 'class-validator';
+import { Field, InputType, ID } from '@nestjs/graphql';
 
 @InputType()
 export class CreateRoleDto {
+  @Field(() => ID)
+  @IsNotEmpty()
+  @IsString()
+  id: string;
+
   @Field()
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @Field(() => [String], { nullable: true })
-  @IsArray()
-  @IsOptional()
-  permission?: string[];
 }

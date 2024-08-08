@@ -1,25 +1,20 @@
-import {
-  Args,
-  Mutation,
-  Resolver,
-  Query,
-  ResolveReference,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, ID, Args } from '@nestjs/graphql';
 import { UserService } from './user.service';
-// import { UseGuards } from '@nestjs/common';
 import { User } from './types/user.types';
-// import { AuthGuard } from '../auth/guards/auth.guard';
-import { ResponseUnion } from '../../common/dto/responseUnion';
+import { ResponseUnion } from 'common/response/responseUnion';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Query(() => ResponseUnion)
-  // @UseGuards(AuthGuard)
   async getUsers(): Promise<typeof ResponseUnion> {
     return await this.userService.findAll();
+  }
+  @Query(() => ResponseUnion, { nullable: true })
+  async getUser(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<typeof ResponseUnion> {
+    return this.userService.findInfoByID(id);
   }
 }

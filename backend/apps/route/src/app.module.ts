@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 //entities
@@ -10,7 +10,6 @@ import { TransportEntity } from './modules/transport/entity/transports.entity';
 import { RouteModule } from './modules/route/route.module';
 
 //graphql
-import { GraphQLError } from 'graphql';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from '@nestjs/config';
 import {
@@ -20,7 +19,7 @@ import {
 import { HealthModule } from './modules/health/health.module';
 import { LocationModule } from './modules/location/location.module';
 import { TransportModule } from './modules/transport/transport.module';
-import { ResponseErrorDto } from './common/dto/responseError.dto';
+import CustomFormatError from '../../../common/exception/validation/custom-format-error';
 
 @Module({
   imports: [
@@ -44,38 +43,7 @@ import { ResponseErrorDto } from './common/dto/responseError.dto';
       buildSchemaOptions: {
         // orphanedTypes: [User],
       },
-      // formatError: (error: GraphQLError) => {
-      //   const originalError = error.extensions?.exception as {
-      //     response?: { statusCode: number; message: string[]; error: string };
-      //   };
-
-      //   const responseError = new ResponseErrorDto();
-
-      //   if (
-      //     originalError?.response?.statusCode === 400 &&
-      //     Array.isArray(originalError.response.message)
-      //   ) {
-      //     // Format validation error messages
-      //     const formattedMessages = originalError.response.message
-      //       .map((msg) => {
-      //         // Customize how you want to format the message here if needed
-      //         return msg;
-      //       })
-      //       .join(', ');
-
-      //     responseError.setStatus(originalError.response.statusCode);
-      //     responseError.setMessage(formattedMessages);
-      //     responseError.setError(
-      //       originalError.response.error || 'Validation Error',
-      //     );
-      //   } else {
-      //     responseError.setStatus(500); // Default status code if not provided
-      //     responseError.setMessage(`${error.name} - ${error.message}`);
-      //     responseError.setError('Internal Server Error');
-      //   }
-
-      //   return responseError;
-      // },
+      formatError: CustomFormatError,
     }),
 
     HealthModule,
@@ -86,7 +54,4 @@ import { ResponseErrorDto } from './common/dto/responseError.dto';
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  constructor() {}
-  configure(consumer: MiddlewareConsumer) {}
-}
+export class AppModule { }

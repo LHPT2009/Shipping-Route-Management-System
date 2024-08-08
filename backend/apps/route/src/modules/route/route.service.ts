@@ -3,27 +3,28 @@ import { RouteRepository } from './route.repository';
 import { Route } from './type/route.type';
 import { CreateRoutesDto } from './dto/route-create.dto';
 import { UpdateRoutesDto } from './dto/route-update.dto';
-import { ResponseDto } from '../../common/dto/responseDto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
-import { ResponseErrorDto } from '../../common/dto/responseError.dto';
+import { ResponseDto } from '../../../../../common/response/responseDto';
+import { ResponseUnion } from '../../../../../common/response/responseUnion';
+import { ResponseErrorDto } from '../../../../../common/response/responseError.dto';
+import { STATUS, STATUS_CODE } from 'common/constants/status';
 
 @Injectable()
 export class RoutesService {
-  constructor(private routeRepository: RouteRepository) {}
+  constructor(private routeRepository: RouteRepository) { }
 
   async findAll(): Promise<typeof ResponseUnion> {
     const response = new ResponseDto<Route[]>();
     try {
       const routes = await this.routeRepository.find();
-      response.setStatus(200);
-      response.setMessage('routes retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(routes);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('routes retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -35,15 +36,15 @@ export class RoutesService {
     try {
       const route = this.routeRepository.create(createRoutesDto);
       await this.routeRepository.save(route);
-      response.setStatus(200);
-      response.setMessage('routes retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(route);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('routes retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -52,15 +53,15 @@ export class RoutesService {
     const response = new ResponseDto<Route>();
     try {
       const route = await this.routeRepository.findOneBy({ id });
-      response.setStatus(200);
-      response.setMessage('routes retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(route);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('routes retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -80,15 +81,15 @@ export class RoutesService {
       const route = routeResponse.data as Route;
       Object.assign(route, updateRoutesDto);
       await this.routeRepository.save(route);
-      response.setStatus(200);
-      response.setMessage('routes retrieved successfully');
+      response.setStatus(STATUS_CODE.CREATE);
+      response.setMessage(STATUS.CREATE);
       response.setData(route);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('routes retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -97,15 +98,15 @@ export class RoutesService {
     const response = new ResponseDto();
     try {
       await this.routeRepository.delete(id);
-      response.setStatus(200);
-      response.setMessage('Delete Successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData('');
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }

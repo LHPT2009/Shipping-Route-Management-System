@@ -1,6 +1,5 @@
 import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
 import { Field, InputType, ID } from '@nestjs/graphql';
-import { RoleObjectType } from '../../role/type/role.type';
 
 @InputType()
 export class UpdatePermissionDto {

@@ -3,11 +3,11 @@ import { RoutesService } from './route.service';
 import { Route } from './type/route.type';
 import { CreateRoutesDto } from './dto/route-create.dto';
 import { UpdateRoutesDto } from './dto/route-update.dto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
+import { ResponseUnion } from '../../../../../common/response/responseUnion';
 
 @Resolver(() => Route)
 export class RoutesResolver {
-  constructor(private routesService: RoutesService) {}
+  constructor(private routesService: RoutesService) { }
 
   @Query(() => ResponseUnion)
   async getRoutes(): Promise<typeof ResponseUnion> {

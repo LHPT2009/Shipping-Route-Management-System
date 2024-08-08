@@ -38,5 +38,5 @@ export class UserEntity implements UserInterface {
 
   @ManyToOne(() => RoleEntity, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
-  role: RoleEntity;
+  roles: RoleEntity;
 }

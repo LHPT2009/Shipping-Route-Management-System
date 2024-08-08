@@ -3,27 +3,28 @@ import { PermissionRepository } from './permission.repository';
 import { PermissionEntity } from './entity/permission.entity';
 import { CreatePermissionDto } from './dto/permission-create.dto';
 import { UpdatePermissionDto } from './dto/permission-update.dto';
-import { ResponseDto } from '../../common/dto/responseDto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
-import { ResponseErrorDto } from '../../common/dto/responseError.dto';
+import { ResponseDto } from 'common/response/responseDto';
+import { ResponseUnion } from 'common/response/responseUnion';
+import { ResponseErrorDto } from 'common/response/responseError.dto';
+import { STATUS, STATUS_CODE } from "common/constants/status"
 
 @Injectable()
 export class PermissionService {
-  constructor(private permissionRepository: PermissionRepository) {}
+  constructor(private permissionRepository: PermissionRepository) { }
 
   async findAll(): Promise<typeof ResponseUnion> {
     const response = new ResponseDto<PermissionEntity[]>();
     try {
       const permissions = await this.permissionRepository.find();
-      response.setStatus(200);
-      response.setMessage('permissions retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(permissions);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Permissions retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -31,15 +32,15 @@ export class PermissionService {
     const response = new ResponseDto<PermissionEntity>();
     try {
       const permission = await this.permissionRepository.findOneBy({ id });
-      response.setStatus(200);
-      response.setMessage('permission retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(permission);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('permission retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -51,15 +52,15 @@ export class PermissionService {
     try {
       const permission = this.permissionRepository.create(createPermissionDto);
       await this.permissionRepository.save(permission);
-      response.setStatus(200);
-      response.setMessage('Permissions retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(permission);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Permissions retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -79,15 +80,15 @@ export class PermissionService {
       const permission = permissionResponse.data as PermissionEntity;
       Object.assign(permission, updatePermissionDto);
       await this.permissionRepository.save(permission);
-      response.setStatus(200);
-      response.setMessage('Permissions retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(permission);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Permissions retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -96,15 +97,15 @@ export class PermissionService {
     const response = new ResponseDto();
     try {
       await this.permissionRepository.delete(id);
-      response.setStatus(200);
-      response.setMessage('Delete Successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData('');
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }

@@ -3,11 +3,11 @@ import { RoleService } from './role.service';
 import { RoleObjectType } from './type/role.type';
 import { CreateRoleDto } from './dto/role-create.dto';
 import { UpdateRoleDto } from './dto/role-update.dto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
+import { ResponseUnion } from 'common/response/responseUnion';
 
 @Resolver(() => RoleObjectType)
 export class RoleResolver {
-  constructor(private roleService: RoleService) {}
+  constructor(private roleService: RoleService) { }
 
   @Query(() => ResponseUnion)
   async getRoles(): Promise<typeof ResponseUnion> {

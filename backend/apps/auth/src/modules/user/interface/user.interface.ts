@@ -9,5 +9,5 @@ export default interface UserInterface {
   address: string;
   password: string;
   active: boolean;
-  role: RoleEntity;
+  roles: RoleEntity;
 }

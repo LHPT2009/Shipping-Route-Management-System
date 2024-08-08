@@ -2,46 +2,32 @@ import {
   Args,
   Mutation,
   Resolver,
-  Query,
-  ResolveReference,
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignupInput } from './dto/signup.input';
-import { SignupResponse } from './types/signup.types';
 import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from './guards/auth.guard';
-import { LoginResponse } from './types/login.types';
-import { ResponseUnion } from '../../common/dto/responseUnion';
-// import { User } from './types/user.types';
+import { ResponseUnion } from 'common/response/responseUnion';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   @Mutation(() => ResponseUnion)
-  // @UseGuards(AuthGuard)
   signup(
     @Args('signupInput')
     signupInput: SignupInput,
   ): Promise<typeof ResponseUnion> {
     return this.userService.create(signupInput);
   }
-  @Query((LoginInput) => LoginResponse)
+  @Mutation(() => ResponseUnion)
   login(
     @Args('loginInput')
     loginInput: LoginInput,
-  ): Promise<LoginResponse> {
+  ): Promise<typeof ResponseUnion> {
     return this.authService.login(loginInput);
   }
-
-  // @ResolveReference()
-  // resolveReference(reference: { __typename: string; id: string }) {
-  //   console.log('resolveReference in auth', reference.id);
-  //   return this.userService.findOneById(reference.id);
-  // }
 }

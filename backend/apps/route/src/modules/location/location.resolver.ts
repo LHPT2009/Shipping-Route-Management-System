@@ -3,11 +3,11 @@ import { LocationsService } from './location.service';
 import { Location } from './type/location.type';
 import { CreateLocationDto } from './dto/location-create.dto';
 import { UpdateLocationDto } from './dto/location-update.dto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
+import { ResponseUnion } from '../../../../../common/response/responseUnion';
 
 @Resolver(() => Location)
 export class LocationsResolver {
-  constructor(private locationsService: LocationsService) {}
+  constructor(private locationsService: LocationsService) { }
 
   @Query(() => ResponseUnion)
   async getLocations(): Promise<typeof ResponseUnion> {

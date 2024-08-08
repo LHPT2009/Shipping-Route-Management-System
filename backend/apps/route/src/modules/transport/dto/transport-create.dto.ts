@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, MinLength } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 import {
   ShippingTypeEnum,
@@ -24,6 +24,7 @@ export class CreateTransportDto {
   @Field()
   @IsNotEmpty({ message: 'Name is required' })
   @IsString({ message: 'Name must be a string' })
+  @MinLength(3, { message: 'Min Length is 3' })
   name: string;
 
   @Field()

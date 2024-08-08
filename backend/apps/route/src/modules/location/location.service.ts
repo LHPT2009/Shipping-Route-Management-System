@@ -3,27 +3,28 @@ import { LocationRepository } from './location.repository';
 import { Location } from './type/location.type';
 import { CreateLocationDto } from './dto/location-create.dto';
 import { UpdateLocationDto } from './dto/location-update.dto';
-import { ResponseDto } from '../../common/dto/responseDto';
-import { ResponseUnion } from '../../common/dto/responseUnion';
-import { ResponseErrorDto } from '../../common/dto/responseError.dto';
+import { ResponseDto } from '../../../../../common/response/responseDto';
+import { ResponseUnion } from '../../../../../common/response/responseUnion';
+import { ResponseErrorDto } from '../../../../../common/response/responseError.dto';
+import { STATUS, STATUS_CODE } from 'common/constants/status';
 
 @Injectable()
 export class LocationsService {
-  constructor(private locationRepository: LocationRepository) {}
+  constructor(private locationRepository: LocationRepository) { }
 
   async findAll(): Promise<typeof ResponseUnion> {
     const response = new ResponseDto<Location[]>();
     try {
       const locations = await this.locationRepository.find();
-      response.setStatus(200);
-      response.setMessage('Locations retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(locations);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -31,15 +32,15 @@ export class LocationsService {
     const response = new ResponseDto<Location>();
     try {
       const location = await this.locationRepository.findOneBy({ id });
-      response.setStatus(200);
-      response.setMessage('Locations retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(location);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -51,15 +52,15 @@ export class LocationsService {
     try {
       const location = this.locationRepository.create(createLocationDto);
       await this.locationRepository.save(location);
-      response.setStatus(200);
-      response.setMessage('Locations retrieved successfully');
+      response.setStatus(STATUS_CODE.CREATE);
+      response.setMessage(STATUS.CREATE);
       response.setData(location);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -79,15 +80,15 @@ export class LocationsService {
       const location = locationResponse.data as Location;
       Object.assign(location, updateLocationDto);
       await this.locationRepository.save(location);
-      response.setStatus(200);
-      response.setMessage('Locations retrieved successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData(location);
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
@@ -96,15 +97,15 @@ export class LocationsService {
     const response = new ResponseDto();
     try {
       await this.locationRepository.delete(id);
-      response.setStatus(200);
-      response.setMessage('Delete Successfully');
+      response.setStatus(STATUS_CODE.SUCCESS);
+      response.setMessage(STATUS.SUCCESS);
       response.setData('');
       return response;
     } catch (error) {
       const response = new ResponseErrorDto();
-      response.setStatus(400);
-      response.setMessage('Locations retrieved Error');
-      response.setError('asdas');
+      response.setStatus(STATUS_CODE.SERVER_ERROR);
+      response.setMessage("");
+      response.setError(STATUS.SERVER_ERROR);
       return response;
     }
   }
