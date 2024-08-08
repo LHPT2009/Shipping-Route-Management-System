@@ -22,6 +22,7 @@ export default function Home() {
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error ...</p>;
   const listItem = data.getRoutes;
+
   return (
     <main>
       <h1 className="text-6xl font-bold">Test page</h1>

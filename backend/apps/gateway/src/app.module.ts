@@ -5,6 +5,12 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { authContext } from './auth.context';
+<<<<<<< HEAD
+=======
+import { KafkaModule } from './kafka.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { join } from 'path';
+>>>>>>> d5bead99d7808f1774c0b4b87dca8fcbfa2ee858
 
 
 @Module({
@@ -44,6 +50,16 @@ import { authContext } from './auth.context';
         },
       },
     }),
+    // ClientsModule.register([
+    //   {
+    //     name: 'AUTH_PACKAGE',
+    //     transport: Transport.GRPC,
+    //     options: {
+    //       package: 'auth',
+    //       protoPath: join(__dirname, 'protos/auth.proto'),
+    //     },
+    //   },
+    // ]),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,17 +7,45 @@ import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+
 
 const { Title, Text } = Typography;
 
 const LoginPage = () => {
+
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   // Validate Yup
   const schema = yup
     .object({
-      username: yup.string().required("Required Username!!!"),
-      password: yup.string().required("Required Password!!!"),
+      username: yup
+        .string()
+        .required("Please enter your username"),
+      password: yup
+        .string()
+        .required("Please enter your password"),
     })
     .required();
+  
+  //useFrom hook
   const {
     control,
     handleSubmit,
@@ -27,15 +55,18 @@ const LoginPage = () => {
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
+
   return (
-    <>
-      <div
+    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+      <Form
+        initialValues={{ remember: true }}
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100vw",
+          width: "35rem",
+          padding: "3rem 3rem 1rem 3rem",
+          margin: "2rem 0",
+          borderRadius: "1rem",
+          backgroundColor: COLOR.BACKGROUNDBODY,
+          textAlign: "left",
         }}
       >
         <Form
@@ -62,28 +93,30 @@ const LoginPage = () => {
           </Form.Item>
           <Form.Item
             name="username"
-            help={
-              errors.username && (
-                <span style={{ color: "red" }}>{errors.username?.message}</span>
-              )
-            }
-          >
-            <Controller
-              name="username"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  key="username"
-                  {...field}
-                  placeholder={"Username..."}
-                  prefix={<UserOutlined />}
-                  style={{ borderRadius: "8px" }}
-                  size="large"
-                />
-              )}
-            />
-          </Form.Item>
-          <Form.Item
+            control={control}
+            render={({ field }) => (
+              <Input
+                key="username"
+                {...field}
+                placeholder={"Enter your username or email"}
+                prefix={<UserOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
+              />
+            )}
+          />
+        </Form.Item>
+
+        {/* Password */}
+        <Form.Item
+          name="password"
+          style={{ paddingBottom: errors.password ? "1rem" : 0 }}
+          help={
+            errors.password && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.password?.message}</span>
+            )
+          }
+        >
+          <Controller
             name="password"
             help={
               errors.username && (
