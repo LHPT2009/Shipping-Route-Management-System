@@ -63,6 +63,7 @@ const RegisterPage = () => {
         .required("Please enter your confirm password"),
     })
     .required();
+
   const {
     control,
     handleSubmit,
