@@ -1,22 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param } from '@nestjs/common';
 import { AppService } from './app.service';
-import { GrpcMethod } from '@nestjs/microservices';
+import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
+import { UserId, UserRole } from './protos/auth';
+import { Observable } from 'rxjs';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  constructor(
+    private readonly appService: AppService,
+  ) { }
+
+  @Get('user-roles/:id')
+  getUserRole(@Param('id') id: string): Observable<UserRole> {
+    return this.appService.getUserRoleById(id);
   }
 
-  // @GrpcMethod('UserService', 'GetUserRoleById')
-  // findOne(data: UserId, metadata: Metadata, call: ServerUnaryCall<any, any>): UserRole {
-  //   const items = [
-  //     { id: 1, role: 'admin', permissions: ["VIEW", "UPDATE"] },
-  //     { id: 2, role: 'customer', permissions: ["VIEW"] },
-  //   ];
-  //   return items.find(({ id }) => id === data.id);
-  // }
+  @Get()
+  getHello(): boolean {
+    return true;
+  }
+
 }

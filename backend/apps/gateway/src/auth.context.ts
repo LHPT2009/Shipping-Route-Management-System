@@ -1,24 +1,37 @@
 import { UnauthorizedException } from '@nestjs/common';
 import axios from 'axios';
 import { access } from 'fs';
+import { AppService } from './app.service';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 export const authContext = async ({ req }) => {
 
-  // const userQuery = `
-  //   query {
-  //     getRole {
-  //       success
-  //       message
-  //     }
-  //   }
-  // `;
-  // await axios.get(
-  //   'http://localhost:5010/auth/role/1'
-  // ).then((res) => console.log(res.data))
+  // console.log(req.headers.accesstoken);
+  const client = ClientProxyFactory.create({
+    transport: Transport.GRPC,
+    options: {
+      package: 'auth',
+      protoPath: ('./protos/auth.proto'),
+      url: 'localhost:50051',
+    },
+  });
 
-  // console.log('userData', response);
+  const appService = new AppService(client as any);
+
+  appService.getUserRoleById("2").subscribe({
+    next: (data) => {
+      console.log('data', data);
+    },
+    error: (err) => {
+      console.error('error', err);
+    },
+    complete: () => {
+      console.log('Completed');
+    },
+  });
 
   return {
     accessToken: req.headers.accesstoken,
-  }
+  };
+
 };

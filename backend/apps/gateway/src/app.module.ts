@@ -4,14 +4,26 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { authContext } from './auth.context';
 import { KafkaModule } from './kafka.module';
 import { ConfigModule } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { authContext } from './auth.context';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     KafkaModule,
+    ClientsModule.register([
+      {
+        name: "AUTH_SERVICE_GRPC",
+        transport: Transport.GRPC,
+        options: {
+          package: 'auth',
+          protoPath: ('./protos/auth.proto'),
+          url: 'localhost:50051',
+        },
+      },
+    ]),
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {
@@ -47,18 +59,8 @@ import { ConfigModule } from '@nestjs/config';
         },
       },
     }),
-    // ClientsModule.register([
-    //   {
-    //     name: 'AUTH_PACKAGE',
-    //     transport: Transport.GRPC,
-    //     options: {
-    //       package: 'auth',
-    //       protoPath: join(__dirname, 'protos/auth.proto'),
-    //     },
-    //   },
-    // ]),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -9,11 +9,11 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
 export interface UserId {
-  id: number;
+  id: string;
 }
 
 export interface UserRole {
-  id: number;
+  id: string;
   role: string;
   permissions: string[];
 }
