@@ -1,37 +1,43 @@
 import { UnauthorizedException } from '@nestjs/common';
-import axios from 'axios';
 import { access } from 'fs';
 import { AppService } from './app.service';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { JwtService } from '@nestjs/jwt';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { lastValueFrom } from 'rxjs';
 
 export const authContext = async ({ req }) => {
 
-  // console.log(req.headers.accesstoken);
-  const client = ClientProxyFactory.create({
-    transport: Transport.GRPC,
-    options: {
-      package: 'auth',
-      protoPath: ('./protos/auth.proto'),
-      url: 'localhost:50051',
-    },
-  });
+  const accessToken: string = req.headers.accesstoken;
 
-  const appService = new AppService(client as any);
+  if (accessToken === undefined) {
+    console.log('No access token');
+  }
+  else {
+    const jwtService = new JwtService();
 
-  appService.getUserRoleById("2").subscribe({
-    next: (data) => {
-      console.log('data', data);
-    },
-    error: (err) => {
-      console.error('error', err);
-    },
-    complete: () => {
-      console.log('Completed');
-    },
-  });
+    const decoded = jwtService.decode(accessToken);
 
-  return {
-    accessToken: req.headers.accesstoken,
-  };
+    const client = ClientProxyFactory.create({
+      transport: Transport.GRPC,
+      options: {
+        package: 'auth',
+        protoPath: ('./protos/auth.proto'),
+        url: 'localhost:50051',
+      },
+    });
 
+    const appService = new AppService(client);
+
+    try {
+      const data = await lastValueFrom(appService.getUserRoleById(decoded.userId));
+      return {
+        accessToken: req.headers.accesstoken,
+        userRole: data,
+      };
+    } catch (err) {
+      throw err;
+    }
+  }
 };

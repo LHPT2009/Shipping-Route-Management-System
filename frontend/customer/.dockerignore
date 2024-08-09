@@ -1,0 +1,11 @@
+node_modules
+.git
+*.md
+.dockerignore
+.DS_Store
+*.log
+logs
+tmp
+*.bak
+*.swp
+.env

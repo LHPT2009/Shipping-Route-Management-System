@@ -4,18 +4,17 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { KafkaModule } from './kafka.module';
+import { authContext } from './auth.context';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { authContext } from './auth.context';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    KafkaModule,
     ClientsModule.register([
       {
-        name: "AUTH_SERVICE_GRPC",
+        name: 'AUTH_SERVICE_GRPC',
         transport: Transport.GRPC,
         options: {
           package: 'auth',
@@ -36,10 +35,10 @@ import { authContext } from './auth.context';
               name: 'auth',
               url: `${process.env.AUTH_URL}:5010/graphql`,
             },
-            {
-              name: 'route',
-              url: `${process.env.ROUTE_URL}:5020/graphql`,
-            },
+            // {
+            //   name: 'route',
+            //   url: `${process.env.ROUTE_URL}:5020/graphql`,
+            // },
             {
               name: 'notification',
               url: `${process.env.NOTIFICATION_URL}:5030/graphql`,
@@ -50,10 +49,8 @@ import { authContext } from './auth.context';
           return new RemoteGraphQLDataSource({
             url,
             willSendRequest({ request, context }) {
-              request.http.headers.set(
-                'accessToken',
-                context.accessToken ? context.accessToken : null,
-              );
+              request.http.headers.set('access_token', context.accessToken ? context.accessToken : null);
+              request.http.headers.set('user_role', context.userRole ? JSON.stringify(context.userRole) : null);
             },
           });
         },

@@ -9,8 +9,8 @@ import { SignupInput } from './dto/signup.input';
 import { SignupResponse } from './types/signup.types';
 import { LoginInput } from '../auth/dto/login.input';
 import { EmailService } from '../email/email.service';
-import nonEmptyString from '../../utils/validation/non-empty-string';
-import validEmail from '../../utils/validation/valid-email';
+// import nonEmptyString from '../../utils/validation/non-empty-string';
+// import validEmail from '../../utils/validation/valid-email';
 
 @Injectable()
 export class UsersService {
@@ -93,19 +93,19 @@ export class UsersService {
 
     const errorMessage: string[] = [];
 
-    if (nonEmptyString(userDTO.last_name)) {
-      errorMessage.push('Last name is required');
-    }
+    // if (nonEmptyString(userDTO.last_name)) {
+    //   errorMessage.push('Last name is required');
+    // }
 
-    if (nonEmptyString(userDTO.first_name)) {
-      errorMessage.push('First name is required');
-      // return 'Please provide your first_name';
-    }
+    // if (nonEmptyString(userDTO.first_name)) {
+    //   errorMessage.push('First name is required');
+    //   // return 'Please provide your first_name';
+    // }
 
-    if (nonEmptyString(userDTO.email) || !validEmail(userDTO.email)) {
-      errorMessage.push('Email is invalid');
-      // return 'Please provide your valid email';
-    }
+    // if (nonEmptyString(userDTO.email) || !validEmail(userDTO.email)) {
+    //   errorMessage.push('Email is invalid');
+    //   // return 'Please provide your valid email';
+    // }
 
     const userIsExist = await this.userRepository.findOneBy({
       email: userDTO.email
@@ -116,15 +116,15 @@ export class UsersService {
       // return 'Email is already in use';
     }
 
-    if (nonEmptyString(userDTO.password)) {
-      errorMessage.push('Please provide your password');
-      // return 'Please provide your password';
-    }
+    // if (nonEmptyString(userDTO.password)) {
+    //   errorMessage.push('Please provide your password');
+    //   // return 'Please provide your password';
+    // }
 
-    if (nonEmptyString(userDTO.passwordConfirm)) {
-      errorMessage.push('Please provide your confirmPassword');
-      // return 'Please provide your confirmPassword';
-    }
+    // if (nonEmptyString(userDTO.passwordConfirm)) {
+    //   errorMessage.push('Please provide your confirmPassword');
+    //   // return 'Please provide your confirmPassword';
+    // }
 
     if (userDTO.password !== userDTO.passwordConfirm) {
       errorMessage.push('Password and password confirm do not match');
