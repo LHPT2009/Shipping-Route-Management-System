@@ -1,4 +1,9 @@
-import { forwardRef, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -26,6 +31,7 @@ import { UserService } from './modules/user/user.service';
 import { UserRepository } from './modules/user/user.repository';
 import { EmailService } from './modules/email/email.service';
 import { JwtModule } from '@nestjs/jwt';
+import CustomFormatError from 'common/exception/validation/custom-format-error';
 
 @Module({
   imports: [
@@ -46,7 +52,7 @@ import { JwtModule } from '@nestjs/jwt';
       autoSchemaFile: {
         federation: 2,
       },
-      // plugins: [ApolloServerPluginInlineTrace()],
+      formatError: CustomFormatError,
     }),
 
     HealthModule,
@@ -56,7 +62,7 @@ import { JwtModule } from '@nestjs/jwt';
     PermissionModule,
 
     forwardRef(() => RoleModule),
-    
+
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'secret',
       signOptions: {
