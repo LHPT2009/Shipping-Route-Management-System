@@ -1,4 +1,4 @@
-import { RoleObjectType } from '../../role/type/role.type';
+import { Role } from '../../role/type/role.type';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 @ObjectType()
@@ -9,6 +9,6 @@ export class Permission {
   @Field()
   name: string;
 
-  @Field(() => [RoleObjectType], { nullable: true })
-  role: RoleObjectType[];
+  @Field(() => [Role], { nullable: true })
+  role: Role[];
 }

@@ -7,7 +7,8 @@ import { AuthService } from './auth.service';
 import { SignupInput } from './dto/signup.input';
 import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
-import { ResponseUnion } from 'common/response/responseUnion';
+import { ResponseDto } from 'common/response/responseDto';
+import { UserEntity } from '../user/entity/user.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -16,18 +17,18 @@ export class AuthResolver {
     private authService: AuthService,
   ) { }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<UserEntity>)
   signup(
-    @Args('signupInput')
-    signupInput: SignupInput,
-  ): Promise<typeof ResponseUnion> {
-    return this.userService.create(signupInput);
+    @Args('input')
+    input: SignupInput,
+  ): Promise<ResponseDto<UserEntity>> {
+    return this.userService.create(input);
   }
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<{}>)
   login(
-    @Args('loginInput')
-    loginInput: LoginInput,
-  ): Promise<typeof ResponseUnion> {
-    return this.authService.login(loginInput);
+    @Args('input')
+    input: LoginInput,
+  ): Promise<ResponseDto<any>> {
+    return this.authService.login(input);
   }
 }

@@ -3,43 +3,43 @@ import { RoutesService } from './route.service';
 import { Route } from './type/route.type';
 import { CreateRoutesDto } from './dto/route-create.dto';
 import { UpdateRoutesDto } from './dto/route-update.dto';
-import { ResponseUnion } from '../../../../../common/response/responseUnion';
+import { ResponseDto } from 'common/response/responseDto';
 
 @Resolver(() => Route)
 export class RoutesResolver {
   constructor(private routesService: RoutesService) { }
 
-  @Query(() => ResponseUnion)
-  async getRoutes(): Promise<typeof ResponseUnion> {
+  @Query(() => ResponseDto<Route[]>)
+  async getRoutes(): Promise<ResponseDto<Route[]>> {
     return this.routesService.findAll();
   }
 
-  @Query(() => ResponseUnion, { nullable: true })
+  @Query(() => ResponseDto<Route>, { nullable: true })
   async getRoute(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<Route>> {
     return this.routesService.findOne(id);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<Route>)
   async createRoute(
-    @Args('createRoutesDto') createRoutesDto: CreateRoutesDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.routesService.create(createRoutesDto);
+    @Args('input') input: CreateRoutesDto,
+  ): Promise<ResponseDto<Route>> {
+    return this.routesService.create(input);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<Route>)
   async updateRoute(
     @Args('id', { type: () => ID }) id: string,
-    @Args('updateRoutesDto') updateRoutesDto: UpdateRoutesDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.routesService.update(id, updateRoutesDto);
+    @Args('input') input: UpdateRoutesDto,
+  ): Promise<ResponseDto<Route>> {
+    return this.routesService.update(id, input);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<Route>)
   async removeRoute(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<Route>> {
     return this.routesService.remove(id);
   }
 }

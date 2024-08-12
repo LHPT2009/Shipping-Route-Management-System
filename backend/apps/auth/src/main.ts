@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
-import { TypeOrmExceptionFilter } from 'common/exception/filter/typeorm-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -36,7 +35,6 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new TypeOrmExceptionFilter());
   app.enableCors();
   await app.listen(5010);
 }

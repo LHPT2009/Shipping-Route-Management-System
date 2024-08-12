@@ -8,7 +8,7 @@ export enum STATUS {
     FORBIDDEN = 'FORBIDDEN',
     NOT_FOUND = 'NOT_FOUND',
     VALIDATION_ERROR = 'VALIDATION_ERROR',
-    SERVER_ERROR = 'SERVER_ERROR',
+    INTERNAL_SERVER_ERROR = 'SERVER_ERROR',
 }
 
 export enum STATUS_CODE {
@@ -19,7 +19,7 @@ export enum STATUS_CODE {
     FORBIDDEN = 403,
     NOT_FOUND = 404,
     VALIDATION_ERROR = 422,
-    SERVER_ERROR = 500,
+    INTERNAL_SERVER_ERROR = 500,
 }
 
 export enum ERROR {
@@ -34,5 +34,5 @@ export enum ERROR {
     NETWORK_ERROR = 'Network error. Please try again.',
     TIMEOUT_ERROR = 'Request timed out. Please try again.',
     PERMISSION_DENIED = 'Permission denied.',
-    VALIDATION_FAILED = 'Data validation failed.',
+    VALIDATION_ERROR = 'Data validation failed.',
 }

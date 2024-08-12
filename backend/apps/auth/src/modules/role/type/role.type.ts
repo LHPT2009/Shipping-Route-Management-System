@@ -3,7 +3,7 @@ import { User } from '../../user/types/user.types';
 import { Permission } from '../../permission/type/permission.type';
 
 @ObjectType()
-export class RoleObjectType {
+export class Role {
   @Field(() => ID)
   id: string;
 

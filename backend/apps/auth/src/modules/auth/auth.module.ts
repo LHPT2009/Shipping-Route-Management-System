@@ -15,13 +15,13 @@ import { UserModule } from '../user/user.module';
     TypeOrmModule.forFeature([UserEntity, UserRepository]),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'secret',
-      signOptions: {
-        expiresIn: '1d',
-      },
+      // signOptions: {
+      //   expiresIn: '1d',
+      // },
     }),
   ],
   providers: [AuthService, AuthResolver, EmailService],
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

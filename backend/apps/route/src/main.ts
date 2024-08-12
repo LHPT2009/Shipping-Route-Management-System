@@ -26,6 +26,3 @@ async function bootstrap() {
   await app.listen(5020);
 }
 bootstrap();
-
-//factory
-//strategies

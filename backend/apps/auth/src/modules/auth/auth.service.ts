@@ -4,11 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
 import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
-import { ResponseUnion } from 'common/response/responseUnion';
 import { ResponseDto } from 'common/response/responseDto';
-import { ResponseErrorDto } from 'common/response/responseError.dto';
 import { STATUS, STATUS_CODE } from "common/constants/status"
-import { VALIDATION } from 'common/constants/validation';
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) { }
 
-  async login(loginDTO: LoginInput): Promise<typeof ResponseUnion> {
+  async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
     const user = await this.userService.findOne(loginDTO);
 
     const passwordMatched = await bcrypt.compare(
@@ -25,19 +22,12 @@ export class AuthService {
     );
 
     if (passwordMatched) {
-      delete user.password;
       const payload: PayloadType = { email: user.email, userId: user.id };
-      const response = new ResponseDto<{}>();
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData({ accessToken: this.jwtService.sign(payload) });
-      return response;
+      const accessToken = this.jwtService.sign(payload, { expiresIn: '15s' });
+      const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken, refreshToken }, []);
     } else {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.FORBIDDEN);
-      response.setMessage(STATUS.FORBIDDEN);
-      response.setError(VALIDATION.PASSWORDS_DO_NOT_MATCH);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 }

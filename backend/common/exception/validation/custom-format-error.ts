@@ -3,6 +3,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { ResponseDto } from 'common/response/responseDto';
+import { ERROR, STATUS_CODE } from 'common/constants/status';
 
 interface ValidationErrorDetail {
   field: string;
@@ -21,9 +23,9 @@ const CustomFormatError = (
     const response = error.extensions.exception.getResponse() as any;
     const validationErrors = response.errors
       ? Object.keys(response.errors).map((key) => ({
-          field: key,
-          errors: (response.errors[key] as string[]) || [],
-        }))
+        field: key,
+        errors: (response.errors[key] as string[]) || [],
+      }))
       : [];
 
     return {
@@ -34,21 +36,13 @@ const CustomFormatError = (
   }
 
   if (error.extensions?.exception instanceof InternalServerErrorException) {
-    return {
-      message: 'Internal server error',
-      status: 500,
-      errors: [],
-    };
+    return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, ERROR.INTERNAL_SERVER_ERROR, [], [])
+
   }
 
   if (error.extensions?.originalError) {
     const originalError = error.extensions.originalError as any;
-
-    return {
-      message: originalError.message || error.message,
-      status: originalError.statusCode || 500,
-      errors: originalError.errors || [],
-    };
+    return new ResponseDto(originalError.statusCode, originalError.message || error.message, [], originalError.errors || [])
   }
 
   return error;
