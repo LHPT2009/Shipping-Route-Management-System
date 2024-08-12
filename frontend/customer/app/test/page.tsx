@@ -2,7 +2,7 @@
 
 import type { RootState } from "../../lib/store/index";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks/hooks";
-import { counterActions } from "../../lib/store/counter";
+import { counterActions } from "../../lib/store/auth";
 import { useQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/query/route";
 
