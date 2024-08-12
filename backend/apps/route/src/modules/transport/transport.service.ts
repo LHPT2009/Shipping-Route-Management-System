@@ -4,110 +4,65 @@ import { Transport } from './type/transport.type';
 import { CreateTransportDto } from './dto/transport-create.dto';
 import { UpdateTransportDto } from './dto/transport-update.dto';
 import { ResponseDto } from '../../../../../common/response/responseDto';
-import { ResponseUnion } from '../../../../../common/response/responseUnion';
-import { ResponseErrorDto } from '../../../../../common/response/responseError.dto';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
 
 @Injectable()
 export class TransportsService {
   constructor(private transportRepository: TransportRepository) { }
 
-  async findAll(): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto<Transport[]>();
+  async findAll(): Promise<ResponseDto<Transport[]>> {
     try {
       const transports = await this.transportRepository.find();
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData(transports);
-      return response;
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transports, []);
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage("");
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 
   async create(
     createTransportDto: CreateTransportDto,
-  ): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto<Transport>();
+  ): Promise<ResponseDto<Transport>> {
     try {
       const transport = this.transportRepository.create(createTransportDto);
       await this.transportRepository.save(transport);
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData(transport);
-      return response;
+      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, transport, []);
+
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage("");
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 
-  async findOne(id: string): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto<Transport>();
+  async findOne(id: string): Promise<ResponseDto<Transport>> {
     try {
       const transport = await this.transportRepository.findOneBy({ id });
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData(transport);
-      return response;
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transport, []);
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage("");
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 
   async update(
     id: string,
     updateTransportDto: UpdateTransportDto,
-  ): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto<Transport>();
+  ): Promise<ResponseDto<Transport>> {
     try {
       const routeResponse = await this.findOne(id);
-
-      if (routeResponse instanceof ResponseErrorDto) {
-        return routeResponse;
-      }
 
       const transport = routeResponse.data as Transport;
       Object.assign(transport, updateTransportDto);
       await this.transportRepository.save(transport);
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData(transport);
-      return response;
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transport, []);
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage("");
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 
-  async remove(id: string): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto();
+  async remove(id: string): Promise<ResponseDto<Transport>> {
     try {
       await this.transportRepository.delete(id);
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData('');
-      return response;
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage("");
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 }

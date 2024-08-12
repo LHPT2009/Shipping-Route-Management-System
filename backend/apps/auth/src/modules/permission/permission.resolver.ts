@@ -3,43 +3,44 @@ import { PermissionService } from './permission.service';
 import { Permission } from './type/permission.type';
 import { CreatePermissionDto } from './dto/permission-create.dto';
 import { UpdatePermissionDto } from './dto/permission-update.dto';
-import { ResponseUnion } from 'common/response/responseUnion';
+import { ResponseDto } from 'common/response/responseDto';
+import { PermissionEntity } from './entity/permission.entity';
 
 @Resolver(() => Permission)
 export class PermissionResolver {
   constructor(private permissionService: PermissionService) { }
 
-  @Query(() => ResponseUnion)
-  async getPermissions(): Promise<typeof ResponseUnion> {
+  @Query(() => ResponseDto<PermissionEntity[]>)
+  async getPermissions(): Promise<ResponseDto<PermissionEntity[]>> {
     return this.permissionService.findAll();
   }
 
-  @Query(() => ResponseUnion, { nullable: true })
+  @Query(() => ResponseDto<PermissionEntity>, { nullable: true })
   async getPermission(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<PermissionEntity>> {
     return this.permissionService.findOne(id);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<PermissionEntity>)
   async createPermission(
-    @Args('createPermissionDto') createLocationDto: CreatePermissionDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.permissionService.create(createLocationDto);
+    @Args('input') input: CreatePermissionDto,
+  ): Promise<ResponseDto<PermissionEntity>> {
+    return this.permissionService.create(input);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<PermissionEntity>)
   async updatePermission(
     @Args('id', { type: () => ID }) id: string,
-    @Args('updatePermissionDto') updateLocationDto: UpdatePermissionDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.permissionService.update(id, updateLocationDto);
+    @Args('input') input: UpdatePermissionDto,
+  ): Promise<ResponseDto<PermissionEntity>> {
+    return this.permissionService.update(id, input);
   }
 
-  @Query(() => ResponseUnion, { nullable: true })
+  @Query(() => ResponseDto<PermissionEntity>, { nullable: true })
   async removePermission(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<PermissionEntity>> {
     return this.permissionService.remove(id);
   }
 }

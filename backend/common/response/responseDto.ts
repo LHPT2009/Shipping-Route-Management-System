@@ -9,18 +9,16 @@ export class ResponseDto<T> {
   @Field()
   message: string;
 
-  @Field(() => GraphQLJSON, { nullable: true })
+  @Field(() => GraphQLJSON)
   data?: T;
 
-  setStatus(status: number): void {
+  @Field(() => GraphQLJSON)
+  error?: any;
+
+  constructor(status: number, message: string, data?: T, error?: any) {
     this.status = status;
-  }
-
-  setMessage(message: string): void {
     this.message = message;
-  }
-
-  setData(data: T): void {
     this.data = data;
+    this.error = error;
   }
 }

@@ -5,48 +5,41 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-// import { UserService } from "../../../apps/auth/src/modules/user/user.service"
+import { JwtService } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    // private userService: UserService,
+    private readonly jwtService: JwtService,
   ) { }
   canActivate(context: ExecutionContext): boolean {
     const ctx = GqlExecutionContext.create(context);
-
-    // const user = { id: 1, username: 'john', roles: ['admin'] };
-
-    // const reviewInfoUser = this.userService.findInfoByID("1")
-    // console.log(reviewInfoUser)
-    // gqlContext.user = user;
-
-    // if (!gqlContext.user) {
-    //   console.log('Failed Case Auth!');
-    //   throw new UnauthorizedException('User not authenticated');
-    // }
-    // console.log('Pass Case Auth!');
-    // return true;
-
     const { req } = ctx.getContext();
 
     const accessToken = req.headers.access_token;
-    const userRole = JSON.parse(req.headers.user_role);  
+    // const userRole = req.headers.user_role;
 
-    if (accessToken === 'null') {
-      console.log('No access token');
+    if (!accessToken || accessToken === 'null') {
       throw new UnauthorizedException('Please login to access this resource!');
     }
-    else {
-      console.log("Access token: ", accessToken);
-      console.log("------------------------");
-      console.log("User role: ", userRole);
+    try {
+      const decoded = this.jwtService.verify(accessToken, {
+        secret: process.env.JWT_SECRET || 'secret',
+      });
 
-      //If permssion is not allowed, do not allow access
-
-      //Else do allow access
-
+      console.log(decoded)
       return true;
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token has expired, please login again!');
+      } else if (err.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException('Invalid token, please login again!');
+      } else {
+        throw new UnauthorizedException('An error occurred, please try again!');
+      }
     }
   }
 }

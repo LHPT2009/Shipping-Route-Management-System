@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { RoleObjectType } from '../../role/type/role.type';
+import { Role } from '../../role/type/role.type';
 
 @ObjectType()
 export class User {
@@ -27,6 +27,6 @@ export class User {
   @Field()
   active: boolean;
 
-  @Field(() => [RoleObjectType], { nullable: true })
-  role: RoleObjectType[];
+  @Field(() => [Role], { nullable: true })
+  role: Role[];
 }

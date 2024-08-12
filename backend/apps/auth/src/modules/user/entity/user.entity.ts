@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -8,6 +9,7 @@ import {
 } from 'typeorm';
 import { RoleEntity } from '../../role/entity/role.entity';
 import UserInterface from '../interface/user.interface';
+import * as bcrypt from 'bcryptjs';
 
 @Entity('users')
 export class UserEntity implements UserInterface {
@@ -39,4 +41,30 @@ export class UserEntity implements UserInterface {
   @ManyToOne(() => RoleEntity, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   roles: RoleEntity;
+
+  constructor(
+    first_name: string,
+    last_name: string,
+    email: string,
+    phone_number: string,
+    address: string,
+    password: string,
+    active: boolean,
+    roles: RoleEntity
+  ) {
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.email = email;
+    this.phone_number = phone_number;
+    this.address = address;
+    this.password = password;
+    this.active = active;
+    this.roles = roles;
+  }
+
+  @BeforeInsert()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }

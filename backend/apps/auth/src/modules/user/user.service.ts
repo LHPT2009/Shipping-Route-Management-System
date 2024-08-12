@@ -1,40 +1,29 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserEntity } from './entity/user.entity';
-import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignupInput } from './dto/signup.input';
 import { LoginInput } from '../auth/dto/login.input';
-import { EmailService } from '../email/email.service';
+// import { EmailService } from '../email/email.service';
 import { ResponseDto } from 'common/response/responseDto';
-import { ResponseUnion } from 'common/response/responseUnion';
-import { ResponseErrorDto } from 'common/response/responseError.dto';
 import { UserRepository } from './user.repository';
 import { RoleEntity } from '../role/entity/role.entity';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
-import { classToPlain, instanceToPlain } from 'class-transformer';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepository: UserRepository,
-    private emailService: EmailService,
+    // private emailService: EmailService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  async findAll(): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto<UserEntity[]>();
+  async findAll(): Promise<ResponseDto<UserEntity[]>> {
     try {
       const users = await this.userRepository.find();
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData(users);
-      return response;
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, users, []);
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage('');
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 
@@ -43,24 +32,9 @@ export class UserService {
     return getUserFromDb;
   }
 
-  async create(userDTO: SignupInput): Promise<typeof ResponseUnion> {
-    const user = new UserEntity();
-    user.first_name = userDTO.first_name;
-    user.last_name = userDTO.last_name;
-    user.email = userDTO.email;
-
-    user.address = '';
-    user.phone_number = '';
-    user.active = false;
-
-    const chooseRole = new RoleEntity();
-    chooseRole.id = '1';
-    chooseRole.name = 'user';
-    user.roles = chooseRole;
-
-    const salt = await bcrypt.genSalt();
-    user.password = await bcrypt.hash(userDTO.password, salt);
-
+  async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
+    const role = new RoleEntity("1", "user")
+    const user = new UserEntity(userDTO.first_name, userDTO.last_name, userDTO.email, "", "", userDTO.password, false, role);
     await this.userRepository.save(user);
 
     // const token = this.jwtService.sign({
@@ -74,32 +48,21 @@ export class UserService {
     //   'Verify a new account',
     //   `Please click below to confirm your email. \n${url}\nIf you did not request this email you can safely ignore it.`,
     // );
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
 
-    const response = new ResponseDto();
-    response.setStatus(STATUS_CODE.CREATE);
-    response.setMessage(STATUS.CREATE);
-    response.setData(user);
-    return response;
   }
 
-  async confirmEmail(token: string): Promise<any> {
+  async confirmEmail(token: string): Promise<ResponseDto<any>> {
     const { email } = this.jwtService.verify(token);
 
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      return {
-        success: false,
-        message: ['User not found'],
-      };
+      return new ResponseDto(STATUS_CODE.NOT_FOUND, STATUS.NOT_FOUND, null, null);
     } else {
       user.active = true;
       await this.userRepository.save(user);
-
-      return {
-        success: true,
-        message: ['Account has been verified'],
-      };
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
     }
   }
 
@@ -115,23 +78,15 @@ export class UserService {
     return this.userRepository.findOneBy({ id: id });
   }
 
-  async findInfoByID(id: string): Promise<typeof ResponseUnion> {
-    const response = new ResponseDto<UserEntity>();
+  async findInfoByID(id: string): Promise<ResponseDto<UserEntity>> {
     try {
-      const permission = await this.userRepository.findOne({
+      const item = await this.userRepository.findOne({
         where: { id },
         relations: ['roles'],
       });
-      response.setStatus(STATUS_CODE.SUCCESS);
-      response.setMessage(STATUS.SUCCESS);
-      response.setData(permission);
-      return response;
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
     } catch (error) {
-      const response = new ResponseErrorDto();
-      response.setStatus(STATUS_CODE.SERVER_ERROR);
-      response.setMessage('');
-      response.setError(STATUS.SERVER_ERROR);
-      return response;
+      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }
 

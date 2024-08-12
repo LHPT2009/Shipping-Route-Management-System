@@ -1,48 +1,49 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { RoleService } from './role.service';
-import { RoleObjectType } from './type/role.type';
+import { Role } from './type/role.type';
 import { CreateRoleDto } from './dto/role-create.dto';
 import { UpdateRoleDto } from './dto/role-update.dto';
-import { ResponseUnion } from 'common/response/responseUnion';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'common/exception/guards/auth.guard';
+import { ResponseDto } from 'common/response/responseDto';
+import { RoleEntity } from './entity/role.entity';
 
-@Resolver(() => RoleObjectType)
+@Resolver(() => Role)
 export class RoleResolver {
   constructor(private roleService: RoleService) { }
 
-  @Query(() => ResponseUnion)
-  async getRoles(): Promise<typeof ResponseUnion> {
+  @Query(() => ResponseDto<RoleEntity[]>)
+  async getRoles(): Promise<ResponseDto<RoleEntity[]>> {
     return this.roleService.findAll();
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => ResponseUnion, { nullable: true })
+  @Query(() => ResponseDto<RoleEntity>, { nullable: true })
   async getRole(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<RoleEntity>> {
     return this.roleService.findOne(id);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<RoleEntity>)
   async createRole(
-    @Args('createRoleDto') createRoleDto: CreateRoleDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.roleService.create(createRoleDto);
+    @Args('input') input: CreateRoleDto,
+  ): Promise<ResponseDto<RoleEntity>> {
+    return this.roleService.create(input);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<RoleEntity>)
   async updateRole(
     @Args('id', { type: () => ID }) id: string,
-    @Args('updateRoleDto') updateRoleDto: UpdateRoleDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.roleService.update(id, updateRoleDto);
+    @Args('input') input: UpdateRoleDto,
+  ): Promise<ResponseDto<RoleEntity>> {
+    return this.roleService.update(id, input);
   }
 
-  @Query(() => ResponseUnion, { nullable: true })
+  @Query(() => ResponseDto<RoleEntity>, { nullable: true })
   async removeLocation(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<RoleEntity>> {
     return this.roleService.remove(id);
   }
 }

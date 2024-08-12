@@ -33,4 +33,9 @@ export class RoleEntity {
     },
   })
   permissions: PermissionEntity[];
+
+  constructor(id: string, name: string) {
+    this.id = id;
+    this.name = name;
+  }
 }

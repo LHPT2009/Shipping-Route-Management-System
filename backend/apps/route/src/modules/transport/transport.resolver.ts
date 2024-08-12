@@ -3,47 +3,46 @@ import { TransportsService } from './transport.service';
 import { Transport } from './type/transport.type';
 import { CreateTransportDto } from './dto/transport-create.dto';
 import { UpdateTransportDto } from './dto/transport-update.dto';
-import { ResponseUnion } from '../../../../../common/response/responseUnion';
 import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
-import { PermissionGuard } from '../../../../../common/exception/guards/permission.guard';
 import { UseGuards } from '@nestjs/common';
+import { ResponseDto } from 'common/response/responseDto';
 
 @Resolver(() => Transport)
 export class TransportsResolver {
   constructor(private transportsService: TransportsService) { }
 
-  @Query(() => ResponseUnion)
-  async getTransports(): Promise<typeof ResponseUnion> {
+  @Query(() => ResponseDto<Transport[]>)
+  @UseGuards(AuthGuard)
+  async getTransports(): Promise<ResponseDto<Transport[]>> {
     return this.transportsService.findAll();
   }
 
-  @Query(() => ResponseUnion, { nullable: true })
-  @UseGuards(AuthGuard, new PermissionGuard(['admin']))
+  @Query(() => ResponseDto<Transport>, { nullable: true })
   async getTransport(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<Transport>> {
     return this.transportsService.findOne(id);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<Transport>)
   async createTransport(
-    @Args('createTransportDto') createTransportDto: CreateTransportDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.transportsService.create(createTransportDto);
+    @Args('input') input: CreateTransportDto,
+  ): Promise<ResponseDto<Transport>> {
+    return this.transportsService.create(input);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<Transport>)
   async updateTransport(
     @Args('id', { type: () => ID }) id: string,
-    @Args('updateTransportDto') updateTransportDto: UpdateTransportDto,
-  ): Promise<typeof ResponseUnion> {
-    return this.transportsService.update(id, updateTransportDto);
+    @Args('input') input: UpdateTransportDto,
+  ): Promise<ResponseDto<Transport>> {
+    return this.transportsService.update(id, input);
   }
 
-  @Mutation(() => ResponseUnion)
+  @Mutation(() => ResponseDto<Transport>)
   async removeTransport(
     @Args('id', { type: () => ID }) id: string,
-  ): Promise<typeof ResponseUnion> {
+  ): Promise<ResponseDto<Transport>> {
     return this.transportsService.remove(id);
   }
 }
