@@ -3,11 +3,6 @@ import { Field, InputType, ID } from '@nestjs/graphql';
 
 @InputType()
 export class CreateRoleDto {
-  @Field(() => ID)
-  @IsNotEmpty()
-  @IsString()
-  id: string;
-
   @Field()
   @IsString()
   @IsNotEmpty()

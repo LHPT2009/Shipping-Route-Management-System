@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { join } from 'path';
-// import auth from "../../../dist/apps/auth/protos/auth";
+import { STATUS, STATUS_CODE } from 'common/constants/status';
+import { TypeOrmExceptionFilter } from 'common/exception/filter/typeorm-exception.filter';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -11,16 +12,32 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: 'auth',
-      protoPath: ('./protos/auth.proto'),
+      protoPath: './protos/auth.proto',
       url: 'localhost:50051',
     },
   });
 
   await app.startAllMicroservices();
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: (errors) => {
+        const messages = errors.map((error) => {
+          return {
+            field: error.property,
+            errors: Object.values(error.constraints),
+          };
+        });
+        return new BadRequestException({
+          statusCode: STATUS_CODE.FAILURE,
+          message: STATUS.VALIDATION_ERROR,
+          errors: messages,
+        });
+      },
+    }),
+  );
+  app.useGlobalFilters(new TypeOrmExceptionFilter());
   app.enableCors();
   await app.listen(5010);
 }
 bootstrap();
-
