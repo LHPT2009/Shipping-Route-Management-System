@@ -143,7 +143,7 @@ const LoginPage = () => {
           <Form.Item style={{ display: "flex", alignItems: "flex-start" }}>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-          <Link href={"/auth/register"} style={{
+          <Link href={"/auth/forgot-password"} style={{
             fontSize: "0.95rem",
             fontWeight: 600,
             color: COLOR.PRIMARY,
