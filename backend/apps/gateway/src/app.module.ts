@@ -35,10 +35,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
               name: 'auth',
               url: `${process.env.AUTH_URL}:5010/graphql`,
             },
-            // {
-            //   name: 'route',
-            //   url: `${process.env.ROUTE_URL}:5020/graphql`,
-            // },
+            {
+              name: 'route',
+              url: `${process.env.ROUTE_URL}:5020/graphql`,
+            },
             {
               name: 'notification',
               url: `${process.env.NOTIFICATION_URL}:5030/graphql`,

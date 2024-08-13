@@ -13,10 +13,8 @@ import { UsersModule } from './modules/users/users.module';
 
 //graphql
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
-import { ApolloDriver, ApolloDriverConfig, ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { databaseConfig } from './config/database.config';
+import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { HealthModule } from './modules/health/health.module';
 
 @Module({
@@ -27,8 +25,8 @@ import { HealthModule } from './modules/health/health.module';
       database: process.env.POSTGRES_DB,
       host: process.env.POSTGRES_HOST,
       port: parseInt(process.env.POSTGRES_PORT),
-      username:  process.env.POSTGRES_USER,
-      password:  process.env.POSTGRES_PASSWORD,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
       // entities: [User],
       synchronize: true,
     }),
@@ -39,7 +37,7 @@ import { HealthModule } from './modules/health/health.module';
         federation: 2,
       },
     }),
-    
+
     HealthModule,
     AuthModule,
     UsersModule,
