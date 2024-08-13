@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, Directive } from '@nestjs/graphql';
 import { LocationsService } from './location.service';
 import { Location } from './type/location.type';
 import { CreateLocationDto } from './dto/location-create.dto';
@@ -36,7 +36,7 @@ export class LocationsResolver {
     return this.locationsService.update(id, input);
   }
 
-  @Query(() => ResponseDto<Location>, { nullable: true })
+  @Mutation(() => ResponseDto<Location>, { nullable: true })
   async removeLocation(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<ResponseDto<Location>> {
