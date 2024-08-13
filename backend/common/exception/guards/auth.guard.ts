@@ -41,11 +41,8 @@ export class AuthGuard implements CanActivate {
       console.log("Access token: ", accessToken);
       console.log("------------------------");
       console.log("User role: ", userRole);
-
       //If permssion is not allowed, do not allow access
-
       //Else do allow access
-
       return true;
     }
   }
