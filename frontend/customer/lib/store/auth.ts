@@ -7,14 +7,25 @@ export enum RegisterStatus {
   VERIFY
 }
 
+export enum ForgotPasswordStatus {
+  ENTER_EMAIL,
+  VERIFY,
+  ENTER_NEW_PASSWORD
+}
+
 export interface AuthState {
   registerStatus: RegisterStatus;
-  emailRegister: string;
+  registerEmail: string;
+  forgotPasswordStatus: ForgotPasswordStatus;
+  forgotPasswordEmail: string;
+
 }
 
 const initialState: AuthState = {
-  registerStatus: RegisterStatus.VERIFY,
-  emailRegister: "testinitredux200202@gmail.com"
+  registerStatus: RegisterStatus.REGISTER,
+  registerEmail: "",
+  forgotPasswordStatus: ForgotPasswordStatus.ENTER_EMAIL,
+  forgotPasswordEmail: ""
 };
 
 export const authSlice = createSlice({
@@ -24,6 +35,15 @@ export const authSlice = createSlice({
     changeRegisterStatus(state, action: PayloadAction<RegisterStatus>) {
       state.registerStatus = action.payload;
     },
+    changeForgotPasswordStatus(state, action: PayloadAction<ForgotPasswordStatus>) {
+      state.forgotPasswordStatus = action.payload;
+    },
+    setRegisterEmail(state, action: PayloadAction<string>) {
+      state.registerEmail = action.payload;
+    },
+    setForgotpasswordEmail(state, action: PayloadAction<string>) {
+      state.forgotPasswordEmail = action.payload;
+    }
   },
 });
 
