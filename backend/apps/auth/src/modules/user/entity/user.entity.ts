@@ -25,7 +25,7 @@ export class UserEntity implements UserInterface {
   @Column()
   otp: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @Column()

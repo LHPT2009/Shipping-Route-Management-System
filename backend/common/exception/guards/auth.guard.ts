@@ -20,7 +20,6 @@ export class AuthGuard implements CanActivate {
     const { req } = ctx.getContext();
 
     const accessToken = req.headers.access_token;
-    // const userRole = req.headers.user_role;
 
     if (!accessToken || accessToken === 'null') {
       throw new UnauthorizedException('Please login to access this resource!');
@@ -29,7 +28,7 @@ export class AuthGuard implements CanActivate {
       const decoded = this.jwtService.verify(accessToken, {
         secret: process.env.JWT_SECRET || 'secret',
       });
-
+      ctx.getContext().token = { accessToken, status: "1" }
       console.log(decoded)
       return true;
     } catch (err) {
