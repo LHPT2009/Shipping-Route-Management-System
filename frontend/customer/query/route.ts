@@ -1,8 +1,19 @@
 import { gql } from "@apollo/client";
 
-export const GET_ROUTES = gql`
+export const LOGIN = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
+        status
+        message
+        data
+        error
+    }
+  }
+`;
+
+export const SIGNUP = gql`
+  mutation Create($input: SignupInput!) {
+    signup(input: $input) {
         status
         message
         data

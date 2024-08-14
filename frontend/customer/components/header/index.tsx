@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Row, Col, Space } from "antd";
+import { Layout, Row, Col, Space, Button } from "antd";
 import DrawerComponent from "../drawer";
 import AvatarComponent from "../dropdown/avatar";
 import NotificationComponent from "../dropdown/notification";
@@ -8,12 +8,16 @@ import Image from "next/image";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import MenuComponent from "../menu";
 import { Flex } from 'antd';
-
+import { useRouter } from "next/navigation";
+import { URL } from "@/constant/url";
+import { COLOR } from "@/constant";
+import Link from "next/link";
 
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const screenWidth = UseScreenWidth();
+  const router = useRouter();
 
   const extraSmall = true;
   const small = true;
@@ -58,36 +62,47 @@ const HeaderComponent = () => {
         <Col span={12} style={{ marginBottom: "0.8rem" }}>
           <Flex justify='center' align='center' >
 
-              {!responsive ? (
-                <>
-                  <MenuComponent
-                    mode="horizontal"
-                    defaultSelectedKeys={["1"]}
-                    responsive={responsive}
-                    
-                  />
-                </>
-              ) : (
-                <>
-                  <Image width={170} src={logoFull} alt="Logo" />
-                </>
-              )}
-        
+            {!responsive ? (
+              <>
+                <MenuComponent
+                  mode="horizontal"
+                  defaultSelectedKeys={["1"]}
+                  responsive={responsive}
+                />
+              </>
+            ) : (
+              <>
+                <Image width={170} src={logoFull} alt="Logo" />
+              </>
+            )}
+
           </Flex>
         </Col>
 
         <Col span={6}>
-          <Flex justify='end' align='end' >
-            <Space size="large">
-              {!responsive ? (
-                <>
-                  <NotificationComponent />
-                </>
-              ) : (
-                <></>
-              )}
-              <AvatarComponent />
-            </Space>
+          <Flex justify='end' align='center'>
+            <Button
+              onClick={() => router.push(URL.LOGIN)}
+              type="link"
+              style={{
+                padding: "1.5rem 2rem",
+                border: "none",
+                fontWeight: 500,
+                color: COLOR.PRIMARY
+              }}
+            >
+              Login
+            </Button>
+            <Button
+              onClick={() => router.push(URL.REGISTER)}
+              type="primary"
+              style={{
+                padding: "1.5rem 1.6rem",
+                border: "none",
+              }}
+            >
+              Get started
+            </Button>
           </Flex>
         </Col>
 

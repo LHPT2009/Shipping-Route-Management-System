@@ -18,6 +18,8 @@ import { useAppDispatch } from "../../../lib/hooks/hooks";
 import { authActions, RegisterStatus } from "../../../lib/store/auth";
 import { Verify } from "crypto";
 import { URL } from "@/constant/url";
+import { useMutation } from "@apollo/client";
+import { SIGNUP } from "@/query/route";
 
 const { Text, Title } = Typography;
 
@@ -58,7 +60,7 @@ const RegisterComponent = () => {
         .matches(passwordRegex, { message: "Please enter a stronger password (Min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit)" })
         .required("Please enter your password"),
 
-      confirmPassword: yup
+      passwordConfirm: yup
         .string()
         .oneOf([yup.ref("password")], "Confirm password must match password")
         .required("Please enter your confirm password"),
@@ -71,9 +73,39 @@ const RegisterComponent = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onFinish = (values: any) => {
-    dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
-    dispatch(authActions.setRegisterEmail(values.email));
+  const [signupMutation, { loading, error, data }] = useMutation(SIGNUP);
+
+  const getErrorMessage = (error: any) => {
+    if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+      const validationError = error.graphQLErrors[0].extensions.originalError;
+      console.log('validationError', validationError);
+    }
+    return error.message;
+  };
+
+  if (loading) return <p>Loading ...</p>;
+  if (error) {
+    const errorMessage = getErrorMessage(error);
+    console.log('error', errorMessage);
+    return <p>Error: {errorMessage}</p>;
+  }
+  console.log(data);
+
+  const onFinish = async (values: any) => { 
+    // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
+    // dispatch(authActions.setRegisterEmail(values.email));
+    console.log(values);
+    await signupMutation({
+      variables: {
+        input: {
+          fullname: values.username,
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          passwordConfirm: values.passwordConfirm
+        }
+      }
+    });
   };
 
   return (
@@ -188,20 +220,20 @@ const RegisterComponent = () => {
         {/* Confirm Password */}
         <Form.Item
           label="Confirm password"
-          name="confirmPassword"
-          style={{ paddingBottom: errors.confirmPassword ? "1rem" : 0, marginBottom: "1.2rem" }}
+          name="passwordConfirm"
+          style={{ paddingBottom: errors.passwordConfirm ? "1rem" : 0, marginBottom: "1.2rem" }}
           help={
-            errors.confirmPassword && (
-              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.confirmPassword?.message}</span>
+            errors.passwordConfirm && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.passwordConfirm?.message}</span>
             )
           }
         >
           <Controller
-            name="confirmPassword"
+            name="passwordConfirm"
             control={control}
             render={({ field }) => (
               <Input.Password
-                key="confirmPassword"
+                key="passwordConfirm"
                 type="password"
                 {...field}
                 placeholder={"Enter your password again"}

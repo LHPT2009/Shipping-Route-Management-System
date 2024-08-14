@@ -10,5 +10,7 @@ export default interface UserInterface {
   address: string;
   password: string;
   active: boolean;
+  verify_token: string;
+  verify_token_expires: Date;
   roles: RoleEntity;
 }

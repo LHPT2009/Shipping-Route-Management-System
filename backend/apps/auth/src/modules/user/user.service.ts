@@ -9,6 +9,7 @@ import { UserRepository } from './user.repository';
 import { RoleEntity } from '../role/entity/role.entity';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
 import { instanceToPlain } from 'class-transformer';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -34,8 +35,7 @@ export class UserService {
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
     const role = new RoleEntity("1", "user")
-
-    console.log(role);
+    const salt = await bcrypt.genSalt();
     const user = new UserEntity(
       userDTO.fullname,
       userDTO.username,
@@ -45,6 +45,8 @@ export class UserService {
       "",
       userDTO.password,
       false,
+      await bcrypt.hash("token", salt),
+      new Date(),
       role
     );
     

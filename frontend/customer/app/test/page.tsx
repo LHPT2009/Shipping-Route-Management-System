@@ -4,7 +4,7 @@ import type { RootState } from "../../lib/store/index";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks/hooks";
 // import { counterActions } from "../../lib/store/auth";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_ROUTES } from "@/query/route";
+import { LOGIN } from "@/query/route";
 
 interface RouteItem {
   id: number;
@@ -16,25 +16,44 @@ export default function Home() {
   // const count = useAppSelector((state: RootState) => state.counter.value);
   const dispatch = useAppDispatch();
 
-  const [funcMutate, { loading, error, data }] = useMutation(GET_ROUTES);
+  const [funcMutate, { loading, error, data }] = useMutation(LOGIN);
+
+  const getErrorMessage = (error: any) => {
+    if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+      const validationError = error.graphQLErrors[0].extensions.originalError;
+      console.log('validationError', validationError);
+    }
+    return error.message;
+  };
 
   if (loading) return <p>Loading ...</p>;
-  if (error) return <p>Error ...</p>;
-
-  console.log("data", data !== undefined ? data.login?.data.accessToken : "no data");
-  console.log("error", error);
+  if (error) {
+    const errorMessage = getErrorMessage(error);
+    console.log('error', errorMessage);
+    return <p>Error: {errorMessage}</p>;
+  }
 
   return (
     <main>
       <h1 className="text-6xl font-bold">Test page</h1>
       <button
-        onClick={() => {
+        onClick={async () => {
           // dispatch(counterActions.increment());
-          funcMutate({
-            variables: {
-              input: { email: "giahuy200202@gmail.com", password: "abc123789" }
-            }
-          })
+          try {
+            await funcMutate({
+              variables: {
+                input: { email: "", password: "aB123789#" }
+              }
+            });
+          } catch (err) {
+            // Handle error here
+            console.error('Caught error:', err);
+          }
+          // funcMutate({
+          //   variables: {
+          //     input: { email: "", password: "aB123789#" }
+          //   }
+          // })
         }}
       >
         Increment

@@ -30,6 +30,12 @@ export class User {
   @Field()
   active: boolean;
 
+  @Field()
+  verify_token: string;
+
+  @Field()
+  verify_token_expires: Date;
+
   @Field(() => [Role], { nullable: true })
   role: Role[];
 }
