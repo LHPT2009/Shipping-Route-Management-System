@@ -23,7 +23,7 @@ export class AuthService {
 
     if (passwordMatched) {
       const payload: PayloadType = { email: user.email, userId: user.id };
-      const accessToken = this.jwtService.sign(payload, { expiresIn: '15s' });
+      const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' });
       const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken, refreshToken }, []);
     } else {

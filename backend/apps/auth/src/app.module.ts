@@ -31,7 +31,6 @@ import { UserService } from './modules/user/user.service';
 import { UserRepository } from './modules/user/user.repository';
 import { EmailService } from './modules/email/email.service';
 import { JwtModule } from '@nestjs/jwt';
-import CustomFormatError from 'common/exception/validation/custom-format-error';
 
 @Module({
   imports: [
@@ -52,7 +51,6 @@ import CustomFormatError from 'common/exception/validation/custom-format-error';
       autoSchemaFile: {
         federation: 2,
       },
-      formatError: CustomFormatError,
     }),
 
     HealthModule,

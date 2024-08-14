@@ -22,7 +22,7 @@ export class UserEntity implements UserInterface {
   @Column()
   last_name: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @Column()

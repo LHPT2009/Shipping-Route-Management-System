@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { authContext } from './auth.context';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import CustomFormatError from 'common/exception/validation/custom-format-error';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       driver: ApolloGatewayDriver,
       server: {
         context: authContext,
+        formatError: CustomFormatError,
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
@@ -54,7 +56,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             },
           });
         },
-      },
+      }
     }),
   ],
   controllers: [AppController],
