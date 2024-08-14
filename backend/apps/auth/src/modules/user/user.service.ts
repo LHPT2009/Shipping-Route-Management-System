@@ -34,7 +34,20 @@ export class UserService {
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
     const role = new RoleEntity("1", "user")
-    const user = new UserEntity(userDTO.first_name, userDTO.last_name, userDTO.email, "", "", userDTO.password, false, role);
+
+    console.log(role);
+    const user = new UserEntity(
+      userDTO.fullname,
+      userDTO.username,
+      "",
+      userDTO.email,
+      "",
+      "",
+      userDTO.password,
+      false,
+      role
+    );
+    
     await this.userRepository.save(user);
 
     // const token = this.jwtService.sign({

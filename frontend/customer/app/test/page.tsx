@@ -2,8 +2,8 @@
 
 import type { RootState } from "../../lib/store/index";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks/hooks";
-import { counterActions } from "../../lib/store/auth";
-import { useQuery } from "@apollo/client";
+// import { counterActions } from "../../lib/store/auth";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/query/route";
 
 interface RouteItem {
@@ -13,35 +13,41 @@ interface RouteItem {
 }
 
 export default function Home() {
-  const count = useAppSelector((state: RootState) => state.counter.value);
+  // const count = useAppSelector((state: RootState) => state.counter.value);
   const dispatch = useAppDispatch();
 
-  const { loading, error, data } = useQuery(GET_ROUTES, {
-    pollInterval: 500,
-  });
+  const [funcMutate, { loading, error, data }] = useMutation(GET_ROUTES);
+
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error ...</p>;
-  const listItem = data.getRoutes;
+
+  console.log("data", data !== undefined ? data.login?.data.accessToken : "no data");
+  console.log("error", error);
 
   return (
     <main>
       <h1 className="text-6xl font-bold">Test page</h1>
       <button
         onClick={() => {
-          dispatch(counterActions.increment());
+          // dispatch(counterActions.increment());
+          funcMutate({
+            variables: {
+              input: { email: "giahuy200202@gmail.com", password: "abc123789" }
+            }
+          })
         }}
       >
         Increment
       </button>
-      <h1>Count: {count}</h1>
+      {/* <h1>Count: {count}</h1> */}
       <p>____________________________</p>
       <ul>
         Load data:
-        {listItem.map(({ id, name, user_id }: RouteItem) => (
+        {/* {listItem.map(({ id, name, user_id }: RouteItem) => (
           <li key={id}>
             {id}-{name}-{user_id}
           </li>
-        ))}
+        ))} */}
       </ul>
     </main>
   );

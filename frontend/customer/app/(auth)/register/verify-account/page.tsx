@@ -4,33 +4,24 @@ import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Form, Button, Typography, Flex } from "antd";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
-import { useAppDispatch, useAppSelector } from "../../../lib/hooks/hooks";
-import { RootState } from "@/lib/store";
 import { InputOTP } from "antd-input-otp";
-import { authActions, ForgotPasswordStatus, RegisterStatus } from "../../../lib/store/auth";
 import { URL } from "@/constant/url";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const { Text, Title } = Typography;
 
-export enum VerifyType {
-  FORGOT_PASSWORD,
-  REGISTER
-}
-
-interface VerifyComponentProps {
-  verifyType: VerifyType;
-}
-
-const VerifyComponent: React.FC<VerifyComponentProps> = ({ verifyType }) => {
+const VerifyAccount: React.FC = () => {
   const screenWidth = UseScreenWidth();
-  const dispatch = useAppDispatch();
-  const email = useAppSelector((state: RootState) =>
-    verifyType === VerifyType.FORGOT_PASSWORD ?
-      state.auth.forgotPasswordEmail :
-      state.auth.registerEmail
-  );
+  const [email, setEmail] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('registerEmail');
+    if (storedEmail) setEmail(storedEmail);
+    else router.push(URL.REGISTER_ENTER_INFORMATION);
+  }, []);
 
   const extraSmall = true;
   const small = true;
@@ -39,15 +30,7 @@ const VerifyComponent: React.FC<VerifyComponentProps> = ({ verifyType }) => {
   const extraLarge = false;
   const extraExtraLarge = false;
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const responsive = GetValueFromScreen(screenWidth, extraSmall, small, medium, large, extraLarge, extraExtraLarge);
 
   const {
     control,
@@ -55,14 +38,7 @@ const VerifyComponent: React.FC<VerifyComponentProps> = ({ verifyType }) => {
   } = useForm();
 
   const onFinish = (values: any) => {
-    if(verifyType === VerifyType.FORGOT_PASSWORD) {
-      dispatch(authActions.changeForgotPasswordStatus(ForgotPasswordStatus.ENTER_NEW_PASSWORD));
-    }
-    else{
-      // call api
-      dispatch(authActions.changeRegisterStatus(RegisterStatus.REGISTER));
-      dispatch(authActions.setRegisterEmail(""));
-    }
+    console.log("Received values of form: ", values);
   };
 
   return (
@@ -142,4 +118,4 @@ const VerifyComponent: React.FC<VerifyComponentProps> = ({ verifyType }) => {
   );
 };
 
-export default VerifyComponent;
+export default VerifyAccount;

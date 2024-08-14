@@ -17,10 +17,13 @@ export class UserEntity implements UserInterface {
   id: string;
 
   @Column()
-  first_name: string;
+  fullname: string;
 
   @Column()
-  last_name: string;
+  username: string;
+
+  @Column()
+  otp: string;
 
   @Column({ unique: true })
   email: string;
@@ -43,8 +46,9 @@ export class UserEntity implements UserInterface {
   roles: RoleEntity;
 
   constructor(
-    first_name: string,
-    last_name: string,
+    fullname: string,
+    username: string,
+    otp: string,
     email: string,
     phone_number: string,
     address: string,
@@ -52,8 +56,9 @@ export class UserEntity implements UserInterface {
     active: boolean,
     roles: RoleEntity
   ) {
-    this.first_name = first_name;
-    this.last_name = last_name;
+    this.fullname = fullname;
+    this.username = username;
+    this.otp = otp;
     this.email = email;
     this.phone_number = phone_number;
     this.address = address;

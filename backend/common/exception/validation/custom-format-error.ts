@@ -21,6 +21,7 @@ const CustomFormatError = (
 ): CustomGraphQLFormattedError => {
   if (error.extensions?.exception instanceof BadRequestException) {
     const response = error.extensions.exception.getResponse() as any;
+    console.log('response', response);
     const validationErrors = response.errors
       ? Object.keys(response.errors).map((key) => ({
         field: key,

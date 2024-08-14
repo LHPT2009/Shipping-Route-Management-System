@@ -14,19 +14,25 @@ export class AuthService {
   ) { }
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
-    const user = await this.userService.findOne(loginDTO);
 
-    const passwordMatched = await bcrypt.compare(
-      loginDTO.password,
-      user.password,
-    );
+    try {
+      const user = await this.userService.findOne(loginDTO);
 
-    if (passwordMatched) {
-      const payload: PayloadType = { email: user.email, userId: user.id };
-      const accessToken = this.jwtService.sign(payload, { expiresIn: '15s' });
-      const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken, refreshToken }, []);
-    } else {
+      const passwordMatched = await bcrypt.compare(
+        loginDTO.password,
+        user.password,
+      );
+
+      if (passwordMatched) {
+        const payload: PayloadType = { email: user.email, userId: user.id };
+        const accessToken = this.jwtService.sign(payload, { expiresIn: '15s' });
+        const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+        return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken, refreshToken }, []);
+      } else {
+        return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      }
+    }
+    catch (error) {
       return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
   }

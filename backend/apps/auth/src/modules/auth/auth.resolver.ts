@@ -22,6 +22,7 @@ export class AuthResolver {
     @Args('input')
     input: SignupInput,
   ): Promise<ResponseDto<UserEntity>> {
+    console.log(input);
     return this.userService.create(input);
   }
   @Mutation(() => ResponseDto<{}>)

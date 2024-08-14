@@ -1,11 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const GET_ROUTES = gql`
-  query {
-    getRoutes {
-      id
-      name
-      user_id
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+        status
+        message
+        data
+        error
     }
   }
 `;

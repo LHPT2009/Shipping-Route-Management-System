@@ -17,12 +17,12 @@ export class UserUpdateDto {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  first_name?: string;
+  username?: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  last_name?: string;
+  fullname?: string;
 
   @Field({ nullable: true })
   @IsOptional()
