@@ -7,10 +7,13 @@ export class User {
   id: string;
 
   @Field()
-  first_name: string;
+  fullname: string;
 
   @Field()
-  last_name: string;
+  username: string;
+
+  @Field()
+  otp: string;
 
   @Field()
   email: string;

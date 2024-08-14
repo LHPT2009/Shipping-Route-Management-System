@@ -11,12 +11,12 @@ export class UserCreateDto {
   @Field()
   @IsNotEmpty()
   @IsString()
-  first_name: string;
+  username: string;
 
   @Field()
   @IsNotEmpty()
   @IsString()
-  last_name: string;
+  fullname: string;
 
   @Field()
   @IsNotEmpty()

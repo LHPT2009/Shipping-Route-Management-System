@@ -12,19 +12,20 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
-import { emailRegex } from "../../../utils/validation/email.regex";
-import { passwordRegex } from "../../../utils/validation/password.regex";
-import { useAppDispatch } from "../../../lib/hooks/hooks";
-import { authActions, RegisterStatus } from "../../../lib/store/auth";
-import { Verify } from "crypto";
+import { emailRegex } from "../../../../utils/validation/email.regex";
+import { passwordRegex } from "../../../../utils/validation/password.regex";
+import { useAppDispatch } from "../../../../lib/hooks/hooks";
+import { authActions, RegisterStatus } from "../../../../lib/store/auth";
 import { URL } from "@/constant/url";
+import { useRouter } from "next/navigation";
 
 const { Text, Title } = Typography;
 
-const RegisterComponent = () => {
+const EnterInformation = () => {
   const screenWidth = UseScreenWidth();
   const dispatch = useAppDispatch();
-
+  const router = useRouter();
+  
   const extraSmall = true;
   const small = true;
   const medium = false;
@@ -32,15 +33,7 @@ const RegisterComponent = () => {
   const extraLarge = false;
   const extraExtraLarge = false;
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const responsive = GetValueFromScreen( screenWidth, extraSmall, small, medium,large,extraLarge,extraExtraLarge);
 
   const schema = yup
     .object({
@@ -72,8 +65,8 @@ const RegisterComponent = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onFinish = (values: any) => {
-    dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
-    dispatch(authActions.setRegisterEmail(values.email));
+    localStorage.setItem('registerEmail', values.email);  
+    router.push(URL.REGISTER_VERIFY_ACCOUNT);
   };
 
   return (
@@ -250,4 +243,4 @@ const RegisterComponent = () => {
   );
 };
 
-export default RegisterComponent;
+export default EnterInformation;

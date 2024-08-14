@@ -14,6 +14,7 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { passwordRegex } from "@/utils/validation/password.regex";
 import { emailRegex } from "@/utils/validation/email.regex";
+import { URL } from "@/constant/url";
 
 const { Title, Text } = Typography;
 
@@ -49,7 +50,7 @@ const LoginPage = () => {
         .required("Please enter your password"),
     })
     .required();
-  
+
   //useFrom hook
   const {
     control,
@@ -143,7 +144,7 @@ const LoginPage = () => {
           <Form.Item style={{ display: "flex", alignItems: "flex-start" }}>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-          <Link href={"/auth/register"} style={{
+          <Link href={"/forgot-password"} style={{
             fontSize: "0.95rem",
             fontWeight: 600,
             color: COLOR.PRIMARY,
@@ -183,7 +184,7 @@ const LoginPage = () => {
         <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>
             Don't have an account? {" "}
-            <Link href={"/auth/register"} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
+            <Link href={URL.REGISTER_ENTER_INFORMATION} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
           </Text>
         </Form.Item>
       </Form>

@@ -6,12 +6,10 @@ import HompageComponent from "@/components/homepage";
 
 export default function Home() {
   return (
-    <div>
-      <LayoutComponent>
-        <BodyComponent>
-          <HompageComponent />
-        </BodyComponent>
-      </LayoutComponent>
-    </div>
+    <LayoutComponent>
+      <BodyComponent>
+        <HompageComponent />
+      </BodyComponent>
+    </LayoutComponent>
   );
 }

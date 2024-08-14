@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ChildrenComponentProps } from "../../types/children";
 import styles from "./homepage.module.css";
 
@@ -27,6 +27,7 @@ import BuildingIcon from "../../public/svg/homepage/building.svg";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { URL } from "@/constant/url";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -34,9 +35,12 @@ const HompageComponent: React.FC = () => {
   const router = useRouter();
 
   const clickHandler = () => {
-    router.push("/auth/login");
+    router.push(URL.LOGIN);
   };
 
+  useEffect(() => {
+    console.log('hello world');
+  }, []);
   return (
     <div className={styles["wrapper"]}>
       {/* Title */}
@@ -196,7 +200,7 @@ const HompageComponent: React.FC = () => {
             with complete information.
           </Paragraph>
 
-          <Link href="/auth/login">
+          <Link href={URL.LOGIN}>
             <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
               <Title
                 level={5}
@@ -254,7 +258,7 @@ const HompageComponent: React.FC = () => {
             improve operational efficiency.
           </Paragraph>
 
-          <Link href="/auth/login">
+          <Link href={URL.LOGIN}>
             <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
               <Title
                 level={5}

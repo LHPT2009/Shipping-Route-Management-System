@@ -2,8 +2,9 @@ import { RoleEntity } from '../../role/entity/role.entity';
 
 export default interface UserInterface {
   id: string;
-  first_name: string;
-  last_name: string;
+  fullname: string;
+  username: string;
+  otp: string;
   email: string;
   phone_number: string;
   address: string;

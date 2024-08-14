@@ -9,7 +9,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import CustomFormatError from 'common/exception/validation/custom-format-error';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -41,10 +40,10 @@ import CustomFormatError from 'common/exception/validation/custom-format-error';
               name: 'route',
               url: `${process.env.ROUTE_URL}:5020/graphql`,
             },
-            {
-              name: 'notification',
-              url: `${process.env.NOTIFICATION_URL}:5030/graphql`,
-            },
+            // {
+            //   name: 'notification',
+            //   url: `${process.env.NOTIFICATION_URL}:5030/graphql`,
+            // },
           ],
         }),
         buildService({ url }) {
