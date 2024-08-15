@@ -15,11 +15,10 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { emailRegex } from "../../../utils/validation/email.regex";
 import { passwordRegex } from "../../../utils/validation/password.regex";
 import { useAppDispatch } from "../../../lib/hooks/hooks";
-import { authActions, RegisterStatus } from "../../../lib/store/auth";
-import { Verify } from "crypto";
 import { URL } from "@/constant/url";
-import { useMutation } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { SIGNUP } from "@/query/route";
+import { getErrorMessage } from "@/utils/errors/apollo.error";
 
 const { Text, Title } = Typography;
 
@@ -73,25 +72,21 @@ const RegisterComponent = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const [signupMutation, { loading, error, data }] = useMutation(SIGNUP);
-
-  const getErrorMessage = (error: any) => {
-    if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-      const validationError = error.graphQLErrors[0].extensions.originalError;
-      console.log('validationError', validationError);
+  const [signupMutation, { loading, error, data }] = useMutation(SIGNUP, {
+    onCompleted(data) {
+      console.log("Printing data");
+    },
+    onError(error: ApolloError) {
+      console.log("Printing error");
     }
-    return error.message;
-  };
+  });
 
-  if (loading) return <p>Loading ...</p>;
   if (error) {
-    const errorMessage = getErrorMessage(error);
-    console.log('error', errorMessage);
-    return <p>Error: {errorMessage}</p>;
+    const errorMessage: any = getErrorMessage(error);
+    console.log("errorMessage", errorMessage.errors);
   }
-  console.log(data);
 
-  const onFinish = async (values: any) => { 
+  const onFinish = async (values: any) => {
     // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
     // dispatch(authActions.setRegisterEmail(values.email));
     console.log(values);
@@ -99,7 +94,7 @@ const RegisterComponent = () => {
       variables: {
         input: {
           fullname: values.username,
-          username: values.username,
+          username: "",
           email: values.email,
           password: values.password,
           passwordConfirm: values.passwordConfirm
@@ -255,6 +250,7 @@ const RegisterComponent = () => {
         {/* Button register*/}
         <Form.Item>
           <Button
+            loading={loading}
             type="primary"
             htmlType="submit"
             className="login-form-button"
