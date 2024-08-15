@@ -1,4 +1,5 @@
 import { COLOR } from '@/constant/color';
+import { CheckCircleFilled, CloseCircleFilled, SmileOutlined } from '@ant-design/icons';
 import { Button, notification, Space } from 'antd';
 import { useState } from 'react';
 
@@ -12,11 +13,15 @@ const useAntNotification = () => {
     message: string,
     description: string
   ) => {
-    api[type]({
-      message: (<b style={{color: COLOR.TEXT}}>{message}</b>),
+    notification.open({
+      message: (<b style={{ color: COLOR.TEXT }}>{message}</b>),
       description: (<>
         {description.split("\n").map(e => { return (<>{e}<br /></>) })}
-      </>)
+      </>),
+      style: { borderRadius: 10 },
+      icon: type === "success" ?
+        <CheckCircleFilled style={{ color: COLOR.PRIMARY }} /> :
+        <CloseCircleFilled style={{ color: "#f03e3e " }} />,
     });
   };
 

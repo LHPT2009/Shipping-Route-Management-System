@@ -85,7 +85,6 @@ const RegisterComponent = () => {
     },
     onError(error: ApolloError) {
       const errorMessage: string = extractErrorMessages(getErrorMessage(error));
-      console.log(errorMessage);
       openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);
     }
   });
@@ -98,8 +97,8 @@ const RegisterComponent = () => {
       variables: {
         input: {
           fullname: values.username,
-          username: values.username,
-          // username: "",
+          // username: values.username,
+          username: "",
           email: values.email,
           password: values.password,
           passwordConfirm: values.passwordConfirm

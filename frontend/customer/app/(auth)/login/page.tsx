@@ -184,7 +184,7 @@ const LoginPage = () => {
         <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>
             Don't have an account? {" "}
-            <Link href={URL.REGISTER_ENTER_INFORMATION} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
+            <Link href={URL.REGISTER} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
           </Text>
         </Form.Item>
       </Form>
