@@ -6,7 +6,7 @@ import {
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Form, Input, Button, Typography, Flex, Checkbox } from "antd";
+import { Form, Input, Button, Typography, Flex, Checkbox, notification } from "antd";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,9 +18,14 @@ import { useAppDispatch } from "../../../lib/hooks/hooks";
 import { URL } from "@/constant/url";
 import { ApolloError, useMutation } from "@apollo/client";
 import { SIGNUP } from "@/query/route";
-import { getErrorMessage } from "@/utils/errors/apollo.error";
+import { getErrorMessage } from "@/utils/error/apollo.error";
+import useAntNotification from "@/lib/hooks/notification";
+import { extractErrorMessages } from "@/utils/error/format.error";
+import { NOTIFICATION } from "@/constant/notification";
 
 const { Text, Title } = Typography;
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
+
 
 const RegisterComponent = () => {
   const screenWidth = UseScreenWidth();
@@ -72,19 +77,18 @@ const RegisterComponent = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+
   const [signupMutation, { loading, error, data }] = useMutation(SIGNUP, {
-    onCompleted(data) {
-      console.log("Printing data");
+    onCompleted() {
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Register successfully. Please check your email to verify your account.");
     },
     onError(error: ApolloError) {
-      console.log("Printing error");
+      const errorMessage: string = extractErrorMessages(getErrorMessage(error));
+      console.log(errorMessage);
+      openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);
     }
   });
-
-  if (error) {
-    const errorMessage: any = getErrorMessage(error);
-    console.log("errorMessage", errorMessage.errors);
-  }
 
   const onFinish = async (values: any) => {
     // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
@@ -94,7 +98,8 @@ const RegisterComponent = () => {
       variables: {
         input: {
           fullname: values.username,
-          username: "",
+          username: values.username,
+          // username: "",
           email: values.email,
           password: values.password,
           passwordConfirm: values.passwordConfirm
@@ -106,6 +111,7 @@ const RegisterComponent = () => {
   return (
 
     <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+      {contextHolder}
       <Form
         layout="vertical"
         initialValues={{ remember: true }}
