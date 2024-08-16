@@ -9,13 +9,20 @@ import { UserRepository } from './user.repository';
 import { RoleEntity } from '../role/entity/role.entity';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
 import { instanceToPlain } from 'class-transformer';
-import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
+import { graphql, GraphQLError } from 'graphql';
+import { validEmail } from 'common/exception/validation/email.validation';
+import { validUsername } from 'common/exception/validation/username.validation';
+import { validPassword } from 'common/exception/validation/password.validation';
+import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
+import { EmailService } from '../email/email.service';
+import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepository: UserRepository,
-    // private emailService: EmailService,
+    private emailService: EmailService,
     private jwtService: JwtService,
   ) { }
 
@@ -35,49 +42,63 @@ export class UserService {
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
     const role = new RoleEntity("1", "user")
-    const salt = await bcrypt.genSalt();
-    const user = new UserEntity(
-      userDTO.fullname,
-      userDTO.username,
-      "",
-      userDTO.email,
-      "",
-      "",
-      userDTO.password,
-      false,
-      await bcrypt.hash("token", salt),
-      new Date(),
-      role
-    );
-    
-    await this.userRepository.save(user);
 
-    // const token = this.jwtService.sign({
-    //   email: userDTO.email,
-    // });
+    const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.username);
+    if (Object.keys(validationErrors).length !== 0) {
+      throw new CustomValidationError('Invalid input', validationErrors);
+    }
 
-    // const url = `${process.env.AUTH_URL}/auth/confirm/${token}`;
-
-    // await this.emailService.sendEmail(
-    //   userDTO.email,
-    //   'Verify a new account',
-    //   `Please click below to confirm your email. \n${url}\nIf you did not request this email you can safely ignore it.`,
-    // );
-    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
-
+    else {
+      const getUserByEmail: UserEntity = await this.userRepository.findOneBy({ email: userDTO.email });
+      if (getUserByEmail) {
+        throw new CustomValidationError('Validation failed', { email: ['Email already exists'] });
+      }
+      else {
+        const verifyToken = crypto.randomBytes(32).toString('base64url');
+        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const user = new UserEntity(
+          userDTO.username,
+          userDTO.email,
+          userDTO.password,
+          verifyToken,
+          verifyTokenExpires,
+          role
+        );
+        await this.userRepository.save(user);
+        this.sendMail(verifyToken, userDTO.email);
+        return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
+      }
+    }
   }
 
-  async confirmEmail(token: string): Promise<ResponseDto<any>> {
-    const { email } = this.jwtService.verify(token);
+  sendMail(verifyToken: string, email: string) {
+    try {
+      const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}`;
+      // this.emailService.sendEmail(
+      //   email,
+      //   'Verify a new account',
+      //   `Please click below to confirm your email. \n${url}\nIf you did not request this email you can safely ignore it.`,
+      // );
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 
-    const user = await this.userRepository.findOne({ where: { email } });
+  async confirmEmail(userDTO: ConfirmEmailInput): Promise<ResponseDto<[]>> {
+
+    const user = await this.userRepository.createQueryBuilder('user')
+      .where('user.verify_token = :verifyToken', { verifyToken: userDTO.verifyToken })
+      .andWhere('user.verify_token_expires > :now', { now: new Date() })
+      .getOne();
 
     if (!user) {
-      return new ResponseDto(STATUS_CODE.NOT_FOUND, STATUS.NOT_FOUND, null, null);
+      throw new CustomValidationError('Not found', { user: ['User not found'] });
     } else {
       user.active = true;
+      user.verify_token = null;
+      user.verify_token_expires = null;
       await this.userRepository.save(user);
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, [], []);
     }
   }
 
@@ -111,5 +132,19 @@ export class UserService {
       relations: ['roles'],
     });
     return instanceToPlain(permission);
+  }
+
+  validateUser(email: string, password: string, username: string) {
+    const validationErrors: ValidationErrorsInterface = {}
+    if (!validEmail(email)) {
+      validationErrors[email] = ['Email is invalid']
+    }
+    if (!validUsername(username)) {
+      validationErrors[username] = ['Username is invalid']
+    }
+    if (!validPassword(password)) {
+      validationErrors[password] = ['Password is too weak']
+    }
+    return validationErrors;
   }
 }

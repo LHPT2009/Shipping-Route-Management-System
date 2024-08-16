@@ -11,11 +11,11 @@ export class ResponseDto<T> {
   @Directive('@shareable')
   message: string;
 
-  @Field(() => GraphQLJSON)
+  @Field(() => GraphQLJSON, { nullable: true })
   @Directive('@shareable')
   data?: T;
 
-  @Field(() => GraphQLJSON)
+  @Field(() => GraphQLJSON, { nullable: true })
   @Directive('@shareable')
   error?: any;
 

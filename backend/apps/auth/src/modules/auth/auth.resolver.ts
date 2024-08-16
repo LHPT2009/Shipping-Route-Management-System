@@ -9,6 +9,7 @@ import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
 import { ResponseDto } from 'common/response/responseDto';
 import { UserEntity } from '../user/entity/user.entity';
+import { ConfirmEmailInput } from './dto/confirm_email.input';
 
 @Resolver()
 export class AuthResolver {
@@ -25,11 +26,20 @@ export class AuthResolver {
     console.log(input);
     return this.userService.create(input);
   }
+
   @Mutation(() => ResponseDto<{}>)
   login(
     @Args('input')
     input: LoginInput,
   ): Promise<ResponseDto<any>> {
     return this.authService.login(input);
+  }
+
+  @Mutation(() => ResponseDto<{}>)
+  confirmEmail(
+    @Args('input')
+    input: ConfirmEmailInput,
+  ): Promise<ResponseDto<any>> {
+    return this.userService.confirmEmail(input);
   }
 }

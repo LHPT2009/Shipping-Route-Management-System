@@ -4,9 +4,4 @@ import { UserService } from '../user/user.service';
 @Controller('auth')
 export class AuthController {
   constructor(private userService: UserService) {}
-
-  @Get('confirm/:token')
-  confirm(@Param('token') token: string) {
-    return this.userService.confirmEmail(token);
-  }
 }

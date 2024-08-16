@@ -4,7 +4,6 @@ export default interface UserInterface {
   id: string;
   fullname: string;
   username: string;
-  otp: string;
   email: string;
   phone_number: string;
   address: string;

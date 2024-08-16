@@ -15,11 +15,6 @@ export class UserCreateDto {
 
   @Field()
   @IsNotEmpty()
-  @IsString()
-  fullname: string;
-
-  @Field()
-  @IsNotEmpty()
   @IsEmail()
   email: string;
 

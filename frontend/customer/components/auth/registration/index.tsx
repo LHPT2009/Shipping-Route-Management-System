@@ -22,6 +22,7 @@ import { getErrorMessage } from "@/utils/error/apollo.error";
 import useAntNotification from "@/lib/hooks/notification";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { NOTIFICATION } from "@/constant/notification";
+import { usernameRegex } from "@/utils/validation/username.regrex";
 
 const { Text, Title } = Typography;
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
@@ -52,6 +53,7 @@ const RegisterComponent = () => {
     .object({
       username: yup
         .string()
+        .matches(usernameRegex, { message: "Please enter a valid username" })
         .required("Please enter your username"),
 
       email: yup
@@ -81,10 +83,12 @@ const RegisterComponent = () => {
 
   const [signupMutation, { loading, error, data }] = useMutation(SIGNUP, {
     onCompleted() {
+      console.log("Register successfully. Please check your email to verify your account.");
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Register successfully. Please check your email to verify your account.");
     },
     onError(error: ApolloError) {
       const errorMessage: string = extractErrorMessages(getErrorMessage(error));
+      console.log(error.graphQLErrors[0]);
       openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);
     }
   });
@@ -92,13 +96,11 @@ const RegisterComponent = () => {
   const onFinish = async (values: any) => {
     // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
     // dispatch(authActions.setRegisterEmail(values.email));
-    console.log(values);
+    console.log(values.username);
     await signupMutation({
       variables: {
         input: {
-          fullname: values.username,
-          // username: values.username,
-          username: "",
+          username: values.username,
           email: values.email,
           password: values.password,
           passwordConfirm: values.passwordConfirm

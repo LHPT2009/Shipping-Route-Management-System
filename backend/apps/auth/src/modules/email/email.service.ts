@@ -23,7 +23,7 @@ export class EmailService {
         const transport = this.mailTransport();
 
         const options: Mail.Options = {
-            from: process.env.MAIL_FROM_ADDRESS,
+            from: `"S-Routing" ${process.env.MAIL_FROM_ADDRESS}`,
             to: to,
             subject: subject,
             html: htmlContent
