@@ -20,7 +20,7 @@ const VerifyAccount: React.FC = () => {
   useEffect(() => {
     const storedEmail = localStorage.getItem('registerEmail');
     if (storedEmail) setEmail(storedEmail);
-    else router.push(URL.REGISTER_ENTER_INFORMATION);
+    // else router.push(URL.REGISTER_ENTER_INFORMATION);
   }, []);
 
   const extraSmall = true;

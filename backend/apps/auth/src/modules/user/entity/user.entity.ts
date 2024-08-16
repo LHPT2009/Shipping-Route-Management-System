@@ -23,9 +23,6 @@ export class UserEntity implements UserInterface {
   username: string;
 
   @Column()
-  otp: string;
-
-  @Column()
   email: string;
 
   @Column()
@@ -41,30 +38,35 @@ export class UserEntity implements UserInterface {
   @Column()
   active: boolean;
 
+  @Column({ nullable: true })
+  verify_token: string;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  verify_token_expires: Date;
+
   @ManyToOne(() => RoleEntity, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   roles: RoleEntity;
 
   constructor(
-    fullname: string,
     username: string,
-    otp: string,
     email: string,
-    phone_number: string,
-    address: string,
     password: string,
-    active: boolean,
+    verify_token: string,
+    verify_token_expires: Date,
     roles: RoleEntity
   ) {
-    this.fullname = fullname;
     this.username = username;
-    this.otp = otp;
     this.email = email;
-    this.phone_number = phone_number;
-    this.address = address;
+    this.active = false;
     this.password = password;
-    this.active = active;
+    this.verify_token = verify_token;
+    this.verify_token_expires = verify_token_expires;
     this.roles = roles;
+
+    this.fullname = '';
+    this.phone_number = '';
+    this.address = '';
   }
 
   @BeforeInsert()

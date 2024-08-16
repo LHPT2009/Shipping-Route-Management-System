@@ -1,0 +1,1 @@
+export const fullnameRegex: RegExp = /^[a-zA-Z ]{2,30}$/;

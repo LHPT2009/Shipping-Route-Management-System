@@ -6,7 +6,7 @@ import {
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Form, Input, Button, Typography, Flex, Checkbox } from "antd";
+import { Form, Input, Button, Typography, Flex, Checkbox, notification } from "antd";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,11 +15,18 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { emailRegex } from "../../../utils/validation/email.regex";
 import { passwordRegex } from "../../../utils/validation/password.regex";
 import { useAppDispatch } from "../../../lib/hooks/hooks";
-import { authActions, RegisterStatus } from "../../../lib/store/auth";
-import { Verify } from "crypto";
 import { URL } from "@/constant/url";
+import { ApolloError, useMutation } from "@apollo/client";
+import { getErrorMessage } from "@/utils/error/apollo.error";
+import useAntNotification from "@/lib/hooks/notification";
+import { extractErrorMessages } from "@/utils/error/format.error";
+import { NOTIFICATION } from "@/constant/notification";
+import { usernameRegex } from "@/utils/validation/username.regrex";
+import { SIGNUP } from "@/apollo/mutations/auth";
 
 const { Text, Title } = Typography;
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
+
 
 const RegisterComponent = () => {
   const screenWidth = UseScreenWidth();
@@ -46,6 +53,7 @@ const RegisterComponent = () => {
     .object({
       username: yup
         .string()
+        .matches(usernameRegex, { message: "Please enter a valid username" })
         .required("Please enter your username"),
 
       email: yup
@@ -58,7 +66,7 @@ const RegisterComponent = () => {
         .matches(passwordRegex, { message: "Please enter a stronger password (Min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit)" })
         .required("Please enter your password"),
 
-      confirmPassword: yup
+      passwordConfirm: yup
         .string()
         .oneOf([yup.ref("password")], "Confirm password must match password")
         .required("Please enter your confirm password"),
@@ -71,14 +79,40 @@ const RegisterComponent = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onFinish = (values: any) => {
-    dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
-    dispatch(authActions.setRegisterEmail(values.email));
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+
+  const [signupMutation, { loading, error, data }] = useMutation(SIGNUP, {
+    onCompleted() {
+      console.log("Register successfully. Please check your email to verify your account.");
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Register successfully. Please check your email to verify your account.");
+    },
+    onError(error: ApolloError) {
+      const errorMessage: string = extractErrorMessages(getErrorMessage(error));
+      console.log(error.graphQLErrors[0]);
+      openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);
+    }
+  });
+
+  const onFinish = async (values: any) => {
+    // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
+    // dispatch(authActions.setRegisterEmail(values.email));
+    console.log(values.username);
+    await signupMutation({
+      variables: {
+        input: {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          passwordConfirm: values.passwordConfirm
+        }
+      }
+    });
   };
 
   return (
 
     <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+      {contextHolder}
       <Form
         layout="vertical"
         initialValues={{ remember: true }}
@@ -188,20 +222,20 @@ const RegisterComponent = () => {
         {/* Confirm Password */}
         <Form.Item
           label="Confirm password"
-          name="confirmPassword"
-          style={{ paddingBottom: errors.confirmPassword ? "1rem" : 0, marginBottom: "1.2rem" }}
+          name="passwordConfirm"
+          style={{ paddingBottom: errors.passwordConfirm ? "1rem" : 0, marginBottom: "1.2rem" }}
           help={
-            errors.confirmPassword && (
-              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.confirmPassword?.message}</span>
+            errors.passwordConfirm && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.passwordConfirm?.message}</span>
             )
           }
         >
           <Controller
-            name="confirmPassword"
+            name="passwordConfirm"
             control={control}
             render={({ field }) => (
               <Input.Password
-                key="confirmPassword"
+                key="passwordConfirm"
                 type="password"
                 {...field}
                 placeholder={"Enter your password again"}
@@ -223,6 +257,7 @@ const RegisterComponent = () => {
         {/* Button register*/}
         <Form.Item>
           <Button
+            loading={loading}
             type="primary"
             htmlType="submit"
             className="login-form-button"

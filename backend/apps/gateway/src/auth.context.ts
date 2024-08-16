@@ -12,7 +12,7 @@ export const authContext = async ({ req }) => {
   const accessToken: string = req.headers.accesstoken;
 
   if (accessToken === undefined) {
-    console.log('No access token');
+    // console.log('No access token');
   }
   else {
     const jwtService = new JwtService();

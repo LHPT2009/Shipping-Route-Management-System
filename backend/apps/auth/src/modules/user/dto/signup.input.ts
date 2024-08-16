@@ -8,10 +8,6 @@ export class SignupInput {
   username: string;
 
   @Field()
-  @IsNotEmpty({ message: 'Fullname should not be empty' })
-  fullname: string;
-
-  @Field()
   @IsNotEmpty({ message: 'Email should not be empty' })
   email: string;
 

@@ -4,22 +4,18 @@ import { IsNotEmpty } from 'class-validator';
 @InputType()
 export class SignupInput {
   @Field((type) => String)
-  @IsNotEmpty({ message: 'Fullname is not Empty!' })
-  fullname: string;
-
-  @Field((type) => String)
-  @IsNotEmpty({ message: 'Username is not Empty!' })
+  @IsNotEmpty({ message: 'Username is not empty' })
   username: string;
 
   @Field((type) => String)
-  @IsNotEmpty({ message: 'email is not Empty!' })
+  @IsNotEmpty({ message: 'Email is not empty' })
   email: string;
 
   @Field((type) => String)  
-  @IsNotEmpty({ message: 'password is not Empty!' })
+  @IsNotEmpty({ message: 'Password is not empty' })
   password: string;
 
   @Field((type) => String)
-  @IsNotEmpty({ message: 'passwordConfirm is not Empty!' })
+  @IsNotEmpty({ message: 'Password Confirm is not empty' })
   passwordConfirm: string;
 }
