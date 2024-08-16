@@ -17,6 +17,8 @@ import { validPassword } from 'common/exception/validation/password.validation';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 import { EmailService } from '../email/email.service';
 import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UserService {
@@ -55,7 +57,7 @@ export class UserService {
       }
       else {
         const verifyToken = crypto.randomBytes(32).toString('base64url');
-        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); //24 hours
         const user = new UserEntity(
           userDTO.username,
           userDTO.email,
@@ -65,20 +67,31 @@ export class UserService {
           role
         );
         await this.userRepository.save(user);
-        this.sendMail(verifyToken, userDTO.email);
+        this.sendMail(verifyToken, userDTO.email, userDTO.username);
         return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
       }
     }
   }
 
-  sendMail(verifyToken: string, email: string) {
+  private email_template(url: string, username: string): string {
+    const templatePath = path.resolve(process.cwd(), 'apps/auth/src/modules/email/email_template.html');
+    let htmlContent = fs.readFileSync(templatePath, 'utf-8');
+    htmlContent = htmlContent.replace('{{url}}', url)
+      .replace('{{username}}', username)
+      .replace('{{contact}}', process.env.CUSTOMER_CONTACT_URL)
+    return htmlContent;
+  }
+
+  sendMail(verifyToken: string, email: string, username: string) {
     try {
       const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}`;
-      // this.emailService.sendEmail(
-      //   email,
-      //   'Verify a new account',
-      //   `Please click below to confirm your email. \n${url}\nIf you did not request this email you can safely ignore it.`,
-      // );
+      const emailHtml = this.email_template(url, username);
+
+      this.emailService.sendEmail(
+        email,
+        'Verify a new account',
+        emailHtml
+      );
     } catch (error) {
       throw new Error(error.message);
     }
@@ -86,17 +99,16 @@ export class UserService {
 
   async confirmEmail(userDTO: ConfirmEmailInput): Promise<ResponseDto<[]>> {
 
-    const user = await this.userRepository.createQueryBuilder('user')
-      .where('user.verify_token = :verifyToken', { verifyToken: userDTO.verifyToken })
-      .andWhere('user.verify_token_expires > :now', { now: new Date() })
-      .getOne();
+    const user = await this.userRepository.findOneBy({ verify_token: userDTO.verifyToken });
 
     if (!user) {
       throw new CustomValidationError('Not found', { user: ['User not found'] });
+    } else if (user.verify_token_expires < new Date()) {
+      throw new CustomValidationError('Token expired', { user: ['Token expired'] });
     } else {
       user.active = true;
-      user.verify_token = null;
-      user.verify_token_expires = null;
+      // user.verify_token = null;
+      // user.verify_token_expires = null;
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, [], []);
     }

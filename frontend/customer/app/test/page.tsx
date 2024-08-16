@@ -4,7 +4,7 @@ import type { RootState } from "../../lib/store/index";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks/hooks";
 // import { counterActions } from "../../lib/store/auth";
 import { useMutation, useQuery } from "@apollo/client";
-import { LOGIN } from "@/query/route";
+import { LOGIN } from "@/apollo/route";
 
 interface RouteItem {
   id: number;

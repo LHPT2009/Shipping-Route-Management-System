@@ -22,12 +22,13 @@ export const SIGNUP = gql`
   }
 `;
 
-export const POST_ROUTES = gql`
-  query {
-    getRoutes {
-      id
-      name
-      user_id
+export const CONFIRM_EMAIL = gql`
+  mutation ConfirmEmail($input: ConfirmEmailInput!) {
+    confirmEmail(input: $input) {
+        status
+        message
+        data
+        error
     }
   }
 `;

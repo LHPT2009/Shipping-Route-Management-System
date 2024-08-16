@@ -17,12 +17,12 @@ import { passwordRegex } from "../../../utils/validation/password.regex";
 import { useAppDispatch } from "../../../lib/hooks/hooks";
 import { URL } from "@/constant/url";
 import { ApolloError, useMutation } from "@apollo/client";
-import { SIGNUP } from "@/query/route";
 import { getErrorMessage } from "@/utils/error/apollo.error";
 import useAntNotification from "@/lib/hooks/notification";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { NOTIFICATION } from "@/constant/notification";
 import { usernameRegex } from "@/utils/validation/username.regrex";
+import { SIGNUP } from "@/apollo/mutations/auth";
 
 const { Text, Title } = Typography;
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
