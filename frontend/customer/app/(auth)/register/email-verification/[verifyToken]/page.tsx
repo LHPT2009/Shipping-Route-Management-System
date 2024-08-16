@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import Paragraph from "antd/es/typography/Paragraph";
 import { URL } from "@/constant/url";
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import VerifyImg from "../../../../../public/images/verify/email.png"
 import { ApolloError, useMutation } from "@apollo/client";
 import { CONFIRM_EMAIL } from "@/apollo/mutations/auth";
@@ -22,8 +22,9 @@ interface VerifyAccountProps {
 
 const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
   const screenWidth = UseScreenWidth();
-  const email = "lehuynhphuongtung12345@gmail.com"
   const router = useRouter();
+  const searchParams = useSearchParams()
+  const email = searchParams.get("email");
 
   const extraSmall = true;
   const small = true;

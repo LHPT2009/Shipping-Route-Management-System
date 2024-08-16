@@ -79,12 +79,13 @@ export class UserService {
     htmlContent = htmlContent.replace('{{url}}', url)
       .replace('{{username}}', username)
       .replace('{{contact}}', process.env.CUSTOMER_CONTACT_URL)
+
     return htmlContent;
   }
 
   sendMail(verifyToken: string, email: string, username: string) {
     try {
-      const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}`;
+      const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}?email=${email}`;
       const emailHtml = this.email_template(url, username);
 
       this.emailService.sendEmail(
