@@ -16,6 +16,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { RoleModule } from './modules/role/role.module';
 import { PermissionModule } from './modules/permission/permission.module';
+import { RefreshTokenModule } from './modules/refreshtoken/refreshtoken.module';
 
 //graphql
 import { GraphQLModule } from '@nestjs/graphql';
@@ -31,6 +32,7 @@ import { UserService } from './modules/user/user.service';
 import { UserRepository } from './modules/user/user.repository';
 import { EmailService } from './modules/email/email.service';
 import { JwtModule } from '@nestjs/jwt';
+import { RefreshTokenEntity } from './modules/refreshtoken/entity/refreshtoken.entity';
 
 @Module({
   imports: [
@@ -42,7 +44,7 @@ import { JwtModule } from '@nestjs/jwt';
       port: parseInt(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
-      entities: [UserEntity, RoleEntity, PermissionEntity],
+      entities: [UserEntity, RoleEntity, PermissionEntity, RefreshTokenEntity],
       synchronize: true,
     }),
 
@@ -58,6 +60,7 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     RoleModule,
     PermissionModule,
+    RefreshTokenModule,
 
     forwardRef(() => RoleModule),
 

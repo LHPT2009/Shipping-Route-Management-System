@@ -6,7 +6,9 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenService } from 'apps/auth/src/modules/refreshtoken/refreshtoken.service';
 import * as dotenv from 'dotenv';
+import { CustomValidationError } from '../validation/custom-validation-error';
 
 dotenv.config();
 
@@ -14,6 +16,7 @@ dotenv.config();
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly refreshTokenService: RefreshTokenService,
   ) { }
   canActivate(context: ExecutionContext): boolean {
     const ctx = GqlExecutionContext.create(context);
@@ -22,7 +25,7 @@ export class AuthGuard implements CanActivate {
     const accessToken = req.headers.access_token;
 
     if (!accessToken || accessToken === 'null') {
-      throw new UnauthorizedException('Please login to access this resource!');
+      throw new CustomValidationError('ERR_AUTH_LOGIN', {});
     }
     try {
       const decoded = this.jwtService.verify(accessToken, {
@@ -33,11 +36,12 @@ export class AuthGuard implements CanActivate {
       return true;
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token has expired, please login again!');
+        const item = this.refreshTokenService.RefreshAccessToken(accessToken);
+        throw new CustomValidationError('ERR_TOKEN_EXPIRED', {});
       } else if (err.name === 'JsonWebTokenError') {
-        throw new UnauthorizedException('Invalid token, please login again!');
+        throw new CustomValidationError('ERR_TOKEN_INVALID', {});
       } else {
-        throw new UnauthorizedException('An error occurred, please try again!');
+        throw new CustomValidationError('An error occurred, please try again!', {});
       }
     }
   }

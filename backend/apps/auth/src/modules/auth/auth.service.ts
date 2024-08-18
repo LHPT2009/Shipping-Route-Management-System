@@ -6,11 +6,13 @@ import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
 import { ResponseDto } from 'common/response/responseDto';
 import { STATUS, STATUS_CODE } from "common/constants/status"
+import { RefreshTokenService } from '../refreshtoken/refreshtoken.service';
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private refreshTokenService: RefreshTokenService,
   ) { }
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
@@ -25,9 +27,9 @@ export class AuthService {
 
       if (passwordMatched) {
         const payload: PayloadType = { email: user.email, userId: user.id };
+        await this.refreshTokenService.CreateRefreshToken(payload);
         const accessToken = this.jwtService.sign(payload, { expiresIn: '15s' });
-        const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-        return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken, refreshToken }, []);
+        return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken }, []);
       } else {
         return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
       }
