@@ -1,6 +1,7 @@
 "use client";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 export enum RegisterStatus {
   REGISTER,
@@ -18,14 +19,17 @@ export interface AuthState {
   registerEmail: string;
   forgotPasswordStatus: ForgotPasswordStatus;
   forgotPasswordEmail: string;
-
+  
+  cookiesIsChecked: boolean;
 }
 
 const initialState: AuthState = {
   registerStatus: RegisterStatus.REGISTER,
   registerEmail: "",
   forgotPasswordStatus: ForgotPasswordStatus.ENTER_EMAIL,
-  forgotPasswordEmail: ""
+  forgotPasswordEmail: "",
+
+  cookiesIsChecked: false,
 };
 
 export const authSlice = createSlice({
@@ -43,6 +47,10 @@ export const authSlice = createSlice({
     },
     setForgotpasswordEmail(state, action: PayloadAction<string>) {
       state.forgotPasswordEmail = action.payload;
+    },
+
+    setCookiesIsChecked(state, action: PayloadAction<boolean>) {
+      state.cookiesIsChecked = action.payload;
     }
   },
 });

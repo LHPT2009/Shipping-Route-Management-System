@@ -1,11 +1,17 @@
+// 'use client';
+
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cookie, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./provider";
 import StyledComponentsRegistry from "@/lib/antd/AntdRegistry";
 import { ConfigProvider } from "antd";
 import { COLOR } from "@/constant";
 import LogoImage from "@/public/logo/logoImage.png";
+import { useEffect } from "react";
+import { setCookies } from "@/utils/cookies/set.cookies";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import CookiesComponent from "@/components/auth/cookies";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +28,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  // useEffect(() => {
+  //   setCookies('accessToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4YW1wbGUuYXV0aDAuY29tLyIsImF1ZCI6Imh0dHBzOi8vYXBpLmV4YW1wbGUuY29tL2NhbGFuZGFyL3YxLyIsInN1YiI6InVzcl8xMjMiLCJpYXQiOjE0NTg3ODU3OTYsImV4cCI6MTQ1ODg3MjE5Nn0.CA7eaHjIHz5NxeIJoFK9krqaeZrPLwmMmgI_XiQiIkQ');
+  //   setCookies('expiredAt', new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString()); //24 hours
+  //   const a = fetchCookies();
+  //   console.log(a);
+  // }, []);
 
   return (
     <html lang="en">
@@ -55,6 +68,7 @@ export default function RootLayout({
               },
             }}
           >
+            <CookiesComponent />
             <Providers>{children}</Providers>
           </ConfigProvider>
         </StyledComponentsRegistry>
