@@ -38,9 +38,6 @@ const HompageComponent: React.FC = () => {
     router.push(URL.LOGIN);
   };
 
-  useEffect(() => {
-    console.log('hello world');
-  }, []);
   return (
     <div className={styles["wrapper"]}>
       {/* Title */}
