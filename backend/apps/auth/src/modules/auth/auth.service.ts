@@ -26,10 +26,16 @@ export class AuthService {
       );
 
       if (passwordMatched) {
+        const expiresIn = 1;
+        // const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString(); // seconds
+        // const expiresAt = new Date(Date.now() + expiresIn * 60 * 1000).toISOString(); // minutes
+        // const expiresAt = new Date(Date.now() + expiresIn * 60 * 60 * 1000).toISOString(); // hours
+        const expiresAt = new Date(Date.now() + expiresIn * 24 * 60 * 60 * 1000).toISOString(); // day
+
         const payload: PayloadType = { email: user.email, userId: user.id };
-        await this.refreshTokenService.CreateRefreshToken(payload);
-        const accessToken = this.jwtService.sign(payload, { expiresIn: '15s' });
-        return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken }, []);
+        await this.refreshTokenService.createRefreshToken(payload);
+        const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiresIn}d` });
+        return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accesstoken: accessToken, expiresAt: expiresAt }, []);
       } else {
         return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
       }

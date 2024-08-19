@@ -10,9 +10,8 @@ import { STATUS, STATUS_CODE } from 'common/constants/status';
 export class TransportsService {
   constructor(private transportRepository: TransportRepository) { }
 
-  async findAll(context: object): Promise<ResponseDto<Transport[]>> {
+  async findAll(): Promise<ResponseDto<Transport[]>> {
     try {
-      console.log(context)
       const transports = await this.transportRepository.find();
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transports, []);
     } catch (error) {

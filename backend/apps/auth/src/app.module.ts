@@ -53,6 +53,7 @@ import { RefreshTokenEntity } from './modules/refreshtoken/entity/refreshtoken.e
       autoSchemaFile: {
         federation: 2,
       },
+      context: ({ req }) => ({ req }),
     }),
 
     HealthModule,

@@ -3,16 +3,14 @@ import { RefreshTokenEntity } from './entity/refreshtoken.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RefreshTokenService } from './refreshtoken.service';
 import { RefreshTokenRepository } from './refreshtoken.repository';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenResolver } from './refreshtoken.resolver';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([RefreshTokenEntity]),
-        // JwtModule.register({
-        //     secret: process.env.JWT_SECRET || 'secret',
-        // }),
+        TypeOrmModule.forFeature([RefreshTokenEntity])
     ],
-    providers: [RefreshTokenService, RefreshTokenRepository, JwtService],
+    providers: [RefreshTokenService, RefreshTokenResolver, RefreshTokenRepository, JwtService],
     exports: [RefreshTokenService],
 })
 export class RefreshTokenModule { }

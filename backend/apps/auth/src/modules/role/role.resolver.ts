@@ -4,9 +4,9 @@ import { Role } from './type/role.type';
 import { CreateRoleDto } from './dto/role-create.dto';
 import { UpdateRoleDto } from './dto/role-update.dto';
 import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'common/exception/guards/auth.guard';
 import { ResponseDto } from 'common/response/responseDto';
 import { RoleEntity } from './entity/role.entity';
+import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
 
 @Resolver(() => Role)
 export class RoleResolver {
