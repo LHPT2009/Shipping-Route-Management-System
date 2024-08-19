@@ -45,7 +45,7 @@ export class UserService {
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
     const role = new RoleEntity("1", "user")
 
-    const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.username);
+    const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.passwordConfirm, userDTO.username);
     if (Object.keys(validationErrors).length !== 0) {
       throw new CustomValidationError('Invalid input', validationErrors);
     }
@@ -147,7 +147,7 @@ export class UserService {
     return instanceToPlain(permission);
   }
 
-  validateUser(email: string, password: string, username: string) {
+  validateUser(email: string, password: string, passwordConfirm: string,username: string) {
     const validationErrors: ValidationErrorsInterface = {}
     if (!validEmail(email)) {
       validationErrors[email] = ['Email is invalid']
@@ -157,6 +157,9 @@ export class UserService {
     }
     if (!validPassword(password)) {
       validationErrors[password] = ['Password is too weak']
+    }
+    if(password !== passwordConfirm) {
+      validationErrors[password] = ['Password is not match']
     }
     return validationErrors;
   }
