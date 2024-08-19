@@ -1,11 +1,11 @@
-import { Resolver, Query, Args, Mutation, ID, Context } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ID } from '@nestjs/graphql';
 import { TransportsService } from './transport.service';
 import { Transport } from './type/transport.type';
 import { CreateTransportDto } from './dto/transport-create.dto';
 import { UpdateTransportDto } from './dto/transport-update.dto';
-import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { ResponseDto } from 'common/response/responseDto';
+import { AuthGuard } from 'common/exception/guards/auth.guard';
 
 @Resolver(() => Transport)
 export class TransportsResolver {
@@ -13,8 +13,8 @@ export class TransportsResolver {
 
   @Query(() => ResponseDto<Transport[]>)
   @UseGuards(AuthGuard)
-  async getTransports(@Context() context): Promise<ResponseDto<Transport[]>> {
-    return this.transportsService.findAll(context.token);
+  async getTransports(): Promise<ResponseDto<Transport[]>> {
+    return this.transportsService.findAll();
   }
 
   @Query(() => ResponseDto<Transport>, { nullable: true })
