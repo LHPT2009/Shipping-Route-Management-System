@@ -58,8 +58,10 @@ export default function RootLayout({
               },
             }}
           >
-            <CookiesComponent />
-            <Providers>{children}</Providers>
+            <Providers>
+              <CookiesComponent />
+              {children}
+            </Providers>
           </ConfigProvider>
         </StyledComponentsRegistry>
       </body>

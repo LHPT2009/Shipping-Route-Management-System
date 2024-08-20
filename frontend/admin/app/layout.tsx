@@ -1,11 +1,14 @@
+// 'use client';
+
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cookie, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./provider";
 import StyledComponentsRegistry from "@/lib/antd/AntdRegistry";
 import { ConfigProvider } from "antd";
 import { COLOR } from "@/constant";
 import LogoImage from "@/public/logo/logoImage.png";
+import CookiesComponent from "@/components/auth/cookies";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,7 +58,10 @@ export default function RootLayout({
               },
             }}
           >
-            <Providers>{children}</Providers>
+            <Providers>
+              <CookiesComponent />
+              {children}
+            </Providers>
           </ConfigProvider>
         </StyledComponentsRegistry>
       </body>

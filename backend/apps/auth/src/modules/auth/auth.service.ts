@@ -26,19 +26,24 @@ export class AuthService {
 
     const user = await this.userService.findOne(loginDTO);
 
+    if(!user.active){
+      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
+    }
+
     const passwordMatched = await bcrypt.compare(
       loginDTO.password,
       user.password,
     );
 
     if (passwordMatched) {
-      const expiresIn = 1;
+      const expiredIn = 1;
+      // const expiresAt = new Date(Date.now() + 2 * 1000).toISOString(); // 2s
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // day
 
       const payload: PayloadType = { email: user.email, userId: user.id };
       await this.refreshTokenService.createRefreshToken(payload);
-      const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiresIn}d` });
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresAt: expiresAt }, []);
+      const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}s` });
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
 
     } else {
       throw new CustomValidationError(STATUS.VALIDATION_ERROR, { password: ['Password is wrong. Please try again'] });

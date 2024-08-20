@@ -2,28 +2,30 @@
 import { COLOR } from "@/constant";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import {
-  FormOutlined,
-  KeyOutlined,
   LockOutlined,
   MailOutlined,
-  PhoneOutlined,
-  SignatureOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Row, Col, Form, Input, Button, Typography, DatePicker, Flex, Checkbox } from "antd";
+import { Form, Input, Button, Typography, Flex, Checkbox } from "antd";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
-import { emailRegex } from "@/utils/validation/email.regex";
-import { passwordRegex } from "@/utils/validation/password.regex";
+import { emailRegex } from "../../../../utils/validation/email.regex";
+import { passwordRegex } from "../../../../utils/validation/password.regex";
+import { useAppDispatch } from "../../../../lib/hooks/hooks";
+import { authActions, RegisterStatus } from "../../../../lib/store/auth";
+import { URL } from "@/constant/url";
+import { useRouter } from "next/navigation";
 
 const { Text, Title } = Typography;
 
-const RegisterPage = () => {
+const EnterInformation = () => {
   const screenWidth = UseScreenWidth();
-
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  
   const extraSmall = true;
   const small = true;
   const medium = false;
@@ -31,15 +33,7 @@ const RegisterPage = () => {
   const extraLarge = false;
   const extraExtraLarge = false;
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const responsive = GetValueFromScreen( screenWidth, extraSmall, small, medium,large,extraLarge,extraExtraLarge);
 
   const schema = yup
     .object({
@@ -71,7 +65,8 @@ const RegisterPage = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+    localStorage.setItem('registerEmail', values.email);  
+    router.push(URL.REGISTER_VERIFY_ACCOUNT);
   };
 
   return (
@@ -224,16 +219,16 @@ const RegisterPage = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "2rem" }}
+            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "1rem" }}
           >
             Register
           </Button>
         </Form.Item>
 
-        <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
+        <Form.Item style={{ textAlign: "center", marginTop: "2rem" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>
             Already have an account? {" "}
-            <Link href={"/auth/login"} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Login</Link>
+            <Link href={URL.LOGIN} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Login</Link>
           </Text>
         </Form.Item>
       </Form>
@@ -248,4 +243,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default EnterInformation;

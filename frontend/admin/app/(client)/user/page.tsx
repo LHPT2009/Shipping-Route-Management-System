@@ -4,9 +4,9 @@ import React from "react";
 
 const userPage = () => {
   return (
-    <>
+    <div style={{ marginTop: "10rem" }}>
       <BodyComponent>sss</BodyComponent>
-    </>
+    </div>
   );
 };
 

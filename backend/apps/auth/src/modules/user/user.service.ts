@@ -19,6 +19,7 @@ import { EmailService } from '../email/email.service';
 import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
 import * as fs from 'fs';
 import * as path from 'path';
+import { get } from 'http';
 
 @Injectable()
 export class UserService {
@@ -51,11 +52,14 @@ export class UserService {
     }
 
     else {
-      const getUserByEmail: UserEntity = await this.userRepository.findOneBy({ email: userDTO.email });
-      if (getUserByEmail) {
-        throw new CustomValidationError('Validation failed', { email: ['Email already exists'] });
-      }
-      else {
+      const getUserByEmailOrUsername: UserEntity = await this.userRepository.createQueryBuilder("user")
+        .where("user.email = :email", { email: userDTO.email })
+        .orWhere("user.username = :username", { username: userDTO.username })
+        .getOne();
+
+      if (getUserByEmailOrUsername) {
+        throw new CustomValidationError('Validation failed', { email: ['Username or email already exists'] });
+      } else {
         const verifyToken = crypto.randomBytes(32).toString('base64url');
         const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); //24 hours
         const user = new UserEntity(
@@ -119,7 +123,7 @@ export class UserService {
     let user: UserEntity;
     if (validEmail(data.email)) {
       user = await this.userRepository.findOneBy({ email: data.email });
-    } else{
+    } else {
       user = await this.userRepository.findOneBy({ username: data.email });
     }
     if (!user) {

@@ -10,6 +10,8 @@ import { UserService } from '../user/user.service';
 import { ResponseDto } from 'common/response/responseDto';
 import { UserEntity } from '../user/entity/user.entity';
 import { ConfirmEmailInput } from './dto/confirm_email.input';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'common/exception/guards/auth.guard';
 
 @Resolver()
 export class AuthResolver {

@@ -13,19 +13,25 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
 import useAntNotification from "@/lib/hooks/notification";
-import { ApolloError, useMutation } from "@apollo/client";
+import { ApolloError, useMutation, useReactiveVar } from "@apollo/client";
 import { LOGIN } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { getErrorMessage } from "@/utils/error/apollo.error";
 import { usernameEmailRegex } from "@/utils/validation/username-email.validation";
+import { setCookies } from "@/utils/cookies/handle.cookies";
+import { routeModule } from "next/dist/build/templates/app-page";
+import { useRouter } from "next/navigation";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import { useGetNewAccessToken } from "@/lib/hooks/token";
+import { useHandleError } from "@/lib/hooks/error";
 
 const { Title, Text } = Typography;
 
 const LoginPage = () => {
 
   const screenWidth = UseScreenWidth();
-
+  const router = useRouter();
   const extraSmall = true;
   const small = true;
   const medium = false;
@@ -64,14 +70,17 @@ const LoginPage = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { handleError } = useHandleError();
 
   const [loginMutation] = useMutation(LOGIN, {
-    onCompleted(data) {
+    onCompleted: async (data) => {
+      await setCookies('accessToken', data.login.data.accessToken);
+      await setCookies('expiresIn', data.login.data.expiresIn);
+      router.push('/');
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
     },
-    onError(error: ApolloError) {
-      const errorMessage: string = extractErrorMessages(getErrorMessage(error));
-      openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);
+    onError: async (error: ApolloError) => {
+      await handleError(error);
     }
   });
 
@@ -82,7 +91,7 @@ const LoginPage = () => {
           email: values.username,
           password: values.password,
         }
-      }
+      },
     });
   };
 
