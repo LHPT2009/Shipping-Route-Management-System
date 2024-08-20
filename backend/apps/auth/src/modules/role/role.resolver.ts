@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { ResponseDto } from 'common/response/responseDto';
 import { RoleEntity } from './entity/role.entity';
 import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
+import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 
 @Resolver(() => Role)
 export class RoleResolver {
@@ -45,5 +46,19 @@ export class RoleResolver {
     @Args('id', { type: () => ID }) id: string,
   ): Promise<ResponseDto<RoleEntity>> {
     return this.roleService.remove(id);
+  }
+
+  @Mutation(() => ResponseDto<RoleEntity>)
+  async addPermissionToRole(
+    @Args('input') input: PermissionToRoleDto,
+  ) {
+    return this.roleService.addPermissionToRole(input);
+  }
+
+  @Mutation(() => ResponseDto<RoleEntity>)
+  async removePermissionFromRole(
+    @Args('input') input: PermissionToRoleDto,
+  ) {
+    return this.roleService.removePermissionFromRole(input);
   }
 }
