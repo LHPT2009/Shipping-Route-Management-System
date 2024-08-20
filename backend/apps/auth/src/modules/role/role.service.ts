@@ -5,10 +5,15 @@ import { UpdateRoleDto } from './dto/role-update.dto';
 import { ResponseDto } from 'common/response/responseDto';
 import { RoleEntity } from './entity/role.entity';
 import { STATUS_CODE, STATUS } from 'common/constants/status';
+import { PermissionRepository } from '../permission/permission.repository';
+import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 
 @Injectable()
 export class RoleService {
-  constructor(private roleRepository: RoleRepository) { }
+  constructor(
+    private roleRepository: RoleRepository,
+    private permissionRepository: PermissionRepository
+  ) { }
 
   async findAll(): Promise<ResponseDto<RoleEntity[]>> {
     try {
@@ -64,5 +69,32 @@ export class RoleService {
     } catch (error) {
       return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
     }
+  }
+
+  async addPermissionToRole(input: PermissionToRoleDto): Promise<ResponseDto<RoleEntity>> {
+    const role = await this.roleRepository.findOne({
+      where: { id: input.roleId },
+      relations: ['permissions'],
+    });
+    const permission = await this.permissionRepository.findOne({ where: { id: input.permissionId } });
+
+    role.permissions.push(permission);
+    this.roleRepository.save(role)
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
+  }
+
+  async removePermissionFromRole(input: PermissionToRoleDto): Promise<ResponseDto<RoleEntity>> {
+    const role = await this.roleRepository.findOne({
+      where: { id: input.roleId },
+      relations: ['permissions'],
+    });
+
+    role.permissions = role.permissions.filter(
+      (permission) => permission.id != input.permissionId,
+    );
+
+    this.roleRepository.save(role)
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
+
   }
 }

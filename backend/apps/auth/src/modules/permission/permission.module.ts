@@ -12,6 +12,6 @@ import { RoleModule } from '../role/role.module';
     TypeOrmModule.forFeature([PermissionEntity]),
   ],
   providers: [PermissionService, PermissionResolver, PermissionRepository],
-  exports: [PermissionService],
+  exports: [PermissionService, PermissionRepository],
 })
-export class PermissionModule {}
+export class PermissionModule { }
