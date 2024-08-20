@@ -54,7 +54,7 @@ const HompageComponent: React.FC = () => {
             color: COLOR.TEXT,
           }}
         >
-          Be the best route management business in your town
+          Be the best route management business in your area
         </Title>
 
         <Paragraph

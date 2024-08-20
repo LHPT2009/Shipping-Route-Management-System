@@ -1,4 +1,6 @@
-import React from "react";
+'use client';
+
+import React, { useEffect, useState } from "react";
 import { Layout, Row, Col, Space, Button } from "antd";
 import DrawerComponent from "../drawer";
 import AvatarComponent from "../dropdown/avatar";
@@ -12,12 +14,16 @@ import { useRouter } from "next/navigation";
 import { URL } from "@/constant/url";
 import { COLOR } from "@/constant";
 import Link from "next/link";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import Tung from "../../public/images/homepage/tung_2.jpg";
+import Paragraph from "antd/es/typography/Paragraph";
 
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const screenWidth = UseScreenWidth();
   const router = useRouter();
+  const [isLogin, setIsLogin] = useState<Boolean>(false);
 
   const extraSmall = true;
   const small = true;
@@ -35,6 +41,17 @@ const HeaderComponent = () => {
     extraLarge,
     extraExtraLarge
   );
+
+  useEffect(() => {
+    const fetchCurrentCookies = async () => {
+      const { accessToken, expiresIn } = await fetchCookies();
+      if (accessToken && expiresIn) {
+        setIsLogin(true);
+      }
+    };
+    fetchCurrentCookies();
+  }, []);
+
 
   return (
     <div>
@@ -80,30 +97,60 @@ const HeaderComponent = () => {
         </Col>
 
         <Col span={6}>
-          <Flex justify='end' align='center'>
-            <Button
-              onClick={() => router.push(URL.LOGIN)}
-              type="link"
-              style={{
-                padding: "1.5rem 2rem",
-                border: "none",
-                fontWeight: 500,
-                color: COLOR.PRIMARY
-              }}
-            >
-              Login
-            </Button>
-            <Button
-              onClick={() => router.push(URL.REGISTER)}
-              type="primary"
-              style={{
-                padding: "1.5rem 1.6rem",
-                border: "none",
-              }}
-            >
-              Get started
-            </Button>
-          </Flex>
+
+          {isLogin ? <Link href="/profile">
+            <Flex justify='end' align='center' gap="1rem">
+
+              <div style={{ textAlign: "right" }}>
+                <Paragraph
+                  style={{
+                    fontSize: "1rem",
+                    marginBottom: "0",
+                    fontWeight: 500,
+                    color: COLOR.TEXT
+                  }}
+                >
+                  Le Huynh Phuong Tung
+                </Paragraph>
+                <Paragraph
+                  style={{
+                    fontSize: "0.8rem",
+                    marginBottom: "0",
+                  }}
+                >
+                  Customer
+                </Paragraph>
+              </div>
+              <img style={{ width: "3.2rem", borderRadius: "50%" }} src={Tung.src} alt="tung" />
+            </Flex>
+          </Link>
+            :
+            <Flex justify='end' align='center'>
+              <Button
+                onClick={() => router.push(URL.LOGIN)}
+                type="link"
+                style={{
+                  padding: "1.5rem 2rem",
+                  border: "none",
+                  fontWeight: 500,
+                  color: COLOR.PRIMARY
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => router.push(URL.REGISTER)}
+                type="primary"
+                style={{
+                  padding: "1.5rem 1.6rem",
+                  border: "none",
+                }}
+              >
+                Get started
+              </Button>
+            </Flex>
+          }
+
         </Col>
 
       </Header>

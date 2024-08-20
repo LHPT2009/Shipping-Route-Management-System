@@ -1,26 +1,37 @@
 "use client";
 import React from "react";
-import { KeyOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Divider, Typography, Checkbox, Flex } from "antd";
 import { COLOR } from "@/constant";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import GoogleImg from "../../../public/images/login/google.png"
-import styles from "./login.module.scss";
 
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import { passwordRegex } from "@/utils/validation/password.regex";
-import { emailRegex } from "@/utils/validation/email.regex";
+import { URL } from "@/constant/url";
+import useAntNotification from "@/lib/hooks/notification";
+import { ApolloError, useMutation, useReactiveVar } from "@apollo/client";
+import { LOGIN } from "@/apollo/mutations/auth";
+import { NOTIFICATION } from "@/constant/notification";
+import { extractErrorMessages } from "@/utils/error/format.error";
+import { getErrorMessage } from "@/utils/error/apollo.error";
+import { usernameEmailRegex } from "@/utils/validation/username-email.validation";
+import { setCookies } from "@/utils/cookies/handle.cookies";
+import { routeModule } from "next/dist/build/templates/app-page";
+import { useRouter } from "next/navigation";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import { useGetNewAccessToken } from "@/lib/hooks/token";
+import { useHandleError } from "@/lib/hooks/error";
 
 const { Title, Text } = Typography;
 
 const LoginPage = () => {
 
   const screenWidth = UseScreenWidth();
-
+  const router = useRouter();
   const extraSmall = true;
   const small = true;
   const medium = false;
@@ -43,13 +54,14 @@ const LoginPage = () => {
     .object({
       username: yup
         .string()
+        .matches(usernameEmailRegex, "Please enter a valid username or email")
         .required("Please enter your username"),
       password: yup
         .string()
         .required("Please enter your password"),
     })
     .required();
-  
+
   //useFrom hook
   const {
     control,
@@ -57,12 +69,35 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  const [loginMutation] = useMutation(LOGIN, {
+    onCompleted: async (data) => {
+      await setCookies('accessToken', data.login.data.accessToken);
+      await setCookies('expiresIn', data.login.data.expiresIn);
+      router.push('/');
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const onFinish = async (values: any) => {
+    await loginMutation({
+      variables: {
+        input: {
+          email: values.username,
+          password: values.password,
+        }
+      },
+    });
   };
 
   return (
     <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+      {contextHolder}
       <Form
         initialValues={{ remember: true }}
         style={{
@@ -143,7 +178,7 @@ const LoginPage = () => {
           <Form.Item style={{ display: "flex", alignItems: "flex-start" }}>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-          <Link href={"/auth/register"} style={{
+          <Link href={"/forgot-password"} style={{
             fontSize: "0.95rem",
             fontWeight: 600,
             color: COLOR.PRIMARY,
@@ -183,7 +218,7 @@ const LoginPage = () => {
         <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>
             Don't have an account? {" "}
-            <Link href={"/auth/register"} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
+            <Link href={URL.REGISTER} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
           </Text>
         </Form.Item>
       </Form>
