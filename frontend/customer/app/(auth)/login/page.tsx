@@ -1,20 +1,24 @@
 "use client";
 import React from "react";
-import { KeyOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Divider, Typography, Checkbox, Flex } from "antd";
 import { COLOR } from "@/constant";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import GoogleImg from "../../../public/images/login/google.png"
-import styles from "./login.module.scss";
 
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import { passwordRegex } from "@/utils/validation/password.regex";
-import { emailRegex } from "@/utils/validation/email.regex";
 import { URL } from "@/constant/url";
+import useAntNotification from "@/lib/hooks/notification";
+import { ApolloError, useMutation } from "@apollo/client";
+import { LOGIN } from "@/apollo/mutations/auth";
+import { NOTIFICATION } from "@/constant/notification";
+import { extractErrorMessages } from "@/utils/error/format.error";
+import { getErrorMessage } from "@/utils/error/apollo.error";
+import { usernameEmailRegex } from "@/utils/validation/username-email.validation";
 
 const { Title, Text } = Typography;
 
@@ -44,6 +48,7 @@ const LoginPage = () => {
     .object({
       username: yup
         .string()
+        .matches(usernameEmailRegex, "Please enter a valid username or email")
         .required("Please enter your username"),
       password: yup
         .string()
@@ -58,12 +63,32 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+
+  const [loginMutation] = useMutation(LOGIN, {
+    onCompleted(data) {
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
+    },
+    onError(error: ApolloError) {
+      const errorMessage: string = extractErrorMessages(getErrorMessage(error));
+      openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);
+    }
+  });
+
+  const onFinish = async (values: any) => {
+    await loginMutation({
+      variables: {
+        input: {
+          email: values.username,
+          password: values.password,
+        }
+      }
+    });
   };
 
   return (
     <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+      {contextHolder}
       <Form
         initialValues={{ remember: true }}
         style={{

@@ -1,0 +1,1 @@
+export const usernameEmailRegex: RegExp = /^(?=.*[a-z])[a-z0-9]{5,}$|^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

@@ -116,15 +116,16 @@ export class UserService {
   }
 
   async findOne(data: LoginInput): Promise<UserEntity> {
-    const user = await this.userRepository.findOneBy({ email: data.email });
+    let user: UserEntity;
+    if (validEmail(data.email)) {
+      user = await this.userRepository.findOneBy({ email: data.email });
+    } else{
+      user = await this.userRepository.findOneBy({ username: data.email });
+    }
     if (!user) {
-      throw new UnauthorizedException('Could not find user');
+      throw new CustomValidationError('Not found', { username: ['User is not found'] });
     }
     return user;
-  }
-
-  async findById(id: string): Promise<UserEntity> {
-    return this.userRepository.findOneBy({ id: id });
   }
 
   async findInfoByID(id: string): Promise<ResponseDto<UserEntity>> {
@@ -147,7 +148,7 @@ export class UserService {
     return instanceToPlain(permission);
   }
 
-  validateUser(email: string, password: string, passwordConfirm: string,username: string) {
+  validateUser(email: string, password: string, passwordConfirm: string, username: string) {
     const validationErrors: ValidationErrorsInterface = {}
     if (!validEmail(email)) {
       validationErrors[email] = ['Email is invalid']
@@ -158,7 +159,7 @@ export class UserService {
     if (!validPassword(password)) {
       validationErrors[password] = ['Password is too weak']
     }
-    if(password !== passwordConfirm) {
+    if (password !== passwordConfirm) {
       validationErrors[password] = ['Password is not match']
     }
     return validationErrors;

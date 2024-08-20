@@ -1,6 +1,6 @@
-import { deleteCookies } from "../cookies/delete.cookies";
-import { getCookies } from "../cookies/get.cookies";
-import { hasCookies } from "../cookies/has.cookies";
+
+import { deleteCookies, getCookies, hasCookies } from "../cookies/handle.cookies";
+
 
 interface ResultFetchCookiesInterface {
   accessToken: string;

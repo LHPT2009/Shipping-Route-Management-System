@@ -3,7 +3,7 @@
 import LayoutComponent from "@/components/layout/client";
 import BodyComponent from "@/components/body";
 import HompageComponent from "@/components/homepage";
-import { getCookies } from "@/utils/cookies/get.cookies";
+import { getCookies } from "@/utils/cookies/handle.cookies";
 import { setCookies } from "@/utils/cookies/set.cookies";
 import { useEffect } from "react";
 import { deleteCache } from "next/dist/server/lib/render-server";

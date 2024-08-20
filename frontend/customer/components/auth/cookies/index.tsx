@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { setCookies } from "@/utils/cookies/set.cookies";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import { setCookies } from "@/utils/cookies/handle.cookies";
 
 export default function CookiesComponent() {
   useEffect(() => {

@@ -64,7 +64,7 @@ export class RefreshTokenService {
                 { expiresIn: `${expiresIn}d`, secret: process.env.JWT_SECRET || 'secret' }
             );
 
-            return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { token: newAccessToken, expiresAt: expiresAt }, []);
+            return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: newAccessToken, expiresAt: expiresAt }, []);
         } catch (error) {
             throw new CustomValidationError('ERR_REFRESH_TOKEN_EXPIRED_OR_INVALID', {});
         }
