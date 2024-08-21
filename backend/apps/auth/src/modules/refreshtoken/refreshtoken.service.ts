@@ -71,10 +71,10 @@ export class RefreshTokenService {
     }
 
     async remove(context: any) {
-        const info = context.user;
+        const decode = this.jwtService.decode(context.accessToken)
 
-        const decoded = info as PayloadType;
-        const { userId } = decoded;
+        const item = decode as PayloadType;
+        const { userId } = item;
 
         const checkinfo = await this.refreshTokenRepository.findOneBy({ userId: userId });
         if (!checkinfo) {
