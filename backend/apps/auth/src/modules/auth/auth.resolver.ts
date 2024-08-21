@@ -14,7 +14,6 @@ import { UserEntity } from '../user/entity/user.entity';
 import { ConfirmEmailInput } from './dto/confirm_email.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'common/exception/guards/auth.guard';
-import { PermissionGuard } from 'common/exception/guards/permission.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -31,8 +30,6 @@ export class AuthResolver {
     return this.userService.create(input);
   }
 
-  // @UseGuards(PermissionGuard)
-  @UseGuards(AuthGuard)
   @Mutation(() => ResponseDto<{}>)
   login(
     @Args('input')
