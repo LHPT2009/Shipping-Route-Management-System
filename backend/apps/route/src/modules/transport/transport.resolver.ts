@@ -6,13 +6,18 @@ import { UpdateTransportDto } from './dto/transport-update.dto';
 import { UseGuards } from '@nestjs/common';
 import { ResponseDto } from 'common/response/responseDto';
 import { AuthGuard } from 'common/exception/guards/auth.guard';
+import { RoleGuard } from 'common/exception/guards/role.guard';
+import { Roles } from 'common/exception/guards/decorator/roles.decorator';
+import { Permissions } from 'common/exception/guards/decorator/permissions.decorator';
 
 @Resolver(() => Transport)
 export class TransportsResolver {
   constructor(private transportsService: TransportsService) { }
 
   @Query(() => ResponseDto<Transport[]>)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles('user', 'admin')
+  @Permissions('GET', 'POST')
   async getTransports(): Promise<ResponseDto<Transport[]>> {
     return this.transportsService.findAll();
   }
