@@ -12,7 +12,7 @@ export const authContext = async ({ req }) => {
   const accessToken: string = req.headers.accesstoken;
 
   if (accessToken === undefined) {
-    // console.log('No access token');
+    console.log('No access token');
   }
   else {
     const jwtService = new JwtService();
@@ -32,6 +32,7 @@ export const authContext = async ({ req }) => {
 
     try {
       const data = await lastValueFrom(appService.getUserRoleById(decoded.userId));
+      console.log('data from grpc: ', data);
       return {
         accessToken: req.headers.accesstoken,
         userRole: data,
