@@ -20,6 +20,8 @@ export class AuthGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
     const accessToken = req.headers.access_token;
+    const user_role = req.headers.user_role;
+    console.log("user role in auth service: ", JSON.parse(user_role));
 
     if (!accessToken || accessToken === 'null') {
       throw new CustomValidationError('ERR_AUTH_LOGIN', {});
@@ -29,6 +31,7 @@ export class AuthGuard implements CanActivate {
       const decoded = this.jwtService.verify(accessToken, {
         secret: process.env.JWT_SECRET || 'secret',
       });
+      console.log(decoded);
       return true;
     } catch (err) {
       if (err.name === 'TokenExpiredError') {

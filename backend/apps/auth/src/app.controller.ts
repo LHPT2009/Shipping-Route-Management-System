@@ -8,6 +8,7 @@ import { UserEntity } from './modules/user/entity/user.entity';
 import { ResponseDto } from 'common/response/responseDto';
 import { instanceToPlain } from 'class-transformer';
 import { RoleService } from './modules/role/role.service';
+import { Any } from 'typeorm';
 
 @Controller()
 export class AppController {
@@ -32,7 +33,7 @@ export class AppController {
     const result: UserRole = {
       id: getUserInfo.data.id,
       role: getUserInfo.data.roles.name,
-      permissions: getPermission.data.permissions.map(item => item.name),
+      permissions: getPermission.data.permissions.map((item:any) => item.name),
     };
 
     return result;

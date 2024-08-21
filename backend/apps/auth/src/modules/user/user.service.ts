@@ -45,7 +45,6 @@ export class UserService {
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
     const role = new RoleEntity("1", "user")
-
     const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.passwordConfirm, userDTO.username);
     if (Object.keys(validationErrors).length !== 0) {
       throw new CustomValidationError('Invalid input', validationErrors);
@@ -61,7 +60,7 @@ export class UserService {
         throw new CustomValidationError('Validation failed', { email: ['Username or email already exists'] });
       } else {
         const verifyToken = crypto.randomBytes(32).toString('base64url');
-        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); //24 hours
+        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);//24 hours
         const user = new UserEntity(
           userDTO.username,
           userDTO.email,
