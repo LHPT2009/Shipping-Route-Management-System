@@ -14,7 +14,8 @@ export class PermissionGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const gqlContext = ctx.getContext();
 
-    const user = gqlContext.user;
+    const user = gqlContext.user_role;
+    console.log('User: ', user);
     if (
       user &&
       user.roles &&
