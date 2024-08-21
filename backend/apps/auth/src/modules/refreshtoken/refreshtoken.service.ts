@@ -69,4 +69,18 @@ export class RefreshTokenService {
             throw new CustomValidationError('ERR_REFRESH_TOKEN_EXPIRED_OR_INVALID', {});
         }
     }
+
+    async remove(context: any) {
+        const info = context.user;
+
+        const decoded = info as PayloadType;
+        const { userId } = decoded;
+
+        const checkinfo = await this.refreshTokenRepository.findOneBy({ userId: userId });
+        if (!checkinfo) {
+            throw new CustomValidationError('ERR_NOT_FOUND', {});
+        }
+
+        await this.refreshTokenRepository.remove(checkinfo)
+    }
 }

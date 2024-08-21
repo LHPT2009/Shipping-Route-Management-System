@@ -2,6 +2,8 @@ import {
   Args,
   Mutation,
   Resolver,
+  Query,
+  Context
 } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { SignupInput } from './dto/signup.input';
@@ -45,5 +47,11 @@ export class AuthResolver {
     input: ConfirmEmailInput,
   ): Promise<ResponseDto<any>> {
     return this.userService.confirmEmail(input);
+  }
+
+  @Query(() => ResponseDto<{}>, { nullable: true })
+  @UseGuards(AuthGuard)
+  async logoutAccount(@Context() context: any): Promise<ResponseDto<{}>> {
+    return this.authService.logout(context);
   }
 }

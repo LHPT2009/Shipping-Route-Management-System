@@ -135,7 +135,7 @@ export class UserService {
     try {
       const item = await this.userRepository.findOne({
         where: { id },
-        relations: ['roles'],
+        relations: ['roles', 'roles.permissions'],
       });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
     } catch (error) {

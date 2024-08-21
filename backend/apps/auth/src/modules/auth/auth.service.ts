@@ -26,7 +26,7 @@ export class AuthService {
 
     const user = await this.userService.findOne(loginDTO);
 
-    if(!user.active){
+    if (!user.active) {
       throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
     }
 
@@ -49,5 +49,10 @@ export class AuthService {
       throw new CustomValidationError(STATUS.VALIDATION_ERROR, { password: ['Password is wrong. Please try again'] });
     }
 
+  }
+
+  async logout(context: any): Promise<ResponseDto<{}>> {
+    await this.refreshTokenService.remove(context);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
   }
 }
