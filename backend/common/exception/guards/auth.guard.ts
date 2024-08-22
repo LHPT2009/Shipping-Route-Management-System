@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
+import { STATUS } from 'common/constants/status';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 import * as dotenv from 'dotenv';
 
@@ -23,7 +24,7 @@ export class AuthGuard implements CanActivate {
     const user_role = req.headers.user_role;
 
     if (!accessToken || accessToken === 'null') {
-      throw new CustomValidationError('ERR_AUTH_LOGIN', {});
+      throw new CustomValidationError(STATUS.ERR_AUTH_LOGIN, {});
     }
 
     try {
@@ -35,12 +36,12 @@ export class AuthGuard implements CanActivate {
       return true;
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
-        throw new CustomValidationError('ERR_TOKEN_EXPIRED', {});
+        throw new CustomValidationError(STATUS.ERR_TOKEN_EXPIRED, {});
       }
       if (err.name === 'JsonWebTokenError') {
-        throw new CustomValidationError('ERR_TOKEN_INVALID', {});
+        throw new CustomValidationError(STATUS.ERR_TOKEN_INVALID, {});
       }
-      throw new CustomValidationError('ERR_UNKNOWN_AUTH_ERROR', {});
+      throw new CustomValidationError(STATUS.ERR_UNKNOWN_AUTH_ERROR, {});
     }
   }
 }

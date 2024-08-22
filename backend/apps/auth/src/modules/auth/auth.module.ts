@@ -16,10 +16,7 @@ import { RefreshTokenModule } from '../refreshtoken/refreshtoken.module';
     forwardRef(() => RefreshTokenModule),
     TypeOrmModule.forFeature([UserEntity, UserRepository]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'secret',
-      // signOptions: {
-      //   expiresIn: '1d',
-      // },
+      secret: process.env.JWT_SECRET || 'secret'
     }),
   ],
   providers: [AuthService, AuthResolver, EmailService],

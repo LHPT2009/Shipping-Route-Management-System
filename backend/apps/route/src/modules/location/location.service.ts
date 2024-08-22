@@ -16,7 +16,7 @@ export class LocationsService {
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, locations, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
   async findOne(id: string): Promise<ResponseDto<Location>> {
@@ -24,7 +24,7 @@ export class LocationsService {
       const location = await this.locationRepository.findOneBy({ id });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, location, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -37,7 +37,7 @@ export class LocationsService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, location, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -53,7 +53,7 @@ export class LocationsService {
       await this.locationRepository.save(location);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, location, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -62,7 +62,7 @@ export class LocationsService {
       await this.locationRepository.delete(id);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 }

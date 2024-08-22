@@ -36,10 +36,6 @@ const CustomFormatError = (
     };
   }
 
-  // if (error.extensions?.exception instanceof InternalServerErrorException) {
-  //   return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, ERROR.INTERNAL_SERVER_ERROR, [], [])
-  // }
-
   if (error.extensions?.originalError) {
     const originalError = error.extensions.originalError as any;
     return new ResponseDto(originalError.statusCode, originalError.message || error.message, [], originalError.errors || [])

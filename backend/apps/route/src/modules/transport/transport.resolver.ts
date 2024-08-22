@@ -9,22 +9,24 @@ import { AuthGuard } from 'common/exception/guards/auth.guard';
 import { RoleGuard } from 'common/exception/guards/role.guard';
 import { Roles } from 'common/exception/guards/decorator/roles.decorator';
 import { Permissions } from 'common/exception/guards/decorator/permissions.decorator';
+import { ROLE } from 'common/constants/role';
+import { PERMISSION } from 'common/constants/permission';
 
 @Resolver(() => Transport)
 export class TransportsResolver {
   constructor(private transportsService: TransportsService) { }
 
   @Query(() => ResponseDto<Transport[]>)
-  @Roles('user', 'admin')
-  @Permissions('GET')
+  @Roles(ROLE.USER, ROLE.ADMIN)
+  @Permissions(PERMISSION.GET)
   @UseGuards(AuthGuard, RoleGuard)
   async getTransports(): Promise<ResponseDto<Transport[]>> {
     return this.transportsService.findAll();
   }
 
   @Query(() => ResponseDto<Transport>, { nullable: true })
-  @Roles('admin')
-  @Permissions('GET')
+  @Roles(ROLE.USER, ROLE.ADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST)
   @UseGuards(AuthGuard, RoleGuard)
   async getTransport(
     @Args('id', { type: () => ID }) id: string,

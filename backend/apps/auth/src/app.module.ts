@@ -33,6 +33,7 @@ import { UserRepository } from './modules/user/user.repository';
 import { EmailService } from './modules/email/email.service';
 import { JwtModule } from '@nestjs/jwt';
 import { RefreshTokenEntity } from './modules/refreshtoken/entity/refreshtoken.entity';
+import { SeedService } from './seed/seed.service';
 
 @Module({
   imports: [
@@ -75,7 +76,7 @@ import { RefreshTokenEntity } from './modules/refreshtoken/entity/refreshtoken.e
     TypeOrmModule.forFeature([UserEntity]),
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, UserRepository, EmailService],
+  providers: [AppService, UserService, UserRepository, EmailService, SeedService],
 })
 export class AppModule implements NestModule {
   constructor(/*private dataSource: DataSource*/) {

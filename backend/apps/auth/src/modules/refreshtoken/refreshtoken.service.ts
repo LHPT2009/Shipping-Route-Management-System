@@ -16,8 +16,7 @@ export class RefreshTokenService {
     async createRefreshToken(item: PayloadType) {
         const { userId, email } = item;
         const expiresIn = 7;
-        const expiresAt = new Date(Date.now() + expiresIn * 24 * 60 * 60 * 1000).toISOString(); // day
-        const checkinfo = await this.refreshTokenRepository.findOneBy({ userId: userId });
+        const checkinfo = await this.refreshTokenRepository.findOneBy({ user: { id: userId } });
         if (checkinfo) {
             const newtoken = this.jwtService.sign(
                 { userId, email },
@@ -30,7 +29,7 @@ export class RefreshTokenService {
                 { userId, email },
                 { expiresIn: `${expiresIn}d`, secret: process.env.JWT_SECRET || 'secret' }
             );
-            const item = this.refreshTokenRepository.create({ userId: userId, token: newtoken });
+            const item = this.refreshTokenRepository.create({ user: { id: userId }, token: newtoken });
             await this.refreshTokenRepository.save(item);
         }
     }
@@ -52,7 +51,7 @@ export class RefreshTokenService {
             const decoded = this.jwtService.decode(accessToken) as PayloadType;
             const { userId, email } = decoded;
 
-            const checkinfo = await this.refreshTokenRepository.findOneBy({ userId: userId });
+            const checkinfo = await this.refreshTokenRepository.findOneBy({ user: { id: userId } });
             if (!checkinfo) {
                 throw new CustomValidationError('ERR_AUTH_LOGIN', {});
             }
@@ -66,7 +65,7 @@ export class RefreshTokenService {
 
             return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: newAccessToken, expiresIn: expiresAt }, []);
         } catch (error) {
-            throw new CustomValidationError('ERR_REFRESH_TOKEN_EXPIRED_OR_INVALID', {});
+            throw new CustomValidationError(STATUS.ERR_REFRESH_TOKEN, {});
         }
     }
 
@@ -76,9 +75,9 @@ export class RefreshTokenService {
         const item = decode as PayloadType;
         const { userId } = item;
 
-        const checkinfo = await this.refreshTokenRepository.findOneBy({ userId: userId });
+        const checkinfo = await this.refreshTokenRepository.findOneBy({ user: { id: userId } });
         if (!checkinfo) {
-            throw new CustomValidationError('ERR_NOT_FOUND', {});
+            throw new CustomValidationError(STATUS.ERR_NOT_FOUND, {});
         }
 
         await this.refreshTokenRepository.remove(checkinfo)
