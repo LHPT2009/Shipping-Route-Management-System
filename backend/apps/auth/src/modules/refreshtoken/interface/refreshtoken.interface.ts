@@ -1,5 +1,7 @@
+import { UserEntity } from "../../user/entity/user.entity";
+
 export default interface RefreshTokenInterface {
     id: string;
-    userId: string;
+    user: UserEntity;
     token: string;
 }

@@ -2,10 +2,11 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector } from '@nestjs/core';
+import { CustomValidationError } from '../validation/custom-validation-error';
+import { STATUS } from 'common/constants/status';
 
 interface UserRole {
   id: string;
@@ -33,7 +34,7 @@ export class RoleGuard implements CanActivate {
     if (requiredRoles) {
       const hasRole = requiredRoles.includes(userRole.role);
       if (!hasRole) {
-        throw new ForbiddenException('You do not have the required role');
+        throw new CustomValidationError(STATUS.ERR_ROLE_USER, {});
       }
     }
 
@@ -43,7 +44,7 @@ export class RoleGuard implements CanActivate {
       );
 
       if (!hasPermission) {
-        throw new ForbiddenException('You do not have the required permissions');
+        throw new CustomValidationError(STATUS.ERR_PERMISSION_USER, {});
       }
     }
 

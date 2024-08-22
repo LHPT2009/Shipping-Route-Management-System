@@ -19,9 +19,12 @@ import { EmailService } from '../email/email.service';
 import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
 import * as fs from 'fs';
 import * as path from 'path';
+
 import * as bcrypt from 'bcryptjs';
 import { ResetPasswordInput } from '../auth/dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify_email.input';
+import { get } from 'http';
+import { ROLE } from 'common/constants/role';
 
 @Injectable()
 export class UserService {
@@ -36,7 +39,7 @@ export class UserService {
       const users = await this.userRepository.find();
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, users, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -46,7 +49,7 @@ export class UserService {
   }
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
-    const role = new RoleEntity("1", "user")
+    const role = new RoleEntity("1", ROLE.USER)
     const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.passwordConfirm, userDTO.username);
     if (Object.keys(validationErrors).length !== 0) {
       throw new CustomValidationError('Invalid input', validationErrors);
@@ -207,7 +210,7 @@ export class UserService {
       });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 

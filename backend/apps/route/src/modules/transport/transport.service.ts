@@ -15,7 +15,7 @@ export class TransportsService {
       const transports = await this.transportRepository.find();
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transports, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -28,7 +28,7 @@ export class TransportsService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, transport, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -37,7 +37,7 @@ export class TransportsService {
       const transport = await this.transportRepository.findOneBy({ id });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transport, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -53,7 +53,7 @@ export class TransportsService {
       await this.transportRepository.save(transport);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, transport, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -62,7 +62,7 @@ export class TransportsService {
       await this.transportRepository.delete(id);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 }

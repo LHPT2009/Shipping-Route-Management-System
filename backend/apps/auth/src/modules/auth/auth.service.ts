@@ -27,7 +27,7 @@ export class AuthService {
     const user = await this.userService.findOne(loginDTO);
 
     if (!user.active) {
-      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
     }
 
     const passwordMatched = await bcrypt.compare(
@@ -46,7 +46,7 @@ export class AuthService {
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
 
     } else {
-      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { password: ['Password is wrong. Please try again'] });
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { password: ['Password is wrong. Please try again'] });
     }
 
   }

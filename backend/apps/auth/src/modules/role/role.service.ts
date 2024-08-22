@@ -20,7 +20,7 @@ export class RoleService {
       const roles = await this.roleRepository.find();
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, roles, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
   async findOne(id: string): Promise<ResponseDto<RoleEntity>> {
@@ -31,7 +31,7 @@ export class RoleService {
       });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -41,7 +41,7 @@ export class RoleService {
       await this.roleRepository.save(item);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, item, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -57,7 +57,7 @@ export class RoleService {
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
 
     }
   }
@@ -67,7 +67,7 @@ export class RoleService {
       await this.roleRepository.delete(id);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
