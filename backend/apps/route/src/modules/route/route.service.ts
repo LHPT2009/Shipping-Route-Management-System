@@ -15,7 +15,7 @@ export class RoutesService {
       const routes = await this.routeRepository.find();
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, routes, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -28,7 +28,7 @@ export class RoutesService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -38,7 +38,7 @@ export class RoutesService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -55,7 +55,7 @@ export class RoutesService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -64,7 +64,7 @@ export class RoutesService {
       await this.routeRepository.delete(id);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 }

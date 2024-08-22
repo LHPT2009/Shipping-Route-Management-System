@@ -19,7 +19,6 @@ import {
 import { HealthModule } from './modules/health/health.module';
 import { LocationModule } from './modules/location/location.module';
 import { TransportModule } from './modules/transport/transport.module';
-// import CustomFormatError from '../../../common/exception/validation/custom-format-error';
 
 @Module({
   imports: [

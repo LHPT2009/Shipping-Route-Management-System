@@ -6,10 +6,12 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  OneToMany
 } from 'typeorm';
 import { RoleEntity } from '../../role/entity/role.entity';
 import UserInterface from '../interface/user.interface';
 import * as bcrypt from 'bcryptjs';
+import { RefreshTokenEntity } from '../../refreshtoken/entity/refreshtoken.entity';
 
 @Entity('users')
 export class UserEntity implements UserInterface {
@@ -47,6 +49,9 @@ export class UserEntity implements UserInterface {
   @ManyToOne(() => RoleEntity, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   roles: RoleEntity;
+
+  @OneToMany(() => RefreshTokenEntity, refreshToken => refreshToken.user)
+  refreshTokens: RefreshTokenEntity[];
 
   constructor(
     username: string,

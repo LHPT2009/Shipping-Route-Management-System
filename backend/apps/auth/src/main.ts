@@ -30,7 +30,7 @@ async function bootstrap() {
           });
           return new BadRequestException({
             statusCode: STATUS_CODE.FAILURE,
-            message: STATUS.VALIDATION_ERROR,
+            message: STATUS.ERR_VALIDATION,
             errors: messages,
           });
         },

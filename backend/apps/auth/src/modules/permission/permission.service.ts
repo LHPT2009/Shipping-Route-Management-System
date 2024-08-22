@@ -15,7 +15,7 @@ export class PermissionService {
       const permissions = await this.permissionRepository.find();
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, permissions, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
   async findOne(id: string): Promise<ResponseDto<PermissionEntity>> {
@@ -23,7 +23,7 @@ export class PermissionService {
       const permission = await this.permissionRepository.findOneBy({ id });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, permission, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -35,7 +35,7 @@ export class PermissionService {
       await this.permissionRepository.save(permission);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, permission, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -48,7 +48,7 @@ export class PermissionService {
       await this.permissionRepository.save(permission);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, permission, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 
@@ -57,7 +57,7 @@ export class PermissionService {
       await this.permissionRepository.delete(id);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.INTERNAL_SERVER_ERROR, STATUS.INTERNAL_SERVER_ERROR, null, null);
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
 }
