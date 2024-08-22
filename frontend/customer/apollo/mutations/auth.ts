@@ -45,12 +45,12 @@ export const RESET_PASSWORD_VERIFY_EMAIL = gql`
 `;
 
 export const RESET_PASSWORD = gql`
-mutation ResetPassword($input: ResetPasswordInput!) {
-  resetPassword(input: $input) {
-      status
-      message
-      data
-      error
+  mutation ResetPassword($input: ResetPasswordInput!) {
+    resetPassword(input: $input) {
+        status
+        message
+        data
+        error
+    }
   }
-}
 `;

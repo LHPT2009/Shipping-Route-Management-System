@@ -14,7 +14,7 @@ import { CONFIRM_EMAIL } from "@/apollo/mutations/auth";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { getErrorMessage } from "@/utils/error/apollo.error";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 interface VerifyAccountProps {
   params: any; // Replace 'any' with the appropriate type for the 'params' property

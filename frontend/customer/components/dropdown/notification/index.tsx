@@ -21,7 +21,7 @@ const items: MenuProps["items"] = [
   },
 ];
 
-const notificationComponent = () => {
+const NotificationComponent = () => {
   return (
     <>
       <Dropdown menu={{ items }} trigger={["click"]} arrow={true}>
@@ -37,4 +37,4 @@ const notificationComponent = () => {
     </>
   );
 };
-export default notificationComponent;
+export default NotificationComponent;

@@ -54,7 +54,7 @@ const ForgotPasswordPage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
   const [resetPasswordVerifyMutation, {data, loading}] = useMutation(RESET_PASSWORD_VERIFY_EMAIL, {

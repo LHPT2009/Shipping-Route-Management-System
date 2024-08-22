@@ -21,3 +21,13 @@ export const GET_NEW_ACCESS_TOKEN = gql`
   }
 `;
 
+export const LOGOUT = gql`
+  query {
+    logoutAccount {
+        status
+        message
+        data
+        error
+    }
+  }
+`;
