@@ -19,8 +19,9 @@ import { EmailService } from '../email/email.service';
 import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
 import * as fs from 'fs';
 import * as path from 'path';
-import { get } from 'http';
-import { ROLE } from 'common/constants/role';
+import * as bcrypt from 'bcryptjs';
+import { ResetPasswordInput } from '../auth/dto/reset_password.input';
+import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify_email.input';
 
 @Injectable()
 export class UserService {
@@ -45,7 +46,7 @@ export class UserService {
   }
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
-    const role = new RoleEntity("1", ROLE.USER)
+    const role = new RoleEntity("1", "user")
     const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.passwordConfirm, userDTO.username);
     if (Object.keys(validationErrors).length !== 0) {
       throw new CustomValidationError('Invalid input', validationErrors);
@@ -71,27 +72,40 @@ export class UserService {
           role
         );
         await this.userRepository.save(user);
-        this.sendMail(verifyToken, userDTO.email, userDTO.username);
+
+        const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}?email=${userDTO.email}`;
+
+        this.sendMail(
+          "Account activation",
+          "Thanks for registering! Please verify your email by clicking the button below to complete the process.",
+          "Activate your account",
+          verifyToken,
+          userDTO.email,
+          userDTO.username,
+          url
+        );
+
         return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
       }
     }
   }
 
-  private email_template(url: string, username: string): string {
+  private email_template(title: string, content: string, button: string, url: string, username: string): string {
     const templatePath = path.resolve(process.cwd(), 'apps/auth/src/modules/email/email_template.html');
     let htmlContent = fs.readFileSync(templatePath, 'utf-8');
     htmlContent = htmlContent.replace('{{url}}', url)
       .replace('{{username}}', username)
       .replace('{{contact}}', process.env.CUSTOMER_CONTACT_URL)
+      .replace('{{title}}', title)
+      .replace('{{content}}', content)
+      .replace('{{button}}', button);
 
     return htmlContent;
   }
 
-  sendMail(verifyToken: string, email: string, username: string) {
+  sendMail(title: string, content: string, button: string, verifyToken: string, email: string, username: string, url: string) {
     try {
-      const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}?email=${email}`;
-      const emailHtml = this.email_template(url, username);
-
+      const emailHtml = this.email_template(title, content, button, url, username);
       this.emailService.sendEmail(
         email,
         'Verify a new account',
@@ -107,16 +121,69 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ verify_token: userDTO.verifyToken });
 
     if (!user) {
-      throw new CustomValidationError('Not found', { user: ['User not found'] });
+      throw new CustomValidationError('Not found', { user: ['Token is invalid. Please try again with new request.'] });
     } else if (user.verify_token_expires < new Date()) {
-      throw new CustomValidationError('Token expired', { user: ['Token expired'] });
+      throw new CustomValidationError('Token expired', { user: ['Token expired. Please try again with new request.'] });
     } else {
       user.active = true;
-      // user.verify_token = null;
-      // user.verify_token_expires = null;
+      user.verify_token = null;
+      user.verify_token_expires = null;
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, [], []);
     }
+  }
+
+  async resetPasswordVerifyEmail(userDTO: ResetPasswordVerifyEmailInput): Promise<ResponseDto<{}>> {
+    if (!validEmail(userDTO.email)) {
+      throw new CustomValidationError('Invalid input', { email: ['Email is invalid'] });
+    }
+    const user = await this.userRepository.findOneBy({ email: userDTO.email });
+    if (!user) {
+      throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
+    }
+    if (!user.active) {
+      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
+    }
+    const verifyToken = crypto.randomBytes(32).toString('base64url');
+    const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    user.verify_token = verifyToken;
+    user.verify_token_expires = verifyTokenExpires;
+    await this.userRepository.save(user);
+
+    const url = `${process.env.CUSTOMER_RESET_PASSWORD_URL}/${verifyToken}?email=${userDTO.email}`;
+
+    this.sendMail(
+      "Reset password",
+      "Please click the button below to recover your account.",
+      "Reset your password",
+      verifyToken, 
+      user.email, 
+      user.username, 
+      url
+    );
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
+  }
+
+  async resetPassword(userDTO: ResetPasswordInput): Promise<ResponseDto<{}>> {
+    if (!validPassword(userDTO.newPassword)) {
+      throw new CustomValidationError('Invalid input', { newPassword: ['New password is too weak'] });
+    }
+    const user = await this.userRepository.findOneBy({ verify_token: userDTO.verifyToken });
+    if (!user) {
+      throw new CustomValidationError('Not found', { verifyToken: ['Token is invalid. Please try again with new request.'] });
+    }
+    if (user.verify_token_expires < new Date()) {
+      throw new CustomValidationError('Token expired', { user: ['Token expired. Please try again with new request.'] });
+    }
+    if (userDTO.newPassword !== userDTO.passwordConfirm) {
+      throw new CustomValidationError('Invalid input', { passwordConfirm: ['Password confirm is not match'] });
+    }
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(userDTO.newPassword, salt);
+    user.verify_token = null;
+    user.verify_token_expires = null;
+    await this.userRepository.save(user);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
   }
 
   async findOne(data: LoginInput): Promise<UserEntity> {
