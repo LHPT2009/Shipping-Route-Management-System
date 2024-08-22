@@ -32,3 +32,25 @@ export const CONFIRM_EMAIL = gql`
     }
   }
 `;
+
+export const RESET_PASSWORD_VERIFY_EMAIL = gql`
+  mutation ResetPasswordVerifyEmail($input: ResetPasswordVerifyEmailInput!) {
+    resetPasswordVerifyEmail(input: $input) {
+        status
+        message
+        data
+        error
+    }
+  }
+`;
+
+export const RESET_PASSWORD = gql`
+mutation ResetPassword($input: ResetPasswordInput!) {
+  resetPassword(input: $input) {
+      status
+      message
+      data
+      error
+  }
+}
+`;

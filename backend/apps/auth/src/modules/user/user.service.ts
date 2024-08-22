@@ -72,7 +72,9 @@ export class UserService {
           role
         );
         await this.userRepository.save(user);
-        this.sendMail(verifyToken, userDTO.email, userDTO.username);
+
+        const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}?email=${userDTO.email}`;
+        this.sendMail(verifyToken, userDTO.email, userDTO.username, url);
         return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
       }
     }
@@ -88,11 +90,10 @@ export class UserService {
     return htmlContent;
   }
 
-  sendMail(verifyToken: string, email: string, username: string) {
+  sendMail(verifyToken: string, email: string, username: string, url: string) {
     try {
-      const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}?email=${email}`;
+    
       const emailHtml = this.email_template(url, username);
-
       this.emailService.sendEmail(
         email,
         'Verify a new account',
@@ -134,7 +135,9 @@ export class UserService {
     const verifyToken = crypto.randomBytes(32).toString('base64url');
     user.verify_token = verifyToken;
     await this.userRepository.save(user);
-    this.sendMail(verifyToken, user.email, user.username);
+    
+    const url = `${process.env.CUSTOMER_EMAIL_URL}/new-password/${verifyToken}?email=${userDTO.email}`;
+    this.sendMail(verifyToken, user.email, user.username, url);
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
   }
 
@@ -147,7 +150,8 @@ export class UserService {
     if(userDTO.newPassword !== userDTO.passwordConfirm) {
       throw new CustomValidationError('Invalid input', { passwordConfirm: ['Password confirm is not match'] });
     }
-    user.password = userDTO.newPassword;
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(userDTO.newPassword, salt);
     await this.userRepository.save(user);
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
   }

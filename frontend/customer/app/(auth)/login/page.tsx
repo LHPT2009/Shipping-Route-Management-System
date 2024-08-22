@@ -72,7 +72,7 @@ const LoginPage = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [loginMutation] = useMutation(LOGIN, {
+  const [loginMutation, {loading}] = useMutation(LOGIN, {
     onCompleted: async (data) => {
       await setCookies('accessToken', data.login.data.accessToken);
       await setCookies('expiresIn', data.login.data.expiresIn);
@@ -189,6 +189,7 @@ const LoginPage = () => {
         {/* Button login*/}
         <Form.Item>
           <Button
+            loading={loading}
             type="primary"
             htmlType="submit"
             className="login-form-button"

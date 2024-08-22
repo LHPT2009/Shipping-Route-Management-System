@@ -57,8 +57,7 @@ const EnterEmailComponent = () => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onFinish = (values: any) => {
-    dispatch(authActions.changeForgotPasswordStatus(ForgotPasswordStatus.VERIFY));
-    dispatch(authActions.setForgotpasswordEmail(values.email));
+    console.log(values.email);
   };
 
   return (
@@ -93,7 +92,7 @@ const EnterEmailComponent = () => {
         {/* Email */}
         <Form.Item
           name="email"
-          style={{ paddingBottom: errors.email ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "2rem" }}
+          style={{ paddingBottom: errors.email ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "1.7rem" }}
           help={
             errors.email && (
               <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.email?.message}</span>
@@ -115,21 +114,33 @@ const EnterEmailComponent = () => {
           />
         </Form.Item>
 
+
         {/* Button register*/}
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "1.5rem" }}
+            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "1.3rem" }}
           >
-            Next
+            Submit
           </Button>
         </Form.Item>
 
-        <Form.Item style={{ textAlign: "center", marginTop: "2rem" }}>
+        {/* {data ?? <Paragraph
+          style={{
+            fontSize: "1rem",
+            marginTop: "1rem",
+            fontWeight: "500",
+            textAlign: "center",
+          }}
+        >
+          Didn’t receive the email? Click <span style={{ color: COLOR.PRIMARY, fontWeight: "600" }}>Resend</span> to try again
+        </Paragraph>} */}
+
+        <Form.Item style={{ textAlign: "center", marginTop: "1.2rem" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>
-            <Link href={"/auth/login"} style={{color: COLOR.PRIMARY}}>Back to Login</Link>
+            <Link href={"/auth/login"} style={{ color: COLOR.PRIMARY }}>Back to Login</Link>
           </Text>
         </Form.Item>
       </Form>
