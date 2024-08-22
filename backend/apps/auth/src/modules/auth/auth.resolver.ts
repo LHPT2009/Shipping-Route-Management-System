@@ -14,6 +14,8 @@ import { UserEntity } from '../user/entity/user.entity';
 import { ConfirmEmailInput } from './dto/confirm_email.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'common/exception/guards/auth.guard';
+import { ResetPasswordInput } from './dto/reset_password.input';
+import { ResetPasswordVerifyEmailInput } from './dto/reset_password_verify_email.input';
 
 @Resolver()
 export class AuthResolver {
@@ -36,6 +38,20 @@ export class AuthResolver {
     input: LoginInput,
   ): Promise<ResponseDto<any>> {
     return this.authService.login(input);
+  }
+
+  @Mutation(() => ResponseDto<{}>)
+  resetPasswordVerifyEmail(
+    @Args('input') input: ResetPasswordVerifyEmailInput,
+  ): Promise<ResponseDto<any>> {
+    return this.userService.resetPasswordVerifyEmail(input);
+  }
+
+  @Mutation(() => ResponseDto<{}>)
+  resetPassword(
+    @Args('input') input: ResetPasswordInput,
+  ): Promise<ResponseDto<any>> {
+    return this.userService.resetPassword(input);
   }
 
   @Mutation(() => ResponseDto<{}>)

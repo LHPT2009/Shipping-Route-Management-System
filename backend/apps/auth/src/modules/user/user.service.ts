@@ -19,7 +19,9 @@ import { EmailService } from '../email/email.service';
 import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
 import * as fs from 'fs';
 import * as path from 'path';
-import { get } from 'http';
+import * as bcrypt from 'bcryptjs';
+import { ResetPasswordInput } from '../auth/dto/reset_password.input';
+import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify_email.input';
 
 @Injectable()
 export class UserService {
@@ -116,6 +118,38 @@ export class UserService {
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, [], []);
     }
+  }
+
+  async resetPasswordVerifyEmail(userDTO: ResetPasswordVerifyEmailInput): Promise<ResponseDto<{}>> {
+    if (!validEmail(userDTO.email)) {
+      throw new CustomValidationError('Invalid input', { email: ['Email is invalid'] });
+    }
+    const user = await this.userRepository.findOneBy({ email: userDTO.email });
+    if (!user) {
+      throw new CustomValidationError('Not found', { email: ['User is not found'] });
+    }
+    if (!user.active) {
+      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
+    }
+    const verifyToken = crypto.randomBytes(32).toString('base64url');
+    user.verify_token = verifyToken;
+    await this.userRepository.save(user);
+    this.sendMail(verifyToken, user.email, user.username);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
+  }
+
+  async resetPassword(userDTO: ResetPasswordInput): Promise<ResponseDto<{}>> {
+    if (!validPassword(userDTO.newPassword)) {
+      throw new CustomValidationError('Invalid input', { newPassword: ['New password is too weak'] });
+    }
+    const user = await this.userRepository.findOneBy({ verify_token: userDTO.verifyToken });
+
+    if(userDTO.newPassword !== userDTO.passwordConfirm) {
+      throw new CustomValidationError('Invalid input', { passwordConfirm: ['Password confirm is not match'] });
+    }
+    user.password = userDTO.newPassword;
+    await this.userRepository.save(user);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
   }
 
   async findOne(data: LoginInput): Promise<UserEntity> {

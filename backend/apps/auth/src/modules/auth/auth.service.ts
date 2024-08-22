@@ -9,6 +9,8 @@ import { STATUS, STATUS_CODE } from "common/constants/status"
 import { RefreshTokenService } from '../refreshtoken/refreshtoken.service';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 import { validUsernameOrEmail } from 'common/exception/validation/username-email.validation';
+import { ResetPasswordInput } from './dto/reset_password.input';
+import { validPassword } from 'common/exception/validation/password.validation';
 
 @Injectable()
 export class AuthService {
@@ -50,6 +52,7 @@ export class AuthService {
     }
 
   }
+
 
   async logout(context: any): Promise<ResponseDto<{}>> {
     await this.refreshTokenService.remove(context);
