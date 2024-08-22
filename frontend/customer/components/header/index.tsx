@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { Layout, Row, Col, Space, Button } from "antd";
+import { Layout, Row, Col, Space, Button, Divider } from "antd";
 import DrawerComponent from "../drawer";
-import AvatarComponent from "../dropdown/avatar";
-import NotificationComponent from "../dropdown/notification";
 import logoFull from "@/public/logo/logoFull.png";
 import Image from "next/image";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
@@ -17,6 +15,13 @@ import Link from "next/link";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import Tung from "../../public/images/homepage/tung_2.jpg";
 import Paragraph from "antd/es/typography/Paragraph";
+import LogoutIcon from "../../public/svg/homepage/logout.svg";
+import { ApolloError, useLazyQuery } from "@apollo/client";
+import { LOGOUT } from "@/apollo/query/auth";
+import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
+import useAntNotification from "@/lib/hooks/notification";
+import { useHandleError } from "@/lib/hooks/error";
+import { NOTIFICATION } from "@/constant/notification";
 
 const { Header } = Layout;
 
@@ -52,6 +57,30 @@ const HeaderComponent = () => {
     fetchCurrentCookies();
   }, []);
 
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  const [logout] = useLazyQuery(LOGOUT, {
+    onCompleted: async (data) => {
+      await deleteCookies('accessToken');
+      await deleteCookies('expiresIn');
+      window.location.reload()
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const logoutHandler = async () => {
+    const accessToken = await getCookies('accessToken');
+    await logout({
+      context: {
+        headers: {
+          accesstoken: accessToken
+        }
+      }
+    });
+  };
 
   return (
     <div>
@@ -98,9 +127,8 @@ const HeaderComponent = () => {
 
         <Col span={6}>
 
-          {isLogin ? <Link href="/profile">
+          {isLogin ?
             <Flex justify='end' align='center' gap="1rem">
-
               <div style={{ textAlign: "right" }}>
                 <Paragraph
                   style={{
@@ -121,9 +149,11 @@ const HeaderComponent = () => {
                   Customer
                 </Paragraph>
               </div>
-              <img style={{ width: "3.2rem", borderRadius: "50%" }} src={Tung.src} alt="tung" />
+              <Link href="/profile">
+                <img style={{ width: "3rem", borderRadius: "50%" }} src={Tung.src} alt="tung" />
+              </Link>
+              <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />
             </Flex>
-          </Link>
             :
             <Flex justify='end' align='center'>
               <Button

@@ -23,6 +23,8 @@ export class AuthGuard implements CanActivate {
     const accessToken = req.headers.access_token;
     const user_role = req.headers.user_role;
 
+    console.log(accessToken);
+
     if (!accessToken || accessToken === 'null') {
       throw new CustomValidationError(STATUS.ERR_AUTH_LOGIN, {});
     }

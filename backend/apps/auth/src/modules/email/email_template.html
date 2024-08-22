@@ -87,15 +87,15 @@
 <body>
   <div class="email-container">
     <div class="email-header">
-      <h1>Account activation</h1>
+      <h1>{{title}}</h1>
     </div>
     <div class="email-content">
       <p>Hello <span class="username-color">{{username}}</span>,</p>
-      <p class="more-space">Thanks for registering! Please verify your email by clicking the button below to complete the process.</p>
-      <a href="{{url}}" class="button"><span class="color-link">Activate your account</span></a>
+      <p class="more-space">{{content}}</p>
+      <a href="{{url}}" class="button"><span class="color-link">{{button}}</span></a>
     </div>
     <div class="email-footer">
-      <p>If you did not create this account, please ignore this email or <a href="{{contact}}"><span class="contact-us">contact us</span></a></p>
+      <p>If you did not make this request, please ignore this email or <a href="{{contact}}"><span class="contact-us">contact us</span></a></p>
     </div>
   </div>
 </body>
