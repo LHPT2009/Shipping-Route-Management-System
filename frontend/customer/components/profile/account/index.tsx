@@ -174,7 +174,7 @@ const AccountInformationComponent: React.FC = () => {
             <Form.Item
               label="New password"
               name="password"
-              style={{ paddingBottom: errors.password ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "2rem" }}
+              style={{ paddingBottom: errors.password ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "1.2rem" }}
               help={
                 errors.password && (
                   <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.password?.message}</span>
