@@ -31,3 +31,14 @@ export const LOGOUT = gql`
     }
   }
 `;
+
+export const GET_USER_BY_TOKEN = gql`
+  query {
+    getUserByToken {
+        status
+        message
+        data
+        error
+    }
+}
+`;

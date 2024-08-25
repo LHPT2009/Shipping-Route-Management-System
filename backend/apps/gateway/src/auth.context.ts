@@ -16,9 +16,7 @@ export const authContext = async ({ req }) => {
   }
   else {
     const jwtService = new JwtService();
-
     const decoded = jwtService.decode(accessToken);
-
     const client = ClientProxyFactory.create({
       transport: Transport.GRPC,
       options: {

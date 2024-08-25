@@ -22,6 +22,8 @@ import * as path from 'path';
 import * as bcrypt from 'bcryptjs';
 import { ResetPasswordInput } from '../auth/dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify_email.input';
+import { ROLE } from 'common/constants/role';
+import { PayloadType } from '../auth/types';
 
 @Injectable()
 export class UserService {
@@ -46,7 +48,7 @@ export class UserService {
   }
 
   async create(userDTO: SignupInput): Promise<ResponseDto<UserEntity>> {
-    const role = new RoleEntity("1", "user")
+    const role = new RoleEntity("1", ROLE.CUSTOMER)
     const validationErrors = this.validateUser(userDTO.email, userDTO.password, userDTO.passwordConfirm, userDTO.username);
     if (Object.keys(validationErrors).length !== 0) {
       throw new CustomValidationError('Invalid input', validationErrors);
@@ -211,12 +213,20 @@ export class UserService {
     }
   }
 
-  async findInfoByIDtest(id: string): Promise<any> {
-    const permission = await this.userRepository.findOne({
-      where: { id },
-      relations: ['roles'],
-    });
-    return instanceToPlain(permission);
+  async findInfoByToken(context: any): Promise<ResponseDto<UserEntity>> {
+    const decode = this.jwtService.decode(context.accessToken)
+    const item = decode as PayloadType;
+    const id = item.userId;
+
+    try {
+      const item = await this.userRepository.findOne({
+        where: { id },
+        relations: ['roles', 'roles.permissions'],
+      });
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
   }
 
   validateUser(email: string, password: string, passwordConfirm: string, username: string) {

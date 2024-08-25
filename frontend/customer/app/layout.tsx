@@ -53,7 +53,7 @@ export default function RootLayout({
                   colorText: COLOR.PRIMARY,
                 },
                 Button: {
-                  borderRadius: 8
+                  borderRadius: 8,
                 }
               },
             }}

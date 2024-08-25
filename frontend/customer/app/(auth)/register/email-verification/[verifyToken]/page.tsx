@@ -40,7 +40,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
   } = useForm();
 
   const onFinish = (values: any) => {
-    router.push(URL.HOMEPAGE);
+    router.push(URL.LOGIN);
   };
 
   const [confirmEmailMutation, { loading, error, data }] = useMutation(CONFIRM_EMAIL, {
@@ -105,7 +105,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
               className="login-form-button"
               style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", margin: "2rem 0 1rem 0" }}
             >
-              Continue with your account
+              Continue
             </Button>
           </Form.Item>
         </Form>

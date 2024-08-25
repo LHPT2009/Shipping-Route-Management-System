@@ -8,7 +8,7 @@ import {
 import RefreshTokenInterface from '../interface/refreshtoken.interface';
 import { UserEntity } from '../../user/entity/user.entity';
 
-@Entity('refreshtokens')
+@Entity('refresh_tokens')
 export class RefreshTokenEntity implements RefreshTokenInterface {
     @PrimaryGeneratedColumn()
     id: string;

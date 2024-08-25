@@ -42,7 +42,7 @@ export class SeedService implements OnApplicationBootstrap {
 
             await roleRepository.save([
                 {
-                    name: ROLE.USER,
+                    name: ROLE.CUSTOMER,
                     permissions: [getPermission],
                 },
                 {
