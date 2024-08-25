@@ -54,7 +54,10 @@ export default function RootLayout({
                 },
                 Button: {
                   borderRadius: 8,
-                }
+                },
+                Modal: {
+                  borderRadius: 8,
+                },
               },
             }}
           >

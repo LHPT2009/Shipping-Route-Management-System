@@ -1,16 +1,14 @@
 
 .common-container {
-  display: flex;
-  align-items: center;
-  padding: 2rem;
+  padding: 2rem 2rem 1rem 2rem;
   border-radius: 1rem;
   border: 1px solid #ced4da;
   text-align: center;
   margin-top: 1rem;
+  width: 42rem;
 }
 
-
 .avatar{
-  width: 18%;
+  width: 17%;
   border-radius: 50%;
 }
