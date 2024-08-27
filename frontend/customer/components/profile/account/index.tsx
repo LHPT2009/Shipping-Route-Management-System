@@ -6,7 +6,7 @@ import styles from "../profile.module.css";
 import Tung from "../../../public/images/homepage/tung_2.jpg";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
-import { useAppSelector } from "@/lib/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { UserState } from "@/lib/store/user";
 import Paragraph from "antd/es/typography/Paragraph";
 import { Controller, useForm } from "react-hook-form";
@@ -14,6 +14,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { passwordRegex } from "@/utils/validation/password.regex";
 import * as yup from "yup";
 import { LockOutlined } from "@ant-design/icons";
+import useAntNotification from "@/lib/hooks/notification";
+import { useHandleError } from "@/lib/hooks/error";
+import { ApolloError, useMutation } from "@apollo/client";
+import { CHANGE_PASSWORD } from "@/apollo/mutations/auth";
+import { NOTIFICATION } from "@/constant/notification";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 
 const AccountInformationComponent: React.FC = () => {
 
@@ -39,14 +45,14 @@ const AccountInformationComponent: React.FC = () => {
         .string()
         .required("Please enter your current password"),
 
-      password: yup
+      newPassword: yup
         .string()
         .matches(passwordRegex, { message: "Please enter a stronger password (Min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit)" })
         .required("Please enter your new password"),
 
-      confirmPassword: yup
+      passwordConfirm: yup
         .string()
-        .oneOf([yup.ref("password")], "Confirm password must match password")
+        .oneOf([yup.ref("newPassword")], "Confirm password must match password")
         .required("Please enter your new confirm password"),
     })
     .required();
@@ -57,9 +63,39 @@ const AccountInformationComponent: React.FC = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onFinish = (values: any) => {
+  const dispatch = useAppDispatch();
+  const { openNotificationWithIcon } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD, {
+    onCompleted: async (data) => {
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "New password was updated successfully");
+      setOpen(false);
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const onFinish = async (values: any) => {
     //call api
-    setOpen(false)
+    const { accessToken, expiresIn } = await fetchCookies();
+    if (accessToken && expiresIn) {
+      await changePassword({
+        variables: {
+          input: {
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
+            passwordConfirm: values.passwordConfirm
+          }
+        },
+        context: {
+          headers: {
+            accesstoken: accessToken
+          }
+        }
+      });
+    }
   };
 
   return (
@@ -173,22 +209,22 @@ const AccountInformationComponent: React.FC = () => {
             {/* New password */}
             <Form.Item
               label="New password"
-              name="password"
-              style={{ paddingBottom: errors.password ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "1.2rem" }}
+              name="newPassword"
+              style={{ paddingBottom: errors.newPassword ? "1rem" : 0, marginBottom: "1.2rem", marginTop: "1.2rem" }}
               help={
-                errors.password && (
-                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.password?.message}</span>
+                errors.newPassword && (
+                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.newPassword?.message}</span>
                 )
               }
             >
               <Controller
-                name="password"
+                name="newPassword"
                 control={control}
                 render={({ field }) => (
                   <Input.Password
-                    key="password"
+                    key="newPassword"
                     {...field}
-                    placeholder={"Enter your password"}
+                    placeholder={"Enter your new password"}
                     prefix={<LockOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
                     type="password"
                     style={{ borderRadius: "0.5rem", height: "3.2rem", background: "white" }}
@@ -201,20 +237,20 @@ const AccountInformationComponent: React.FC = () => {
             {/* Confirm Password */}
             <Form.Item
               label="Confirm password"
-              name="confirmPassword"
-              style={{ paddingBottom: errors.confirmPassword ? "1rem" : 0, marginBottom: "1.2rem" }}
+              name="passwordConfirm"
+              style={{ paddingBottom: errors.passwordConfirm ? "1rem" : 0, marginBottom: "1.2rem" }}
               help={
-                errors.confirmPassword && (
-                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.confirmPassword?.message}</span>
+                errors.passwordConfirm && (
+                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.passwordConfirm?.message}</span>
                 )
               }
             >
               <Controller
-                name="confirmPassword"
+                name="passwordConfirm"
                 control={control}
                 render={({ field }) => (
                   <Input.Password
-                    key="confirmPassword"
+                    key="passwordConfirm"
                     type="password"
                     {...field}
                     placeholder={"Enter your password again"}

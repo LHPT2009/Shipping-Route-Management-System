@@ -26,6 +26,8 @@ import { ROLE } from 'common/constants/role';
 import { PayloadType } from '../auth/types';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { validPhone } from 'common/exception/validation/phone.validation';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import e from 'express';
 
 @Injectable()
 export class UserService {
@@ -268,6 +270,47 @@ export class UserService {
       }
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
+    }
+  }
+
+  async changePassword(context: any, userDTO: ChangePasswordDto): Promise<ResponseDto<UserEntity>> {
+    const decode = this.jwtService.decode(context.accessToken)
+    const item = decode as PayloadType;
+    const id = item.userId;
+
+    const user = await this.userRepository.findOneBy({ id: id });
+
+    if (!user) {
+      throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
+    } else {
+      const passwordMatched = await bcrypt.compare(
+        userDTO.currentPassword,
+        user.password,
+      );
+      if (!passwordMatched) {
+        throw new CustomValidationError('Invalid input', { currentPassword: ['Current password is wrong. Please try again.'] });
+      } else {
+        if (!validPassword(userDTO.newPassword)) {
+          throw new CustomValidationError('Invalid input', { newPassword: ['New password is too weak'] });
+        } else {
+          const newPasswordExists = await bcrypt.compare(
+            userDTO.newPassword,
+            user.password,
+          );
+          if (newPasswordExists) {
+            throw new CustomValidationError('Invalid input', { newPassword: ['New password must be different with current password. Please try again.'] });
+          } else {
+            if (userDTO.newPassword !== userDTO.passwordConfirm) {
+              throw new CustomValidationError('Invalid input', { passwordConfirm: ['Password confirm is not match'] });
+            } else {
+              const salt = await bcrypt.genSalt();
+              user.password = await bcrypt.hash(userDTO.newPassword, salt);
+              await this.userRepository.save(user);
+              return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
+            }
+          }
+        }
+      }
     }
   }
 

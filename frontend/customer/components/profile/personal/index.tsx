@@ -68,7 +68,7 @@ const PersonalInformationComponent: React.FC = () => {
   });
 
   const dispatch = useAppDispatch();
-  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
   const [updateUserByToken, { loading }] = useMutation(UPDATE_PROFILE, {

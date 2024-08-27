@@ -11,6 +11,7 @@ import { ROLE } from 'common/constants/role';
 import { PERMISSION } from 'common/constants/permission';
 import { UseGuards } from '@nestjs/common';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -58,8 +59,8 @@ export class UserResolver {
   @UseGuards(AuthGuard, RoleGuard)
   async changePassword(
     @Context() context: any,
-    @Args('input') input: UserUpdateDto,
+    @Args('input') input: ChangePasswordDto,
   ): Promise<ResponseDto<UserEntity>> {
-    return this.userService.updateUserByToken(context, input);
+    return this.userService.changePassword(context, input);
   }
 }
