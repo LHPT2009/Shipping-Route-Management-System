@@ -32,6 +32,14 @@ export const userSlice = createSlice({
       state.phone = action.payload.phone;
       state.role = action.payload.role;
     },
+    clearUserInformation(state, action: PayloadAction) {
+      state.username = "";
+      state.email = "";
+      state.fullname = "";
+      state.address = "";
+      state.phone = "";
+      state.role = "";
+    }
   },
 });
 

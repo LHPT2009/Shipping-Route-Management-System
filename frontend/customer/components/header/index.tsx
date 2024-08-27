@@ -22,15 +22,16 @@ import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
 import { useHandleError } from "@/lib/hooks/error";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { userActions, UserState } from "@/lib/store/user";
+import { authActions } from "@/lib/store/auth";
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const screenWidth = UseScreenWidth();
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState<Boolean>(false);
 
   const dispatch = useAppDispatch();
   const user: UserState = useAppSelector((state) => state.user);
+  const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
 
   const extraSmall = true;
   const small = true;
@@ -55,46 +56,13 @@ const HeaderComponent = () => {
     onCompleted: async (data) => {
       await deleteCookies('accessToken');
       await deleteCookies('expiresIn');
-      window.location.reload()
+      dispatch(authActions.setIsLogin(false));
+      dispatch(userActions.clearUserInformation());
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
     }
   });
-
-  const [getUserByToken] = useLazyQuery(GET_USER_BY_TOKEN, {
-    onCompleted: async (data) => {
-      const userData: UserState = {
-        username: data.getUserByToken.data.username,
-        email: data.getUserByToken.data.email,
-        fullname: data.getUserByToken.data.fullname,
-        address: data.getUserByToken.data.address,
-        phone: data.getUserByToken.data.phone_number,
-        role: data.getUserByToken.data.roles.name.charAt(0).toUpperCase() + data.getUserByToken.data.roles.name.slice(1).toLowerCase(),
-      }
-      dispatch(userActions.setUserInformation(userData));
-    },
-    onError: async (error: ApolloError) => {
-      await handleError(error);
-    }
-  });
-
-  useEffect(() => {
-    const fetchCurrentCookies = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        getUserByToken({
-          context: {
-            headers: {
-              accesstoken: accessToken
-            }
-          }
-        });
-        setIsLogin(true);
-      }
-    };
-    fetchCurrentCookies();
-  }, []);
 
   const logoutHandler = async () => {
     const accessToken = await getCookies('accessToken');

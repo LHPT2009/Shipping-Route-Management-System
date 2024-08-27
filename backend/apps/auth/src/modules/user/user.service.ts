@@ -24,6 +24,8 @@ import { ResetPasswordInput } from '../auth/dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify_email.input';
 import { ROLE } from 'common/constants/role';
 import { PayloadType } from '../auth/types';
+import { UserUpdateDto } from './dto/user-update.dto';
+import { validPhone } from 'common/exception/validation/phone.validation';
 
 @Injectable()
 export class UserService {
@@ -158,9 +160,9 @@ export class UserService {
       "Reset password",
       "Please click the button below to recover your account.",
       "Reset your password",
-      verifyToken, 
-      user.email, 
-      user.username, 
+      verifyToken,
+      user.email,
+      user.username,
       url
     );
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
@@ -225,7 +227,47 @@ export class UserService {
       });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { email: ['Internal error occurs. Please contact to admin for more help.'] });
+    }
+  }
+
+  async updateUserByToken(context: any, userDTO: UserUpdateDto): Promise<ResponseDto<UserEntity>> {
+    const decode = this.jwtService.decode(context.accessToken)
+    const item = decode as PayloadType;
+    const id = item.userId;
+
+    const user = await this.userRepository.findOneBy({ id: id });
+
+    if (!user) {
+      throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
+    } else {
+      if (userDTO.username) {
+        const usernameIsExist = await this.userRepository.findOneBy({ username: userDTO.username });
+        if (usernameIsExist && usernameIsExist.id !== id) {
+          throw new CustomValidationError('Validation failed', { username: ['Username already exists'] });
+        } else {
+          if (!validUsername(userDTO.username)) {
+            throw new CustomValidationError('Invalid input', { username: ['Username is invalid'] });
+          } else {
+            user.username = userDTO.username;
+          }
+        }
+      }
+      if (userDTO.fullname) {
+        user.fullname = userDTO.fullname;
+      }
+      if (userDTO.phone_number) {
+        if (!validPhone(userDTO.phone_number)) {
+          throw new CustomValidationError('Invalid input', { phone_number: ['Phone number is invalid'] });
+        } else {
+          user.phone_number = userDTO.phone_number;
+        }
+      }
+      if (userDTO.address) {
+        user.address = userDTO.address;
+      }
+      await this.userRepository.save(user);
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
     }
   }
 

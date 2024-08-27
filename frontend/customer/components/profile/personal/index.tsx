@@ -8,7 +8,7 @@ import Tung from "../../../public/images/homepage/tung_2.jpg";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-import { UserState } from "@/lib/store/user";
+import { userActions, UserState } from "@/lib/store/user";
 import Paragraph from "antd/es/typography/Paragraph";
 import { Controller, useForm } from "react-hook-form";
 
@@ -18,6 +18,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { usernameRegex } from "@/utils/validation/username.regrex";
 import { emailRegex } from "@/utils/validation/email.regex";
+import { phoneRegex } from "@/utils/validation/phone.regex";
+import { ApolloError, useMutation } from "@apollo/client";
+import { UPDATE_PROFILE } from "@/apollo/mutations/user";
+import useAntNotification from "@/lib/hooks/notification";
+import { useHandleError } from "@/lib/hooks/error";
+import { NOTIFICATION } from "@/constant/notification";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 
 const PersonalInformationComponent: React.FC = () => {
 
@@ -30,12 +37,11 @@ const PersonalInformationComponent: React.FC = () => {
         .matches(usernameRegex, { message: "Please enter a valid username" }),
 
       phone: yup
-        .string(),
-      // .matches(usernameRegex, { message: "Please enter a valid username" }),
+        .string()
+        .matches(phoneRegex, { message: "Please enter a valid username" }),
 
       email: yup
-        .string()
-        .matches(emailRegex, { message: "Please enter a valid email" }),
+        .string(),
 
       fullname: yup
         .string(),
@@ -61,6 +67,28 @@ const PersonalInformationComponent: React.FC = () => {
     },
   });
 
+  const dispatch = useAppDispatch();
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  const [updateUserByToken, { loading }] = useMutation(UPDATE_PROFILE, {
+    onCompleted: async (data) => {
+      const userData: UserState = {
+        username: data.updateUserByToken.data.username,
+        email: user.email,
+        fullname: data.updateUserByToken.data.fullname,
+        address: data.updateUserByToken.data.address,
+        phone: data.updateUserByToken.data.phone_number,
+        role: user.role
+      }
+      dispatch(userActions.setUserInformation(userData));
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "User information was updated successfully");
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
   useEffect(() => {
     if (user) {
       reset({
@@ -74,7 +102,24 @@ const PersonalInformationComponent: React.FC = () => {
   }, [user, reset]);
 
   const onFinish = async (values: any) => {
-
+    const { accessToken, expiresIn } = await fetchCookies();
+    if (accessToken && expiresIn) {
+      await updateUserByToken({
+        variables: {
+          input: {
+            fullname: values.fullname,
+            username: values.username,
+            phone_number: values.phone,
+            address: values.address,
+          }
+        },
+        context: {
+          headers: {
+            accesstoken: accessToken
+          }
+        }
+      });
+    }
   };
 
   return (
@@ -88,8 +133,6 @@ const PersonalInformationComponent: React.FC = () => {
       }}>
         Personal information
       </Title>
-      {/* <Flex justify="center" align="center" >
-      </Flex> */}
       <Form
         layout="vertical"
         initialValues={{ remember: true }}
@@ -97,7 +140,7 @@ const PersonalInformationComponent: React.FC = () => {
           height: "auto",
           borderRadius: "1rem",
           backgroundColor: COLOR.BACKGROUNDBODY,
-          textAlign: "right",
+          textAlign: "left",
         }}
         onFinish={handleSubmit(onFinish)}
       >
@@ -231,10 +274,11 @@ const PersonalInformationComponent: React.FC = () => {
         {/* Button register*/}
         <Form.Item>
           <Button
+            loading={loading}
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            style={{ width: "10rem", borderRadius: "0.5rem", height: "2.7rem", marginTop: "1.2rem" }}
+            style={{ width: "10rem", borderRadius: "0.5rem", height: "2.7rem", marginTop: "1.2rem", float: "right" }}
           >
             Update profile
           </Button>
