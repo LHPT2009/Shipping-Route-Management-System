@@ -17,18 +17,21 @@ import Tung from "../../public/images/homepage/tung_2.jpg";
 import Paragraph from "antd/es/typography/Paragraph";
 import LogoutIcon from "../../public/svg/homepage/logout.svg";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { LOGOUT } from "@/apollo/query/auth";
+import { GET_USER_BY_TOKEN, LOGOUT } from "@/apollo/query/auth";
 import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
-import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import { NOTIFICATION } from "@/constant/notification";
-
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
+import { userActions, UserState } from "@/lib/store/user";
+import { authActions } from "@/lib/store/auth";
 const { Header } = Layout;
 
 const HeaderComponent = () => {
   const screenWidth = UseScreenWidth();
   const router = useRouter();
-  const [isLogin, setIsLogin] = useState<Boolean>(false);
+
+  const dispatch = useAppDispatch();
+  const user: UserState = useAppSelector((state) => state.user);
+  const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
 
   const extraSmall = true;
   const small = true;
@@ -47,24 +50,14 @@ const HeaderComponent = () => {
     extraExtraLarge
   );
 
-  useEffect(() => {
-    const fetchCurrentCookies = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        setIsLogin(true);
-      }
-    };
-    fetchCurrentCookies();
-  }, []);
-
-  const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
 
   const [logout] = useLazyQuery(LOGOUT, {
     onCompleted: async (data) => {
       await deleteCookies('accessToken');
       await deleteCookies('expiresIn');
-      window.location.reload()
+      dispatch(authActions.setIsLogin(false));
+      dispatch(userActions.clearUserInformation());
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
@@ -138,7 +131,7 @@ const HeaderComponent = () => {
                     color: COLOR.TEXT
                   }}
                 >
-                  Le Huynh Phuong Tung
+                  {user.username}
                 </Paragraph>
                 <Paragraph
                   style={{
@@ -146,7 +139,7 @@ const HeaderComponent = () => {
                     marginBottom: "0",
                   }}
                 >
-                  Customer
+                  {user.role}
                 </Paragraph>
               </div>
               <Link href="/profile">

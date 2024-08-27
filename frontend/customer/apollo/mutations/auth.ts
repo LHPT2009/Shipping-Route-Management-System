@@ -54,3 +54,14 @@ export const RESET_PASSWORD = gql`
     }
   }
 `;
+
+export const CHANGE_PASSWORD = gql`
+  mutation changePassword($input: ChangePasswordDto!) {
+    changePassword(input: $input) {
+        status
+        message
+        data
+        error
+    }
+  }
+`;

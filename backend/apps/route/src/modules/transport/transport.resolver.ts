@@ -17,7 +17,7 @@ export class TransportsResolver {
   constructor(private transportsService: TransportsService) { }
 
   @Query(() => ResponseDto<Transport[]>)
-  @Roles(ROLE.USER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
   @Permissions(PERMISSION.GET)
   @UseGuards(AuthGuard, RoleGuard)
   async getTransports(): Promise<ResponseDto<Transport[]>> {
@@ -25,7 +25,7 @@ export class TransportsResolver {
   }
 
   @Query(() => ResponseDto<Transport>, { nullable: true })
-  @Roles(ROLE.USER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
   @Permissions(PERMISSION.GET, PERMISSION.POST)
   @UseGuards(AuthGuard, RoleGuard)
   async getTransport(

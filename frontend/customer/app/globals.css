@@ -35,6 +35,11 @@ body,h1,h2, h3, h4, h5, p{
     sans-serif !important;
 }
 
+.modalStyle, .ant-modal-content{
+  border-radius: 0.7rem !important;
+  padding-bottom: 1px !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

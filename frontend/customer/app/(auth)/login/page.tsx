@@ -25,6 +25,8 @@ import { useRouter } from "next/navigation";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { useGetNewAccessToken } from "@/lib/hooks/token";
 import { useHandleError } from "@/lib/hooks/error";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { authActions } from "@/lib/store/auth";
 
 const { Title, Text } = Typography;
 
@@ -38,6 +40,8 @@ const LoginPage = () => {
   const large = false;
   const extraLarge = false;
   const extraExtraLarge = false;
+
+  const dispatch = useAppDispatch();
 
   const responsive = GetValueFromScreen(
     screenWidth,
@@ -76,6 +80,7 @@ const LoginPage = () => {
     onCompleted: async (data) => {
       await setCookies('accessToken', data.login.data.accessToken);
       await setCookies('expiresIn', data.login.data.expiresIn);
+      dispatch(authActions.setIsLogin(true));
       router.push('/');
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
     },
