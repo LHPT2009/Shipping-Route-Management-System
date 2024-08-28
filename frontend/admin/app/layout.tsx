@@ -23,7 +23,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -39,20 +38,20 @@ export default function RootLayout({
               },
               components: {
                 Layout: {
-                  headerBg: "#fff",
-                  headerHeight: 80,
-                  footerBg: "#fff",
-                  colorBgLayout: "#fff",
+                  headerBg: COLOR.BACKGROUND,
+                  footerBg: COLOR.BACKGROUND,
+                  colorBgLayout: COLOR.BACKGROUNDLAYOUT,
+                  headerHeight: 70,
                 },
                 Menu: {
-                  colorBgContainer: "#fff",
+                  colorBgContainer: COLOR.BACKGROUND,
                 },
                 Breadcrumb: {
                   colorText: COLOR.PRIMARY,
                 },
                 Button: {
-                  borderRadius: 8
-                }
+                  borderRadius: 8,
+                },
               },
             }}
           >

@@ -30,7 +30,10 @@ const notificationComponent = () => {
             shape="circle"
             size="large"
             icon={<BellOutlined />}
-            style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
+            style={{
+              color: COLOR.PRIMARY,
+              backgroundColor: "#fff",
+            }}
           />
         </Badge>
       </Dropdown>

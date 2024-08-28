@@ -1,16 +1,14 @@
 "use client";
 
+import ContentComponent from "@/components/content";
+import HeaderComponent from "@/components/header";
 import LayoutAdminComponent from "@/components/layout/admin";
 
 export default function Home() {
-  const breadcrumbItems = [
-    { title: "Home", href: "/" },
-    { title: "User", href: "/user" },
-    { title: "Bill" }
-  ];
   return (
-    <LayoutAdminComponent listbread={breadcrumbItems}>
-      asdasd
+    <LayoutAdminComponent>
+      <HeaderComponent />
+      <ContentComponent>asdasd</ContentComponent>
     </LayoutAdminComponent>
   );
 }
