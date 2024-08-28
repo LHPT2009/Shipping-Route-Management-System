@@ -21,7 +21,7 @@ import { getErrorMessage } from "@/utils/error/apollo.error";
 import useAntNotification from "@/lib/hooks/notification";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { NOTIFICATION } from "@/constant/notification";
-import { usernameRegex } from "@/utils/validation/username.regrex";
+import { usernameRegex } from "@/utils/validation/username.regex";
 import { SIGNUP } from "@/apollo/mutations/auth";
 import { useHandleError } from "@/lib/hooks/error";
 

@@ -3,15 +3,12 @@
 import React from "react";
 import { Flex, Spin } from "antd";
 import Title from "antd/es/typography/Title";
-import { COLOR } from "@/constant/color";
-import { useAppSelector } from "@/lib/hooks/hooks";
-import { UserState } from "@/lib/store/user";
+import { COLOR } from "@/constant/color";;
 import GeneralInformationComponent from "@/components/profile/account";
 import PersonalInformationComponent from "@/components/profile/personal";
+import withProtectedRoute from "@/components/auth/protection";
 
 const ProfilePage = () => {
-
-  const user: UserState = useAppSelector((state) => state.user);
   return (
     <Flex vertical align="center" justify="center" style={{ width: "45rem", margin: "6rem auto 2rem auto" }}>
       <Title level={4} style={{
@@ -27,4 +24,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default withProtectedRoute(ProfilePage);

@@ -18,7 +18,7 @@ import { LOGIN } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { getErrorMessage } from "@/utils/error/apollo.error";
-import { usernameEmailRegex } from "@/utils/validation/username-email.validation";
+import { usernameEmailRegex } from "@/utils/validation/username-email.regex";
 import { setCookies } from "@/utils/cookies/handle.cookies";
 import { routeModule } from "next/dist/build/templates/app-page";
 import { useRouter } from "next/navigation";

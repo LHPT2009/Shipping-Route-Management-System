@@ -16,7 +16,7 @@ import * as yup from "yup";
 import { passwordRegex } from "@/utils/validation/password.regex";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { usernameRegex } from "@/utils/validation/username.regrex";
+import { usernameRegex } from "@/utils/validation/username.regex";
 import { emailRegex } from "@/utils/validation/email.regex";
 import { phoneRegex } from "@/utils/validation/phone.regex";
 import { ApolloError, useMutation } from "@apollo/client";
