@@ -17,7 +17,7 @@ export const MENULIST: MenuItem[] = [
   },
   {
     key: "3",
-    label: "Contact Us",
+    label: "Contact us",
     url: "/contact",
   },
 ];

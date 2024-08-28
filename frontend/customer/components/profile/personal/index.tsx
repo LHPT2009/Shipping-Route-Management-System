@@ -38,7 +38,7 @@ const PersonalInformationComponent: React.FC = () => {
 
       phone: yup
         .string()
-        .matches(phoneRegex, { message: "Please enter a valid username" }),
+        .matches(phoneRegex, { message: "Please enter a valid phone number" }),
 
       email: yup
         .string(),

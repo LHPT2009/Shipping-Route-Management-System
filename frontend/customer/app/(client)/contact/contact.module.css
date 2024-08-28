@@ -1,0 +1,43 @@
+.header{
+  margin-top: 5rem;
+  text-align: center;
+}
+
+.container{
+  display: flex;
+  margin: 2rem;
+  /* height: 65rem; */
+  width: 100%;
+}
+
+.info-container{
+  background: #edf2ff;
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+  width: 40%;
+}
+
+.sub-info{
+  margin: 2.5rem;
+}
+
+.contact-container{
+  width: 60%;
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  border-top: 1px solid #dbe4ff;
+  border-bottom: 1px solid #dbe4ff;
+  border-right: 1px solid #dbe4ff;
+  padding-bottom: 1rem;
+}
+
+.sub-contact{
+  margin: 2.5em;
+}
+
+.underline-css{
+  margin-top: 2.5rem;
+  font-weight: 400;
+  border-bottom: 1px solid #868e96;
+  width: 10rem;
+}

@@ -2,15 +2,17 @@ import React from "react";
 import { Menu } from "antd";
 import { MenuComponentProps } from "@/types/menu";
 import { MENULIST } from "@/constant";
+import { useRouter } from "next/navigation";
 
 const MenuComponent: React.FC<MenuComponentProps> = ({
   defaultSelectedKeys,
   responsive,
 }) => {
+  const router = useRouter();
   const handleClick = (e: { key: string }) => {
     const clickedItem = MENULIST.find((item) => item.key === e.key);
     if (clickedItem) {
-      console.log(clickedItem.url);
+      router.push(clickedItem.url!);
     }
   };
   return (

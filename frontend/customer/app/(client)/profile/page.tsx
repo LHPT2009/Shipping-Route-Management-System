@@ -10,7 +10,7 @@ import withProtectedRoute from "@/components/auth/protection";
 
 const ProfilePage = () => {
   return (
-    <Flex vertical align="center" justify="center" style={{ width: "45rem", margin: "6rem auto 2rem auto" }}>
+    <Flex vertical align="center" justify="center" style={{ width: "45rem", margin: "6.5rem auto 2rem auto" }}>
       <Title level={4} style={{
         fontSize: "2rem",
         fontWeight: 700,
