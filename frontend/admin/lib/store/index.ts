@@ -2,10 +2,12 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import AuthReducer from './auth';
+import ResponsiveReducer from './responsive';
 
 export const store = configureStore({
   reducer: {
-    auth: AuthReducer
+    auth: AuthReducer,
+    responsive: ResponsiveReducer
   }
 })
 
