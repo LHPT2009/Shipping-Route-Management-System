@@ -35,8 +35,8 @@ export class SeedService implements OnApplicationBootstrap {
       await routeRepository.save(routeData);
     }
 
-    // const allRoutes = await routeRepository.findOneBy({id: "1"});
-    // console.log(allRoutes);
+    // const allRoutes = await routeRepository.find();
+    // console.log(allRoutes.length);
 
   }
 }
