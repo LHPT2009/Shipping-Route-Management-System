@@ -15,10 +15,8 @@ const ContentComponent: React.FC<ChildrenComponentProps> = ({ children }) => {
         <div
           style={{
             padding: 24,
-            minHeight: 360,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-            height: "760px"
           }}
         >
           {children}
