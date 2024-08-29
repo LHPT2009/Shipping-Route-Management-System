@@ -13,8 +13,8 @@ export enum ShippingTypeEnum {
 
 export interface TransportInterface {
   id: string;
-  vehicleType: VehicleTypeEnum;
-  shippingType: ShippingTypeEnum;
+  vehicle_type: VehicleTypeEnum;
+  shipping_type: ShippingTypeEnum;
   name: string;
   license_plate: string;
 }

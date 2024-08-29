@@ -15,13 +15,13 @@ export class TransportEntity implements TransportInterface {
     type: 'enum',
     enum: VehicleTypeEnum,
   })
-  vehicleType: VehicleTypeEnum;
+  vehicle_type: VehicleTypeEnum;
 
   @Column({
     type: 'enum',
     enum: ShippingTypeEnum,
   })
-  shippingType: ShippingTypeEnum;
+  shipping_type: ShippingTypeEnum;
 
   @Column()
   name: string;

@@ -1,0 +1,32 @@
+import { StatusEnum } from "../../modules/route/interface/routes.interface";
+
+
+export const routeData = [
+  { name: 'Route A', departure: { id: '45' }, departure_time: '2021-09-01T00:00:00Z', arrival: { id: '78' }, arrival_time: '2021-09-02T00:00:00Z', distance: 1000, transport: { id: '5' }, status: StatusEnum.Progress },
+  { name: 'Route B', departure: { id: '12' }, departure_time: '2021-09-03T00:00:00Z', arrival: { id: '34' }, arrival_time: '2021-09-04T00:00:00Z', distance: 1500, transport: { id: '8' }, status: StatusEnum.Finished },
+  { name: 'Route C', departure: { id: '56' }, departure_time: '2021-09-05T00:00:00Z', arrival: { id: '23' }, arrival_time: '2021-09-06T00:00:00Z', distance: 2000, transport: { id: '15' }, status: StatusEnum.Cancelled },
+  { name: 'Route D', departure: { id: '67' }, departure_time: '2021-09-07T00:00:00Z', arrival: { id: '89' }, arrival_time: '2021-09-08T00:00:00Z', distance: 2500, transport: { id: '3' }, status: StatusEnum.Progress },
+  { name: 'Route E', departure: { id: '78' }, departure_time: '2021-09-09T00:00:00Z', arrival: { id: '45' }, arrival_time: '2021-09-10T00:00:00Z', distance: 3000, transport: { id: '12' }, status: StatusEnum.Finished },
+  { name: 'Route F', departure: { id: '89' }, departure_time: '2021-09-11T00:00:00Z', arrival: { id: '67' }, arrival_time: '2021-09-12T00:00:00Z', distance: 3500, transport: { id: '7' }, status: StatusEnum.Cancelled },
+  { name: 'Route G', departure: { id: '23' }, departure_time: '2021-09-13T00:00:00Z', arrival: { id: '56' }, arrival_time: '2021-09-14T00:00:00Z', distance: 4000, transport: { id: '19' }, status: StatusEnum.Progress },
+  { name: 'Route H', departure: { id: '34' }, departure_time: '2021-09-15T00:00:00Z', arrival: { id: '12' }, arrival_time: '2021-09-16T00:00:00Z', distance: 4500, transport: { id: '2' }, status: StatusEnum.Finished },
+  { name: 'Route I', departure: { id: '45' }, departure_time: '2021-09-17T00:00:00Z', arrival: { id: '78' }, arrival_time: '2021-09-18T00:00:00Z', distance: 5000, transport: { id: '10' }, status: StatusEnum.Cancelled },
+  { name: 'Route J', departure: { id: '56' }, departure_time: '2021-09-19T00:00:00Z', arrival: { id: '23' }, arrival_time: '2021-09-20T00:00:00Z', distance: 5500, transport: { id: '14' }, status: StatusEnum.Progress },
+  { name: 'Route K', departure: { id: '67' }, departure_time: '2021-09-21T00:00:00Z', arrival: { id: '89' }, arrival_time: '2021-09-22T00:00:00Z', distance: 6000, transport: { id: '6' }, status: StatusEnum.Finished },
+  { name: 'Route L', departure: { id: '78' }, departure_time: '2021-09-23T00:00:00Z', arrival: { id: '45' }, arrival_time: '2021-09-24T00:00:00Z', distance: 6500, transport: { id: '11' }, status: StatusEnum.Cancelled },
+  { name: 'Route M', departure: { id: '89' }, departure_time: '2021-09-25T00:00:00Z', arrival: { id: '67' }, arrival_time: '2021-09-26T00:00:00Z', distance: 7000, transport: { id: '4' }, status: StatusEnum.Progress },
+  { name: 'Route N', departure: { id: '12' }, departure_time: '2021-09-27T00:00:00Z', arrival: { id: '34' }, arrival_time: '2021-09-28T00:00:00Z', distance: 7500, transport: { id: '9' }, status: StatusEnum.Finished },
+  { name: 'Route O', departure: { id: '23' }, departure_time: '2021-09-29T00:00:00Z', arrival: { id: '56' }, arrival_time: '2021-09-30T00:00:00Z', distance: 8000, transport: { id: '13' }, status: StatusEnum.Cancelled },
+  { name: 'Route P', departure: { id: '34' }, departure_time: '2021-10-01T00:00:00Z', arrival: { id: '12' }, arrival_time: '2021-10-02T00:00:00Z', distance: 8500, transport: { id: '1' }, status: StatusEnum.Progress },
+  { name: 'Route Q', departure: { id: '45' }, departure_time: '2021-10-03T00:00:00Z', arrival: { id: '78' }, arrival_time: '2021-10-04T00:00:00Z', distance: 9000, transport: { id: '18' }, status: StatusEnum.Finished },
+  { name: 'Route R', departure: { id: '56' }, departure_time: '2021-10-05T00:00:00Z', arrival: { id: '23' }, arrival_time: '2021-10-06T00:00:00Z', distance: 9500, transport: { id: '20' }, status: StatusEnum.Cancelled },
+  { name: 'Route S', departure: { id: '67' }, departure_time: '2021-10-07T00:00:00Z', arrival: { id: '89' }, arrival_time: '2021-10-08T00:00:00Z', distance: 10000, transport: { id: '17' }, status: StatusEnum.Progress },
+  { name: 'Route T', departure: { id: '78' }, departure_time: '2021-10-09T00:00:00Z', arrival: { id: '45' }, arrival_time: '2021-10-10T00:00:00Z', distance: 10500, transport: { id: '16' }, status: StatusEnum.Finished },
+  { name: 'Route U', departure: { id: '89' }, departure_time: '2021-10-11T00:00:00Z', arrival: { id: '67' }, arrival_time: '2021-10-12T00:00:00Z', distance: 11000, transport: { id: '5' }, status: StatusEnum.Cancelled },
+  { name: 'Route V', departure: { id: '12' }, departure_time: '2021-10-13T00:00:00Z', arrival: { id: '34' }, arrival_time: '2021-10-14T00:00:00Z', distance: 11500, transport: { id: '8' }, status: StatusEnum.Progress },
+  { name: 'Route W', departure: { id: '23' }, departure_time: '2021-10-15T00:00:00Z', arrival: { id: '56' }, arrival_time: '2021-10-16T00:00:00Z', distance: 12000, transport: { id: '15' }, status: StatusEnum.Finished },
+  { name: 'Route X', departure: { id: '34' }, departure_time: '2021-10-17T00:00:00Z', arrival: { id: '12' }, arrival_time: '2021-10-18T00:00:00Z', distance: 12500, transport: { id: '3' }, status: StatusEnum.Cancelled },
+  { name: 'Route Y', departure: { id: '45' }, departure_time: '2021-10-19T00:00:00Z', arrival: { id: '78' }, arrival_time: '2021-10-20T00:00:00Z', distance: 13000, transport: { id: '12' }, status: StatusEnum.Progress },
+  { name: 'Route Z', departure: { id: '56' }, departure_time: '2021-10-21T00:00:00Z', arrival: { id: '23' }, arrival_time: '2021-10-22T00:00:00Z', distance: 13500, transport: { id: '7' }, status: StatusEnum.Finished },
+  { name: 'Route AA', departure: { id: '67' }, departure_time: '2021-10-23T00:00:00Z', arrival: { id: '89' }, arrival_time: '2021-10-24T00:00:00Z', distance: 14000, transport: { id: '19' }, status: StatusEnum.Cancelled },
+];

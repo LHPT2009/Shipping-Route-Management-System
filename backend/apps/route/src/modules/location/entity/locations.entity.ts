@@ -13,10 +13,10 @@ export class LocationEntity implements LocationInterface {
   @Column()
   address: string;
 
-  @Column()
+  @Column('float')
   longitude: number;
 
-  @Column()
+  @Column('float')
   latitude: number;
 
   @OneToMany(() => RouteEntity, (route) => route.departure)

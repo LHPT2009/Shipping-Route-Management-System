@@ -19,6 +19,7 @@ import {
 import { HealthModule } from './modules/health/health.module';
 import { LocationModule } from './modules/location/location.module';
 import { TransportModule } from './modules/transport/transport.module';
+import { SeedService } from './seed/seed.service';
 
 @Module({
   imports: [
@@ -51,6 +52,6 @@ import { TransportModule } from './modules/transport/transport.module';
     TransportModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [SeedService],
 })
 export class AppModule { }
