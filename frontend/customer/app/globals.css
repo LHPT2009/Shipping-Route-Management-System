@@ -40,6 +40,10 @@ body,h1,h2, h3, h4, h5, p{
   padding-bottom: 1px !important;
 }
 
+.ant-table-thead .ant-table-cell {
+  background-color: #edf2ff !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

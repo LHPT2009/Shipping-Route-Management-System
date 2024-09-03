@@ -1,0 +1,398 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
+import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
+import { useAppSelector } from "@/lib/hooks/hooks";
+// import RouteModal from "@/components/modal/route";
+import ContentComponent from "@/components/route";
+import styles from "./route.module.css";
+import Title from "antd/es/typography/Title";
+import { COLOR } from "@/constant/color";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import useAntNotification from "@/lib/hooks/notification";
+import { useHandleError } from "@/lib/hooks/error";
+import * as yup from "yup";
+import { ApolloError, useLazyQuery } from "@apollo/client";
+import { GET_ROUTES } from "@/apollo/query/route";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import { FilterDropdownProps } from "antd/es/table/interface";
+import { CarOutlined, EnvironmentOutlined, SearchOutlined } from "@ant-design/icons";
+import Highlighter from 'react-highlight-words';
+import type { SorterResult } from 'antd/es/table/interface';
+import qs from 'qs';
+import { useRouter } from "next/navigation";
+import MapIcon from "@/public/svg/route/map.svg";
+import InformationIcon from "@/public/svg/route/information.svg";
+
+const { Search } = Input;
+
+type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
+type Filters = Parameters<OnChange>[1];
+
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
+
+type ColumnsType<T extends object = object> = TableProps<T>['columns'];
+type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
+
+interface DataType {
+  id: number;
+  name: string;
+  departure: string;
+  arrival: string;
+  shipping_type: string;
+  status: string;
+}
+
+interface TableParams {
+  pagination?: TablePaginationConfig;
+  sortField?: SorterResult<any>['field'];
+  sortOrder?: SorterResult<any>['order'];
+  filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
+}
+
+type DataIndex = keyof DataType;
+
+const RoutePage = () => {
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
+  const router = useRouter();
+
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef<InputRef>(null);
+
+  const [data, setData] = useState<DataType[]>([]);
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+    },
+  });
+
+  const checkStatusBackground: boolean = useAppSelector(
+    (state) => state.responsive.checkStatusBackground
+  );
+  const checkStatusResponse: boolean = useAppSelector(
+    (state) => state.responsive.checkStatusResponse
+  );
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps['confirm'],
+    dataIndex: DataIndex,
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    if (clearFilters) {
+      clearFilters();
+    }
+    setSearchText('');
+  };
+
+  const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div style={{ padding: "1rem" }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ background: "white", borderRadius: "0.3rem", marginBottom: "1rem", display: 'block', padding: "0.4rem 1rem", width: "18rem" }}
+        />
+        <Space style={{ float: "right", marginBottom: "1rem" }}>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            style={{ background: "white", width: 100, height: 34, borderRadius: "0.3rem" }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            style={{ width: 100, height: 34, borderRadius: "0.3rem" }}
+          >
+            Search
+          </Button>
+
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? COLOR.PRIMARY : undefined, fontSize: "1.1rem" }} />
+    ),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+  });
+
+  const menuStatus = [
+    {
+      key: 'all',
+      label: 'All',
+    },
+    {
+      key: 'Progress',
+      label: 'Progress',
+    },
+    {
+      key: 'Finished',
+      label: 'Finished',
+    },
+    {
+      key: 'Cancelled',
+      label: 'Cancelled',
+    },
+  ];
+
+  const menuShippingType = [
+    {
+      key: 'all',
+      label: 'All',
+    },
+    {
+      key: 'Seaway',
+      label: 'Seaway',
+    },
+    {
+      key: 'Road',
+      label: 'Road',
+    },
+  ];
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'ID',
+      key: 'id',
+      render: (text, record, index) => index + 1,
+      width: '5%',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      ...getColumnSearchProps('name'),
+      width: '10%',
+    },
+    {
+      title: 'Departure',
+      dataIndex: 'departure',
+      key: 'departure',
+      ...getColumnSearchProps('departure'),
+      width: '21%',
+    },
+    {
+      title: 'Arrival',
+      dataIndex: 'arrival',
+      key: 'arrival',
+      ...getColumnSearchProps('arrival'),
+      width: '21%',
+    },
+    {
+      title: 'Distance',
+      dataIndex: 'distance',
+      key: 'distance',
+      width: '10%',
+    },
+    {
+      title: 'Shipping',
+      dataIndex: 'shipping_type',
+      key: 'shipping_type',
+      width: '10%',
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Menu
+            selectedKeys={selectedKeys.map(String)}
+            onClick={({ key }) => {
+              if (key === 'all') {
+                handleReset(clearFilters!);
+                confirm();
+              } else {
+                setSelectedKeys([key]);
+                confirm();
+              }
+            }}
+            items={menuShippingType}
+          />
+        </div>
+      ),
+      render: (_, { shipping_type }) => (
+        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={shipping_type === 'Seaway' ? 'blue' : 'green'} key={shipping_type}>
+          {shipping_type}
+        </Tag>
+      )
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      width: '10%',
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Menu
+            selectedKeys={selectedKeys.map(String)}
+            onClick={({ key }) => {
+              if (key === 'all') {
+                handleReset(clearFilters!);
+                confirm();
+              } else {
+                setSelectedKeys([key]);
+                confirm();
+              }
+            }}
+            items={menuStatus}
+          />
+        </div>
+      ),
+      render: (_, { status }) => (
+        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={status === 'Finished' ? 'cyan' : status === 'Progress' ? 'orange' : 'red'} key={status}>
+          {status}
+        </Tag>
+      )
+    },
+    {
+      title: "Action",
+      dataIndex: "Action",
+      key: "Action",
+      width: "15%",
+      render: (_, record) => (
+        <Flex align="center" gap="1rem">
+          <Button
+            onClick={() => router.push(`/${record.id}`)}
+            style={{ border: "0.5px solid #4f46e5", color: COLOR.PRIMARY, padding: "0.9rem 1.2rem", borderRadius: "0.3rem", fontSize: "0.9rem", background: "white" }}
+          >
+            Detail
+          </Button>
+          <Button
+            type="primary"
+            // onClick={() => router.push(`/${record.id}`)}
+            style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
+          >
+            <img src={MapIcon.src} style={{width: "1.2rem", height: "2rem"}}/>
+          </Button>
+        </Flex>
+      ),
+    },
+
+  ];
+
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
+    onCompleted: async (data) => {
+      console.log(data.getRoutes.data);
+      setData(data.getRoutes.data.routes);
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: data.getRoutes.data.total,
+        },
+      });
+
+    },
+    onError: async (error: ApolloError) => {
+      console.log(error.graphQLErrors[0])
+      await handleError(error);
+    }
+  });
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const { accessToken, expiresIn } = await fetchCookies();
+      console.log("tableParams", tableParams);
+      if (accessToken && expiresIn) {
+        await getRoutes({
+          context: {
+            headers: {
+              accesstoken: accessToken
+            }
+          },
+          variables: {
+            input: {
+              page: tableParams.pagination?.current,
+              limit: tableParams.pagination?.pageSize,
+              name: tableParams.filters?.name?.[0],
+              departure: tableParams.filters?.departure?.[0],
+              arrival: tableParams.filters?.arrival?.[0],
+              shipping_type: tableParams.filters?.shipping_type?.[0],
+              status: tableParams.filters?.status?.[0],
+            }
+          },
+        });
+      }
+    };
+    fetchRoutes();
+  }, [
+    tableParams.pagination?.current,
+    tableParams.pagination?.pageSize,
+    tableParams?.sortOrder,
+    tableParams?.sortField,
+    JSON.stringify(tableParams.filters),
+  ]);
+
+  const getRandomuserParams = (params: TableParams) => ({
+    results: params.pagination?.pageSize,
+    page: params.pagination?.current,
+    ...params,
+  });
+
+  const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
+    setTableParams({
+      pagination,
+      filters,
+      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
+      sortField: Array.isArray(sorter) ? undefined : sorter.field,
+    });
+
+    // `dataSource` is useless since `pageSize` changed
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setData([]);
+    }
+  };
+
+  return (
+    <>
+      {!checkStatusBackground ? (
+        <></>
+      ) : (
+        <div style={{ width: "88rem", margin: "6.5rem auto 2rem auto" }}>
+          <Title level={4} style={{
+            fontSize: "2rem",
+            fontWeight: 700,
+            color: COLOR.TEXT,
+            textAlign: "center",
+            marginBottom: "3rem"
+          }}>
+            Routes
+          </Title>
+
+          <Table
+            rowKey={(record) => record.id}
+            className={styles['table-striped-rows']}
+            columns={columns}
+            pagination={tableParams.pagination}
+            loading={loading}
+            onChange={handleTableChange}
+            dataSource={data}
+          />
+
+        </div>
+      )}
+    </>
+  );
+};
+
+export default RoutePage;

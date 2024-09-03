@@ -168,7 +168,7 @@ const data: DataType[] = [
   },
 ];
 
-const routePage = () => {
+const RoutePage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -281,4 +281,4 @@ const routePage = () => {
   );
 };
 
-export default routePage;
+export default RoutePage;
