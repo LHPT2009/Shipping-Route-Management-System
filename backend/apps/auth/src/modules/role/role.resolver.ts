@@ -9,16 +9,24 @@ import { RoleEntity } from './entity/role.entity';
 import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
 import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 
+import { RoleGuard } from 'common/exception/guards/role.guard';
+import { Roles } from 'common/exception/guards/decorator/roles.decorator';
+import { Permissions } from 'common/exception/guards/decorator/permissions.decorator';
+import { ROLE } from 'common/constants/role';
+import { PERMISSION } from 'common/constants/permission';
+
 @Resolver(() => Role)
 export class RoleResolver {
   constructor(private roleService: RoleService) { }
 
   @Query(() => ResponseDto<RoleEntity[]>)
+  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Permissions(PERMISSION.GET)
+  @UseGuards(AuthGuard, RoleGuard)
   async getRoles(): Promise<ResponseDto<RoleEntity[]>> {
     return this.roleService.findAll();
   }
 
-  @UseGuards(AuthGuard)
   @Query(() => ResponseDto<RoleEntity>, { nullable: true })
   async getRole(
     @Args('id', { type: () => ID }) id: string,
@@ -55,10 +63,10 @@ export class RoleResolver {
     return this.roleService.addPermissionToRole(input);
   }
 
-  @Mutation(() => ResponseDto<RoleEntity>)
-  async removePermissionFromRole(
-    @Args('input') input: PermissionToRoleDto,
-  ) {
-    return this.roleService.removePermissionFromRole(input);
-  }
+  // @Mutation(() => ResponseDto<RoleEntity>)
+  // async removePermissionFromRole(
+  //   @Args('input') input: PermissionToRoleDto,
+  // ) {
+  //   return this.roleService.removePermissionFromRole(input);
+  // }
 }

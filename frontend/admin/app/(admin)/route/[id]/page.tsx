@@ -9,7 +9,7 @@ import { useState } from "react";
 import CustomModal from "@/components/modal/route";
 
 const { Text } = Typography;
-const routeDetailPage = () => {
+const routeDetailPage = ({ params }: { params: { id: string } }) => {
   const schema = yup
     .object({
       username: yup.string().required("Please enter your username"),
@@ -35,7 +35,7 @@ const routeDetailPage = () => {
     <>
       <ContentComponent>
         <Form onFinish={handleSubmit(onFinish)} layout="vertical">
-          <Text>Detail info</Text>
+          <Text>Detail info({params.id})</Text>
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
               <Row gutter={[16, 16]}>

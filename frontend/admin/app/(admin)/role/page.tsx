@@ -2,35 +2,25 @@
 import React, { useState } from "react";
 import ContentComponent from "@/components/content";
 import { Col, Flex, Row, theme, Button, Input, Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import type { TableColumnsType } from "antd";
 import { useAppSelector } from "@/lib/hooks/hooks";
+import { useQuery } from "@apollo/client";
+import { GET_ROLES } from "@/apollo/query/role";
+import { useRouter } from "next/navigation";
+import { headers } from "next/headers";
 
 const { Search } = Input;
 
 interface DataType {
-  key: string;
+  id: string;
   name: string;
 }
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "USER",
-  },
-  {
-    key: "2",
-    name: "ADMIN",
-  },
-  {
-    key: "3",
-    name: "SUPERADMIN",
-  },
-];
-
-const rolePage = () => {
+const RolePage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const router = useRouter();
 
   const columns: TableColumnsType<DataType> = [
     {
@@ -39,9 +29,17 @@ const rolePage = () => {
       key: "name",
     },
     {
-      title: "Action",
+      // title: "Action",
       dataIndex: "Action",
       key: "Action",
+      render: (_, record) => (
+        <Button
+          type="primary"
+          onClick={() => router.push(`/role/${record.id}`)}
+        >
+          Detail
+        </Button>
+      ),
     },
   ];
 
@@ -51,6 +49,14 @@ const rolePage = () => {
   const checkStatusResponse: boolean = useAppSelector(
     (state) => state.responsive.checkStatusResponse
   );
+
+  const [listItem, setListItem] = useState<DataType[]>();
+
+  useQuery(GET_ROLES, {
+    onCompleted: async (data) => {
+      setListItem(data.getRoles.data);
+    },
+  });
 
   return (
     <>
@@ -120,7 +126,7 @@ const rolePage = () => {
           <ContentComponent>
             <Table
               columns={columns}
-              dataSource={data}
+              dataSource={listItem}
               scroll={{ x: 768, y: 375 }}
             />
           </ContentComponent>
@@ -130,4 +136,4 @@ const rolePage = () => {
   );
 };
 
-export default rolePage;
+export default RolePage;
