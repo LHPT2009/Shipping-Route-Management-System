@@ -19,7 +19,7 @@ export default function CookiesComponent() {
 
   const dispatch = useAppDispatch();
   const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
-  
+
   const { handleError } = useHandleError();
 
   const [getUserByToken] = useLazyQuery(GET_USER_BY_TOKEN, {
@@ -38,7 +38,7 @@ export default function CookiesComponent() {
       await handleError(error);
     }
   });
-  
+
   useEffect(() => {
     const fetchCurrentCookies = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
@@ -47,7 +47,7 @@ export default function CookiesComponent() {
           await getNewAccessToken({
             context: {
               headers: {
-                accesstoken: accessToken
+                authorization: `Bearer ${accessToken}`
               }
             }
           });
@@ -56,7 +56,7 @@ export default function CookiesComponent() {
           await getUserByToken({
             context: {
               headers: {
-                accesstoken: accessToken
+                authorization: `Bearer ${accessToken}`
               }
             }
           });

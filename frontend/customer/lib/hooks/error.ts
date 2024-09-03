@@ -19,7 +19,7 @@ export const useHandleError = () => {
       await getNewAccessToken({
         context: {
           headers: {
-            accesstoken: accessToken
+             authorization: `Bearer ${accessToken}`
           }
         }
       });

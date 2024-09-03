@@ -69,7 +69,7 @@ const HeaderComponent = () => {
     await logout({
       context: {
         headers: {
-          accesstoken: accessToken
+           authorization: `Bearer ${accessToken}`
         }
       }
     });
