@@ -143,16 +143,16 @@ const RoutePage = () => {
       label: 'All',
     },
     {
-      key: 'progress',
+      key: 'Progress',
       label: 'Progress',
     },
     {
-      key: 'finished',
+      key: 'Finished',
       label: 'Finished',
     },
     {
-      key: 'canceled',
-      label: 'Canceled',
+      key: 'Cancelled',
+      label: 'Cancelled',
     },
   ];
 
@@ -162,11 +162,11 @@ const RoutePage = () => {
       label: 'All',
     },
     {
-      key: 'seaway',
+      key: 'Seaway',
       label: 'Seaway',
     },
     {
-      key: 'road',
+      key: 'Road',
       label: 'Road',
     },
   ];
@@ -210,11 +210,6 @@ const RoutePage = () => {
       dataIndex: 'shipping_type',
       key: 'shipping_type',
       width: '10%',
-      filters: [
-        { text: 'Finished', value: 'finished' },
-        { text: 'Progress', value: 'progress' },
-        { text: 'Canceled', value: 'canceled' },
-      ],
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
           <Menu
@@ -243,10 +238,6 @@ const RoutePage = () => {
       dataIndex: 'status',
       key: 'status',
       width: '10%',
-      filters: [
-        { text: 'Active', value: 'active' },
-        { text: 'Inactive', value: 'inactive' },
-      ],
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
           <Menu
