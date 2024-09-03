@@ -26,6 +26,7 @@ export class RoleGuard implements CanActivate {
     const requiredPermissions = this.reflector.get<string[]>('permissions', context.getHandler());
 
     const userRole: UserRole = JSON.parse(gqlContext.user_role);
+    console.log('userRole', userRole);
 
     if (!requiredRoles && !requiredPermissions) {
       return true;

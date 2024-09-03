@@ -1,10 +1,18 @@
 "use client";
 import React, { useState } from "react";
-import ContentComponent from "@/components/content";
-import { Col, Flex, Row, theme, Button, Input, Table } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { useAppSelector } from "@/lib/hooks/hooks";
-import RouteModal from "@/components/modal/route";
+// import RouteModal from "@/components/modal/route";
+import ContentComponent from "@/components/route";
+import styles from "./route.module.css";
+import Title from "antd/es/typography/Title";
+import { COLOR } from "@/constant/color";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import useAntNotification from "@/lib/hooks/notification";
+import { useHandleError } from "@/lib/hooks/error";
+import * as yup from "yup";
 
 const { Search } = Input;
 
@@ -202,80 +210,47 @@ const RoutePage = () => {
     (state) => state.responsive.checkStatusResponse
   );
 
+  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  // const [loginMutation, {loading}] = useMutation(LOGIN, {
+  //   onCompleted: async (data) => {
+  //     await setCookies('accessToken', data.login.data.accessToken);
+  //     await setCookies('expiresIn', data.login.data.expiresIn);
+  //     dispatch(authActions.setIsLogin(true));
+  //     router.push('/');
+  //     openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
+  //   },
+  //   onError: async (error: ApolloError) => {
+  //     await handleError(error);
+  //   }
+  // });
+
+
   return (
     <>
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <>
-          <div
-            style={{
-              padding: "0 16px",
-              marginBottom: "10px",
-            }}
-          >
-            <Row style={{ width: "100%" }}>
-              <Col span={12} xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                <div
-                  style={{ paddingRight: checkStatusResponse ? "0px" : "5px" }}
-                >
-                  <div
-                    style={{
-                      background: colorBgContainer,
-                      borderRadius: borderRadiusLG,
-                      padding: "16px 16px",
-                    }}
-                  >
-                    <Flex justify="start" align="start">
-                      <Search
-                        placeholder="input search text"
-                        enterButton="Search"
-                        size="large"
-                        loading={true}
-                      />
-                    </Flex>
-                  </div>
-                </div>
-              </Col>
-              <Col span={12} xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                <div
-                  style={{
-                    paddingLeft: "0px",
-                    marginTop: checkStatusResponse ? "10px" : "0px",
-                  }}
-                >
-                  <div
-                    style={{
-                      background: colorBgContainer,
-                      borderRadius: borderRadiusLG,
-                      padding: "16px 16px",
-                    }}
-                  >
-                    <Flex justify="end" align="end" wrap gap="small">
-                      <Button type="primary" size="large">
-                        Primary
-                      </Button>
-                      <Button type="primary" size="large">
-                        Primary
-                      </Button>
-                      <Button type="primary" size="large">
-                        Primary
-                      </Button>
-                    </Flex>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <ContentComponent>
-            <Table
-              columns={columns}
-              dataSource={data}
-              onChange={handleChange}
-              scroll={{ x: 768, y: 375 }}
-            />
-          </ContentComponent>
-        </>
+        <div style={{ width: "85%", margin: "6.5rem auto 2rem auto" }}>
+          <Title level={4} style={{
+            fontSize: "2rem",
+            fontWeight: 700,
+            color: COLOR.TEXT,
+            textAlign: "center",
+            marginBottom: "3rem"
+          }}>
+            Routes
+          </Title>
+
+          <Table
+            className={styles['table-striped-rows']}
+            columns={columns}
+            dataSource={data}
+            onChange={handleChange}
+          />
+
+        </div>
       )}
     </>
   );

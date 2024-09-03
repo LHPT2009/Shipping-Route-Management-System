@@ -58,6 +58,10 @@ export default function RootLayout({
                 Modal: {
                   borderRadius: 8,
                 },
+                Table: {
+                  colorBgContainer: "#fff",
+                  borderRadius: 8,
+                }
               },
             }}
           >
