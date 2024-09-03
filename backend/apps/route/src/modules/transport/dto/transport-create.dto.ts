@@ -12,14 +12,14 @@ export class CreateTransportDto {
   @IsEnum(VehicleTypeEnum, {
     message: 'Vehicle type must be a valid enum value',
   })
-  vehicleType: VehicleTypeEnum;
+  vehicle_type: VehicleTypeEnum;
 
   @Field(() => ShippingTypeEnum)
   @IsNotEmpty({ message: 'Shipping type is required' })
   @IsEnum(ShippingTypeEnum, {
     message: 'Shipping type must be a valid enum value',
   })
-  shippingType: ShippingTypeEnum;
+  shipping_type: ShippingTypeEnum;
 
   @Field()
   @IsNotEmpty({ message: 'Name is required' })

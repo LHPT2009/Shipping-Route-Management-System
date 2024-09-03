@@ -10,12 +10,12 @@ export class UpdateTransportDto {
   @Field(() => VehicleTypeEnum)
   @IsNotEmpty()
   @IsEnum(VehicleTypeEnum)
-  vehicleType?: VehicleTypeEnum;
+  vehicle_type?: VehicleTypeEnum;
 
   @Field(() => ShippingTypeEnum)
   @IsNotEmpty()
   @IsEnum(ShippingTypeEnum)
-  shippingType?: ShippingTypeEnum;
+  shipping_type?: ShippingTypeEnum;
 
   @Field()
   @IsNotEmpty()
