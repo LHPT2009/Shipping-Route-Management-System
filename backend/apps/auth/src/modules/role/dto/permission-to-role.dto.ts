@@ -4,6 +4,6 @@ import { Field, InputType } from '@nestjs/graphql';
 export class PermissionToRoleDto {
     @Field()
     roleId: string;
-    @Field()
-    permissionId: string;
+    @Field(() => [String])
+    permissionIds: string[];
 }

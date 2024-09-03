@@ -18,10 +18,10 @@ export class Transport {
   id: string;
 
   @Field(() => VehicleTypeEnum)
-  vehicleType: VehicleTypeEnum;
+  vehicle_type: VehicleTypeEnum;
 
   @Field(() => ShippingTypeEnum)
-  shippingType: ShippingTypeEnum;
+  shipping_type: ShippingTypeEnum;
 
   @Field()
   name: string;

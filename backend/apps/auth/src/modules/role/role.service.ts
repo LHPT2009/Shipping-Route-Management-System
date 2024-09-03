@@ -7,6 +7,7 @@ import { RoleEntity } from './entity/role.entity';
 import { STATUS_CODE, STATUS } from 'common/constants/status';
 import { PermissionRepository } from '../permission/permission.repository';
 import { PermissionToRoleDto } from './dto/permission-to-role.dto';
+import { In } from 'typeorm';
 
 @Injectable()
 export class RoleService {
@@ -72,29 +73,24 @@ export class RoleService {
   }
 
   async addPermissionToRole(input: PermissionToRoleDto): Promise<ResponseDto<RoleEntity>> {
-    const role = await this.roleRepository.findOne({
-      where: { id: input.roleId },
-      relations: ['permissions'],
-    });
-    const permission = await this.permissionRepository.findOne({ where: { id: input.permissionId } });
+    const { roleId, permissionIds } = input;
 
-    role.permissions.push(permission);
-    this.roleRepository.save(role)
+    const role = await this.roleRepository.findOne({ where: { id: roleId }, relations: ['permissions'] });
+
+    if (!role) {
+      return new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: `Role with ID ${roleId} not found` });
+    }
+
+    const permissions = await this.permissionRepository.findBy({ id: In(permissionIds) });
+
+    if (permissions.length !== permissionIds.length) {
+      return new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: `Some permissions were not found` });
+    }
+
+    role.permissions = permissions;
+
+    await this.roleRepository.save(role);
+
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
-  }
-
-  async removePermissionFromRole(input: PermissionToRoleDto): Promise<ResponseDto<RoleEntity>> {
-    const role = await this.roleRepository.findOne({
-      where: { id: input.roleId },
-      relations: ['permissions'],
-    });
-
-    role.permissions = role.permissions.filter(
-      (permission) => permission.id != input.permissionId,
-    );
-
-    this.roleRepository.save(role)
-    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
-
   }
 }
