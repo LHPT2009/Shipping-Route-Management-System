@@ -12,7 +12,7 @@ const MenuComponent: React.FC<MenuComponentProps> = ({
   const handleClick = (e: { key: string }) => {
     const clickedItem = MENULIST.find((item) => item.key === e.key);
     if (clickedItem) {
-      // router.push(clickedItem.url!);
+      router.push(clickedItem.url!);
     }
   };
   return (
