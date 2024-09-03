@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
@@ -17,11 +17,13 @@ import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { FilterDropdownProps } from "antd/es/table/interface";
-import { SearchOutlined } from "@ant-design/icons";
+import { CarOutlined, EnvironmentOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from 'react-highlight-words';
 import type { SorterResult } from 'antd/es/table/interface';
 import qs from 'qs';
 import { useRouter } from "next/navigation";
+import MapIcon from "@/public/svg/route/map.svg";
+import InformationIcon from "@/public/svg/route/information.svg";
 
 const { Search } = Input;
 
@@ -104,12 +106,12 @@ const RoutePage = () => {
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{ borderRadius: "0.3rem", marginBottom: "1rem", display: 'block', padding: "0.4rem 1rem", width: "18rem" }}
+          style={{ background: "white", borderRadius: "0.3rem", marginBottom: "1rem", display: 'block', padding: "0.4rem 1rem", width: "18rem" }}
         />
         <Space style={{ float: "right", marginBottom: "1rem" }}>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
-            style={{ width: 100, height: 34, borderRadius: "0.3rem" }}
+            style={{ background: "white", width: 100, height: 34, borderRadius: "0.3rem" }}
           >
             Reset
           </Button>
@@ -135,40 +137,82 @@ const RoutePage = () => {
     },
   });
 
+  const menuStatus = [
+    {
+      key: 'all',
+      label: 'All',
+    },
+    {
+      key: 'progress',
+      label: 'Progress',
+    },
+    {
+      key: 'finished',
+      label: 'Finished',
+    },
+    {
+      key: 'canceled',
+      label: 'Canceled',
+    },
+  ];
+
+  const menuShippingType = [
+    {
+      key: 'all',
+      label: 'All',
+    },
+    {
+      key: 'seaway',
+      label: 'Seaway',
+    },
+    {
+      key: 'road',
+      label: 'Road',
+    },
+  ];
+
   const columns: ColumnsType<DataType> = [
     {
       title: 'ID',
       key: 'id',
-      render: (text, record, index) => index,
+      render: (text, record, index) => index + 1,
+      width: '5%',
     },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
       ...getColumnSearchProps('name'),
-      // width: '20%',
+      width: '10%',
     },
     {
       title: 'Departure',
       dataIndex: 'departure',
       key: 'departure',
       ...getColumnSearchProps('departure'),
-      // width: '20%',
+      width: '21%',
     },
     {
       title: 'Arrival',
       dataIndex: 'arrival',
       key: 'arrival',
       ...getColumnSearchProps('arrival'),
-      // width: '20%',
+      width: '21%',
     },
     {
-      title: 'Shipping Type',
+      title: 'Distance',
+      dataIndex: 'distance',
+      key: 'distance',
+      width: '10%',
+    },
+    {
+      title: 'Shipping',
       dataIndex: 'shipping_type',
       key: 'shipping_type',
+      width: '10%',
       filters: [
         { text: 'Finished', value: 'finished' },
-        { text: 'In Progress', value: 'in_progress' },
+        { text: 'Progress', value: 'progress' },
         { text: 'Canceled', value: 'canceled' },
       ],
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -184,20 +228,21 @@ const RoutePage = () => {
                 confirm();
               }
             }}
-          >
-            <Menu.Item key="all" > All </Menu.Item>
-            <Menu.Item key="finished"> Finished </Menu.Item>
-            <Menu.Item key="in_progress"> In Progress </Menu.Item>
-            <Menu.Item key="canceled"> Canceled </Menu.Item>
-          </Menu>
+            items={menuShippingType}
+          />
         </div>
       ),
-      // width: '20%',
+      render: (_, { shipping_type }) => (
+        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={shipping_type === 'Seaway' ? 'blue' : 'green'} key={shipping_type}>
+          {shipping_type}
+        </Tag>
+      )
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      width: '10%',
       filters: [
         { text: 'Active', value: 'active' },
         { text: 'Inactive', value: 'inactive' },
@@ -215,25 +260,37 @@ const RoutePage = () => {
                 confirm();
               }
             }}
-          >
-            <Menu.Item key="all" > All </Menu.Item>
-            <Menu.Item key="active"> Active </Menu.Item>
-            <Menu.Item key="inactive"> Inactive </Menu.Item>
-          </Menu>
+            items={menuStatus}
+          />
         </div>
       ),
+      render: (_, { status }) => (
+        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={status === 'Finished' ? 'cyan' : status === 'Progress' ? 'orange' : 'red'} key={status}>
+          {status}
+        </Tag>
+      )
     },
     {
       title: "Action",
       dataIndex: "Action",
       key: "Action",
+      width: "15%",
       render: (_, record) => (
-        <Button
-          onClick={() => router.push(`/role/${record.id}`)}
-          style={{ width: 100, height: 34, borderRadius: "0.3rem" }}
-        >
-          Detail
-        </Button>
+        <Flex align="center" gap="1rem">
+          <Button
+            onClick={() => router.push(`/${record.id}`)}
+            style={{ border: "0.5px solid #4f46e5", color: COLOR.PRIMARY, padding: "0.9rem 1.2rem", borderRadius: "0.3rem", fontSize: "0.9rem", background: "white" }}
+          >
+            Detail
+          </Button>
+          <Button
+            type="primary"
+            // onClick={() => router.push(`/${record.id}`)}
+            style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
+          >
+            <img src={MapIcon.src} style={{width: "1.2rem", height: "2rem"}}/>
+          </Button>
+        </Flex>
       ),
     },
 
@@ -253,8 +310,10 @@ const RoutePage = () => {
           total: data.getRoutes.data.total,
         },
       });
+
     },
     onError: async (error: ApolloError) => {
+      console.log(error.graphQLErrors[0])
       await handleError(error);
     }
   });
@@ -262,6 +321,7 @@ const RoutePage = () => {
   useEffect(() => {
     const fetchRoutes = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
+      console.log("tableParams", tableParams);
       if (accessToken && expiresIn) {
         await getRoutes({
           context: {
@@ -271,13 +331,13 @@ const RoutePage = () => {
           },
           variables: {
             input: {
-              page: 1,
-              limit: 2,
-              name: "",
-              departure: "",
-              arrival: "",
-              shipping_type: "",
-              status: ""
+              page: tableParams.pagination?.current,
+              limit: tableParams.pagination?.pageSize,
+              name: tableParams.filters?.name?.[0],
+              departure: tableParams.filters?.departure?.[0],
+              arrival: tableParams.filters?.arrival?.[0],
+              shipping_type: tableParams.filters?.shipping_type?.[0],
+              status: tableParams.filters?.status?.[0],
             }
           },
         });
@@ -291,34 +351,6 @@ const RoutePage = () => {
     tableParams?.sortField,
     JSON.stringify(tableParams.filters),
   ]);
-
-  // const fetchData = () => {
-  //   fetch(`https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`)
-  //     .then((res) => res.json())
-  //     .then(({ results }) => {
-  //       console.log('url', `https://randomuser.me/api?${qs.stringify(getRandomuserParams(tableParams))}`);
-  //       console.log(getRandomuserParams(tableParams));
-  //       setData(results);
-  //       setTableParams({
-  //         ...tableParams,
-  //         pagination: {
-  //           ...tableParams.pagination,
-  //           total: 200,
-  //         },
-  //       });
-  //       console.log("tableParams", tableParams);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [
-  //   tableParams.pagination?.current,
-  //   tableParams.pagination?.pageSize,
-  //   tableParams?.sortOrder,
-  //   tableParams?.sortField,
-  //   JSON.stringify(tableParams.filters),
-  // ]);
 
   const getRandomuserParams = (params: TableParams) => ({
     results: params.pagination?.pageSize,
