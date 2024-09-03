@@ -15,6 +15,23 @@ export class SeedService implements OnApplicationBootstrap {
     private readonly dataSource: DataSource,
   ) { }
 
+  checkForDuplicatePairs = (data) => {
+    const pairs = new Set();
+    const duplicatePairs = new Set();
+  
+    data.forEach(route => {
+      const pair = `${route.departure.id}-${route.arrival.id}`;
+      
+      if (pairs.has(pair)) {
+        duplicatePairs.add(pair);
+      } else {
+        pairs.add(pair);
+      }
+    });
+  
+    return Array.from(duplicatePairs);
+  };
+
   async onApplicationBootstrap() {
     const locationRepository = this.dataSource.getRepository(LocationEntity);
     const transportRepository = this.dataSource.getRepository(TransportEntity);
@@ -31,6 +48,14 @@ export class SeedService implements OnApplicationBootstrap {
     }
 
     const routeCount = await routeRepository.count();
+
+    const duplicatePairs = this.checkForDuplicatePairs(routeData);
+
+    if (duplicatePairs.length > 0) {
+      console.log('Duplicate departure-arrival pairs found:', duplicatePairs);
+    } else {
+      console.log('No duplicate departure-arrival pairs found.');
+    }
     if (routeCount === 0) {
       await routeRepository.save(routeData);
     }
