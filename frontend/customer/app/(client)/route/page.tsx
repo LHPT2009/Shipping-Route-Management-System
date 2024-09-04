@@ -69,7 +69,7 @@ const RoutePage = () => {
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
     },
   });
 
@@ -174,7 +174,9 @@ const RoutePage = () => {
   const columns: ColumnsType<DataType> = [
     {
       title: 'ID',
+      dataIndex: 'id',
       key: 'id',
+      sorter: true,
       render: (text, record, index) => index + 1,
       width: '5%',
     },
@@ -182,6 +184,7 @@ const RoutePage = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: true,
       ...getColumnSearchProps('name'),
       width: '10%',
     },
@@ -189,6 +192,7 @@ const RoutePage = () => {
       title: 'Departure',
       dataIndex: 'departure',
       key: 'departure',
+      sorter: true,
       ...getColumnSearchProps('departure'),
       width: '21%',
     },
@@ -196,6 +200,7 @@ const RoutePage = () => {
       title: 'Arrival',
       dataIndex: 'arrival',
       key: 'arrival',
+      sorter: true,
       ...getColumnSearchProps('arrival'),
       width: '21%',
     },
@@ -204,6 +209,7 @@ const RoutePage = () => {
       dataIndex: 'distance',
       key: 'distance',
       width: '10%',
+      sorter: true,
     },
     {
       title: 'Shipping',
@@ -329,6 +335,8 @@ const RoutePage = () => {
               arrival: tableParams.filters?.arrival?.[0],
               shipping_type: tableParams.filters?.shipping_type?.[0],
               status: tableParams.filters?.status?.[0],
+              sort_field: tableParams.sortField,
+              sort_order: tableParams.sortOrder,
             }
           },
         });
@@ -368,7 +376,7 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <div style={{ width: "88rem", margin: "6.5rem auto 2rem auto" }}>
+        <div style={{ width: "85rem", margin: "6.5rem auto 2rem auto" }}>
           <Title level={4} style={{
             fontSize: "2rem",
             fontWeight: 700,

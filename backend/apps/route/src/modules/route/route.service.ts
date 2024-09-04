@@ -44,6 +44,15 @@ export class RoutesService {
         const statusEnumValue = StatusEnum[filterRoutesDto.status as keyof typeof StatusEnum];
         queryBuilder.andWhere('route.status = :status', { status: statusEnumValue });
       }
+      if (filterRoutesDto.sort_field && filterRoutesDto.sort_order) {
+        if (filterRoutesDto.sort_field === 'departure') {
+          queryBuilder.orderBy('departure.name', filterRoutesDto.sort_order === 'ascend' ? 'ASC' : 'DESC');
+        } else if (filterRoutesDto.sort_field === 'arrival') {
+          queryBuilder.orderBy('arrival.name', filterRoutesDto.sort_order === 'ascend' ? 'ASC' : 'DESC');
+        } else {
+          queryBuilder.orderBy(`route.${filterRoutesDto.sort_field}`, filterRoutesDto.sort_order === 'ascend' ? 'ASC' : 'DESC');
+        }
+      }
 
       const [routes, total] = await queryBuilder
         .skip((filterRoutesDto.page - 1) * filterRoutesDto.limit)

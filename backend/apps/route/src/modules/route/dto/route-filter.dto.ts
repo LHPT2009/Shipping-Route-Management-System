@@ -35,4 +35,10 @@ export class FilterRoutesDto {
 
   @Field({ nullable: true })
   status?: string;
+
+  @Field({ nullable: true })
+  sort_field?: string;
+
+  @Field({ nullable: true })
+  sort_order?: string;
 }
