@@ -91,7 +91,7 @@ const AccountInformationComponent: React.FC = () => {
         },
         context: {
           headers: {
-            accesstoken: accessToken
+            authorization: `Bearer ${accessToken}`
           }
         }
       });
