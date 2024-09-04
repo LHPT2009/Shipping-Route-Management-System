@@ -11,28 +11,28 @@ export const authContext = async ({ req }) => {
 
   if (accessToken && accessToken.startsWith('Bearer ')) {
     accessToken = accessToken.split(' ')[1];
+    const jwtService = new JwtService();
+    const decoded = jwtService.decode(accessToken);
+    const client = ClientProxyFactory.create({
+      transport: Transport.GRPC,
+      options: {
+        package: 'auth',
+        protoPath: ('./protos/auth.proto'),
+        url: 'localhost:50051',
+      },
+    });
+  
+    const appService = new AppService(client);
+  
+    try {
+      const data = await lastValueFrom(appService.getUserRoleById(decoded.userId));
+      return {
+        accessToken: accessToken,
+        userRole: data,
+      };
+    } catch (err) {
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { token: ['Token is Invaild.'] });
+    }
   }
 
-  const jwtService = new JwtService();
-  const decoded = jwtService.decode(accessToken);
-  const client = ClientProxyFactory.create({
-    transport: Transport.GRPC,
-    options: {
-      package: 'auth',
-      protoPath: ('./protos/auth.proto'),
-      url: 'localhost:50051',
-    },
-  });
-
-  const appService = new AppService(client);
-
-  try {
-    const data = await lastValueFrom(appService.getUserRoleById(decoded.userId));
-    return {
-      accessToken: accessToken,
-      userRole: data,
-    };
-  } catch (err) {
-    throw new CustomValidationError(STATUS.ERR_VALIDATION, { token: ['Token is Invaild.'] });
-  }
 };

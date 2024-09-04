@@ -1,503 +1,702 @@
 export const locationData = [
   {
-    name: "Central Park",
-    address: "New York, NY 10024, USA",
-    latitude: 40.785091, longitude: -73.968285
+    id: "1",
+    name: "Hoan Kiem Lake",
+    address: "79 Hang Trong, Hoan Kiem, Hanoi, Vietnam",
+    latitude: 21.028511,
+    longitude: 105.854444
   },
   {
-    name: "Eiffel Tower",
-    address: "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France",
-    latitude: 48.858844, longitude: 2.294351
+    id: "2",
+    name: "Ngoc Son Temple",
+    address: "Dinh Tien Hoang, Hoan Kiem, Hanoi, Vietnam",
+    latitude: 21.033333,
+    longitude: 105.851111
   },
   {
-    name: "Sydney Opera House",
-    address: "Bennelong Point, Sydney NSW 2000, Australia",
-    latitude: -33.856784, longitude: 151.215297
+    id: "3",
+    name: "Hanoi Opera House",
+    address: "1 Trang Tien, Hoan Kiem, Hanoi, Vietnam",
+    latitude: 21.024500,
+    longitude: 105.857500
   },
   {
-    name: "Great Wall of China",
-    address: "Huairou, China",
-    latitude: 40.431908, longitude: 116.570374
+    id: "4",
+    name: "Vietnam Museum of Ethnology",
+    address: "Nguyen Van Huyen, Cau Giay, Hanoi, Vietnam",
+    latitude: 21.040900,
+    longitude: 105.782300
   },
   {
-    name: "Machu Picchu",
-    address: "Peru",
-    latitude: -13.163068, longitude: -72.545128
+    id: "5",
+    name: "Temple of Literature",
+    address: "58 Quoc Tu Giam, Dong Da, Hanoi, Vietnam",
+    latitude: 21.028500,
+    longitude: 105.835500
   },
   {
-    name: "Taj Mahal",
-    address: "Agra, Uttar Pradesh 282001, India",
-    latitude: 27.175015, longitude: 78.042155
+    id: "6",
+    name: "Ho Chi Minh Mausoleum",
+    address: "2 Hung Vuong, Ba Dinh, Hanoi, Vietnam",
+    latitude: 21.036600,
+    longitude: 105.834200
   },
   {
-    name: "Colosseum",
-    address: "Piazza del Colosseo, 1, 00184 Roma RM, Italy",
-    latitude: 41.890210,
-    longitude: 12.492231
+    id: "7",
+    name: "One Pillar Pagoda",
+    address: "Ong Ich Khiem, Ba Dinh, Hanoi, Vietnam",
+    latitude: 21.036900,
+    longitude: 105.834200
   },
   {
-    name: "Statue of Liberty",
-    address: "New York, NY 10004, USA",
-    latitude: 40.689247, longitude: -74.044502
+    id: "8",
+    name: "West Lake",
+    address: "Tay Ho, Hanoi, Vietnam",
+    latitude: 21.050100,
+    longitude: 105.818800
   },
   {
-    name: "Stonehenge",
-    address: "A303, Amesbury, Salisbury SP4 7DE, UK",
-    latitude: 51.178884, longitude: -1.826215
+    id: "9",
+    name: "Tran Quoc Pagoda",
+    address: "Thanh Nien, Tay Ho, Hanoi, Vietnam",
+    latitude: 21.045600,
+    longitude: 105.836000
   },
   {
-    name: "Christ the Redeemer",
-    address: "Parque Lage - Jardim Botânico, Rio de Janeiro - RJ, 22241-125, Brazil",
-    latitude: -22.951916, longitude: -43.210487
+    id: "10",
+    name: "St. Joseph's Cathedral",
+    address: "40 Nha Chung, Hoan Kiem, Hanoi, Vietnam",
+    latitude: 21.028500,
+    longitude: 105.849700
   },
   {
-    name: "Mount Fuji",
-    address: "Yoshida Trail, Fujiyoshida, Yamanashi Prefecture, Japan",
-    latitude: 35.360638, longitude: 138.727363
+    id: "11",
+    name: "Ben Thanh Market",
+    address: "Le Loi, Ben Thanh, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.772200,
+    longitude: 106.698300
   },
   {
-    name: "Acropolis of Athens",
-    address: "Athens 105 58, Greece",
-    latitude: 37.971532, longitude: 23.726716
+    id: "12",
+    name: "Notre-Dame Cathedral Basilica of Saigon",
+    address: "1 Cong Xa Paris, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.779800,
+    longitude: 106.699200
   },
   {
-    name: "Burj Khalifa",
-    address: "1 Sheikh Mohammed bin Rashid Blvd - Dubai - United Arab Emirates",
-    latitude: 25.197197, longitude: 55.274112
+    id: "13",
+    name: "Saigon Central Post Office",
+    address: "2 Cong Xa Paris, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.779400,
+    longitude: 106.698400
   },
   {
-    name: "Grand Canyon",
-    address: "Arizona, USA",
-    latitude: 36.054445, longitude: -112.140111
+    id: "14",
+    name: "War Remnants Museum",
+    address: "28 Vo Van Tan, District 3, Ho Chi Minh City, Vietnam",
+    latitude: 10.779200,
+    longitude: 106.692300
   },
   {
-    name: "Big Ben",
-    address: "London SW1A 0AA, UK",
-    latitude: 51.500729, longitude: -0.124625
+    id: "15",
+    name: "Independence Palace",
+    address: "135 Nam Ky Khoi Nghia, Ben Thanh, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.776900,
+    longitude: 106.695800
   },
   {
-    name: "Sagrada Familia",
-    address: "Carrer de Mallorca, 401, 08013 Barcelona, Spain",
-    latitude: 41.403629, longitude: 2.174355
+    id: "16",
+    name: "Bitexco Financial Tower",
+    address: "2 Hai Trieu, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.771500,
+    longitude: 106.704100
   },
   {
-    name: "Pyramids of Giza",
-    address: "Giza Governorate, Egypt",
-    latitude: 29.979234, longitude: 31.134202
+    id: "17",
+    name: "Saigon Zoo and Botanical Gardens",
+    address: "2 Nguyen Binh Khiem, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.789600,
+    longitude: 106.702200
   },
   {
-    name: "Petra",
-    address: "Ma'an Governorate, Jordan",
-    latitude: 30.328454, longitude: 35.444362
+    id: "18",
+    name: "Cu Chi Tunnels",
+    address: "Phu Hiep, Cu Chi, Ho Chi Minh City, Vietnam",
+    latitude: 11.147700,
+    longitude: 106.499700
   },
   {
-    name: "Niagara Falls",
-    address: "Niagara Falls, NY 14303, USA",
-    latitude: 43.096214, longitude: -79.037739
+    id: "19",
+    name: "Mekong Delta",
+    address: "My Tho, Tien Giang, Vietnam",
+    latitude: 10.360300,
+    longitude: 106.363000
   },
   {
-    name: "Louvre Museum",
-    address: "Rue de Rivoli, 75001 Paris, France",
-    latitude: 48.860846, longitude: 2.337604
+    id: "20",
+    name: "Phu Quoc Island",
+    address: "Duong Dong, Phu Quoc, Kien Giang, Vietnam",
+    latitude: 10.289900,
+    longitude: 103.984000
   },
   {
-    name: "Buckingham Palace",
-    address: "London SW1A 1AA, UK",
-    latitude: 51.501364, longitude: -0.141890
+    id: "21",
+    name: "My Son Sanctuary",
+    address: "Duy Phu, Duy Xuyen, Quang Nam, Vietnam",
+    latitude: 15.776100,
+    longitude: 108.112800
   },
   {
-    name: "Sydney Harbour Bridge",
-    address: "Sydney NSW 2060, Australia",
-    latitude: -33.848588, longitude: 151.210556
+    id: "22",
+    name: "Hoi An Ancient Town",
+    address: "Minh An, Hoi An, Quang Nam, Vietnam",
+    latitude: 15.880100,
+    longitude: 108.338000
   },
   {
-    name: "Golden Gate Bridge",
-    address: "San Francisco, CA 94129, USA",
-    latitude: 37.819929, longitude: -122.478255
+    id: "23",
+    name: "Marble Mountains",
+    address: "Hoa Hai, Ngu Hanh Son, Da Nang, Vietnam",
+    latitude: 16.001600,
+    longitude: 108.263700
   },
   {
-    name: "Prague Castle",
-    address: "Prague 119 08, Czech Republic",
-    latitude: 50.090294, longitude: 14.398249
+    id: "24",
+    name: "Dragon Bridge",
+    address: "An Hai Tay, Son Tra, Da Nang, Vietnam",
+    latitude: 16.060500,
+    longitude: 108.228900
   },
   {
-    name: "Mount Everest",
-    address: "Nepal/China border",
-    latitude: 27.988168, longitude: 86.925026
+    id: "25",
+    name: "Ba Na Hills",
+    address: "Hoa Ninh, Hoa Vang, Da Nang, Vietnam",
+    latitude: 15.995000,
+    longitude: 107.996000
   },
   {
-    name: "Vatican City",
-    address: "Vatican City",
-    latitude: 41.902916, longitude: 12.453389
+    id: "26",
+    name: "Son Doong Cave",
+    address: "Son Trach, Bo Trach, Quang Binh, Vietnam",
+    latitude: 17.471600,
+    longitude: 106.287700
   },
   {
-    name: "Red Square",
-    address: "Moscow, Russia",
-    latitude: 55.755825, longitude: 37.617298
+    id: "27",
+    name: "Phong Nha-Ke Bang National Park",
+    address: "Son Trach, Bo Trach, Quang Binh, Vietnam",
+    latitude: 17.537300,
+    longitude: 106.151700
   },
   {
-    name: "Tiananmen Square",
-    address: "Beijing, China",
-    latitude: 39.904202, longitude: 116.407394
+    id: "28",
+    name: "Hue Imperial City",
+    address: "Thuan Thanh, Hue, Thua Thien Hue, Vietnam",
+    latitude: 16.463700,
+    longitude: 107.579700
   },
   {
-    name: "Fallingwater",
-    address: "1491 Mill Run Rd, Mill Run, PA 15464, USA",
-    latitude: 39.924071, longitude: -79.470833
+    id: "29",
+    name: "Thien Mu Pagoda",
+    address: "Huong Long, Hue, Thua Thien Hue, Vietnam",
+    latitude: 16.472300,
+    longitude: 107.561400
   },
   {
-    name: "Angkor Wat",
-    address: "Siem Reap, Cambodia",
-    latitude: 13.412469, longitude: 103.866986
+    id: "30",
+    name: "Lang Co Beach",
+    address: "Lang Co, Phu Loc, Thua Thien Hue, Vietnam",
+    latitude: 16.297800,
+    longitude: 107.852500
   },
   {
-    name: "Alhambra",
-    address: "Calle Real de la Alhambra, s/n, 18009 Granada, Spain",
-    latitude: 37.176098, longitude: -3.588120
+    id: "31",
+    name: "Tam Coc",
+    address: "Ninh Hai, Hoa Lu, Ninh Binh, Vietnam",
+    latitude: 20.251400,
+    longitude: 105.936000
   },
   {
-    name: "Sistine Chapel",
-    address: "Vatican City",
-    latitude: 41.902556, longitude: 12.453389
+    id: "32",
+    name: "Trang An Landscape Complex",
+    address: "Truong Yen, Hoa Lu, Ninh Binh, Vietnam",
+    latitude: 20.250400,
+    longitude: 105.882900
   },
   {
-    name: "Mount Kilimanjaro",
-    address: "Tanzania",
-    latitude: -3.067425, longitude: 37.355621
+    id: "33",
+    name: "Bai Dinh Pagoda",
+    address: "Gia Sinh, Gia Vien, Ninh Binh, Vietnam",
+    latitude: 20.253600,
+    longitude: 105.912100
   },
   {
-    name: "Rila Monastery",
-    address: "Rila 2643, Bulgaria",
-    latitude: 42.133939, longitude: 23.291834
+    id: "34",
+    name: "Cat Ba Island",
+    address: "Cat Ba, Cat Hai, Hai Phong, Vietnam",
+    latitude: 20.727800,
+    longitude: 107.048200
   },
   {
-    name: "Galápagos Islands",
-    address: "Ecuador",
-    latitude: -0.927092, longitude: -90.975253
+    id: "35",
+    name: "Ha Long Bay",
+    address: "Ha Long, Quang Ninh, Vietnam",
+    latitude: 20.910100,
+    longitude: 107.183900
   },
   {
-    name: "Chichen Itza",
-    address: "Yucatan, Mexico",
-    latitude: 20.684288, longitude: -88.567779
+    id: "36",
+    name: "Sapa",
+    address: "Sapa, Lao Cai, Vietnam",
+    latitude: 22.335000,
+    longitude: 103.822000
   },
   {
-    name: "Brandenburg Gate",
-    address: "Pariser Platz, 10117 Berlin, Germany",
-    latitude: 52.516275, longitude: 13.377704
+    id: "37",
+    name: "Fansipan Mountain",
+    address: "Sapa, Lao Cai, Vietnam",
+    latitude: 22.304000,
+    longitude: 103.774000
   },
   {
-    name: "Fjords of Norway",
-    address: "Norway",
-    latitude: 61.092800, longitude: 7.635813
+    id: "38",
+    name: "Bac Ha Market",
+    address: "Bac Ha, Lao Cai, Vietnam",
+    latitude: 22.548300,
+    longitude: 104.283300
   },
   {
-    name: "Easter Island",
-    address: "Chile",
-    latitude: -27.112740, longitude: -109.349686
+    id: "39",
+    name: "Ban Gioc Waterfall",
+    address: "Dam Thuy, Trung Khanh, Cao Bang, Vietnam",
+    latitude: 22.853300,
+    longitude: 106.722200
   },
   {
-    name: "Auschwitz-Birkenau",
-    address: "Oświęcim, Poland",
-    latitude: 50.035965, longitude: 19.178765
+    id: "40",
+    name: "Ba Be Lake",
+    address: "Nam Mau, Ba Be, Bac Kan, Vietnam",
+    latitude: 22.413300,
+    longitude: 105.626700
   },
   {
-    name: "Meteora",
-    address: "Kalambaka 422 00, Greece",
-    latitude: 39.721586, longitude: 21.629978
+    id: "41",
+    name: "Mai Chau",
+    address: "Mai Chau, Hoa Binh, Vietnam",
+    latitude: 20.662000,
+    longitude: 105.103000
   },
   {
-    name: "Kiyomizu-dera",
-    address: "1-chōme-294 Kiyomizu, Higashiyama Ward, Kyoto, 605-0862, Japan",
-    latitude: 34.994858, longitude: 135.785012
+    id: "42",
+    name: "Pu Luong Nature Reserve",
+    address: "Ba Thuoc, Thanh Hoa, Vietnam",
+    latitude: 20.365000,
+    longitude: 105.210000
   },
   {
-    name: "Lalibela",
-    address: "Lalibela, Ethiopia",
-    latitude: 12.032701, longitude: 39.044574
+    id: "43",
+    name: "Con Dao Islands",
+    address: "Con Dao, Ba Ria - Vung Tau, Vietnam",
+    latitude: 8.680000,
+    longitude: 106.600000
   },
   {
-    name: "Hallstatt",
-    address: "Austria",
-    latitude: 47.561485, longitude: 13.649013
+    id: "44",
+    name: "Vung Tau Beach",
+    address: "Vung Tau, Ba Ria - Vung Tau, Vietnam",
+    latitude: 10.411400,
+    longitude: 107.136200
   },
   {
-    name: "Moai Statues",
-    address: "Rano Raraku, Easter Island, Chile",
-    latitude: -27.118935, longitude: -109.360855
+    id: "45",
+    name: "Mui Ne Beach",
+    address: "Mui Ne, Phan Thiet, Binh Thuan, Vietnam",
+    latitude: 10.933300,
+    longitude: 108.283300
   },
   {
-    name: "Hagia Sophia",
-    address: "Sultan Ahmet, Ayasofya Meydanı No:1, 34122 Fatih/Istanbul, Turkey",
-    latitude: 41.008583, longitude: 28.980175
+    id: "46",
+    name: "Da Lat Market",
+    address: "Nguyen Thi Minh Khai, Da Lat, Lam Dong, Vietnam",
+    latitude: 11.940400,
+    longitude: 108.438100
   },
   {
-    name: "Santorini",
-    address: "Cyclades, Greece",
-    latitude: 36.393156, longitude: 25.461510
+    id: "47",
+    name: "Xuan Huong Lake",
+    address: "Da Lat, Lam Dong, Vietnam",
+    latitude: 11.941600,
+    longitude: 108.441900
   },
   {
-    name: "Golden Pavilion",
-    address: "Kinkaku-ji, 1 Kinkakujicho, Kita Ward, Kyoto, 603-8361, Japan",
-    latitude: 35.039373, longitude: 135.729219
+    id: "48",
+    name: "Tram Chim National Park",
+    address: "Tam Nong, Dong Thap, Vietnam",
+    latitude: 10.697000,
+    longitude: 105.533000
   },
   {
-    name: "Neuschwanstein Castle",
-    address: "Neuschwansteinstraße 20, 87645 Schwangau, Germany",
-    latitude: 47.557573, longitude: 10.749800
+    id: "49",
+    name: "Cai Rang Floating Market",
+    address: "Cai Rang, Can Tho, Vietnam",
+    latitude: 10.033300,
+    longitude: 105.783300
   },
   {
-    name: "Palace of Versailles",
-    address: "Place d'Armes, 78000 Versailles, France",
-    latitude: 48.804865, longitude: 2.120355
+    id: "50",
+    name: "Parkson Paragon",
+    address: "3 Nguyen Luong Bang, Tan Phu, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7292,
+    longitude: 106.7208
   },
   {
-    name: "Table Mountain",
-    address: "Cape Town, South Africa",
-    latitude: -33.962784, longitude: 18.409295
+    id: "51",
+    name: "Crescent Mall",
+    address: "101 Ton Dat Tien, Tan Phu, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7282,
+    longitude: 106.7215
   },
   {
-    name: "Banff National Park",
-    address: "Alberta, Canada",
-    latitude: 51.496846, longitude: -115.928056
+    id: "52",
+    name: "SC VivoCity",
+    address: "1058 Nguyen Van Linh, Tan Phong, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7290,
+    longitude: 106.7030
   },
   {
-    name: "Rijksmuseum",
-    address: "Museumstraat 1, 1071 XX Amsterdam, Netherlands",
-    latitude: 52.360006, longitude: 4.885220
+    id: "53",
+    name: "Starlight Bridge",
+    address: "Crescent Lake, Tan Phu, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7265,
+    longitude: 106.7210
   },
   {
-    name: "Metropolitan Museum of Art",
-    address: "1000 5th Ave, New York, NY 10028, USA",
-    latitude: 40.779170, longitude: -73.963174
+    id: "54",
+    name: "Saigon Exhibition and Convention Center (SECC)",
+    address: "799 Nguyen Van Linh, Tan Phu, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7280,
+    longitude: 106.7190
   },
   {
-    name: "Hiroshima Peace Memorial Park",
-    address: "1-2 Nakajima-cho, Naka Ward, Hiroshima, 730-0811, Japan",
-    latitude: 34.395533, longitude: 132.453074
+    id: "55",
+    name: "Cresent Lake Park",
+    address: "Crescent Lake, Tan Phu, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7260,
+    longitude: 106.7200
   },
   {
-    name: "Bora Bora",
-    address: "French Polynesia",
-    latitude: -16.500000, longitude: -151.741000
+    id: "56",
+    name: "RMIT University Vietnam",
+    address: "702 Nguyen Van Linh, Tan Phong, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7295,
+    longitude: 106.6995
   },
   {
-    name: "Alcatraz Island",
-    address: "San Francisco, CA 94133, USA",
-    latitude: 37.827000, longitude: -122.423000
+    id: "57",
+    name: "Saigon Opera House",
+    address: "7 Lam Son Square, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7769,
+    longitude: 106.7033
   },
   {
-    name: "Moulin Rouge",
-    address: "82 Boulevard de Clichy, 75018 Paris, France",
-    latitude: 48.884052, longitude: 2.332066
+    id: "58",
+    name: "Ho Chi Minh City Museum",
+    address: "65 Ly Tu Trong, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7764,
+    longitude: 106.6981
   },
   {
-    name: "Pisa Leaning Tower",
-    address: "Piazza del Duomo, 56126 Pisa PI, Italy",
-    latitude: 43.722838, longitude: 10.396611
+    id: "59",
+    name: "Jade Emperor Pagoda",
+    address: "73 Mai Thi Luu, Da Kao, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7896,
+    longitude: 106.6969
   },
   {
-    name: "Neptune Fountain",
-    address: "Piazza Navona, 00186 Roma RM, Italy",
-    latitude: 41.898410, longitude: 12.471458
+    id: "60",
+    name: "Pham Ngu Lao Street",
+    address: "Pham Ngu Lao, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7679,
+    longitude: 106.6920
   },
   {
-    name: "Hermitage Museum",
-    address: "Palace Square, 2, Sankt-Peterburg, Russia",
-    latitude: 59.977430, longitude: 30.231825
+    id: "61",
+    name: "Bui Vien Street",
+    address: "Bui Vien, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7687,
+    longitude: 106.6933
   },
   {
-    name: "Sistine Chapel",
-    address: "Vatican City",
-    latitude: 41.902556, longitude: 12.453389
+    id: "62",
+    name: "Tao Dan Park",
+    address: "55C Nguyen Thi Minh Khai, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7725,
+    longitude: 106.6925
   },
   {
-    name: "Dubrovnik Old Town",
-    address: "Dubrovnik, Croatia",
-    latitude: 42.639683, longitude: 18.114306
+    id: "63",
+    name: "FV Hospital",
+    address: "6 Nguyen Luong Bang, Tan Phu, District 7, Ho Chi Minh City, Vietnam",
+    latitude: 10.7298,
+    longitude: 106.7212
   },
   {
-    name: "Krakow Old Town",
-    address: "Krakow, Poland",
-    latitude: 50.061947, longitude: 19.936856
+    id: "64",
+    name: "Vinh Nghiem Pagoda",
+    address: "339 Nam Ky Khoi Nghia, District 3, Ho Chi Minh City, Vietnam",
+    latitude: 10.7841,
+    longitude: 106.6838
   },
   {
-    name: "Kyoto Imperial Palace",
-    address: "3 Kyoto Gyoen, Kamigyo Ward, Kyoto, 602-0878, Japan",
-    latitude: 35.027361, longitude: 135.759465
+    id: "65",
+    name: "Cholon (Chinatown)",
+    address: "District 5, Ho Chi Minh City, Vietnam",
+    latitude: 10.7547,
+    longitude: 106.6417
   },
   {
-    name: "Mont Saint-Michel",
-    address: "50170 Mont Saint-Michel, France",
-    latitude: 48.636063, longitude: -1.511000
+    id: "66",
+    name: "Thien Hau Temple",
+    address: "710 Nguyen Trai, District 5, Ho Chi Minh City, Vietnam",
+    latitude: 10.7541,
+    longitude: 106.6602
   },
   {
-    name: "Mount Rushmore",
-    address: "13000 SD-244, Keystone, SD 57751, USA",
-    latitude: 43.879102, longitude: -103.459066
+    id: "67",
+    name: "Binh Tay Market",
+    address: "57A Thap Muoi, District 6, Ho Chi Minh City, Vietnam",
+    latitude: 10.7515,
+    longitude: 106.6416
   },
   {
-    name: "Faneuil Hall Marketplace",
-    address: "4 S Market St, Boston, MA 02109, USA",
-    latitude: 42.360087, longitude: -71.056799
+    id: "68",
+    name: "Dam Sen Water Park",
+    address: "3 Hoa Binh, District 11, Ho Chi Minh City, Vietnam",
+    latitude: 10.7629,
+    longitude: 106.6350
   },
   {
-    name: "Luxor Temple",
-    address: "Luxor, Egypt",
-    latitude: 25.698480, longitude: 32.639556
+    id: "69",
+    name: "Suoi Tien Theme Park",
+    address: "120 Hanoi Highway, District 9, Ho Chi Minh City, Vietnam",
+    latitude: 10.8700,
+    longitude: 106.8039
   },
   {
-    name: "Tulum Ruins",
-    address: "Tulum, Quintana Roo, Mexico",
-    latitude: 20.211822, longitude: -87.465926
+    id: "70",
+    name: "Vincom Center",
+    address: "72 Le Thanh Ton, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7769,
+    longitude: 106.7009
   },
   {
-    name: "Salar de Uyuni",
-    address: "Uyuni, Bolivia",
-    latitude: -20.133800, longitude: -66.254200
+    id: "71",
+    name: "Takashimaya Vietnam",
+    address: "92-94 Nam Ky Khoi Nghia, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7749,
+    longitude: 106.6990
   },
   {
-    name: "Rothenburg ob der Tauber",
-    address: "Rothenburg, Germany",
-    latitude: 49.379776, longitude: 10.175430
+    id: "72",
+    name: "Nguyen Hue Walking Street",
+    address: "Nguyen Hue, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7734,
+    longitude: 106.7041
   },
   {
-    name: "Walt Disney World",
-    address: "Orlando, FL 32830, USA",
-    latitude: 28.385233, longitude: -81.563873
+    id: "73",
+    name: "Saigon Skydeck",
+    address: "36 Ho Tung Mau, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7719,
+    longitude: 106.7042
   },
   {
-    name: "Giza Solar Boat Museum",
-    address: "Giza Governorate, Egypt",
-    latitude: 29.979234, longitude: 31.134202
+    id: "74",
+    name: "Vincom Mega Mall Thao Dien",
+    address: "161 Xa Lo Ha Noi, Thao Dien, District 2, Ho Chi Minh City, Vietnam",
+    latitude: 10.8015,
+    longitude: 106.7376
   },
   {
-    name: "Timbuktu",
-    address: "Mali",
-    latitude: 16.766391, longitude: -3.002778
+    id: "75",
+    name: "Landmark 81",
+    address: "208 Nguyen Huu Canh, Binh Thanh, Ho Chi Minh City, Vietnam",
+    latitude: 10.7942,
+    longitude: 106.7201
   },
   {
-    name: "Cappadocia",
-    address: "Nevşehir Province, Turkey",
-    latitude: 38.634892, longitude: 34.824088
+    id: "76",
+    name: "Tan Dinh Church",
+    address: "289 Hai Ba Trung, District 3, Ho Chi Minh City, Vietnam",
+    latitude: 10.7889,
+    longitude: 106.6900
   },
   {
-    name: "Seoul Tower",
-    address: "Namsan Seoul Tower, 105 Namsangongwon-gil, Yongsan-gu, Seoul, South Korea",
-    latitude: 37.551233, longitude: 126.988205
+    id: "77",
+    name: "Ho Chi Minh City Fine Arts Museum",
+    address: "97A Pho Duc Chinh, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7698,
+    longitude: 106.6975
   },
   {
-    name: "Santa Maria del Fiore",
-    address: "Piazza del Duomo, 50122 Firenze FI, Italy",
-    latitude: 43.773063, longitude: 11.256377
+    id: "78",
+    name: "Saigon River",
+    address: "District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7758,
+    longitude: 106.7038
   },
   {
-    name: "Monte Carlo Casino",
-    address: "Place du Casino, 98000 Monaco",
-    latitude: 43.733333, longitude: 7.416667
+    id: "79",
+    name: "Saigon Square",
+    address: "77 Nam Ky Khoi Nghia, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7749,
+    longitude: 106.6990
   },
   {
-    name: "Zion National Park",
-    address: "Springdale, UT 84767, USA",
-    latitude: 37.298226, longitude: -113.026300
+    id: "80",
+    name: "Diamond Plaza",
+    address: "34 Le Duan, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7815,
+    longitude: 106.7000
   },
   {
-    name: "Petra Treasury",
-    address: "Petra, Ma'an Governorate, Jordan",
-    latitude: 30.328454, longitude: 35.444362
+    id: "81",
+    name: "Ben Dinh Tunnels",
+    address: "Ben Dinh, Cu Chi, Ho Chi Minh City, Vietnam",
+    latitude: 11.0656,
+    longitude: 106.5170
   },
   {
-    name: "Santiago de Compostela Cathedral",
-    address: "Praza do Obradoiro, s/n, 15705 Santiago de Compostela, A Coruña, Spain",
-    latitude: 42.879938, longitude: -8.544774
+    id: "82",
+    name: "Ben Duoc Tunnels",
+    address: "Ben Duoc, Cu Chi, Ho Chi Minh City, Vietnam",
+    latitude: 11.1467,
+    longitude: 106.4997
   },
   {
-    name: "Goreme National Park",
-    address: "Nevşehir Province, Turkey",
-    latitude: 38.641867, longitude: 34.832767
+    id: "83",
+    name: "Cu Chi Wildlife Rescue Station",
+    address: "50 Highway 22, Cu Chi, Ho Chi Minh City, Vietnam",
+    latitude: 11.0072,
+    longitude: 106.4632
   },
   {
-    name: "Mount Etna",
-    address: "Sicily, Italy",
-    latitude: 37.751000, longitude: 14.995000
+    id: "84",
+    name: "Can Gio Mangrove Forest",
+    address: "Can Gio, Ho Chi Minh City, Vietnam",
+    latitude: 10.4114,
+    longitude: 106.9547
   },
   {
-    name: "Uffizi Gallery",
-    address: "Piazzale degli Uffizi, 6, 50122 Firenze FI, Italy",
-    latitude: 43.768648, longitude: 11.255812
+    id: "85",
+    name: "Monkey Island",
+    address: "Can Gio, Ho Chi Minh City, Vietnam",
+    latitude: 10.4114,
+    longitude: 106.9547
   },
   {
-    name: "Metéora Monasteries",
-    address: "Kalambaka, Greece",
-    latitude: 39.721586, longitude: 21.629978
+    id: "86",
+    name: "Vam Sat Ecological Tourist Area",
+    address: "Can Gio, Ho Chi Minh City, Vietnam",
+    latitude: 10.4114,
+    longitude: 106.9547
   },
   {
-    name: "Luxor Temple",
-    address: "Luxor, Egypt",
-    latitude: 25.698480, longitude: 32.639556
+    id: "87",
+    name: "Binh Quoi Tourist Village",
+    address: "1147 Binh Quoi, Binh Thanh, Ho Chi Minh City, Vietnam",
+    latitude: 10.8150,
+    longitude: 106.7300
   },
   {
-    name: "Hohenzollern Castle",
-    address: "Burg Hohenzollern, 72379 Burg Hohenzollern, Germany",
-    latitude: 48.342229, longitude: 8.546559
+    id: "88",
+    name: "Suoi Tien Cultural Theme Park",
+    address: "120 Hanoi Highway, Tan Phu, District 9, Ho Chi Minh City, Vietnam",
+    latitude: 10.8700,
+    longitude: 106.8039
   },
   {
-    name: "Zócalo",
-    address: "Plaza Mayor, 06000 Ciudad de México, CDMX, Mexico",
-    latitude: 19.432608, longitude: -99.133209
+    id: "89",
+    name: "Dam Sen Cultural Park",
+    address: "3 Hoa Binh, District 11, Ho Chi Minh City, Vietnam",
+    latitude: 10.7629,
+    longitude: 106.6350
   },
   {
-    name: "National Mall",
-    address: "Washington, D.C., USA",
-    latitude: 38.889483, longitude: -77.035278
+    id: "90",
+    name: "Saigon Outcast",
+    address: "188/1 Nguyen Van Huong, Thao Dien, District 2, Ho Chi Minh City, Vietnam",
+    latitude: 10.8015,
+    longitude: 106.7376
   },
   {
-    name: "Kinkaku-ji",
-    address: "1 Kinkakujicho, Kita Ward, Kyoto, 603-8361, Japan",
-    latitude: 35.039373, longitude: 135.729219
+    id: "91",
+    name: "Vincom Center Landmark 81",
+    address: "208 Nguyen Huu Canh, Binh Thanh, Ho Chi Minh City, Vietnam",
+    latitude: 10.7942,
+    longitude: 106.7201
   },
   {
-    name: "St. Basil's Cathedral",
-    address: "Red Square, Moscow, Russia",
-    latitude: 55.755825, longitude: 37.617298
+    id: "92",
+    name: "Saigon Notre-Dame Cathedral Basilica",
+    address: "1 Cong Xa Paris, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7798,
+    longitude: 106.6992
   },
   {
-    name: "Belém Tower",
-    address: "Av. Brasília, 1400-038 Lisboa, Portugal",
-    latitude: 38.691647, longitude: -9.215947
+    id: "93",
+    name: "Saigon Central Mosque",
+    address: "66 Dong Du, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7769,
+    longitude: 106.7033
   },
   {
-    name: "Empire State Building",
-    address: "20 W 34th St, New York, NY 10118, USA",
-    latitude: 40.748817, longitude: -73.985428
+    id: "94",
+    name: "Ho Chi Minh City Hall",
+    address: "86 Le Thanh Ton, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7769,
+    longitude: 106.7009
   },
   {
-    name: "Tower Bridge",
-    address: "London SE1 2UP, UK",
-    latitude: 51.505456, longitude: -0.075356
+    id: "95",
+    name: "Saigon Notre-Dame Basilica",
+    address: "1 Cong Xa Paris, Ben Nghe, District 1, Ho Chi Minh City, Vietnam",
+    latitude: 10.7798,
+    longitude: 106.6992
   },
   {
-    name: "Church of the Savior on Spilled Blood",
-    address: "Griboedov Canal Embankment, 2Б, Sankt-Peterburg, Russia",
-    latitude: 59.934281, longitude: 30.326267
+    id: "96",
+    name: "Binh Dong Wharf",
+    address: "Binh Dong, District 8, Ho Chi Minh City, Vietnam",
+    latitude: 10.7380,
+    longitude: 106.6290
   },
   {
-    name: "Teotihuacan",
-    address: "San Juan Teotihuacán, Estado de México, Mexico",
-    latitude: 19.692430, longitude: -98.843306
+    id: "97",
+    name: "Phu Dinh Port",
+    address: "Phu Dinh, District 8, Ho Chi Minh City, Vietnam",
+    latitude: 10.7240,
+    longitude: 106.6250
   },
   {
-    name: "Galápagos Islands",
-    address: "Ecuador",
-    latitude: -0.927092, longitude: -90.975253
+    id: "98",
+    name: "Chanh Hung Bridge",
+    address: "Chanh Hung, District 8, Ho Chi Minh City, Vietnam",
+    latitude: 10.7385,
+    longitude: 106.6350
   },
   {
-    name: "Chichen Itza",
-    address: "Yucatan, Mexico",
-    latitude: 20.684288, longitude: -88.567779
+    id: "99",
+    name: "Ba Tang Market",
+    address: "Ba Tang, District 8, Ho Chi Minh City, Vietnam",
+    latitude: 10.7350,
+    longitude: 106.6300
   },
   {
-    name: "Brandenburg Gate",
-    address: "Pariser Platz, 10117 Berlin, Germany",
-    latitude: 52.516275, longitude: 13.377704
-  },
+    id: "100",
+    name: "District 8 Park",
+    address: "Ward 5, District 8, Ho Chi Minh City, Vietnam",
+    latitude: 10.7360,
+    longitude: 106.6280
+  }
 ];

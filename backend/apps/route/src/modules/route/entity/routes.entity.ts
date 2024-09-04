@@ -35,7 +35,7 @@ export class RouteEntity implements RouteInterface {
   @Column({ type: 'timestamptz' })
   arrival_time: Date;
 
-  @Column()
+  @Column('float')
   distance: number;
 
   @ManyToOne(() => TransportEntity, (transport) => transport.routes, {
