@@ -61,6 +61,9 @@ export default function RootLayout({
                 Table: {
                   colorBgContainer: "#fff",
                   borderRadius: 8,
+                },
+                Input:{
+                  colorTextDisabled: "#868e96"
                 }
               },
             }}

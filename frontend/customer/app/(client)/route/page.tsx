@@ -275,7 +275,7 @@ const RoutePage = () => {
       render: (_, record) => (
         <Flex align="center" gap="1rem">
           <Button
-            onClick={() => router.push(`/${record.id}`)}
+            onClick={() => router.push(`/route/${record.id}`)}
             style={{ border: "0.5px solid #4f46e5", color: COLOR.PRIMARY, padding: "0.9rem 1.2rem", borderRadius: "0.3rem", fontSize: "0.9rem", background: "white" }}
           >
             Detail
