@@ -5,53 +5,21 @@ import { Col, Flex, Row, theme, Button, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { useAppSelector } from "@/lib/hooks/hooks";
 import { useQuery } from "@apollo/client";
-import { GET_ROLES } from "@/apollo/query/role";
-import CreateRoleModal from "@/components/modal/role/create";
-import UpdateRoleModal from "@/components/modal/role/update";
-import AssginPermissionToRoleModal from "@/components/modal/role/assign";
+import { useRouter } from "next/navigation";
+import { GET_PERMISSIONS } from "@/apollo/query/permission";
+import CreatePermissionModal from "@/components/modal/permission/create";
+import UpdatePermissionModal from "@/components/modal/permission/update";
 
 interface DataType {
   id: string;
   name: string;
 }
 
-const RolePage = () => {
-  const [openModalCreate, setOpenModalCreate] = useState(false);
-  const [openModalUpdate, setOpenModalUpdate] = useState(false);
-  const [openModalAssignPermissionToRole, setOpenModalAssignPermissionToRole] =
-    useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
-  const [selectedRolename, setSelectedRolename] = useState<string | null>(null);
-
-  const handleOpenModalCreate = () => {
-    setOpenModalCreate(true);
-  };
-
-  const handleCloseModalCreate = () => {
-    setOpenModalCreate(false);
-  };
-  const handleOpenModalUpdate = (id: string, name: string) => {
-    setSelectedRoleId(id);
-    setSelectedRolename(name);
-    setOpenModalUpdate(true);
-  };
-
-  const handleCloseModalUpdate = () => {
-    setOpenModalUpdate(false);
-  };
-
-  const handleOpenModalAssignPermissionToRole = (id: string) => {
-    setSelectedRoleId(id);
-    setOpenModalAssignPermissionToRole(true);
-  };
-
-  const handleCloseModalAssignPermissionToRole = () => {
-    setOpenModalAssignPermissionToRole(false);
-  };
-
+const PermissionPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const router = useRouter();
 
   const columns: TableColumnsType<DataType> = [
     {
@@ -63,22 +31,12 @@ const RolePage = () => {
       dataIndex: "Action",
       key: "Action",
       render: (_, record) => (
-        <Flex justify="end" align="end" wrap gap="small">
-          <Button
-            type="primary"
-            size="large"
-            onClick={() => handleOpenModalUpdate(record.id, record.name)}
-          >
-            Detail
-          </Button>
-          <Button
-            type="default"
-            size="large"
-            onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
-          >
-            Assign Permission To Role
-          </Button>
-        </Flex>
+        <Button
+          type="primary"
+          onClick={() => handleOpenModalUpdate(record.id, record.name)}
+        >
+          Detail
+        </Button>
       ),
     },
   ];
@@ -89,11 +47,36 @@ const RolePage = () => {
 
   const [listItem, setListItem] = useState<DataType[]>();
 
-  useQuery(GET_ROLES, {
+  useQuery(GET_PERMISSIONS, {
     onCompleted: async (data) => {
-      setListItem(data.getRoles.data);
+      setListItem(data.getPermissions.data);
     },
   });
+
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [selectedPermissionId, setSelectedPermissionId] = useState<
+    string | null
+  >(null);
+  const [selectedPermissionname, setSelectedPermissionname] = useState<
+    string | null
+  >(null);
+  const handleOpenModalCreate = () => {
+    setOpenModalCreate(true);
+  };
+
+  const handleCloseModalCreate = () => {
+    setOpenModalCreate(false);
+  };
+  const handleOpenModalUpdate = (id: string, name: string) => {
+    setSelectedPermissionId(id);
+    setSelectedPermissionname(name);
+    setOpenModalUpdate(true);
+  };
+
+  const handleCloseModalUpdate = () => {
+    setOpenModalUpdate(false);
+  };
 
   return (
     <>
@@ -138,23 +121,20 @@ const RolePage = () => {
           </ContentComponent>
         </>
       )}
-      <CreateRoleModal
+      <CreatePermissionModal
         open={openModalCreate}
         onClose={handleCloseModalCreate}
       />
-      <UpdateRoleModal
-        roleId={selectedRoleId ? `${selectedRoleId}` : ""}
-        roleName={selectedRolename ? `${selectedRolename}` : ""}
+      <UpdatePermissionModal
+        permissionId={selectedPermissionId ? `${selectedPermissionId}` : ""}
+        permissionName={
+          selectedPermissionname ? `${selectedPermissionname}` : ""
+        }
         open={openModalUpdate}
         onClose={handleCloseModalUpdate}
-      />
-      <AssginPermissionToRoleModal
-        roleId={selectedRoleId ? `${selectedRoleId}` : ""}
-        open={openModalAssignPermissionToRole}
-        onClose={handleCloseModalAssignPermissionToRole}
       />
     </>
   );
 };
 
-export default RolePage;
+export default PermissionPage;

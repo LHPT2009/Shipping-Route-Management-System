@@ -49,8 +49,8 @@ export class RoleResolver {
     return this.roleService.update(id, input);
   }
 
-  @Query(() => ResponseDto<RoleEntity>, { nullable: true })
-  async removeLocation(
+  @Mutation(() => ResponseDto<RoleEntity>, { nullable: true })
+  async removeRole(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<ResponseDto<RoleEntity>> {
     return this.roleService.remove(id);
