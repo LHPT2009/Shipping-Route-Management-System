@@ -76,7 +76,7 @@ export class SeedService implements OnApplicationBootstrap {
         const { latitude: arrLat, longitude: arrLon } = arrivalLocation;
         route.distance = this.haversineDistance(depLat, depLon, arrLat, arrLon);
       } else {
-        route.distance = 0; // or handle the error as needed
+        route.distance = 0; 
       }
       return route;
     });
@@ -119,9 +119,5 @@ export class SeedService implements OnApplicationBootstrap {
         await routeRepository.save(updatedRouteData);
       }
     }
-
-    // const allRoutes = await routeRepository.find();
-    // console.log(allRoutes.length);
-
   }
 }
