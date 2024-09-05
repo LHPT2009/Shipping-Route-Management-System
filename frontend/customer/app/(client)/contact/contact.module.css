@@ -11,7 +11,7 @@
 }
 
 .info-container{
-  background: #e9ecef;
+  background: #edf2ff;
   border-top-left-radius: 2rem;
   border-bottom-left-radius: 2rem;
   width: 40%;
@@ -25,9 +25,9 @@
   width: 60%;
   border-top-right-radius: 2rem;
   border-bottom-right-radius: 2rem;
-  border-top: 1px solid #e9ecef;
-  border-bottom: 1px solid #e9ecef;
-  border-right: 1px solid #e9ecef;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
   padding-bottom: 1rem;
 }
 

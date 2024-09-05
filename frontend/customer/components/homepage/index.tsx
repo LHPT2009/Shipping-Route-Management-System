@@ -28,14 +28,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 
 const { Title, Text, Paragraph } = Typography;
 
 const HompageComponent: React.FC = () => {
   const router = useRouter();
 
-  const clickHandler = () => {
-    router.push(URL.LOGIN);
+  const clickHandler = async () => {
+    const { accessToken, expiresIn } = await fetchCookies();
+    if(accessToken && expiresIn) {
+      router.push(URL.ROUTE);
+    } else {
+      router.push(URL.REGISTER);
+    }
   };
 
   return (

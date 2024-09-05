@@ -13,7 +13,7 @@ import { URL } from "@/constant/url";
 import { COLOR } from "@/constant";
 import Link from "next/link";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
-import Tung from "../../public/images/homepage/tung_2.jpg";
+import Male from "../../public/images/homepage/male.png";
 import Paragraph from "antd/es/typography/Paragraph";
 import LogoutIcon from "../../public/svg/homepage/logout.svg";
 import { ApolloError, useLazyQuery } from "@apollo/client";
@@ -58,6 +58,7 @@ const HeaderComponent = () => {
       await deleteCookies('expiresIn');
       dispatch(authActions.setIsLogin(false));
       dispatch(userActions.clearUserInformation());
+      window.location.reload();
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
@@ -73,6 +74,15 @@ const HeaderComponent = () => {
         }
       }
     });
+  };
+
+  const clickHandler = async () => {
+    const { accessToken, expiresIn } = await fetchCookies();
+    if(accessToken && expiresIn) {
+      router.push(URL.ROUTE);
+    } else {
+      router.push(URL.REGISTER);
+    }
   };
 
   return (
@@ -143,7 +153,7 @@ const HeaderComponent = () => {
                 </Paragraph>
               </div>
               <Link href="/profile">
-                <img style={{ width: "3rem", borderRadius: "50%" }} src={Tung.src} alt="tung" />
+                <img style={{ width: "3rem", borderRadius: "50%" }} src={Male.src} alt="tung" />
               </Link>
               <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />
             </Flex>
@@ -162,7 +172,7 @@ const HeaderComponent = () => {
                 Login
               </Button>
               <Button
-                onClick={() => router.push(URL.REGISTER)}
+                onClick={clickHandler}
                 type="primary"
                 style={{
                   padding: "1.5rem 1.6rem",

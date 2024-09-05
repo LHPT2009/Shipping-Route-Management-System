@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button, Flex, Form, Input, Modal } from "antd";
 import styles from "../profile.module.css";
-import Tung from "../../../public/images/homepage/tung_2.jpg";
+import Male from "../../../public/images/homepage/male.png";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
@@ -99,9 +99,9 @@ const AccountInformationComponent: React.FC = () => {
   };
 
   return (
-    <div className={styles['common-container']} style={{ paddingBottom: "3rem" }}>
+    <div className={styles['common-container']} style={{ paddingBottom: "1.5rem" }}>
 
-      <Title level={4} style={{
+      {/* <Title level={4} style={{
         fontSize: "1.2rem",
         marginBottom: "1.2rem",
         fontWeight: 700,
@@ -109,9 +109,9 @@ const AccountInformationComponent: React.FC = () => {
         textAlign: "left",
       }}>
         Account information
-      </Title>
+      </Title> */}
       <Flex justify="center" align="center" >
-        <img className={styles["avatar"]} src={Tung.src} alt="tung" />
+        <img className={styles["avatar"]} src={Male.src} alt="tung" />
         <Flex justify="space-between" align="flex-start" style={{ width: "100%", margin: 0 }}>
           <Flex gap="0.3rem" vertical align="flex-start" style={{ marginLeft: "1.5rem" }}>
             <Title

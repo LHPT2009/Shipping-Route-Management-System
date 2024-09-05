@@ -24,6 +24,7 @@ export default function CookiesComponent() {
 
   const [getUserByToken] = useLazyQuery(GET_USER_BY_TOKEN, {
     onCompleted: async (data) => {
+      console.log(data);
       const userData: UserState = {
         username: data.getUserByToken.data.username,
         email: data.getUserByToken.data.email,

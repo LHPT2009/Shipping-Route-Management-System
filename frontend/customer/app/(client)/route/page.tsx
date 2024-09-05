@@ -177,7 +177,6 @@ const RoutePage = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      sorter: true,
       render: (text, record, index) => index + 1,
       width: '5%',
     },

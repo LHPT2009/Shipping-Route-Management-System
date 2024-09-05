@@ -1,9 +1,8 @@
 "use client";
 import { Col, Form, Row, Input, Button, Typography, Flex } from "antd";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import CustomModal from "@/components/modal/route";
 import { COLOR } from "@/constant/color";
@@ -15,10 +14,10 @@ import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "./route.interface";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
 import withProtectedRoute from "@/components/auth/protection";
+import { URL } from "@/constant/url";
 
 const { Text } = Typography;
 
@@ -339,7 +338,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
               <Button
-                onClick={() => router.push("/route")}
+                onClick={() => router.push(URL.ROUTE)}
                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
                 Back to routes

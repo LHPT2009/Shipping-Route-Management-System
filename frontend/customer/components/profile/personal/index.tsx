@@ -137,6 +137,7 @@ const PersonalInformationComponent: React.FC = () => {
         layout="vertical"
         initialValues={{ remember: true }}
         style={{
+          marginTop: "1.5rem",
           height: "auto",
           borderRadius: "1rem",
           backgroundColor: COLOR.BACKGROUNDBODY,
