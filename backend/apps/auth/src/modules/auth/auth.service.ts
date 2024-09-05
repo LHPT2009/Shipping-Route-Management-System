@@ -37,7 +37,7 @@ export class AuthService {
 
     if (passwordMatched) {
       const expiredIn = 1;
-      // const expiresAt = new Date(Date.now() + 2 * 1000).toISOString(); // 2s
+      // const expiresAt = new Date(Date.now() + 1000).toISOString(); // 1s
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // day
 
       const payload: PayloadType = { email: user.email, userId: user.id };
