@@ -1,7 +1,5 @@
-"use client";
-import ContentComponent from "@/components/content";
 import React, { useState } from "react";
-import { Button, Transfer, Typography, Flex } from "antd";
+import { Button, Transfer, Typography, Flex, Modal } from "antd";
 import type { TransferProps } from "antd";
 import { ApolloError, useMutation, useQuery } from "@apollo/client";
 import { GET_ROLE } from "@/apollo/query/role";
@@ -11,6 +9,12 @@ import { useHandleError } from "@/lib/hooks/error";
 import useAntNotification from "@/lib/hooks/notification";
 import { ADD_PERMISSION_TO_ROLE } from "@/apollo/mutations/role";
 
+interface CustomModalProps {
+  roleId: string;
+  open: boolean;
+  onClose: () => void;
+}
+
 interface RecordType {
   key: string;
   name: string;
@@ -19,7 +23,11 @@ interface RecordType {
 
 const { Title } = Typography;
 
-const DetailRolePage = ({ params }: { params: { id: string } }) => {
+const AssginPermissionToRoleModal: React.FC<CustomModalProps> = ({
+  roleId,
+  open,
+  onClose,
+}) => {
   const [nameRole, setNameRole] = useState("Loading...");
   const [mockData, setMockData] = useState<RecordType[]>([]);
   const [targetKeys, setTargetKeys] = useState<TransferProps["targetKeys"]>([]);
@@ -29,7 +37,7 @@ const DetailRolePage = ({ params }: { params: { id: string } }) => {
   };
 
   useQuery(GET_ROLE, {
-    variables: { id: params.id },
+    variables: { id: roleId },
     onCompleted: (data) => {
       setNameRole(data.getRole.data.name);
       const rolePermissions = data.getRole.data.permissions.map(
@@ -38,7 +46,6 @@ const DetailRolePage = ({ params }: { params: { id: string } }) => {
           name: permission.name,
         })
       );
-      console.log("Check GET_ROLE");
       setTargetKeys(rolePermissions.map((perm: RecordType) => perm.key));
     },
   });
@@ -51,19 +58,19 @@ const DetailRolePage = ({ params }: { params: { id: string } }) => {
           name: permission.name,
         })
       );
-      console.log("Check GET_PERMISSIONS");
       setMockData(allPermissions);
     },
   });
+
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
   const [addPermissionToRole] = useMutation(ADD_PERMISSION_TO_ROLE, {
-    onCompleted: async (data) => {
+    onCompleted: () => {
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
-        "Login successfully"
+        "Update successfully"
       );
     },
     onError: async (error: ApolloError) => {
@@ -75,7 +82,7 @@ const DetailRolePage = ({ params }: { params: { id: string } }) => {
     await addPermissionToRole({
       variables: {
         input: {
-          roleId: params.id,
+          roleId: roleId,
           permissionIds: targetKeys?.map(String),
         },
       },
@@ -83,36 +90,35 @@ const DetailRolePage = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <>
-      <ContentComponent>
-        <div style={{ height: "577px" }}>
-          <Title level={2}>{nameRole}</Title>
-          <Transfer
-            dataSource={mockData}
-            targetKeys={targetKeys}
-            onChange={handleChange}
-            render={(item) => item.name}
-            listStyle={{
-              width: 400,
-              height: 300,
-            }}
-            titles={["All of Permission", `Permissions of the ${nameRole}`]}
-          />
-          <Flex
-            justify="start"
-            align="start"
-            wrap
-            gap="small"
-            style={{ marginTop: "10px" }}
-          >
-            <Button type="primary" size="large" onClick={onSubmit}>
-              Save
-            </Button>
-          </Flex>
-        </div>
-      </ContentComponent>
-    </>
+    <Modal
+      title="AssginPermissionToRoleModal"
+      centered
+      open={open}
+      onOk={onClose}
+      onCancel={onClose}
+      footer={false}
+    >
+      <Title level={2}>{nameRole}</Title>
+      <Transfer
+        dataSource={mockData}
+        targetKeys={targetKeys}
+        onChange={handleChange}
+        render={(item) => item.name}
+        titles={["All of Permission", `Permissions of the ${nameRole}`]}
+      />
+      <Flex
+        justify="start"
+        align="start"
+        wrap
+        gap="small"
+        style={{ marginTop: "10px" }}
+      >
+        <Button type="primary" size="large" onClick={onSubmit}>
+          Save
+        </Button>
+      </Flex>
+    </Modal>
   );
 };
 
-export default DetailRolePage;
+export default AssginPermissionToRoleModal;

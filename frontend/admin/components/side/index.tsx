@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Layout, Flex, Menu, Divider } from "antd";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { MailOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useAppDispatch } from "@/lib/hooks/hooks";
 import { responsiveActions } from "@/lib/store/responsive";
+import { useRouter } from "next/navigation";
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -15,29 +16,40 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
-    label: "Navigation One",
-    key: "mail1",
+    label: "Dashboard",
+    key: "dashboard",
     icon: <MailOutlined />,
   },
   {
-    label: "Navigation Two",
-    key: "mail2",
+    label: "Role",
+    key: "role",
     icon: <MailOutlined />,
   },
   {
-    label: "Navigation Three",
-    key: "mail3",
+    label: "Permission",
+    key: "permission",
     icon: <MailOutlined />,
   },
+  // {
+  //   label: "Route",
+  //   key: "route",
+  //   icon: <MailOutlined />,
+  // },
+  // {
+  //   label: "Customer",
+  //   key: "customer",
+  //   icon: <MailOutlined />,
+  // },
 ];
 
 const SiderComponent = async () => {
-
-  const [current, setCurrent] = useState("mail");
-
+  const router = useRouter();
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
-    setCurrent(e.key);
+    if (e.key === "dashboard") {
+      router.push(`/`);
+    } else {
+      router.push(`/${e.key}`);
+    }
   };
 
   const dispatch = useAppDispatch();
@@ -48,13 +60,13 @@ const SiderComponent = async () => {
       collapsedWidth="0"
       onBreakpoint={async (broken) => {
         if (broken === false) {
-          await dispatch(responsiveActions.changeStatusBackground(true))
+          await dispatch(responsiveActions.changeStatusBackground(true));
         }
-        await dispatch(responsiveActions.changeStatusResponse(broken))
+        await dispatch(responsiveActions.changeStatusResponse(broken));
       }}
       onCollapse={async (collapsed, type) => {
         if (type === "clickTrigger") {
-          await dispatch(responsiveActions.changeStatusBackground(collapsed))
+          await dispatch(responsiveActions.changeStatusBackground(collapsed));
         }
       }}
       style={{ height: "100vh", backgroundColor: "#fff" }}
@@ -84,12 +96,7 @@ const SiderComponent = async () => {
               Menu
             </Divider>
           </div>
-          <Menu
-            onClick={onClick}
-            selectedKeys={[current]}
-            mode="vertical"
-            items={items}
-          />
+          <Menu onClick={onClick} mode="vertical" items={items} />
         </Content>
         <Footer>
           <Flex justify="center" align="center">

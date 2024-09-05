@@ -3,11 +3,6 @@ import { Field, InputType, ID } from '@nestjs/graphql';
 
 @InputType()
 export class UpdatePermissionDto {
-  @Field(() => ID)
-  @IsNotEmpty()
-  @IsString()
-  id?: string;
-
   @Field({ nullable: true })
   @IsOptional()
   @IsString()

@@ -37,7 +37,7 @@ export class PermissionResolver {
     return this.permissionService.update(id, input);
   }
 
-  @Query(() => ResponseDto<PermissionEntity>, { nullable: true })
+  @Mutation(() => ResponseDto<PermissionEntity>, { nullable: true })
   async removePermission(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<ResponseDto<PermissionEntity>> {
