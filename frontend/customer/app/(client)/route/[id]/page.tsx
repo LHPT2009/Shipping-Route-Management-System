@@ -17,6 +17,8 @@ import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "./route.interface";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import moment from 'moment';
+import withProtectedRoute from "@/components/auth/protection";
 
 const { Text } = Typography;
 
@@ -92,10 +94,10 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     if (route) {
       reset({
         name: route.name,
-        distance: route.distance,
+        distance: `${route.distance} km` ,
         status: StatusEnum[route.status],
-        departureTime: route.departure_time,
-        arrivalTime: route.arrival_time,
+        departureTime: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
+        arrivalTime: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
         departureLocation: route.departure.name,
         arrivalLocation: route.arrival.name,
         departureAddress: route.departure.address,
@@ -359,4 +361,4 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default RouteDetailPage;
+export default withProtectedRoute(RouteDetailPage);

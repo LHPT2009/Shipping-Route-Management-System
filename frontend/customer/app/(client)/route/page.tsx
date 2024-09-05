@@ -24,6 +24,7 @@ import qs from 'qs';
 import { useRouter } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
 import InformationIcon from "@/public/svg/route/information.svg";
+import withProtectedRoute from "@/components/auth/protection";
 
 const { Search } = Input;
 
@@ -403,4 +404,4 @@ const RoutePage = () => {
   );
 };
 
-export default RoutePage;
+export default withProtectedRoute(RoutePage);
