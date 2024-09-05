@@ -33,6 +33,9 @@ export class RoutesResolver {
     return this.routesService.findAll(input);
   }
 
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>, { nullable: true })
   async getRoute(
     @Args('id', { type: () => ID }) id: string,

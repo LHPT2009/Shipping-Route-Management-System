@@ -1,20 +1,44 @@
 "use client";
 import { Col, Form, Row, Input, Button, Typography, Flex } from "antd";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { UserOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomModal from "@/components/modal/route";
 import { COLOR } from "@/constant/color";
 import Title from "antd/es/typography/Title";
-
+import MapImg from "@/public/images/route/map.png";
+import { ApolloError, useLazyQuery } from "@apollo/client";
+import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
+import useAntNotification from "@/lib/hooks/notification";
+import { useHandleError } from "@/lib/hooks/error";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "./route.interface";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const { Text } = Typography;
-const routeDetailPage = ({ params }: { params: { id: string } }) => {
+
+const RouteDetailPage = ({ params }: { params: { id: string } }) => {
+
+  const router = useRouter();
+  
   const schema = yup
     .object({
-      username: yup.string().required("Please enter your username"),
+      name: yup.string(),
+      distance: yup.string(),
+      status: yup.string(),
+      departureTime: yup.string(),
+      arrivalTime: yup.string(),
+      departureLocation: yup.string(),
+      arrivalLocation: yup.string(),
+      departureAddress: yup.string(),
+      arrivalAddress: yup.string(),
+      shippingType: yup.string(),
+      vehicleType: yup.string(),
+      vehicleName: yup.string(),
+      lisencePlate: yup.string(),
     })
     .required();
 
@@ -22,6 +46,7 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({ resolver: yupResolver(schema) });
 
   const onFinish = async (values: any) => {
@@ -29,9 +54,59 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
   };
 
   const [open, setOpen] = useState(false);
+  const [route, setRoute] = useState<RouteInterface>();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const { openNotificationWithIcon } = useAntNotification();
+  const { handleError } = useHandleError();
+
+  const [getRouteById, { data, loading }] = useLazyQuery(GET_ROUTE_BY_ID, {
+    onCompleted: async (data) => {
+      setRoute(data.getRoute.data);
+      console.log("route", route);
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const { accessToken, expiresIn } = await fetchCookies();
+      if (accessToken && expiresIn) {
+        await getRouteById({
+          context: {
+            headers: {
+              authorization: `Bearer ${accessToken}`
+            }
+          },
+          variables: {
+            input: params.id
+          },
+        });
+      }
+    };
+    fetchRoutes();
+    if (route) {
+      reset({
+        name: route.name,
+        distance: route.distance,
+        status: StatusEnum[route.status],
+        departureTime: route.departure_time,
+        arrivalTime: route.arrival_time,
+        departureLocation: route.departure.name,
+        arrivalLocation: route.arrival.name,
+        departureAddress: route.departure.address,
+        arrivalAddress: route.arrival.address,
+        shippingType: ShippingTypeEnum[route.transport.shipping_type],
+        vehicleType: VehicleTypeEnum[route.transport.vehicle_type],
+        vehicleName: route.transport.name,
+        lisencePlate: route.transport.license_plate,
+      });
+    }
+  }, [route, reset]);
 
   return (
     <div style={{ margin: "6.5rem auto 2rem auto", width: "80rem", }}>
@@ -52,42 +127,42 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
 
               <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Name"
+                  name="name"
                 >
                   <Controller
-                    name="username"
+                    name="name"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="name" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Distance"
+                  name="distance"
                 >
                   <Controller
-                    name="username"
+                    name="distance"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="distance" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Status"
+                  name="status"
                 >
                   <Controller
-                    name="username"
+                    name="status"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="status" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -96,28 +171,28 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Departure time"
+                  name="departureTime"
                 >
                   <Controller
-                    name="username"
+                    name="departureTime"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="departureTime" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Arrival time"
+                  name="arrivalTime"
                 >
                   <Controller
-                    name="username"
+                    name="arrivalTime"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="arrivalTime" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -126,14 +201,14 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Departure"
+                  name="departureLocation"
                 >
                   <Controller
-                    name="username"
+                    name="departureLocation"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="departureLocation" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -142,14 +217,14 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Departure address"
+                  name="departureAddress"
                 >
                   <Controller
-                    name="username"
+                    name="departureAddress"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="departureAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -158,14 +233,14 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Arrival"
+                  name="arrivalLocation"
                 >
                   <Controller
-                    name="username"
+                    name="arrivalLocation"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="arrivalLocation" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -174,14 +249,14 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Arrival address"
+                  name="arrivalAddress"
                 >
                   <Controller
-                    name="username"
+                    name="arrivalAddress"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="arrivalAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -190,28 +265,28 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Shipping type"
+                  name="shippingType"
                 >
                   <Controller
-                    name="username"
+                    name="shippingType"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="shippingType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Vehicle type"
+                  name="vehicleType"
                 >
                   <Controller
-                    name="username"
+                    name="vehicleType"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="vehicleType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -220,28 +295,28 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Vehicle name"
+                  name="vehicleName"
                 >
                   <Controller
-                    name="username"
+                    name="vehicleName"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="vehicleName" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Username"
-                  name="username"
+                  label="Lisence plate"
+                  name="lisencePlate"
                 >
                   <Controller
-                    name="username"
+                    name="lisencePlate"
                     control={control}
                     render={({ field }) => (
-                      <Input disabled key="username" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -251,34 +326,29 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
           </Col>
 
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-            <div style={{ height: "32rem", backgroundColor: "pink", marginBottom: "2rem", marginTop: "0.6rem" }}></div>
+            <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
             <Flex align="center" justify="center">
               <Button
-                type="primary"
                 // onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-                style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto" }}
+                style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
                 View location
               </Button>
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
-
-                <Button
-                  style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
-                >
-                  Back to routes
-                </Button>
-
-
-
-                <Button
-                  type="primary"
-                  style={{ width: "50%", height: "2.6rem", borderRadius: "0.4rem", margin: "0 auto" }}
-                >
-                  Update
-                </Button>
-
-
+              <Button
+                onClick={() => router.push("/route")}
+                style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
+              >
+                Back to routes
+              </Button>
+              <Button
+                disabled
+                type="primary"
+                style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
+              >
+                Update
+              </Button>
             </Flex>
 
           </Col>
@@ -289,4 +359,4 @@ const routeDetailPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default routeDetailPage;
+export default RouteDetailPage;
