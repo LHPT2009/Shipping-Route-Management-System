@@ -18,13 +18,14 @@ import { useRouter } from "next/navigation";
 import moment from 'moment';
 import withProtectedRoute from "@/components/auth/protection";
 import { URL } from "@/constant/url";
+import MapComponent from "@/components/route/map";
 
 const { Text } = Typography;
 
 const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
-  
+
   const schema = yup
     .object({
       name: yup.string(),
@@ -93,7 +94,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     if (route) {
       reset({
         name: route.name,
-        distance: `${route.distance} km` ,
+        distance: `${route.distance} km`,
         status: StatusEnum[route.status],
         departureTime: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
         arrivalTime: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
@@ -327,7 +328,9 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           </Col>
 
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-            <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
+            {/* <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
+             */}
+            <MapComponent />
             <Flex align="center" justify="center">
               <Button
                 // onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}

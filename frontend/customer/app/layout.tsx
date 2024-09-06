@@ -9,6 +9,7 @@ import { ConfigProvider } from "antd";
 import { COLOR } from "@/constant";
 import LogoImage from "@/public/logo/logoImage.png";
 import CookiesComponent from "@/components/auth/cookies";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

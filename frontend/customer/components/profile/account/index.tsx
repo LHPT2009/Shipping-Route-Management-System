@@ -266,7 +266,7 @@ const AccountInformationComponent: React.FC = () => {
               <Form.Item>
                 <Button
                   type="default"
-                  htmlType="submit"
+                  onClick={handleCancel}
                   className="login-form-button"
                   style={{ width: "7rem", borderRadius: "0.5rem", marginTop: "1rem", height: "2.6rem", color: COLOR.PRIMARY, border: "1px solid #4f46e5", background: "white" }}
                 >
