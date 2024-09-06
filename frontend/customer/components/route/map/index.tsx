@@ -86,7 +86,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     },
     paint: {
       'circle-radius': 5,
-      'circle-color': '#4f46e5'
+      'circle-color': '#22b8cf'
     }
   };
 

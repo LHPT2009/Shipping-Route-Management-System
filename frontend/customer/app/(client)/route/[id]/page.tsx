@@ -337,12 +337,13 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             />
             <Flex align="center" justify="center">
               <Button
+                type="primary"
                 onClick={() => {
                   console.log("isShowDirection", isShowDirection);
                   setIsShowDirection(true);
                   console.log("isShowDirection", isShowDirection);
                 }}
-                style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
+                style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto"}}
               >
                 View on map
               </Button>
@@ -367,7 +368,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         </Row>
       </Form>
     </div>
-    
+
   );
 };
 

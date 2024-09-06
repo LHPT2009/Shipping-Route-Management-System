@@ -6,11 +6,8 @@ export const layerStyle: any = {
     "line-cap": "round"
   },
   paint: {
-    'line-color': "#4f46e5",
+    'line-color': "#22b8cf",
     'line-width': 4,
-    'line-opacity': 0.75
+    'line-opacity': 0.8
   }
 };
-
-
-

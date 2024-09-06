@@ -12,6 +12,8 @@ interface CustomModalProps {
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({ open, onClose, departure, arrival, departureLocation, arrivalLocation }) => {
+  console.log(departureLocation)
+  console.log(arrivalLocation)
   return <Modal
     footer={null}
     onCancel={onClose}

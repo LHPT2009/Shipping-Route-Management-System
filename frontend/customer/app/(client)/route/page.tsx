@@ -70,7 +70,7 @@ const RoutePage = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const [indexRow, setIndexRow] = useState(0);
+  const [indexRow, setIndexRow] = useState(-1);
 
   const [data, setData] = useState<DataType[]>([]);
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -289,7 +289,7 @@ const RoutePage = () => {
           <Button
             type="primary"
             onClick={() => {
-              setIndexRow(record.id)
+              setIndexRow(record.id - 1)
               handleOpen();
             }}
             style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
@@ -309,7 +309,6 @@ const RoutePage = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // const 
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     onCompleted: async (data) => {
@@ -413,7 +412,7 @@ const RoutePage = () => {
         </div>
       )}
 
-      {data && data.length !== 0 && (
+      {data && data.length !== 0 && indexRow != -1 && (
         <CustomModal
           open={open}
           onClose={handleClose}
