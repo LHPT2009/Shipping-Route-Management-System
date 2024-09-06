@@ -1,24 +1,35 @@
 import React from "react";
 import { Modal } from "antd";
+import MapComponent from "@/components/route/map";
 
 interface CustomModalProps {
   open: boolean;
   onClose: () => void;
+  departure: number[];
+  arrival: number[];
+  departureLocation: string;
+  arrivalLocation: string;
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ open, onClose }) => (
-  <Modal
-    title="Modal 1000px width"
-    centered
-    open={open}
-    onOk={onClose}
+const CustomModal: React.FC<CustomModalProps> = ({ open, onClose, departure, arrival, departureLocation, arrivalLocation }) => {
+  return <Modal
+    footer={null}
     onCancel={onClose}
-    width={1000}
+    closable={false}
+    open={open}
+    style={{ height: "35rem", top: 20 }}
+    width={800}
   >
-    <p>some contents...</p>
-    <p>some contents...</p>
-    <p>some contents...</p>
+    <MapComponent
+      isShowDirection={true}
+      departure={departure}
+      arrival={arrival}
+      departureLocation={departureLocation}
+      arrivalLocation={departureLocation}
+      heightProps="35rem"
+    />
   </Modal>
-);
+}
+
 
 export default CustomModal;

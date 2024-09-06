@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
 import InformationIcon from "@/public/svg/route/information.svg";
 import withProtectedRoute from "@/components/auth/protection";
+import CustomModal from "@/components/modal/route";
 
 const { Search } = Input;
 
@@ -44,6 +45,10 @@ interface DataType {
   arrival: string;
   shipping_type: string;
   status: string;
+  departureLongitude: number,
+  departureLatitude: number,
+  arrivalLongitude: number,
+  arrivalLatitude: number,
 }
 
 interface TableParams {
@@ -65,6 +70,7 @@ const RoutePage = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
+  const [indexRow, setIndexRow] = useState(0);
 
   const [data, setData] = useState<DataType[]>([]);
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -282,11 +288,15 @@ const RoutePage = () => {
           </Button>
           <Button
             type="primary"
-            // onClick={() => router.push(`/${record.id}`)}
+            onClick={() => {
+              setIndexRow(record.id)
+              handleOpen();
+            }}
             style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
           >
-            <img src={MapIcon.src} style={{width: "1.2rem", height: "2rem"}}/>
+            <img src={MapIcon.src} style={{ width: "1.2rem", height: "2rem" }} />
           </Button>
+
         </Flex>
       ),
     },
@@ -295,6 +305,11 @@ const RoutePage = () => {
 
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  // const 
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     onCompleted: async (data) => {
@@ -310,7 +325,6 @@ const RoutePage = () => {
 
     },
     onError: async (error: ApolloError) => {
-      console.log(error.graphQLErrors[0])
       await handleError(error);
     }
   });
@@ -318,7 +332,6 @@ const RoutePage = () => {
   useEffect(() => {
     const fetchRoutes = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
-      console.log("tableParams", tableParams);
       if (accessToken && expiresIn) {
         await getRoutes({
           context: {
@@ -398,6 +411,17 @@ const RoutePage = () => {
           />
 
         </div>
+      )}
+
+      {data && data.length !== 0 && (
+        <CustomModal
+          open={open}
+          onClose={handleClose}
+          departure={[data[indexRow].departureLongitude, data[indexRow].departureLatitude]}
+          arrival={[data[indexRow].arrivalLongitude, data[indexRow].arrivalLatitude]}
+          departureLocation={data[indexRow].departure}
+          arrivalLocation={data[indexRow].arrival}
+        />
       )}
     </>
   );

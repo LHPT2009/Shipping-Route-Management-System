@@ -55,11 +55,9 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     console.log(values);
   };
 
-  const [open, setOpen] = useState(false);
   const [route, setRoute] = useState<RouteInterface>();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isShowDirection, setIsShowDirection] = useState(false);
 
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
@@ -330,13 +328,23 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             {/* <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
              */}
-            <MapComponent />
+            <MapComponent
+              isShowDirection={isShowDirection}
+              departure={[route?.departure.longitude!, route?.departure.latitude!]}
+              arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
+              departureLocation={route?.departure.name!}
+              arrivalLocation={route?.arrival.name!}
+            />
             <Flex align="center" justify="center">
               <Button
-                // onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                onClick={() => {
+                  console.log("isShowDirection", isShowDirection);
+                  setIsShowDirection(true);
+                  console.log("isShowDirection", isShowDirection);
+                }}
                 style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
-                View location
+                View on map
               </Button>
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
@@ -358,8 +366,8 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           </Col>
         </Row>
       </Form>
-      <CustomModal open={open} onClose={handleClose} />
     </div>
+    
   );
 };
 

@@ -68,6 +68,10 @@ export class RoutesService {
           shipping_type: ShippingTypeEnum[route.transport.shipping_type],
           distance: `${route.distance} km`,
           status: StatusEnum[route.status],
+          departureLongitude: route.departure.longitude,
+          departureLatitude: route.departure.latitude,
+          arrivalLongitude: route.arrival.longitude,
+          arrivalLatitude: route.arrival.latitude,
         };
       });
 
