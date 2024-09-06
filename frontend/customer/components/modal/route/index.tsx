@@ -7,13 +7,9 @@ interface CustomModalProps {
   onClose: () => void;
   departure: number[];
   arrival: number[];
-  departureLocation: string;
-  arrivalLocation: string;
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ open, onClose, departure, arrival, departureLocation, arrivalLocation }) => {
-  console.log(departureLocation)
-  console.log(arrivalLocation)
+const CustomModal: React.FC<CustomModalProps> = ({ open, onClose, departure, arrival }) => {
   return <Modal
     footer={null}
     onCancel={onClose}
@@ -26,8 +22,6 @@ const CustomModal: React.FC<CustomModalProps> = ({ open, onClose, departure, arr
       isShowDirection={true}
       departure={departure}
       arrival={arrival}
-      departureLocation={departureLocation}
-      arrivalLocation={departureLocation}
       heightProps="35rem"
     />
   </Modal>

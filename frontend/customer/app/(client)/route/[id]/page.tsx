@@ -332,8 +332,6 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
               isShowDirection={isShowDirection}
               departure={[route?.departure.longitude!, route?.departure.latitude!]}
               arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
-              departureLocation={route?.departure.name!}
-              arrivalLocation={route?.arrival.name!}
             />
             <Flex align="center" justify="center">
               <Button

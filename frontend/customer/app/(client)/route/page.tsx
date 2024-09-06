@@ -70,7 +70,8 @@ const RoutePage = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const [indexRow, setIndexRow] = useState(-1);
+  const [departure, setDeparture] = useState<number[]>([]);
+  const [arrival, setArrival] = useState<number[]>([]);
 
   const [data, setData] = useState<DataType[]>([]);
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -278,7 +279,7 @@ const RoutePage = () => {
       dataIndex: "Action",
       key: "Action",
       width: "15%",
-      render: (_, record) => (
+      render: (_, record, index) => (
         <Flex align="center" gap="1rem">
           <Button
             onClick={() => router.push(`/route/${record.id}`)}
@@ -289,7 +290,11 @@ const RoutePage = () => {
           <Button
             type="primary"
             onClick={() => {
-              setIndexRow(record.id - 1)
+              const getDataById = data.find((item, index) => item.id === record.id)
+              if (getDataById) {
+                setDeparture([getDataById?.departureLongitude!, getDataById?.departureLatitude!])
+                setArrival([getDataById?.arrivalLongitude!, getDataById?.arrivalLatitude!])
+              }
               handleOpen();
             }}
             style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
@@ -412,14 +417,12 @@ const RoutePage = () => {
         </div>
       )}
 
-      {data && data.length !== 0 && indexRow != -1 && (
+      {data && data.length !== 0 && departure.length != 0 && arrival.length != 0 && (
         <CustomModal
           open={open}
           onClose={handleClose}
-          departure={[data[indexRow].departureLongitude, data[indexRow].departureLatitude]}
-          arrival={[data[indexRow].arrivalLongitude, data[indexRow].arrivalLatitude]}
-          departureLocation={data[indexRow].departure}
-          arrivalLocation={data[indexRow].arrival}
+          departure={departure}
+          arrival={arrival}
         />
       )}
     </>

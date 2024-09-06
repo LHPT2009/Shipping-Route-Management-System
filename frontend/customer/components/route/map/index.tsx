@@ -12,8 +12,6 @@ interface MapComponentProps {
   isShowDirection: boolean;
   departure: number[];
   arrival: number[];
-  departureLocation: string;
-  arrivalLocation: string;
   heightProps?: string;
 }
 
@@ -21,8 +19,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
   isShowDirection,
   departure,
   arrival,
-  departureLocation,
-  arrivalLocation,
   heightProps
 }) => {
 
@@ -90,10 +86,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
     }
   };
 
-  const popupArrival = useMemo(() => {
-    return new mapboxgl.Popup().setText(arrivalLocation);
-  }, [])
-
   return <ReactMapGl
     {...viewState}
     onMove={evt => setViewState(evt.viewState)}
@@ -124,7 +116,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     <NavigationControl />
 
     {isShowDirection && (
-      <Marker longitude={arrival[0]} latitude={arrival[1]} color="#fa5252" popup={popupArrival} />
+      <Marker longitude={arrival[0]} latitude={arrival[1]} color="#fa5252" />
     )}
 
   </ReactMapGl>;
