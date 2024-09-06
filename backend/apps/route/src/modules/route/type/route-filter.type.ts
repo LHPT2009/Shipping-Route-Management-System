@@ -30,4 +30,15 @@ export class FilterRouteType {
   @Field()
   status: string;
 
+  @Field()
+  departureLongitude: number;
+
+  @Field()
+  departureLatitude: number;
+
+  @Field()
+  arrivalLongitude: number;
+
+  @Field()
+  arrivalLatitude: number;
 }
