@@ -1,14 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Flex, Menu, Divider } from "antd";
 import Image from "next/image";
-import { COLOR } from "@/constant";
+import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import logoFull from "@/public/logo/logoFull.png";
 import { MailOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { useAppDispatch } from "@/lib/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { responsiveActions } from "@/lib/store/responsive";
 import { useRouter } from "next/navigation";
+import { menuActions, MenuState } from "@/lib/store/menu";
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -16,35 +17,32 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
-    label: "Dashboard",
-    key: "dashboard",
+    label: LABELMENU.DASHBOARD,
+    key: KEYMENU.DASHBOARD,
     icon: <MailOutlined />,
   },
   {
-    label: "Role",
-    key: "role",
+    label: LABELMENU.ROLE,
+    key: KEYMENU.ROLE,
     icon: <MailOutlined />,
   },
   {
-    label: "Permission",
-    key: "permission",
+    label: LABELMENU.PERMISSION,
+    key: KEYMENU.PERMISSION,
     icon: <MailOutlined />,
-  },
-  // {
-  //   label: "Route",
-  //   key: "route",
-  //   icon: <MailOutlined />,
-  // },
-  // {
-  //   label: "Customer",
-  //   key: "customer",
-  //   icon: <MailOutlined />,
-  // },
+  }
 ];
 
-const SiderComponent = async () => {
+const SiderComponent = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
+
   const onClick: MenuProps["onClick"] = (e) => {
+    const value : MenuState ={
+      keyMenu:e.key,
+      labelMenu: e.key
+    }
+    dispatch(menuActions.changeInfoMenu(value))
     if (e.key === "dashboard") {
       router.push(`/`);
     } else {
@@ -52,7 +50,7 @@ const SiderComponent = async () => {
     }
   };
 
-  const dispatch = useAppDispatch();
+  const getKeyMenu: string = useAppSelector((state) => state.menu.keyMenu);
 
   return (
     <Sider
@@ -96,7 +94,7 @@ const SiderComponent = async () => {
               Menu
             </Divider>
           </div>
-          <Menu onClick={onClick} mode="vertical" items={items} />
+          <Menu onClick={onClick} mode="vertical" items={items} defaultSelectedKeys={[`${getKeyMenu}`]}/>
         </Content>
         <Footer>
           <Flex justify="center" align="center">

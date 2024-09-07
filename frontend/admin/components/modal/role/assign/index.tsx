@@ -36,7 +36,7 @@ const AssginPermissionToRoleModal: React.FC<CustomModalProps> = ({
     setTargetKeys(newTargetKeys);
   };
 
-  useQuery(GET_ROLE, {
+  const { refetch } = useQuery(GET_ROLE, {
     variables: { id: roleId },
     onCompleted: (data) => {
       setNameRole(data.getRole.data.name);
@@ -50,7 +50,7 @@ const AssginPermissionToRoleModal: React.FC<CustomModalProps> = ({
     },
   });
 
-  useQuery(GET_PERMISSIONS, {
+   useQuery(GET_PERMISSIONS, {
     onCompleted: (data) => {
       const allPermissions = data.getPermissions.data.map(
         (permission: any) => ({
@@ -66,12 +66,15 @@ const AssginPermissionToRoleModal: React.FC<CustomModalProps> = ({
   const { handleError } = useHandleError();
 
   const [addPermissionToRole] = useMutation(ADD_PERMISSION_TO_ROLE, {
-    onCompleted: () => {
+    onCompleted: async () => {
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
         "Update successfully"
       );
+      onClose();
+      await refetch(); 
+      onClose();
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
