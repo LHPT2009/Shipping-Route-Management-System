@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import ContentComponent from "@/components/content";
 import { Col, Flex, Row, theme, Button, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { useAppSelector } from "@/lib/hooks/hooks";
-import { useQuery } from "@apollo/client";
-import { GET_ROLES } from "@/apollo/query/role";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import CreateRoleModal from "@/components/modal/role/create";
 import UpdateRoleModal from "@/components/modal/role/update";
 import AssginPermissionToRoleModal from "@/components/modal/role/assign";
+import useRoles from "@/lib/hooks/role/useRoles";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU, LABELMENU } from "@/constant";
 
 interface DataType {
   id: string;
@@ -16,10 +17,18 @@ interface DataType {
 }
 
 const RolePage = () => {
+  const { roles, loading, error, refetch } = useRoles();
+
+  const dispatch = useAppDispatch();
+  const value : MenuState ={
+    keyMenu: KEYMENU.ROLE,
+    labelMenu: LABELMENU.ROLE
+  }
+  dispatch(menuActions.changeInfoMenu(value))
+  
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
-  const [openModalAssignPermissionToRole, setOpenModalAssignPermissionToRole] =
-    useState(false);
+  const [openModalAssignPermissionToRole, setOpenModalAssignPermissionToRole] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [selectedRolename, setSelectedRolename] = useState<string | null>(null);
 
@@ -87,14 +96,6 @@ const RolePage = () => {
     (state) => state.responsive.checkStatusBackground
   );
 
-  const [listItem, setListItem] = useState<DataType[]>();
-
-  useQuery(GET_ROLES, {
-    onCompleted: async (data) => {
-      setListItem(data.getRoles.data);
-    },
-  });
-
   return (
     <>
       {!checkStatusBackground ? (
@@ -132,7 +133,7 @@ const RolePage = () => {
           <ContentComponent>
             <Table
               columns={columns}
-              dataSource={listItem}
+              dataSource={roles}
               scroll={{ x: 768, y: 375 }}
             />
           </ContentComponent>
@@ -141,12 +142,14 @@ const RolePage = () => {
       <CreateRoleModal
         open={openModalCreate}
         onClose={handleCloseModalCreate}
+        refetch={refetch}
       />
       <UpdateRoleModal
         roleId={selectedRoleId ? `${selectedRoleId}` : ""}
         roleName={selectedRolename ? `${selectedRolename}` : ""}
         open={openModalUpdate}
         onClose={handleCloseModalUpdate}
+        refetch={refetch}
       />
       <AssginPermissionToRoleModal
         roleId={selectedRoleId ? `${selectedRoleId}` : ""}

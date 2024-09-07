@@ -18,6 +18,7 @@ interface CustomModalProps {
   roleName: string;
   open: boolean;
   onClose: () => void;
+  refetch: () => void;
 }
 
 const UpdateRoleModal: React.FC<CustomModalProps> = ({
@@ -25,6 +26,7 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
   roleName,
   open,
   onClose,
+  refetch,
 }) => {
   // Validate Yup
   const schema = yup
@@ -62,6 +64,8 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
         NOTIFICATION.CONGRATS,
         "successfully"
       );
+      await refetch(); 
+      onClose();
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
@@ -75,6 +79,8 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
         NOTIFICATION.CONGRATS,
         "successfully"
       );
+      await refetch(); 
+      onClose();
     },
     onError: async (error: ApolloError) => {
       await handleError(error);

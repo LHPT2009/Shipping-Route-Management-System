@@ -16,15 +16,14 @@ import { ADD_ROLE } from "@/apollo/mutations/role";
 interface CustomModalProps {
   open: boolean;
   onClose: () => void;
+  refetch: () => void;
 }
 
-const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose }) => {
-  // Validate Yup
+const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch }) => {
   const schema = yup
     .object({ name: yup.string().required("Please enter your rolename") })
     .required();
 
-  //useFrom hook
   const {
     control,
     handleSubmit,
@@ -41,6 +40,8 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose }) => {
         NOTIFICATION.CONGRATS,
         "successfully"
       );
+      await refetch();
+      onClose();
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
