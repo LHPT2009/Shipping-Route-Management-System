@@ -51,13 +51,21 @@ const HeaderComponent = () => {
                 }}
               >
                 <Flex justify="start" align="start" gap="small">
-                  <Avatar
+                  {/* <Avatar
                     shape="circle"
                     size="large"
                     icon={<LeftCircleOutlined  />}
                     style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
-                  />
-                  <Title level={3}>{getlabelMenu}</Title>
+                  /> */}
+                  <Title level={4} style={{
+                    fontSize: "1.6rem",
+                    fontWeight: 700,
+                    color: COLOR.TEXT,
+                    paddingLeft: "0.5rem"
+                  }}>
+                    {getlabelMenu}
+                  </Title>
+                  {/* <Title level={3}>{getlabelMenu}</Title> */}
                 </Flex>
               </div>
             </Col>
@@ -65,10 +73,10 @@ const HeaderComponent = () => {
               <div
                 style={{
                   padding: "20px 0px",
-                  marginRight:"20px"
+                  marginRight: "20px"
                 }}
               >
-                <Flex justify="end" align="end" gap="small">
+                <Flex justify="end" align="end" gap="small" style={{ paddingRight: "1rem" }}>
                   <NotificationComponent />
                 </Flex>
               </div>
@@ -77,8 +85,8 @@ const HeaderComponent = () => {
               <div
                 style={{
                   padding: "11px 0px",
-                  borderLeft: checkStatusResponse ? "" : "5px solid",
-                  borderColor: checkStatusResponse ? "" : COLOR.PRIMARY,
+                  borderLeft: checkStatusResponse ? "" : "1px solid",
+                  borderColor: checkStatusResponse ? "" : "#dee2e6",
                 }}
               >
                 <Flex justify="end" align="end" gap="small">

@@ -22,6 +22,16 @@ const items: MenuItem[] = [
     icon: <MailOutlined />,
   },
   {
+    label: LABELMENU.USER,
+    key: KEYMENU.USER,
+    icon: <MailOutlined />,
+  },
+  {
+    label: LABELMENU.ROUTE,
+    key: KEYMENU.ROUTE,
+    icon: <MailOutlined />,
+  },
+  {
     label: LABELMENU.ROLE,
     key: KEYMENU.ROLE,
     icon: <MailOutlined />,

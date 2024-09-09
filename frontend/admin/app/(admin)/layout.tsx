@@ -1,6 +1,7 @@
 "use client";
 import HeaderComponent from "@/components/header";
 import LayoutAdminComponent from "@/components/layout/admin";
+import withProtectedRoute from "@/components/protection";
 import { ChildrenComponentProps } from "@/types/children";
 
 const LayoutAdmin: React.FC<ChildrenComponentProps> = ({ children }: ChildrenComponentProps) => {
@@ -12,4 +13,4 @@ const LayoutAdmin: React.FC<ChildrenComponentProps> = ({ children }: ChildrenCom
     );
 }
 
-export default LayoutAdmin
+export default withProtectedRoute(LayoutAdmin);

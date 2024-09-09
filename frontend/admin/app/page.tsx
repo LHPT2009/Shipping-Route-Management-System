@@ -3,11 +3,12 @@
 import ContentComponent from "@/components/content";
 import HeaderComponent from "@/components/header";
 import LayoutAdminComponent from "@/components/layout/admin";
+import withProtectedRoute from "@/components/protection";
 import { KEYMENU, LABELMENU } from "@/constant";
 import { useAppDispatch } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 
-export default function Home() {
+function Home() {
   const dispatch = useAppDispatch();
   const value : MenuState ={
     keyMenu: KEYMENU.DASHBOARD,
@@ -21,3 +22,5 @@ export default function Home() {
     </LayoutAdminComponent>
   );
 }
+
+export default withProtectedRoute(Home);
