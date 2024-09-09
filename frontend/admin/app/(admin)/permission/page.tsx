@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import usePermissions from "@/lib/hooks/permission/usePermissions";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU, LABELMENU } from "@/constant";
+import styles from "./permission.module.css";
 
 interface DataType {
   id: string;
@@ -46,7 +47,7 @@ const PermissionPage = () => {
             <Table
               columns={columns}
               dataSource={permissions}
-              scroll={{ x: 768, y: 375 }}
+              className={styles['table-striped-rows']}
             />
           </ContentComponent>
         </>

@@ -9,7 +9,9 @@ import UpdateRoleModal from "@/components/modal/role/update";
 import AssginPermissionToRoleModal from "@/components/modal/role/assign";
 import useRoles from "@/lib/hooks/role/useRoles";
 import { menuActions, MenuState } from "@/lib/store/menu";
-import { KEYMENU, LABELMENU } from "@/constant";
+import { COLOR, KEYMENU, LABELMENU } from "@/constant";
+import styles from "./role.module.css";
+import { PlusOutlined } from "@ant-design/icons";
 
 interface DataType {
   id: string;
@@ -20,12 +22,12 @@ const RolePage = () => {
   const { roles, loading, error, refetch } = useRoles();
 
   const dispatch = useAppDispatch();
-  const value : MenuState ={
+  const value: MenuState = {
     keyMenu: KEYMENU.ROLE,
     labelMenu: LABELMENU.ROLE
   }
   dispatch(menuActions.changeInfoMenu(value))
-  
+
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalAssignPermissionToRole, setOpenModalAssignPermissionToRole] = useState(false);
@@ -72,20 +74,21 @@ const RolePage = () => {
       dataIndex: "Action",
       key: "Action",
       render: (_, record) => (
-        <Flex justify="end" align="end" wrap gap="small">
+        <Flex justify="end" align="end" wrap gap="1rem">
+
           <Button
-            type="primary"
-            size="large"
             onClick={() => handleOpenModalUpdate(record.id, record.name)}
+            style={{ border: "0.5px solid #4f46e5", color: COLOR.PRIMARY, padding: "1.1rem 1.2rem", borderRadius: "0.3rem", background: "white" }}
           >
             Detail
           </Button>
+
           <Button
-            type="default"
-            size="large"
+            type="primary"
             onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
+            style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem"}}
           >
-            Assign Permission To Role
+            Assign permission
           </Button>
         </Flex>
       ),
@@ -102,39 +105,19 @@ const RolePage = () => {
         <></>
       ) : (
         <>
-          <div
-            style={{
-              padding: "0 16px",
-              marginBottom: "10px",
-            }}
-          >
-            <Row style={{ width: "100%" }}>
-              <Col span={12} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <div
-                  style={{
-                    background: colorBgContainer,
-                    borderRadius: borderRadiusLG,
-                    padding: "16px 16px",
-                  }}
-                >
-                  <Flex justify="end" align="end" wrap gap="small">
-                    <Button
-                      type="primary"
-                      size="large"
-                      onClick={handleOpenModalCreate}
-                    >
-                      Create New
-                    </Button>
-                  </Flex>
-                </div>
-              </Col>
-            </Row>
-          </div>
           <ContentComponent>
+            <Button
+              type="primary"
+              onClick={handleOpenModalCreate}
+              style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
+            >
+              <PlusOutlined />
+              New role
+            </Button>
             <Table
               columns={columns}
               dataSource={roles}
-              scroll={{ x: 768, y: 375 }}
+              className={styles['table-striped-rows']}
             />
           </ContentComponent>
         </>

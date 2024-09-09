@@ -10,19 +10,19 @@ const ContentComponent: React.FC<ChildrenComponentProps> = ({ children }) => {
   } = theme.useToken();
 
   return (
-    <>
-      <Content style={{ margin: "0 16px" }}>
-        <div
-          style={{
-            padding: 24,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          {children}
-        </div>
-      </Content>
-    </>
+
+    <Content>
+      <div
+        style={{
+          padding: 24,
+          background: colorBgContainer,
+          borderRadius: "0.5rem",
+        }}
+      >
+        {children}
+      </div>
+    </Content>
+
   );
 };
 

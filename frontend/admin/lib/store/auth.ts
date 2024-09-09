@@ -21,6 +21,7 @@ export interface AuthState {
   forgotPasswordEmail: string;
   
   cookiesIsChecked: boolean;
+  isLogin: boolean;
 }
 
 const initialState: AuthState = {
@@ -30,6 +31,7 @@ const initialState: AuthState = {
   forgotPasswordEmail: "",
 
   cookiesIsChecked: false,
+  isLogin: false,
 };
 
 export const authSlice = createSlice({
@@ -51,6 +53,9 @@ export const authSlice = createSlice({
 
     setCookiesIsChecked(state, action: PayloadAction<boolean>) {
       state.cookiesIsChecked = action.payload;
+    },
+    setIsLogin(state, action: PayloadAction<boolean>) {
+      state.isLogin = action.payload;
     }
   },
 });

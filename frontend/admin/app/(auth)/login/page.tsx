@@ -20,6 +20,8 @@ import { usernameEmailRegex } from "@/utils/validation/username-email.regex";
 import { setCookies } from "@/utils/cookies/handle.cookies";
 import { useRouter } from "next/navigation";
 import { useHandleError } from "@/lib/hooks/error";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { authActions } from "@/lib/store/auth";
 
 const { Title, Text } = Typography;
 
@@ -63,6 +65,7 @@ const LoginPage = () => {
 
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
+  const dispatch = useAppDispatch();  
 
   const [loginMutation] = useMutation(LOGIN, {
     onCompleted: async (data) => {

@@ -28,8 +28,16 @@ export const GET_USER_BY_TOKEN = gql`
         message
         data
         error
+  }
+`;
+
+export const LOGOUT = gql`
+  query {
+    logoutAccount {
+        status
+        message
+        data
+        error
     }
 }
 `;
-
-

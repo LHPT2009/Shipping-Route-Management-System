@@ -1,302 +1,373 @@
-"use client";
-import ContentComponent from "@/components/content";
-import { Col, Form, Row, Input, Button, Typography, Flex } from "antd";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { UserOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import CustomModal from "@/components/modal/route";
+// "use client";
+// import { Col, Form, Row, Input, Button, Typography, Flex } from "antd";
+// import { Controller, useForm } from "react-hook-form";
+// import { yupResolver } from "@hookform/resolvers/yup";
+// import * as yup from "yup";
+// import { useEffect, useState } from "react";
+// import CustomModal from "@/components/modal/route";
+// import { COLOR } from "@/constant/color";
+// import Title from "antd/es/typography/Title";
+// import MapImg from "@/public/images/route/map.png";
+// import { ApolloError, useLazyQuery } from "@apollo/client";
+// import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
+// import useAntNotification from "@/lib/hooks/notification";
+// import { useHandleError } from "@/lib/hooks/error";
+// import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+// import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "./route.interface";
+// import { useRouter } from "next/navigation";
+// import moment from 'moment';
+// import withProtectedRoute from "@/components/auth/protection";
+// import { URL } from "@/constant/url";
+// import MapComponent from "@/components/route/map";
 
-const { Text } = Typography;
-const routeDetailPage = ({ params }: { params: { id: string } }) => {
-  const schema = yup
-    .object({
-      username: yup.string().required("Please enter your username"),
-    })
-    .required();
+// const { Text } = Typography;
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+// const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
-  const onFinish = async (values: any) => {
-    console.log(values);
-  };
+//   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
+//   const schema = yup
+//     .object({
+//       name: yup.string(),
+//       distance: yup.string(),
+//       status: yup.string(),
+//       departureTime: yup.string(),
+//       arrivalTime: yup.string(),
+//       departureLocation: yup.string(),
+//       arrivalLocation: yup.string(),
+//       departureAddress: yup.string(),
+//       arrivalAddress: yup.string(),
+//       shippingType: yup.string(),
+//       vehicleType: yup.string(),
+//       vehicleName: yup.string(),
+//       lisencePlate: yup.string(),
+//     })
+//     .required();
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+//   const {
+//     control,
+//     handleSubmit,
+//     formState: { errors },
+//     reset
+//   } = useForm({ resolver: yupResolver(schema) });
 
-  return (
-    <>
-      <ContentComponent>
-        <Form onFinish={handleSubmit(onFinish)} layout="vertical">
-          <Text>Detail info({params.id})</Text>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                  <Form.Item
-                    label="Username"
-                    name="username"
-                    style={{
-                      paddingBottom: errors.username ? "1rem" : 0,
-                      marginBottom: "1.2rem",
-                      marginTop: "2rem",
-                    }}
-                    help={
-                      errors.username && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.username?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
-                      name="username"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="username"
-                          {...field}
-                          placeholder={"Enter your username"}
-                          prefix={
-                            <UserOutlined
-                              style={{ padding: "0 0.5rem 0 0.25rem" }}
-                            />
-                          }
-                          style={{
-                            borderRadius: "0.5rem",
-                            height: "3.2rem",
-                            background: "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Username"
-                    name="username"
-                    style={{
-                      paddingBottom: errors.username ? "1rem" : 0,
-                      marginBottom: "1.2rem",
-                      marginTop: "2rem",
-                    }}
-                    help={
-                      errors.username && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.username?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
-                      name="username"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="username"
-                          {...field}
-                          placeholder={"Enter your username"}
-                          prefix={
-                            <UserOutlined
-                              style={{ padding: "0 0.5rem 0 0.25rem" }}
-                            />
-                          }
-                          style={{
-                            borderRadius: "0.5rem",
-                            height: "3.2rem",
-                            background: "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Username"
-                    name="username"
-                    style={{
-                      paddingBottom: errors.username ? "1rem" : 0,
-                      marginBottom: "1.2rem",
-                      marginTop: "2rem",
-                    }}
-                    help={
-                      errors.username && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.username?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
-                      name="username"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="username"
-                          {...field}
-                          placeholder={"Enter your username"}
-                          prefix={
-                            <UserOutlined
-                              style={{ padding: "0 0.5rem 0 0.25rem" }}
-                            />
-                          }
-                          style={{
-                            borderRadius: "0.5rem",
-                            height: "3.2rem",
-                            background: "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
-                  <Form.Item
-                    label="Username"
-                    name="username"
-                    style={{
-                      paddingBottom: errors.username ? "1rem" : 0,
-                      marginBottom: "1.2rem",
-                      marginTop: "2rem",
-                    }}
-                    help={
-                      errors.username && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.username?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
-                      name="username"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="username"
-                          {...field}
-                          placeholder={"Enter your username"}
-                          prefix={
-                            <UserOutlined
-                              style={{ padding: "0 0.5rem 0 0.25rem" }}
-                            />
-                          }
-                          style={{
-                            borderRadius: "0.5rem",
-                            height: "3.2rem",
-                            background: "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Username"
-                    name="username"
-                    style={{
-                      paddingBottom: errors.username ? "1rem" : 0,
-                      marginBottom: "1.2rem",
-                      marginTop: "2rem",
-                    }}
-                    help={
-                      errors.username && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.username?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
-                      name="username"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="username"
-                          {...field}
-                          placeholder={"Enter your username"}
-                          prefix={
-                            <UserOutlined
-                              style={{ padding: "0 0.5rem 0 0.25rem" }}
-                            />
-                          }
-                          style={{
-                            borderRadius: "0.5rem",
-                            height: "3.2rem",
-                            background: "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Username"
-                    name="username"
-                    style={{
-                      paddingBottom: errors.username ? "1rem" : 0,
-                      marginBottom: "1.2rem",
-                      marginTop: "2rem",
-                    }}
-                    help={
-                      errors.username && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.username?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
-                      name="username"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="username"
-                          {...field}
-                          placeholder={"Enter your username"}
-                          prefix={
-                            <UserOutlined
-                              style={{ padding: "0 0.5rem 0 0.25rem" }}
-                            />
-                          }
-                          style={{
-                            borderRadius: "0.5rem",
-                            height: "3.2rem",
-                            background: "white",
-                          }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                  <Flex justify="end" align="end" wrap gap="small">
-                    <Button type="primary" size="large" htmlType="submit">
-                      Primary
-                    </Button>
-                    <Button type="primary" size="large" htmlType="submit">
-                      Primary
-                    </Button>
-                    <Button type="primary" size="large" onClick={handleOpen}>
-                      Edit By Modal
-                    </Button>
-                  </Flex>
-                </Col>
-              </Row>
-            </Col>
+//   const onFinish = async (values: any) => {
+//     console.log(values);
+//   };
 
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-              <Text strong>map:</Text>
-              <div style={{ height: "60vh", backgroundColor: "red" }}></div>
-            </Col>
-          </Row>
-        </Form>
-      </ContentComponent>
-      <CustomModal open={open} onClose={handleClose} />
-    </>
-  );
-};
+//   const [route, setRoute] = useState<RouteInterface>();
 
-export default routeDetailPage;
+//   const [isShowDirection, setIsShowDirection] = useState(false);
+
+//   const { openNotificationWithIcon } = useAntNotification();
+//   const { handleError } = useHandleError();
+
+//   const [getRouteById, { data, loading }] = useLazyQuery(GET_ROUTE_BY_ID, {
+//     onCompleted: async (data) => {
+//       setRoute(data.getRoute.data);
+//       console.log("route", route);
+//     },
+//     onError: async (error: ApolloError) => {
+//       await handleError(error);
+//     }
+//   });
+
+//   useEffect(() => {
+//     const fetchRoutes = async () => {
+//       const { accessToken, expiresIn } = await fetchCookies();
+//       if (accessToken && expiresIn) {
+//         await getRouteById({
+//           context: {
+//             headers: {
+//               authorization: `Bearer ${accessToken}`
+//             }
+//           },
+//           variables: {
+//             input: params.id
+//           },
+//         });
+//       }
+//     };
+//     fetchRoutes();
+//     if (route) {
+//       reset({
+//         name: route.name,
+//         distance: `${route.distance} km`,
+//         status: StatusEnum[route.status],
+//         departureTime: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
+//         arrivalTime: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
+//         departureLocation: route.departure.name,
+//         arrivalLocation: route.arrival.name,
+//         departureAddress: route.departure.address,
+//         arrivalAddress: route.arrival.address,
+//         shippingType: ShippingTypeEnum[route.transport.shipping_type],
+//         vehicleType: VehicleTypeEnum[route.transport.vehicle_type],
+//         vehicleName: route.transport.name,
+//         lisencePlate: route.transport.license_plate,
+//       });
+//     }
+//   }, [route, reset]);
+
+//   return (
+//     <div style={{ margin: "6.5rem auto 2rem auto", width: "80rem", }}>
+//       <Form onFinish={handleSubmit(onFinish)} layout="vertical" >
+//         <Title level={4} style={{
+//           fontSize: "2rem",
+//           fontWeight: 700,
+//           color: COLOR.TEXT,
+//           textAlign: "center",
+//           marginBottom: "3rem"
+//         }}>
+//           Route details
+//         </Title>
+//         <Row gutter={[8, 8]} style={{ border: "1px solid #ced4da", borderRadius: "1rem", padding: "3rem 3rem 2rem 3rem" }}>
+//           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+//             {/* content */}
+//             <Row gutter={[18, 0]}>
+
+//               <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+//                 <Form.Item
+//                   label="Name"
+//                   name="name"
+//                 >
+//                   <Controller
+//                     name="name"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="name" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//               <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
+//                 <Form.Item
+//                   label="Distance"
+//                   name="distance"
+//                 >
+//                   <Controller
+//                     name="distance"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="distance" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//               <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
+//                 <Form.Item
+//                   label="Status"
+//                   name="status"
+//                 >
+//                   <Controller
+//                     name="status"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="status" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+//                 <Form.Item
+//                   label="Departure time"
+//                   name="departureTime"
+//                 >
+//                   <Controller
+//                     name="departureTime"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="departureTime" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+//                 <Form.Item
+//                   label="Arrival time"
+//                   name="arrivalTime"
+//                 >
+//                   <Controller
+//                     name="arrivalTime"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="arrivalTime" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+//                 <Form.Item
+//                   label="Departure"
+//                   name="departureLocation"
+//                 >
+//                   <Controller
+//                     name="departureLocation"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="departureLocation" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+//                 <Form.Item
+//                   label="Departure address"
+//                   name="departureAddress"
+//                 >
+//                   <Controller
+//                     name="departureAddress"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="departureAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+//                 <Form.Item
+//                   label="Arrival"
+//                   name="arrivalLocation"
+//                 >
+//                   <Controller
+//                     name="arrivalLocation"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="arrivalLocation" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+//                 <Form.Item
+//                   label="Arrival address"
+//                   name="arrivalAddress"
+//                 >
+//                   <Controller
+//                     name="arrivalAddress"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="arrivalAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+//                 <Form.Item
+//                   label="Shipping type"
+//                   name="shippingType"
+//                 >
+//                   <Controller
+//                     name="shippingType"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="shippingType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+//                 <Form.Item
+//                   label="Vehicle type"
+//                   name="vehicleType"
+//                 >
+//                   <Controller
+//                     name="vehicleType"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="vehicleType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+//             <Row gutter={[18, 0]}>
+//               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+//                 <Form.Item
+//                   label="Vehicle name"
+//                   name="vehicleName"
+//                 >
+//                   <Controller
+//                     name="vehicleName"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="vehicleName" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+//                 <Form.Item
+//                   label="Lisence plate"
+//                   name="lisencePlate"
+//                 >
+//                   <Controller
+//                     name="lisencePlate"
+//                     control={control}
+//                     render={({ field }) => (
+//                       <Input disabled key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+//                     )}
+//                   />
+//                 </Form.Item>
+//               </Col>
+//             </Row>
+
+//           </Col>
+
+//           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+//             {/* <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
+//              */}
+//             <MapComponent
+//               isShowDirection={isShowDirection}
+//               departure={[route?.departure.longitude!, route?.departure.latitude!]}
+//               arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
+//             />
+//             <Flex align="center" justify="center">
+//               <Button
+//                 type="primary"
+//                 onClick={() => {
+//                   console.log("isShowDirection", isShowDirection);
+//                   setIsShowDirection(true);
+//                   console.log("isShowDirection", isShowDirection);
+//                 }}
+//                 style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto"}}
+//               >
+//                 View on map
+//               </Button>
+//             </Flex>
+//             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
+//               <Button
+//                 onClick={() => router.push(URL.ROUTE)}
+//                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
+//               >
+//                 Back to routes
+//               </Button>
+//               <Button
+//                 disabled
+//                 type="primary"
+//                 style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
+//               >
+//                 Update
+//               </Button>
+//             </Flex>
+
+//           </Col>
+//         </Row>
+//       </Form>
+//     </div>
+
+//   );
+// };
+
+// export default withProtectedRoute(RouteDetailPage);
