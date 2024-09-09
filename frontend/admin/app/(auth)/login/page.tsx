@@ -25,6 +25,8 @@ import { useRouter } from "next/navigation";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { useGetNewAccessToken } from "@/lib/hooks/token";
 import { useHandleError } from "@/lib/hooks/error";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { authActions } from "@/lib/store/auth";
 
 const { Title, Text } = Typography;
 
@@ -68,6 +70,7 @@ const LoginPage = () => {
 
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
+  const dispatch = useAppDispatch();  
 
   const [loginMutation] = useMutation(LOGIN, {
     onCompleted: async (data) => {

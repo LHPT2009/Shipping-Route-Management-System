@@ -11,7 +11,7 @@ const withProtectedRoute = (WrappedComponent: any) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
-    // const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
+    const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
     
     useEffect(() => {
       const checkToken = async () => {
@@ -23,7 +23,7 @@ const withProtectedRoute = (WrappedComponent: any) => {
         }
       }
       checkToken();
-    }, [router]);
+    }, [router, isLogin]);
 
     if (isLoading) {
       return <LoadingComponent />;

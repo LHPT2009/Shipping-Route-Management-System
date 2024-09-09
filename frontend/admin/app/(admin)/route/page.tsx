@@ -198,7 +198,7 @@ const RoutePage = () => {
       key: 'departure',
       sorter: true,
       ...getColumnSearchProps('departure'),
-      width: '19%',
+      width: '22%',
     },
     {
       title: 'Arrival',
@@ -206,7 +206,7 @@ const RoutePage = () => {
       key: 'arrival',
       sorter: true,
       ...getColumnSearchProps('arrival'),
-      width: '19%',
+      width: '22%',
     },
     {
       title: 'Distance',

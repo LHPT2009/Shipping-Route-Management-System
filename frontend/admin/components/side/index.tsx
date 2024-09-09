@@ -77,11 +77,11 @@ const SiderComponent = () => {
           await dispatch(responsiveActions.changeStatusBackground(collapsed));
         }
       }}
-      style={{ height: "100vh", backgroundColor: "#fff", position: "fixed", zIndex: "100" }}
+      style={{ height: "100vh", backgroundColor: "#fff", position: "fixed", zIndex: "100",  }}
     >
-      <Layout style={{ height: "100%", padding: "16px 0px" }}>
+      <Layout style={{ height: "100%", padding: "16px 0px"  }}>
         <Header
-          style={{ display: "flex", padding: "0px 10px", height: "150px" }}
+          style={{ display: "flex", padding: "0px 10px", height: "150px", borderRadius: "0.5rem" }}
         >
           <Flex justify="center" align="center">
             <Image src={logoFull} style={{width: "85%"}} alt="Logo" />
@@ -90,6 +90,7 @@ const SiderComponent = () => {
         <Content
           style={{
             backgroundColor: COLOR.BACKGROUND,
+            borderRadius: "0.5rem"
           }}
         >
           <div style={{ padding: "0px 30px 0px 20px" }}>
@@ -106,7 +107,7 @@ const SiderComponent = () => {
           </div>
           <Menu onClick={onClick} mode="vertical" items={items} defaultSelectedKeys={[`${getKeyMenu}`]}/>
         </Content>
-        <Footer>
+        <Footer style={{borderRadius: "0.5rem"}}>
           <Flex justify="center" align="center">
             <div>@2024 - T6</div>
           </Flex>

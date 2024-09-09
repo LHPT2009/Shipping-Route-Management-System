@@ -16,7 +16,7 @@ const ContentComponent: React.FC<ChildrenComponentProps> = ({ children }) => {
         style={{
           padding: 24,
           background: colorBgContainer,
-          borderRadius: borderRadiusLG,
+          borderRadius: "0.5rem",
         }}
       >
         {children}

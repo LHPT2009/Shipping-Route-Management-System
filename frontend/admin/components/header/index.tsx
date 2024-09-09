@@ -5,8 +5,15 @@ import { Avatar, Col, Flex, Layout, Row, theme, Typography } from "antd";
 import NotificationComponent from "../dropdown/notification";
 import AvatarComponent from "../dropdown/avatar";
 import { COLOR } from "@/constant";
-import { useAppSelector } from "@/lib/hooks/hooks";
-import { LeftCircleOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
+import { LeftCircleOutlined, MoonOutlined } from "@ant-design/icons";
+import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
+import { ApolloError, useLazyQuery } from "@apollo/client";
+import { LOGOUT } from "@/apollo/query/auth";
+import { useHandleError } from "@/lib/hooks/error";
+import { authActions } from "@/lib/store/auth";
+import LogoutIcon from "../../public/svg/homepage/logout.svg";
+import NotiIcon from "../../public/svg/homepage/noti.svg";
 
 const { Header } = Layout;
 
@@ -20,6 +27,32 @@ const HeaderComponent = () => {
   const checkStatusResponse: boolean = useAppSelector(state => state.responsive.checkStatusResponse)
   const checkStatusBackground: boolean = useAppSelector(state => state.responsive.checkStatusBackground)
   const getlabelMenu: string = useAppSelector(state => state.menu.labelMenu)
+
+  const { handleError } = useHandleError();
+  const dispatch = useAppDispatch();
+
+  const [logout] = useLazyQuery(LOGOUT, {
+    onCompleted: async (data) => {
+      await deleteCookies('accessToken');
+      await deleteCookies('expiresIn');
+      dispatch(authActions.setIsLogin(false));
+      window.location.reload();
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const logoutHandler = async () => {
+    const accessToken = await getCookies('accessToken');
+    await logout({
+      context: {
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        }
+      }
+    });
+  };
 
   return (
     <div style={{ width: "100%", position: "fixed", zIndex: 100, paddingTop: 0, margin: "0 0 0 12.5rem", paddingRight: "12.5rem" }}>
@@ -35,12 +68,12 @@ const HeaderComponent = () => {
         >
         </Header>
       </> :
-        <div style={{ background: "#f8f9fa", padding: "10px 16px 8px 16px " }}>
+        <div style={{ background: "#f8f9fa", padding: "16px 16px 16px 16px " }}>
           <Header
             style={{
               padding: checkStatusResponse ? "0 16px 155px 16px" : "0 16px 0 16px",
               background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+              borderRadius: "0.5rem",
             }}
           >
             <Row style={{ width: "100%" }}>
@@ -58,12 +91,12 @@ const HeaderComponent = () => {
                     style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
                   /> */}
                     <Title level={4} style={{
-                      fontSize: "1.6rem",
+                      fontSize: "1.5rem",
                       fontWeight: 700,
                       color: COLOR.TEXT,
                       paddingLeft: "0.5rem"
                     }}>
-                      {getlabelMenu}
+                      {getlabelMenu === "Dashboard" ? "Dashboard" : `${getlabelMenu} management`}
                     </Title>
                     {/* <Title level={3}>{getlabelMenu}</Title> */}
                   </Flex>
@@ -76,8 +109,9 @@ const HeaderComponent = () => {
                     marginRight: "20px"
                   }}
                 >
-                  <Flex justify="end" align="end" gap="small" style={{ paddingRight: "1rem" }}>
-                    <NotificationComponent />
+                  <Flex justify="end" align="end" gap="1.5rem" style={{ paddingRight: "1rem" }}>
+                    <img src={NotiIcon.src} alt="logout" style={{ width: "1.35rem", cursor: "pointer" }} />
+                    <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />
                   </Flex>
                 </div>
               </Col>
