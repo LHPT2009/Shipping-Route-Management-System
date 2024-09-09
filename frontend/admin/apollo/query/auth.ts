@@ -21,3 +21,15 @@ export const GET_NEW_ACCESS_TOKEN = gql`
   }
 `;
 
+export const GET_USER_BY_TOKEN = gql`
+  query {
+    getUserByToken {
+        status
+        message
+        data
+        error
+    }
+}
+`;
+
+

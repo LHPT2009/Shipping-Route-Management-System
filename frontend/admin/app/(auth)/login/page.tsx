@@ -16,14 +16,9 @@ import useAntNotification from "@/lib/hooks/notification";
 import { ApolloError, useMutation, useReactiveVar } from "@apollo/client";
 import { LOGIN } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
-import { extractErrorMessages } from "@/utils/error/format.error";
-import { getErrorMessage } from "@/utils/error/apollo.error";
 import { usernameEmailRegex } from "@/utils/validation/username-email.regex";
 import { setCookies } from "@/utils/cookies/handle.cookies";
-import { routeModule } from "next/dist/build/templates/app-page";
 import { useRouter } from "next/navigation";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
-import { useGetNewAccessToken } from "@/lib/hooks/token";
 import { useHandleError } from "@/lib/hooks/error";
 
 const { Title, Text } = Typography;
