@@ -4,7 +4,7 @@ import { Layout, Flex, Menu, Divider } from "antd";
 import Image from "next/image";
 import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import logoFull from "@/public/logo/logoFull.png";
-import { MailOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, LineChartOutlined, MailOutlined, TeamOutlined, UnlockOutlined, UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { responsiveActions } from "@/lib/store/responsive";
@@ -19,27 +19,27 @@ const items: MenuItem[] = [
   {
     label: LABELMENU.DASHBOARD,
     key: KEYMENU.DASHBOARD,
-    icon: <MailOutlined />,
+    icon: <LineChartOutlined />,
   },
   {
     label: LABELMENU.USER,
     key: KEYMENU.USER,
-    icon: <MailOutlined />,
+    icon: <UserOutlined />,
   },
   {
     label: LABELMENU.ROUTE,
     key: KEYMENU.ROUTE,
-    icon: <MailOutlined />,
+    icon: <EnvironmentOutlined />,
   },
   {
     label: LABELMENU.ROLE,
     key: KEYMENU.ROLE,
-    icon: <MailOutlined />,
+    icon: <TeamOutlined />,
   },
   {
     label: LABELMENU.PERMISSION,
     key: KEYMENU.PERMISSION,
-    icon: <MailOutlined />,
+    icon: <UnlockOutlined />,
   }
 ];
 
@@ -77,14 +77,14 @@ const SiderComponent = () => {
           await dispatch(responsiveActions.changeStatusBackground(collapsed));
         }
       }}
-      style={{ height: "100vh", backgroundColor: "#fff" }}
+      style={{ height: "100vh", backgroundColor: "#fff", position: "fixed", zIndex: "100" }}
     >
       <Layout style={{ height: "100%", padding: "16px 0px" }}>
         <Header
           style={{ display: "flex", padding: "0px 10px", height: "150px" }}
         >
           <Flex justify="center" align="center">
-            <Image src={logoFull} alt="Logo" />
+            <Image src={logoFull} style={{width: "85%"}} alt="Logo" />
           </Flex>
         </Header>
         <Content
@@ -98,7 +98,7 @@ const SiderComponent = () => {
               orientationMargin="0px"
               style={{
                 marginTop: "30px 0px 0px 0px",
-                borderColor: COLOR.PRIMARY,
+                borderColor: COLOR.TEXT,
               }}
             >
               Menu

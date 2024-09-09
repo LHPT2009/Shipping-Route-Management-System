@@ -20,12 +20,12 @@ const RolePage = () => {
   const { roles, loading, error, refetch } = useRoles();
 
   const dispatch = useAppDispatch();
-  const value : MenuState ={
+  const value: MenuState = {
     keyMenu: KEYMENU.ROLE,
     labelMenu: LABELMENU.ROLE
   }
   dispatch(menuActions.changeInfoMenu(value))
-  
+
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalAssignPermissionToRole, setOpenModalAssignPermissionToRole] = useState(false);
@@ -102,35 +102,14 @@ const RolePage = () => {
         <></>
       ) : (
         <>
-          <div
-            style={{
-              padding: "0 16px",
-              marginBottom: "10px",
-            }}
-          >
-            <Row style={{ width: "100%" }}>
-              <Col span={12} xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-                <div
-                  style={{
-                    background: colorBgContainer,
-                    borderRadius: borderRadiusLG,
-                    padding: "16px 16px",
-                  }}
-                >
-                  <Flex justify="end" align="end" wrap gap="small">
-                    <Button
-                      type="primary"
-                      size="large"
-                      onClick={handleOpenModalCreate}
-                    >
-                      Create New
-                    </Button>
-                  </Flex>
-                </div>
-              </Col>
-            </Row>
-          </div>
           <ContentComponent>
+            <Button
+              type="primary"
+              size="large"
+              onClick={handleOpenModalCreate}
+            >
+              Create New
+            </Button>
             <Table
               columns={columns}
               dataSource={roles}

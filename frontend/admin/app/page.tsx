@@ -18,7 +18,7 @@ function Home() {
   return (
     <LayoutAdminComponent>
       <HeaderComponent />
-      <ContentComponent>asdasd</ContentComponent>
+      <ContentComponent>Dashboard</ContentComponent>
     </LayoutAdminComponent>
   );
 }

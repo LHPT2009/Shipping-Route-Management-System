@@ -22,11 +22,11 @@ const HeaderComponent = () => {
   const getlabelMenu: string = useAppSelector(state => state.menu.labelMenu)
 
   return (
-    <>
+    <div style={{ width: "100%", position: "fixed", zIndex: 100, paddingTop: 0, margin: "0 0 0 12.5rem", paddingRight: "12.5rem" }}>
       {!checkStatusBackground ? <>
         <Header
           style={{
-            margin: "16px 16px 10px 16px",
+            margin: "0 16px 10px 16px",
             padding: checkStatusResponse ? "0 16px 155px 16px" : "0 16px 0 16px",
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
@@ -34,76 +34,77 @@ const HeaderComponent = () => {
           }}
         >
         </Header>
-      </> : <>
-        <Header
-          style={{
-            margin: "16px 16px 10px 16px",
-            padding: checkStatusResponse ? "0 16px 155px 16px" : "0 16px 0 16px",
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <Row style={{ width: "100%" }}>
-            <Col xs={16} sm={12} md={12} lg={12} xl={12} xxl={12}>
-              <div
-                style={{
-                  padding: "16px 0px",
-                }}
-              >
-                <Flex justify="start" align="start" gap="small">
-                  {/* <Avatar
+      </> :
+        <div style={{ background: "#f8f9fa", padding: "10px 16px 8px 16px " }}>
+          <Header
+            style={{
+              padding: checkStatusResponse ? "0 16px 155px 16px" : "0 16px 0 16px",
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <Row style={{ width: "100%" }}>
+              <Col xs={16} sm={12} md={12} lg={12} xl={12} xxl={12}>
+                <div
+                  style={{
+                    padding: "16px 0px",
+                  }}
+                >
+                  <Flex justify="start" align="start" gap="small">
+                    {/* <Avatar
                     shape="circle"
                     size="large"
                     icon={<LeftCircleOutlined  />}
                     style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
                   /> */}
-                  <Title level={4} style={{
-                    fontSize: "1.6rem",
-                    fontWeight: 700,
-                    color: COLOR.TEXT,
-                    paddingLeft: "0.5rem"
-                  }}>
-                    {getlabelMenu}
-                  </Title>
-                  {/* <Title level={3}>{getlabelMenu}</Title> */}
-                </Flex>
-              </div>
-            </Col>
-            <Col xs={8} sm={12} md={6} lg={6} xl={6} xxl={6}>
-              <div
-                style={{
-                  padding: "20px 0px",
-                  marginRight: "20px"
-                }}
-              >
-                <Flex justify="end" align="end" gap="small" style={{ paddingRight: "1rem" }}>
-                  <NotificationComponent />
-                </Flex>
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
-              <div
-                style={{
-                  padding: "11px 0px",
-                  borderLeft: checkStatusResponse ? "" : "1px solid",
-                  borderColor: checkStatusResponse ? "" : "#dee2e6",
-                }}
-              >
-                <Flex justify="end" align="end" gap="small">
-                  <Flex justify="end" align="end" vertical>
-                    <Text strong>Lê Huỳnh Phương Tùng</Text>
-                    <Text type="secondary">Admin</Text>
+                    <Title level={4} style={{
+                      fontSize: "1.6rem",
+                      fontWeight: 700,
+                      color: COLOR.TEXT,
+                      paddingLeft: "0.5rem"
+                    }}>
+                      {getlabelMenu}
+                    </Title>
+                    {/* <Title level={3}>{getlabelMenu}</Title> */}
                   </Flex>
-                  <Flex style={{ marginBottom: "2px" }}>
-                    <AvatarComponent />
+                </div>
+              </Col>
+              <Col xs={8} sm={12} md={6} lg={6} xl={6} xxl={6}>
+                <div
+                  style={{
+                    padding: "20px 0px",
+                    marginRight: "20px"
+                  }}
+                >
+                  <Flex justify="end" align="end" gap="small" style={{ paddingRight: "1rem" }}>
+                    <NotificationComponent />
                   </Flex>
-                </Flex>
-              </div>
-            </Col>
-          </Row>
-        </Header>
-      </>}
-    </>
+                </div>
+              </Col>
+              <Col xs={24} sm={24} md={6} lg={6} xl={6} xxl={6}>
+                <div
+                  style={{
+                    padding: "11px 0px",
+                    borderLeft: checkStatusResponse ? "" : "1px solid",
+                    borderColor: checkStatusResponse ? "" : "#dee2e6",
+                  }}
+                >
+                  <Flex justify="end" align="end" gap="small">
+                    <Flex justify="end" align="end" vertical>
+                      <Text strong>Lê Huỳnh Phương Tùng</Text>
+                      <Text type="secondary">Admin</Text>
+                    </Flex>
+                    <Flex style={{ marginBottom: "2px" }}>
+                      <AvatarComponent />
+                    </Flex>
+                  </Flex>
+                </div>
+              </Col>
+            </Row>
+          </Header>
+        </div>
+      }
+    </div>
   );
 };
 

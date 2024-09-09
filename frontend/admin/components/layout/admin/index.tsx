@@ -9,7 +9,7 @@ const LayoutAdminComponent: React.FC<ChildrenComponentProps> = ({
   children,
 }: ChildrenComponentProps) => {
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ height: "100vh", borderRadius: "1rem" }}>
       <SiderComponent />
       <Layout>
         {children}

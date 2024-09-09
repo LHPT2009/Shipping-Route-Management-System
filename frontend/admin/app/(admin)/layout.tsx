@@ -8,7 +8,7 @@ const LayoutAdmin: React.FC<ChildrenComponentProps> = ({ children }: ChildrenCom
     return (
         <LayoutAdminComponent>
             <HeaderComponent />
-            {children}
+            <div style={{ margin: "6.5rem 1rem 0 13.58rem "}}> {children}</div>
         </LayoutAdminComponent>
     );
 }
