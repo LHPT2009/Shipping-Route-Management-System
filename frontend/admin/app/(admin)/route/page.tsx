@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
 import InformationIcon from "@/public/svg/route/information.svg";
 import CustomModal from "@/components/modal/route";
-import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 
 const { Search } = Input;
@@ -398,6 +398,14 @@ const RoutePage = () => {
         <></>
       ) : (
         <ContentComponent>
+          <Button
+            type="primary"
+            // onClick={}
+            style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
+          >
+            <PlusOutlined />
+            New route
+          </Button>
           <Table
             rowKey={(record) => record.id}
             className={styles['table-striped-rows']}

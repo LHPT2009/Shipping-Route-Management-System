@@ -9,7 +9,9 @@ import UpdateRoleModal from "@/components/modal/role/update";
 import AssginPermissionToRoleModal from "@/components/modal/role/assign";
 import useRoles from "@/lib/hooks/role/useRoles";
 import { menuActions, MenuState } from "@/lib/store/menu";
-import { KEYMENU, LABELMENU } from "@/constant";
+import { COLOR, KEYMENU, LABELMENU } from "@/constant";
+import styles from "./role.module.css";
+import { PlusOutlined } from "@ant-design/icons";
 
 interface DataType {
   id: string;
@@ -72,20 +74,21 @@ const RolePage = () => {
       dataIndex: "Action",
       key: "Action",
       render: (_, record) => (
-        <Flex justify="end" align="end" wrap gap="small">
+        <Flex justify="end" align="end" wrap gap="1rem">
+
           <Button
-            type="primary"
-            size="large"
             onClick={() => handleOpenModalUpdate(record.id, record.name)}
+            style={{ border: "0.5px solid #4f46e5", color: COLOR.PRIMARY, padding: "1.1rem 1.2rem", borderRadius: "0.3rem", background: "white" }}
           >
             Detail
           </Button>
+
           <Button
-            type="default"
-            size="large"
+            type="primary"
             onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
+            style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem"}}
           >
-            Assign Permission To Role
+            Assign permission
           </Button>
         </Flex>
       ),
@@ -105,15 +108,16 @@ const RolePage = () => {
           <ContentComponent>
             <Button
               type="primary"
-              size="large"
               onClick={handleOpenModalCreate}
+              style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
             >
-              Create New
+              <PlusOutlined />
+              New role
             </Button>
             <Table
               columns={columns}
               dataSource={roles}
-              scroll={{ x: 768, y: 375 }}
+              className={styles['table-striped-rows']}
             />
           </ContentComponent>
         </>
