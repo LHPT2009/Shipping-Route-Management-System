@@ -8,13 +8,8 @@ import { loadingActions } from '@/lib/store/loading';
 const withProtectedRoute = (WrappedComponent: any) => {
   return (props: any) => {
     const router = useRouter();
-<<<<<<< HEAD:frontend/admin/components/protection/withProtectedRoute.tsx
     const dispatch = useAppDispatch();
 
-=======
-    const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
-    
->>>>>>> 57af38e32089a158813717ce8984e9063bb01803:frontend/admin/components/protection/index.tsx
     useEffect(() => {
       const checkToken = async () => {
         const { accessToken, expiresIn } = await fetchCookies();
@@ -25,7 +20,7 @@ const withProtectedRoute = (WrappedComponent: any) => {
         }
       }
       checkToken();
-    }, [router, isLogin]);
+    }, [router]);
 
     return <WrappedComponent {...props} />;
   };
