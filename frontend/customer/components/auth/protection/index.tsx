@@ -17,7 +17,7 @@ const withProtectedRoute = (WrappedComponent: any) => {
       const checkToken = async () => {
         const { accessToken, expiresIn } = await fetchCookies();
         if (!accessToken || !expiresIn || !isLogin) {
-          router.push('/');
+          router.push('/login');
         } else {
           setIsLoading(false);
         }
