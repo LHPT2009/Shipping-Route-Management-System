@@ -23,7 +23,7 @@ export class UserResolver {
   }
 
   @Query(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
   @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
   @UseGuards(AuthGuard, RoleGuard)
   async getUserById(
@@ -33,7 +33,7 @@ export class UserResolver {
   }
 
   @Query(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
   @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
   @UseGuards(AuthGuard, RoleGuard)
   async getUserByToken(

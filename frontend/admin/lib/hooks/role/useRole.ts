@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { GET_ROLE } from "@/apollo/query/role";
 
-const useRole = () => {
-  const { data, loading, error, refetch } = useQuery(GET_ROLE);
+const useRole = ( id:string ) => {
+  const { data, loading, error, refetch } = useQuery(GET_ROLE,{
+    variables: { id: id },
+  });
 
   const role = data?.getRole?.data || [];
 

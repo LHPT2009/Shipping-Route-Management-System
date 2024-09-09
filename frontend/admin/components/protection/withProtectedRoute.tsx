@@ -1,33 +1,31 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchCookies } from '@/utils/token/fetch_cookies.token';
-import { Spin } from 'antd';
-import LoadingComponent from '@/components/loading';
-import { useAppSelector } from '@/lib/hooks/hooks';
+import { useAppDispatch } from '@/lib/hooks/hooks';
+import { loadingActions } from '@/lib/store/loading';
 
 const withProtectedRoute = (WrappedComponent: any) => {
   return (props: any) => {
-
-    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+<<<<<<< HEAD:frontend/admin/components/protection/withProtectedRoute.tsx
+    const dispatch = useAppDispatch();
+
+=======
     const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
     
+>>>>>>> 57af38e32089a158813717ce8984e9063bb01803:frontend/admin/components/protection/index.tsx
     useEffect(() => {
       const checkToken = async () => {
         const { accessToken, expiresIn } = await fetchCookies();
+
         if (!accessToken || !expiresIn) {
           router.push('/login');
-        } else {
-          setIsLoading(false);
+          dispatch(loadingActions.changeLoadingStatus(false))
         }
       }
       checkToken();
     }, [router, isLogin]);
-
-    if (isLoading) {
-      return <LoadingComponent />;
-    }
 
     return <WrappedComponent {...props} />;
   };
