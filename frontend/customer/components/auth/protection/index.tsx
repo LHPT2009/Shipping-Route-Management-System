@@ -11,19 +11,19 @@ const withProtectedRoute = (WrappedComponent: any) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
-    const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
+    // const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
     
     useEffect(() => {
       const checkToken = async () => {
         const { accessToken, expiresIn } = await fetchCookies();
-        if (!accessToken || !expiresIn || !isLogin) {
+        if (!accessToken || !expiresIn) {
           router.push('/login');
         } else {
           setIsLoading(false);
         }
       }
       checkToken();
-    }, [router, isLogin]);
+    }, [router]);
 
     if (isLoading) {
       return <LoadingComponent />;

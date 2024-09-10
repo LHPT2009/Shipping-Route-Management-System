@@ -289,6 +289,7 @@ const RoutePage = () => {
           </Button>
           <Button
             type="primary"
+            disabled={record.shipping_type === "Seaway"}
             onClick={() => {
               const getDataById = data.find((item, index) => item.id === record.id)
               if (getDataById) {

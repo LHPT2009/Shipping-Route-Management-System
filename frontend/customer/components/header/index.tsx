@@ -70,7 +70,7 @@ const HeaderComponent = () => {
     await logout({
       context: {
         headers: {
-           authorization: `Bearer ${accessToken}`
+          authorization: `Bearer ${accessToken}`
         }
       }
     });
@@ -78,7 +78,7 @@ const HeaderComponent = () => {
 
   const clickHandler = async () => {
     const { accessToken, expiresIn } = await fetchCookies();
-    if(accessToken && expiresIn) {
+    if (accessToken && expiresIn) {
       router.push(URL.ROUTE);
     } else {
       router.push(URL.REGISTER);
