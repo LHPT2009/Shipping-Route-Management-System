@@ -1,6 +1,6 @@
 "use client";
 import { Col, Form, Row, Input, Button, Typography, Flex, Select, DatePicker } from "antd";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect, useState } from "react";
@@ -16,9 +16,8 @@ import { useRouter } from "next/navigation";
 import moment from 'moment';
 import MapComponent from "@/components/map";
 import ContentComponent from "@/components/content";
-import { GET_LOCATIONS } from "@/apollo/query/location";
+import { GET_LOCATIONS, GET_TRANSPORTS } from "@/apollo/query/location";
 import { LocationInterface } from "./location.interface";
-import { current } from "@reduxjs/toolkit";
 import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
 
 const { Text } = Typography;
@@ -55,17 +54,23 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   const onFinish = async (values: any) => {
     console.log("finished value: ", values);
+    // console.log(VehicleTypeEnum[values.vehicleType] )
   };
 
   // const [route, setRoute] = useState<RouteInterface>();
 
   const [isShowDirection, setIsShowDirection] = useState(false);
   const [location, setLocations] = useState<LocationInterface[]>([]);
+  const [transport, setTransports] = useState<{ name: string; license_plate: string; shipping_type: string; vehicle_type: string }[]>([]);
   const [optionLocation, setOptionLocation] = useState<{ value: string, label: string }[]>([]);
   const { openNotificationWithIcon } = useAntNotification();
+
+  const [vehicleTypeOption, setVehicleTypeOption] = useState<{ value: string, label: string }[]>([]);
+  const [vehicleNameOption, setVehicleNameOption] = useState<{ value: string, label: string }[]>([]);
+
   const { handleError } = useHandleError();
 
-  const [getLocations, { data, loading }] = useLazyQuery(GET_LOCATIONS, {
+  const [getLocations, { loading }] = useLazyQuery(GET_LOCATIONS, {
     onCompleted: async (data) => {
       setLocations(data.getLocations.data);
       setOptionLocation(data.getLocations.data.map((item: LocationInterface) => {
@@ -74,6 +79,15 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           label: item.name,
         };
       }));
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const [getTransports] = useLazyQuery(GET_TRANSPORTS, {
+    onCompleted: async (data) => {
+      setTransports(data.getTransports.data);
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
@@ -102,6 +116,14 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             }
           }
         });
+
+        await getTransports({
+          context: {
+            headers: {
+              authorization: `Bearer ${accessToken}`
+            }
+          }
+        });
       }
     };
     fetchLocations();
@@ -111,13 +133,13 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         status: StatusEnum[0],
         departureAddress: "Auto filled",
         arrivalAddress: "Auto filled",
+        lisencePlate: "Auto filled",
       });
     }
   }, [location, reset]);
 
   const handleChangeLocation = (value: string, type: string) => {
     const currentValues = getValues();
-    console.log("currentValues: ", currentValues);
     if (type === "departure") {
       reset({
         ...currentValues,
@@ -145,6 +167,52 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   };
 
+  const handleChangeShippingType = (value: string) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      shippingType: value,
+    });
+    if (transport.length > 0) {
+      const matchingItems = transport.filter((item: any) => item.shipping_type?.toString() === value);
+      const uniqueVehicleTypes = Array.from(new Set(matchingItems.map((item: any) => item.vehicle_type)));
+      const formattedVehicleTypes = uniqueVehicleTypes.map((type, index) => ({
+        value: value === "1" ? (index + 3).toString() : index.toString(),
+        label: VehicleTypeEnum[type],
+      }));
+      console.log("shipping type: ", formattedVehicleTypes)
+
+      setVehicleTypeOption(formattedVehicleTypes);
+    }
+  };
+
+  const handleChangeVehicleType = (value: string) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      vehicleType: value,
+    });
+    if (transport.length > 0) {
+      const matchingItems = transport.filter((item: any) => item.shipping_type?.toString() === currentValues.shippingType && item.vehicle_type?.toString() === value);
+      const uniqueVehicleNames = Array.from(new Set(matchingItems.map((item: any) => item.name)));
+      const formattedVehicleNames = uniqueVehicleNames.map((type, index) => ({
+        value: type,
+        label: type,
+      }));
+      console.log("vehicle type: ", matchingItems)
+      setVehicleNameOption(formattedVehicleNames);
+    }
+  };
+
+
+  const handleChangeVehicleName = (value: string) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      vehicleName: value,
+      lisencePlate: transport.find((item) => item.name === value)?.license_plate!,
+    });
+  };
 
   return (
     <ContentComponent>
@@ -409,6 +477,16 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Shipping type"
                   name="shippingType"
+                  style={{
+                    paddingBottom: errors.shippingType ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.shippingType && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.shippingType?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="shippingType"
@@ -417,16 +495,14 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                       <Select
                         key="shippingType"
                         {...field}
-                        defaultValue="1"
+                        placeholder="Select shipping type"
+                        onChange={handleChangeShippingType}
                         style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
                         options={[
-                          { value: '0', label: 'Finished' },
-                          { value: '1', label: 'Progress' },
-                          { value: '2', label: 'Cancelled' },
-                          { value: 'disabled', label: 'Disabled', disabled: true },
+                          { value: '0', label: 'Road' },
+                          { value: '1', label: 'Seaway' },
                         ]}
                       />
-                      // <Input key="shippingType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -435,24 +511,29 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Vehicle type"
                   name="vehicleType"
+                  style={{
+                    paddingBottom: errors.vehicleType ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.vehicleType && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.vehicleType?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="vehicleType"
                     control={control}
                     render={({ field }) => (
-                      // <Select
-                      //   key="status"
-                      //   {...field}
-                      //   defaultValue="1"
-                      //   style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                      //   options={[
-                      //     { value: '0', label: 'Finished' },
-                      //     { value: '1', label: 'Progress' },
-                      //     { value: '2', label: 'Cancelled' },
-                      //     { value: 'disabled', label: 'Disabled', disabled: true },
-                      //   ]}
-                      // />
-                      <Input key="vehicleType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        key="vehicleType"
+                        {...field}
+                        placeholder="Select vehicle type"
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        onChange={handleChangeVehicleType}
+                        options={vehicleTypeOption}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -463,12 +544,29 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Vehicle name"
                   name="vehicleName"
+                  style={{
+                    paddingBottom: errors.vehicleName ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.vehicleName && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.vehicleName?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="vehicleName"
                     control={control}
                     render={({ field }) => (
-                      <Input key="vehicleName" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        key="vehicleName"
+                        {...field}
+                        placeholder="Select vehicle name"
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        onChange={handleChangeVehicleName}
+                        options={vehicleNameOption}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -482,7 +580,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     name="lisencePlate"
                     control={control}
                     render={({ field }) => (
-                      <Input key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -503,9 +601,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
               <Button
                 type="primary"
                 onClick={() => {
-                  console.log("isShowDirection", isShowDirection);
                   setIsShowDirection(true);
-                  console.log("isShowDirection", isShowDirection);
                 }}
                 style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto" }}
               >

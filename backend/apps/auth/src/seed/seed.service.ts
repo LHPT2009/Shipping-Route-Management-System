@@ -90,7 +90,7 @@ export class SeedService implements OnApplicationBootstrap {
           address: "",
           password: password,
           active: true,
-          roles: { id: "3", name: ROLE.SUPERADMIN },
+          roles: { id: "2", name: ROLE.ADMIN },
           verify_token: verifyToken,
           verify_token_expires: verifyTokenExpires
         },

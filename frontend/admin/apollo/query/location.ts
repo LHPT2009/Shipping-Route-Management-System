@@ -11,3 +11,15 @@ export const GET_LOCATIONS = gql`
   }
 `;
 
+export const GET_TRANSPORTS = gql`
+  query getTransports {
+    getTransports {
+        status
+        message
+        data
+        error
+    }
+  }
+`;
+
+
