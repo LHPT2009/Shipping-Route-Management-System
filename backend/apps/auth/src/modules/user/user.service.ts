@@ -28,6 +28,7 @@ import { UserUpdateDto } from './dto/user-update.dto';
 import { validPhone } from 'common/exception/validation/phone.validation';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import e from 'express';
+import { FilterUsersDto } from './dto/user-filter.dto';
 
 @Injectable()
 export class UserService {
@@ -37,12 +38,65 @@ export class UserService {
     private jwtService: JwtService,
   ) { }
 
-  async findAll(): Promise<ResponseDto<UserEntity[]>> {
+  async findAll(filterUsersDto: FilterUsersDto): Promise<ResponseDto<{
+    users: any[];
+    total: number;
+    page: number;
+    limit: number;
+  }>> {
     try {
-      const users = await this.userRepository.find();
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, users, []);
+      const queryBuilder = this.userRepository.createQueryBuilder('user')
+        .leftJoinAndSelect('user.roles', 'roles')
+        .leftJoinAndSelect('roles.permissions', 'permissions');
+
+      if (filterUsersDto.username) {
+        console.log("12345");
+        queryBuilder.andWhere('LOWER(user.username) LIKE LOWER(:username)', { username: `%${filterUsersDto.username.toLowerCase()}%` });
+      }
+      if (filterUsersDto.email) {
+        queryBuilder.andWhere('LOWER(user.email) LIKE LOWER(:email)', { email: `%${filterUsersDto.email.toLowerCase()}%` });
+      }
+      if (filterUsersDto.role) {
+        queryBuilder.andWhere('roles.name = :role', { role: filterUsersDto.role });
+      }
+      if(filterUsersDto.status) {
+        if(filterUsersDto.status === 'Active') {
+          queryBuilder.andWhere('user.active = :active', { active: true });
+        } else {
+          queryBuilder.andWhere('user.active = :active', { active: false });
+        }
+      }
+
+      if (filterUsersDto.sort_field && filterUsersDto.sort_order) {
+        queryBuilder.orderBy(`user.${filterUsersDto.sort_field}`, filterUsersDto.sort_order === 'ascend' ? 'ASC' : 'DESC');
+      }
+
+      const [users, total] = await queryBuilder
+        .skip((filterUsersDto.page - 1) * filterUsersDto.limit)
+        .take(filterUsersDto.limit)
+        .getManyAndCount();
+
+      const usersResponse = users.map((user) => {
+        return {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          roles: user.roles.name,
+          permissions: user.roles.permissions.map(permission => permission.name),
+          status: user.active ? "Active" : "Inactive",
+        };
+      });
+
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, {
+        total,
+        page: filterUsersDto.page,
+        limit: filterUsersDto.limit,
+        users: usersResponse,
+      }, []);
+
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      console.log(error)
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { user: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
 

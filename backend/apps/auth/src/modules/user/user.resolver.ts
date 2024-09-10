@@ -12,14 +12,22 @@ import { PERMISSION } from 'common/constants/permission';
 import { UseGuards } from '@nestjs/common';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { FilterUsersDto } from './dto/user-filter.dto';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(private userService: UserService) { }
 
   @Query(() => ResponseDto<UserEntity[]>)
-  async getUsers(): Promise<ResponseDto<UserEntity[]>> {
-    return await this.userService.findAll();
+  async getUsers(
+    @Args('input') input: FilterUsersDto,
+  ): Promise<ResponseDto<{
+    users: any[];
+    total: number;
+    page: number;
+    limit: number;
+  }>> {
+    return await this.userService.findAll(input);
   }
 
   @Query(() => ResponseDto<UserEntity>, { nullable: true })
