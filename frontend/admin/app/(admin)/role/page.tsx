@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContentComponent from "@/components/content";
 import { Col, Flex, Row, theme, Button, Table } from "antd";
 import type { TableColumnsType } from "antd";
@@ -19,14 +19,17 @@ interface DataType {
 }
 
 const RolePage = () => {
-  const { roles, loading, error, refetch } = useRoles();
+  const { roles, refetch } = useRoles();
 
   const dispatch = useAppDispatch();
-  const value: MenuState = {
-    keyMenu: KEYMENU.ROLE,
-    labelMenu: LABELMENU.ROLE
-  }
-  dispatch(menuActions.changeInfoMenu(value))
+
+  useEffect(() => {
+    const value: MenuState = {
+      keyMenu: KEYMENU.ROLE,
+      labelMenu: LABELMENU.ROLE,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
+  }, [dispatch]);
 
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);

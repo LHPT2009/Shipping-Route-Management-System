@@ -4,7 +4,7 @@ import { Layout, Flex, Menu, Divider } from "antd";
 import Image from "next/image";
 import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import logoFull from "@/public/logo/logoFull.png";
-import { EnvironmentOutlined, LineChartOutlined, MailOutlined, TeamOutlined, UnlockOutlined, UserOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, LineChartOutlined, TeamOutlined, UnlockOutlined, UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { responsiveActions } from "@/lib/store/responsive";
@@ -62,6 +62,12 @@ const SiderComponent = () => {
 
   const getKeyMenu: string = useAppSelector((state) => state.menu.keyMenu);
 
+  const [selectedKey, setSelectedKey] = useState<string>(getKeyMenu);
+
+  useEffect(() => {
+    setSelectedKey(getKeyMenu);
+  }, [getKeyMenu]);
+
   return (
     <Sider
       breakpoint="md"
@@ -105,7 +111,7 @@ const SiderComponent = () => {
               Menu
             </Divider>
           </div>
-          <Menu onClick={onClick} mode="vertical" items={items} defaultSelectedKeys={[`${getKeyMenu}`]}/>
+          <Menu onClick={onClick} mode="vertical" items={items} selectedKeys={[selectedKey]}/>
         </Content>
         <Footer style={{borderRadius: "0.5rem"}}>
           <Flex justify="center" align="center">
