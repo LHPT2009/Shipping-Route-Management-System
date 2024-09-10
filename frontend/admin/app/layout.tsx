@@ -25,13 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{background: "#f8f9fa"}}>
+      <body className={inter.className} style={{ background: "#f8f9fa" }}>
         <StyledComponentsRegistry>
           <ConfigProvider
             theme={{
               token: {
                 colorPrimary: COLOR.PRIMARY,
-                borderRadius: 2,
+                borderRadius: 5,
                 colorText: "#000",
                 colorBgContainer: COLOR.BACKGROUND,
                 fontSize: 16,
@@ -45,6 +45,7 @@ export default function RootLayout({
                 },
                 Menu: {
                   colorBgContainer: COLOR.BACKGROUND,
+                  borderRadius: 8,
                 },
                 Breadcrumb: {
                   colorText: COLOR.PRIMARY,
@@ -52,6 +53,15 @@ export default function RootLayout({
                 Button: {
                   borderRadius: 8,
                 },
+                Select: {
+                  borderRadius: 8,
+                },
+                Dropdown: {
+                  borderRadius: 8,
+                },
+                Input: {
+                  colorTextDisabled: "black"
+                }
               },
             }}
           >
