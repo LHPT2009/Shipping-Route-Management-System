@@ -21,8 +21,9 @@ import { useRouter } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
 import InformationIcon from "@/public/svg/route/information.svg";
 import CustomModal from "@/components/modal/route";
-import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, MinusCircleOutlined, PlusOutlined, SearchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
+import { GET_USERS } from "@/apollo/query/user";
 
 const { Search } = Input;
 
@@ -37,15 +38,11 @@ type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>
 
 interface DataType {
   id: number;
-  name: string;
-  departure: string;
-  arrival: string;
-  shipping_type: string;
+  username: string;
+  email: string;
+  roles: string;
+  permissions: string;
   status: string;
-  departureLongitude: number,
-  departureLatitude: number,
-  arrivalLongitude: number,
-  arrivalLatitude: number,
 }
 
 interface TableParams {
@@ -67,8 +64,6 @@ const UserPage = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const [departure, setDeparture] = useState<number[]>([]);
-  const [arrival, setArrival] = useState<number[]>([]);
 
   const [data, setData] = useState<DataType[]>([]);
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -148,31 +143,12 @@ const UserPage = () => {
       label: 'All',
     },
     {
-      key: 'Progress',
-      label: 'Progress',
+      key: 'Active',
+      label: 'Active',
     },
     {
-      key: 'Finished',
-      label: 'Finished',
-    },
-    {
-      key: 'Cancelled',
-      label: 'Cancelled',
-    },
-  ];
-
-  const menuShippingType = [
-    {
-      key: 'all',
-      label: 'All',
-    },
-    {
-      key: 'Seaway',
-      label: 'Seaway',
-    },
-    {
-      key: 'Road',
-      label: 'Road',
+      key: 'Inactive',
+      label: 'Inactive',
     },
   ];
 
@@ -182,72 +158,65 @@ const UserPage = () => {
       dataIndex: 'id',
       key: 'id',
       render: (text, record, index) => index + 1,
-      width: '5%',
+      // width: '5%',
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
       sorter: true,
-      ...getColumnSearchProps('name'),
-      width: '10%',
+      ...getColumnSearchProps('username'),
+      // width: '10%',
     },
     {
-      title: 'Departure',
-      dataIndex: 'departure',
-      key: 'departure',
-      sorter: true,
-      ...getColumnSearchProps('departure'),
-      width: '22%',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      ...getColumnSearchProps('email'),
+      // width: '22%',
     },
     {
-      title: 'Arrival',
-      dataIndex: 'arrival',
-      key: 'arrival',
-      sorter: true,
-      ...getColumnSearchProps('arrival'),
-      width: '22%',
-    },
-    {
-      title: 'Distance',
-      dataIndex: 'distance',
-      key: 'distance',
-      width: '10%',
-      sorter: true,
-    },
-    {
-      title: 'Shipping',
-      dataIndex: 'shipping_type',
-      key: 'shipping_type',
-      width: '8%',
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-          <Menu
-            selectedKeys={selectedKeys.map(String)}
-            onClick={({ key }) => {
-              if (key === 'all') {
-                handleReset(clearFilters!);
-                confirm();
-              } else {
-                setSelectedKeys([key]);
-                confirm();
-              }
-            }}
-            items={menuShippingType}
-          />
-        </div>
-      ),
-      render: (_, { shipping_type }) => (
-        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={shipping_type === 'Seaway' ? 'blue' : 'green'} key={shipping_type}>
-          {shipping_type}
+      title: 'Role',
+      dataIndex: 'roles',
+      key: 'roles',
+      // width: '10%',
+      render: (_, { roles }) => (
+        <Tag
+          style={{ borderRadius: "0.2rem", padding: "0.15rem 0.5rem", fontSize: "0.8rem" }}
+          color={roles === 'CUSTOMER' ? 'purple' : 'magenta'} key={roles}
+        >
+          {roles}
         </Tag>
+      )
+    },
+    {
+      title: 'Permission',
+      dataIndex: 'permissions',
+      key: 'permissions',
+      // width: '25%',
+      render: (_, { status, permissions }) => (
+        <div>
+          {Array.isArray(permissions) && permissions.length > 0 ? permissions.map((perm, index) => (
+            <Tag
+              key={index}
+              style={{
+                borderRadius: "0.2rem",
+                padding: "0.15rem 0.5rem",
+                fontSize: "0.8rem",
+              }}
+              color={perm === 'GET' ? 'blue' : perm === 'POST' ? 'green' : perm === 'PUT' ? 'orange' : perm === 'PATCH' ? 'cyan' : 'red'}
+            >
+              {perm}
+            </Tag>
+          )) : 'No Permissions'}
+        </div>
       )
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      width: '10%',
+      // width: '10%',
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
           <Menu
@@ -266,7 +235,7 @@ const UserPage = () => {
         </div>
       ),
       render: (_, { status }) => (
-        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={status === 'Finished' ? 'cyan' : status === 'Progress' ? 'orange' : 'red'} key={status}>
+        <Tag style={{ borderRadius: "0.2rem", padding: "0.15rem 0.7rem" }} color={status === 'Active' ? 'cyan' : 'red'} key={status}>
           {status}
         </Tag>
       )
@@ -281,7 +250,7 @@ const UserPage = () => {
           <Button
             type="primary"
             onClick={() => {
-              router.push(`/route/${record.id}/information`);
+              router.push(`/user/${record.id}/information`);
             }}
             style={{ width: "2.3rem", borderRadius: "0.3rem" }}
           >
@@ -290,17 +259,18 @@ const UserPage = () => {
           <Button
             type="primary"
             onClick={() => {
-              router.push(`/route/${record.id}/information`);
+              // router.push(`/user/${record.id}/information`);
+              
             }}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
           >
-            <EditOutlined />
+            <UsergroupAddOutlined />
           </Button>
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
           >
-            <DeleteOutlined />
+            <MinusCircleOutlined />
           </Button>
 
         </Flex>
@@ -316,15 +286,15 @@ const UserPage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
+  const [getUsers, { loading }] = useLazyQuery(GET_USERS, {
     onCompleted: async (data) => {
-      console.log(data.getRoutes.data);
-      setData(data.getRoutes.data.routes);
+      console.log(data.getUsers.data);
+      setData(data.getUsers.data.users);
       setTableParams({
         ...tableParams,
         pagination: {
           ...tableParams.pagination,
-          total: data.getRoutes.data.total,
+          total: data.getUsers.data.total,
         },
       });
 
@@ -335,10 +305,10 @@ const UserPage = () => {
   });
 
   useEffect(() => {
-    const fetchRoutes = async () => {
+    const fetchUsers = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
       if (accessToken && expiresIn) {
-        await getRoutes({
+        await getUsers({
           context: {
             headers: {
               authorization: `Bearer ${accessToken}`
@@ -348,10 +318,8 @@ const UserPage = () => {
             input: {
               page: tableParams.pagination?.current,
               limit: tableParams.pagination?.pageSize,
-              name: tableParams.filters?.name?.[0],
-              departure: tableParams.filters?.departure?.[0],
-              arrival: tableParams.filters?.arrival?.[0],
-              shipping_type: tableParams.filters?.shipping_type?.[0],
+              username: tableParams.filters?.username?.[0],
+              email: tableParams.filters?.email?.[0],
               status: tableParams.filters?.status?.[0],
               sort_field: tableParams.sortField,
               sort_order: tableParams.sortOrder,
@@ -360,7 +328,7 @@ const UserPage = () => {
         });
       }
     };
-    fetchRoutes();
+    fetchUsers();
   }, [
     tableParams.pagination?.current,
     tableParams.pagination?.pageSize,
@@ -368,12 +336,6 @@ const UserPage = () => {
     tableParams?.sortField,
     JSON.stringify(tableParams.filters),
   ]);
-
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
 
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -395,16 +357,6 @@ const UserPage = () => {
         <></>
       ) : (
         <ContentComponent>
-          <Button
-            type="primary"
-            onClick={() => {
-              router.push(`/route/create`);
-            }}
-            style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
-          >
-            <PlusOutlined />
-            New route
-          </Button>
           <Table
             rowKey={(record) => record.id}
             className={styles['table-striped-rows']}
@@ -413,6 +365,7 @@ const UserPage = () => {
             loading={loading}
             onChange={handleTableChange}
             dataSource={data}
+            style={{ marginTop: "0.5rem" }}
           />
         </ContentComponent>
       )}

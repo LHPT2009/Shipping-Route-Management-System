@@ -13,6 +13,7 @@ import { UseGuards } from '@nestjs/common';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { FilterUsersDto } from './dto/user-filter.dto';
+import { FilterUsersType } from './types/user-filter.types';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -22,7 +23,7 @@ export class UserResolver {
   async getUsers(
     @Args('input') input: FilterUsersDto,
   ): Promise<ResponseDto<{
-    users: any[];
+    users: FilterUsersType[];
     total: number;
     page: number;
     limit: number;

@@ -29,6 +29,7 @@ import { validPhone } from 'common/exception/validation/phone.validation';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import e from 'express';
 import { FilterUsersDto } from './dto/user-filter.dto';
+import { FilterUsersType } from './types/user-filter.types';
 
 @Injectable()
 export class UserService {
@@ -39,7 +40,7 @@ export class UserService {
   ) { }
 
   async findAll(filterUsersDto: FilterUsersDto): Promise<ResponseDto<{
-    users: any[];
+    users: FilterUsersType[];
     total: number;
     page: number;
     limit: number;
@@ -50,28 +51,24 @@ export class UserService {
         .leftJoinAndSelect('roles.permissions', 'permissions');
 
       if (filterUsersDto.username) {
-        console.log("12345");
         queryBuilder.andWhere('LOWER(user.username) LIKE LOWER(:username)', { username: `%${filterUsersDto.username.toLowerCase()}%` });
       }
       if (filterUsersDto.email) {
         queryBuilder.andWhere('LOWER(user.email) LIKE LOWER(:email)', { email: `%${filterUsersDto.email.toLowerCase()}%` });
       }
-      if (filterUsersDto.role) {
-        queryBuilder.andWhere('roles.name = :role', { role: filterUsersDto.role });
-      }
-      if(filterUsersDto.status) {
-        if(filterUsersDto.status === 'Active') {
+      if (filterUsersDto.status) {
+        if (filterUsersDto.status === 'Active') {
           queryBuilder.andWhere('user.active = :active', { active: true });
         } else {
           queryBuilder.andWhere('user.active = :active', { active: false });
         }
       }
-
       if (filterUsersDto.sort_field && filterUsersDto.sort_order) {
         queryBuilder.orderBy(`user.${filterUsersDto.sort_field}`, filterUsersDto.sort_order === 'ascend' ? 'ASC' : 'DESC');
       }
 
       const [users, total] = await queryBuilder
+        .andWhere('roles.name != :adminRole', { adminRole: 'ADMIN' }) 
         .skip((filterUsersDto.page - 1) * filterUsersDto.limit)
         .take(filterUsersDto.limit)
         .getManyAndCount();
