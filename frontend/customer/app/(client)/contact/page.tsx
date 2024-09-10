@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Flex, Form, Input, Spin } from "antd";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";;
@@ -15,8 +15,20 @@ import { emailRegex } from "@/utils/validation/email.regex";
 import useAntNotification from "@/lib/hooks/notification";
 import { NOTIFICATION } from "@/constant/notification";
 import TextArea from "antd/es/input/TextArea";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU } from "@/constant";
 
 const ContactPage = () => {
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const value : MenuState ={
+      keyMenu: KEYMENU.CONTACT,
+    }
+    dispatch(menuActions.changeInfoMenu(value))
+  }, [dispatch]);
 
   const schema = yup
     .object({

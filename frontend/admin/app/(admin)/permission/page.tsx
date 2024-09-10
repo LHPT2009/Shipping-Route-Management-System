@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import ContentComponent from "@/components/content";
 import { theme, Table } from "antd";
 import type { TableColumnsType } from "antd";
@@ -19,11 +19,14 @@ const PermissionPage = () => {
   const { permissions } = usePermissions();
 
   const dispatch = useAppDispatch();
-  const value : MenuState ={
-    keyMenu: KEYMENU.PERMISSION,
-    labelMenu: LABELMENU.PERMISSION
-  }
-  dispatch(menuActions.changeInfoMenu(value))
+
+  useEffect(() => {
+    const value : MenuState ={
+      keyMenu: KEYMENU.PERMISSION,
+      labelMenu: LABELMENU.PERMISSION
+    }
+    dispatch(menuActions.changeInfoMenu(value))
+  }, [dispatch]);
 
   const columns: TableColumnsType<DataType> = [
     {

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
-import { useAppSelector } from "@/lib/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import ContentComponent from "@/components/route";
 import styles from "./route.module.css";
@@ -26,6 +26,8 @@ import MapIcon from "@/public/svg/route/map.svg";
 import InformationIcon from "@/public/svg/route/information.svg";
 import withProtectedRoute from "@/components/auth/protection";
 import CustomModal from "@/components/modal/route";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU } from "@/constant";
 
 const { Search } = Input;
 
@@ -66,6 +68,15 @@ const RoutePage = () => {
   } = theme.useToken();
 
   const router = useRouter();
+  
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const value : MenuState ={
+      keyMenu: KEYMENU.ROUTE,
+    }
+    dispatch(menuActions.changeInfoMenu(value))
+  }, [dispatch]);
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
