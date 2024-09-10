@@ -91,6 +91,7 @@ export class RoutesService {
     createRoutesDto: CreateRoutesDto,
   ): Promise<ResponseDto<Route>> {
     try {
+      console.log("createRoutesDto", createRoutesDto);
       const route = this.routeRepository.create(createRoutesDto);
       await this.routeRepository.save(route);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);

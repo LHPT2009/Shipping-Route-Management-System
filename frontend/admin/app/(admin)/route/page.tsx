@@ -281,7 +281,7 @@ const RoutePage = () => {
           <Button
             type="primary"
             onClick={() => {
-
+              router.push(`/route/${record.id}/information`);
             }}
             style={{ width: "2.3rem", borderRadius: "0.3rem" }}
           >
@@ -290,7 +290,7 @@ const RoutePage = () => {
           <Button
             type="primary"
             onClick={() => {
-
+              router.push(`/route/${record.id}/information`);
             }}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
           >
@@ -298,9 +298,6 @@ const RoutePage = () => {
           </Button>
           <Button
             type="primary"
-            onClick={() => {
-
-            }}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
           >
             <DeleteOutlined />
@@ -400,7 +397,9 @@ const RoutePage = () => {
         <ContentComponent>
           <Button
             type="primary"
-            // onClick={}
+            onClick={() => {
+              router.push(`/route/create`);
+            }}
             style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
           >
             <PlusOutlined />
