@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { UserOutlined } from "@ant-design/icons";
+import { UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Flex, Form, Input, Modal } from "antd";
 import { COLOR } from "@/constant";
 import { Controller, useForm } from "react-hook-form";
@@ -12,6 +12,8 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { NOTIFICATION } from "@/constant/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { DELETE_ROLE, UPDATE_ROLE } from "@/apollo/mutations/role";
+import Title from "antd/es/typography/Title";
+import Paragraph from "antd/es/typography/Paragraph";
 
 interface CustomModalProps {
   roleId: string;
@@ -64,7 +66,7 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
         NOTIFICATION.CONGRATS,
         "successfully"
       );
-      await refetch(); 
+      await refetch();
       onClose();
     },
     onError: async (error: ApolloError) => {
@@ -77,9 +79,9 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
-        "successfully"
+        "Role has been updated successfully!"
       );
-      await refetch(); 
+      await refetch();
       onClose();
     },
     onError: async (error: ApolloError) => {
@@ -108,8 +110,6 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
 
   return (
     <Modal
-      title="Information Detail"
-      centered
       open={open}
       footer={false}
       onOk={onClose}
@@ -119,11 +119,26 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
         initialValues={{ remember: true }}
         onFinish={handleSubmit(onFinish)}
       >
+        <Title style={{
+          fontSize: "1.5rem",
+          fontWeight: 700,
+          color: COLOR.TEXT,
+          marginBottom: 0,
+          marginTop: "0.8rem",
+        }}>Role information</Title>
+
+        <Paragraph style={{
+          fontSize: "1.1rem",
+          marginTop: "0.9rem"
+        }}>
+          Effortlessly view and update role information through the user management system.
+        </Paragraph>
+
         <Form.Item
           name="name"
           style={{
             paddingBottom: errors.name ? "1rem" : 0,
-            marginTop: "2.7rem",
+            marginTop: "1.6rem",
           }}
           help={
             errors.name && (
@@ -142,7 +157,7 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
                 {...field}
                 placeholder={"Enter your role name"}
                 prefix={
-                  <UserOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />
+                  <UsergroupAddOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />
                 }
                 style={{
                   borderRadius: "0.5rem",
@@ -155,7 +170,22 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
         </Form.Item>
 
         <Form.Item>
-          <Flex gap="small">
+          <Flex gap="1rem" style={{ marginTop: "1rem" }}>
+            <Button
+              type="default"
+              className="login-form-button"
+              style={{
+                width: "100%",
+                borderRadius: "0.5rem",
+                height: "2.8rem",
+                border: "1px solid #4f46e5",
+                background: "white",
+                color: COLOR.PRIMARY,
+              }}
+              onClick={onDelete}
+            >
+              Delete
+            </Button>
             <Button
               type="primary"
               htmlType="submit"
@@ -164,23 +194,9 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
                 width: "100%",
                 borderRadius: "0.5rem",
                 height: "2.8rem",
-                marginTop: "0.5rem",
               }}
             >
               Update
-            </Button>
-            <Button
-              type="default"
-              className="login-form-button"
-              style={{
-                width: "100%",
-                borderRadius: "0.5rem",
-                height: "2.8rem",
-                marginTop: "0.5rem",
-              }}
-              onClick={onDelete}
-            >
-              Delete
             </Button>
           </Flex>
         </Form.Item>
