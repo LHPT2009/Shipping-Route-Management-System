@@ -1,19 +1,16 @@
 "use client";
 import { Col, Form, Row, Input, Button, Typography, Flex, Select, DatePicker } from "antd";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect, useState } from "react";
 import { COLOR } from "@/constant/color";
 import Title from "antd/es/typography/Title";
 import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
-import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
-import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "../route.interface";
+import { StatusEnum, VehicleTypeEnum } from "../route.interface";
 import { useRouter } from "next/navigation";
-import moment from 'moment';
 import MapComponent from "@/components/map";
 import ContentComponent from "@/components/content";
 import { GET_LOCATIONS, GET_TRANSPORTS } from "@/apollo/query/location";
@@ -21,8 +18,6 @@ import { LocationInterface } from "../location.interface";
 import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
 import { CREATE_ROUTE } from "@/apollo/mutations/route";
 import { NOTIFICATION } from "@/constant/notification";
-
-const { Text } = Typography;
 
 const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
@@ -82,6 +77,8 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
   const { handleError } = useHandleError();
 
   const [getLocations, { loading }] = useLazyQuery(GET_LOCATIONS, {
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
     onCompleted: async (data) => {
       setLocations(data.getLocations.data);
       setOptionLocation(data.getLocations.data.map((item: LocationInterface) => {
@@ -97,6 +94,8 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
   });
 
   const [getTransports] = useLazyQuery(GET_TRANSPORTS, {
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
     onCompleted: async (data) => {
       setTransports(data.getTransports.data);
     },
@@ -117,11 +116,8 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchLocations = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        await getLocations();
-        await getTransports();
-      }
+      await getLocations();
+      await getTransports();
     };
     fetchLocations();
     if (location) {

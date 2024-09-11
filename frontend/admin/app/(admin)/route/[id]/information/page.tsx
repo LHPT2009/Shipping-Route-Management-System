@@ -10,8 +10,7 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
-import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "../../route.interface";
+import { RouteInterface, StatusEnum, VehicleTypeEnum } from "../../route.interface";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
 import MapComponent from "@/components/map";
@@ -21,8 +20,6 @@ import { LocationInterface } from "../../location.interface";
 import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
 import { UPDATE_ROUTE } from "@/apollo/mutations/route";
 import { NOTIFICATION } from "@/constant/notification";
-
-const { Text } = Typography;
 
 const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
@@ -38,7 +35,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
       departureTime: yup.string(),
       arrivalTime: yup
         .string(),
-        
+
       departureLocation: yup
         .string()
         .required("Please choose departure location"),
@@ -88,6 +85,8 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   const [arrLocationState, setArrLocationState] = useState<boolean>(false);
 
   const [getLocations, { loading }] = useLazyQuery(GET_LOCATIONS, {
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
     onCompleted: async (data) => {
       setLocations(data.getLocations.data);
       setOptionLocation(data.getLocations.data.map((item: LocationInterface) => {
@@ -103,6 +102,8 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   });
 
   const [getTransports] = useLazyQuery(GET_TRANSPORTS, {
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
     onCompleted: async (data) => {
       setTransports(data.getTransports.data);
     },
@@ -122,7 +123,10 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   });
 
   const [getRouteById] = useLazyQuery(GET_ROUTE_BY_ID, {
+    fetchPolicy: 'cache-and-network', // Used for first execution
+    // nextFetchPolicy: 'cache-first', // Used for subsequent executions
     onCompleted: async (data) => {
+      console.log("fetch route id");
       setRoute(data.getRoute.data);
       setDepLocationState(true);
       setArrLocationState(true);
@@ -134,16 +138,14 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchLocationsAndRoutes = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        await getLocations();
-        await getTransports();
-        await getRouteById({
-          variables: {
-            input: params.id
-          },
-        });
-      }
+      await getLocations();
+      await getTransports();
+      await getRouteById({
+        variables: {
+          input: params.id
+        },
+      });
+
     };
     fetchLocationsAndRoutes();
     if (route) {
@@ -299,8 +301,8 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   };
 
-  useEffect(()=>{
-    if(depLocationState && arrLocationState){
+  useEffect(() => {
+    if (depLocationState && arrLocationState) {
       setIsShowButtonDirection(true);
     } else {
       setIsShowButtonDirection(false);
