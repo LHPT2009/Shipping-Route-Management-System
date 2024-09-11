@@ -30,6 +30,8 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import e from 'express';
 import { FilterUsersDto } from './dto/user-filter.dto';
 import { FilterUsersType } from './types/user-filter.types';
+import { User } from './types/user.types';
+import { UserUpdateRoleDto } from './dto/user-update-role';
 
 @Injectable()
 export class UserService {
@@ -380,5 +382,27 @@ export class UserService {
       validationErrors[password] = ['Password is not match']
     }
     return validationErrors;
+  }
+
+  async updateRoleForUser( id: string, userUpdateRoleDto: UserUpdateRoleDto ): Promise<ResponseDto<UserEntity>> {
+    try {
+      const user = await this.userRepository.findOneBy({id});
+
+      Object.assign(user, userUpdateRoleDto);
+      await this.userRepository.save(user);
+      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
+
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
+
+  async remove(id: string): Promise<ResponseDto<UserEntity>> {
+    try {
+      await this.userRepository.delete(id);
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
   }
 }

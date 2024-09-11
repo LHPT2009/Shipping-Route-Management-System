@@ -24,8 +24,17 @@ import CustomModal from "@/components/modal/route";
 import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, MinusCircleOutlined, PlusOutlined, SearchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 import { GET_USERS } from "@/apollo/query/user";
+import AssignUserModal from "@/components/modal/user/assign";
+import DeleteUserModal from "@/components/modal/user/delete";
 
 const { Search } = Input;
+
+type RecordType = {
+  id: string;
+  roles: {
+    id: string;
+  };
+};
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -75,9 +84,6 @@ const UserPage = () => {
 
   const checkStatusBackground: boolean = useAppSelector(
     (state) => state.responsive.checkStatusBackground
-  );
-  const checkStatusResponse: boolean = useAppSelector(
-    (state) => state.responsive.checkStatusResponse
   );
 
   const handleSearch = (
@@ -249,18 +255,14 @@ const UserPage = () => {
         <Flex align="center" gap="1rem">
           <Button
             type="primary"
-            onClick={() => {
-              router.push(`/user/${record.id}/information`);
-            }}
+            onClick={() => { router.push(`/user/${record.id}/information`) }}
             style={{ width: "2.3rem", borderRadius: "0.3rem" }}
           >
             <InfoCircleOutlined />
           </Button>
           <Button
             type="primary"
-            onClick={() => {
-              // router.push(`/user/${record.id}/information`);
-            }}
+            onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
           >
             <UsergroupAddOutlined />
@@ -268,7 +270,8 @@ const UserPage = () => {
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
-          >
+            onClick={() =>handleOpenModalDelete(String(record.id))}
+            >
             <MinusCircleOutlined />
           </Button>
 
@@ -278,16 +281,15 @@ const UserPage = () => {
 
   ];
 
-  const { openNotificationWithIcon, contextHolder } = useAntNotification();
+  const [openModalAssign, setOpenModalAssign] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [roleName, setRoleName] = useState("");
+
   const { handleError } = useHandleError();
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const [getUsers, { loading }] = useLazyQuery(GET_USERS, {
+  const [getUsers, { loading, refetch }] = useLazyQuery(GET_USERS, {
     onCompleted: async (data) => {
-      console.log(data.getUsers.data);
       setData(data.getUsers.data.users);
       setTableParams({
         ...tableParams,
@@ -350,11 +352,32 @@ const UserPage = () => {
     }
   };
 
+  const handleOpenModalDelete = ( id: string ) => {
+    setUserId(id);
+    setOpenModalDelete(true);
+  };
+
+  const handleCloseModalDelete = () => {
+    setOpenModalDelete(false);
+  };
+
+  const handleOpenModalAssign = ( userId: string, role: any ) => {
+    setUserId(userId);
+    setRoleName(roleName);
+    console.log(roleName)
+    setOpenModalAssign(true);
+  };
+
+  const handleCloseModalAssign = () => {
+    setOpenModalAssign(false);
+  };
+
   return (
     <div >
       {!checkStatusBackground ? (
         <></>
       ) : (
+      <>
         <ContentComponent>
           <Table
             rowKey={(record) => record.id}
@@ -367,8 +390,21 @@ const UserPage = () => {
             style={{ marginTop: "0.5rem" }}
           />
         </ContentComponent>
+        <DeleteUserModal
+          userId={userId? `${userId}`: ""}
+          open={openModalDelete}
+          onClose={handleCloseModalDelete}
+          refetch={refetch}
+        />
+        <AssignUserModal
+          roleName={roleName? `${roleName}`: ""}
+          userId={userId? `${userId}`: ""}
+          open={openModalAssign}
+          onClose={handleCloseModalAssign}
+          refetch={refetch}
+        />
+      </>
       )}
-
     </div>
   );
 };
