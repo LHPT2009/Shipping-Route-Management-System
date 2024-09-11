@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
-import { useAppSelector } from "@/lib/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
 import Title from "antd/es/typography/Title";
@@ -26,6 +26,8 @@ import ContentComponent from "@/components/content";
 import { GET_USERS } from "@/apollo/query/user";
 import AssignUserModal from "@/components/modal/user/assign";
 import DeleteUserModal from "@/components/modal/user/delete";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU, LABELMENU } from "@/constant/menu";
 
 const { Search } = Input;
 
@@ -270,8 +272,8 @@ const UserPage = () => {
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
-            onClick={() =>handleOpenModalDelete(String(record.id))}
-            >
+            onClick={() => handleOpenModalDelete(String(record.id))}
+          >
             <MinusCircleOutlined />
           </Button>
 
@@ -352,7 +354,7 @@ const UserPage = () => {
     }
   };
 
-  const handleOpenModalDelete = ( id: string ) => {
+  const handleOpenModalDelete = (id: string) => {
     setUserId(id);
     setOpenModalDelete(true);
   };
@@ -361,7 +363,7 @@ const UserPage = () => {
     setOpenModalDelete(false);
   };
 
-  const handleOpenModalAssign = ( userId: string, role: any ) => {
+  const handleOpenModalAssign = (userId: string, role: any) => {
     setUserId(userId);
     setRoleName(roleName);
     console.log(roleName)
@@ -372,38 +374,47 @@ const UserPage = () => {
     setOpenModalAssign(false);
   };
 
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const value: MenuState = {
+      keyMenu: KEYMENU.USER,
+      labelMenu: LABELMENU.USER,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
+  }, [dispatch]);
+
   return (
     <div >
       {!checkStatusBackground ? (
         <></>
       ) : (
-      <>
-        <ContentComponent>
-          <Table
-            rowKey={(record) => record.id}
-            className={styles['table-striped-rows']}
-            columns={columns}
-            pagination={tableParams.pagination}
-            loading={loading}
-            onChange={handleTableChange}
-            dataSource={data}
-            style={{ marginTop: "0.5rem" }}
+        <>
+          <ContentComponent>
+            <Table
+              rowKey={(record) => record.id}
+              className={styles['table-striped-rows']}
+              columns={columns}
+              pagination={tableParams.pagination}
+              loading={loading}
+              onChange={handleTableChange}
+              dataSource={data}
+              style={{ marginTop: "0.5rem" }}
+            />
+          </ContentComponent>
+          <DeleteUserModal
+            userId={userId ? `${userId}` : ""}
+            open={openModalDelete}
+            onClose={handleCloseModalDelete}
+            refetch={refetch}
           />
-        </ContentComponent>
-        <DeleteUserModal
-          userId={userId? `${userId}`: ""}
-          open={openModalDelete}
-          onClose={handleCloseModalDelete}
-          refetch={refetch}
-        />
-        <AssignUserModal
-          roleName={roleName? `${roleName}`: ""}
-          userId={userId? `${userId}`: ""}
-          open={openModalAssign}
-          onClose={handleCloseModalAssign}
-          refetch={refetch}
-        />
-      </>
+          <AssignUserModal
+            roleName={roleName ? `${roleName}` : ""}
+            userId={userId ? `${userId}` : ""}
+            open={openModalAssign}
+            onClose={handleCloseModalAssign}
+            refetch={refetch}
+          />
+        </>
       )}
     </div>
   );

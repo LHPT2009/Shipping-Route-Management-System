@@ -333,11 +333,16 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             />
             <Flex align="center" justify="center">
               <Button
-                type="primary"
                 onClick={() => {
                   setIsShowDirection(true);
                 }}
-                style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto"}}
+                style={{
+                  padding: "1.3rem 1.5rem",
+                  borderRadius: "0.4rem",
+                  margin: "0 auto",
+                  color: COLOR.PRIMARY,
+                  border: "1px solid #4f46e5",
+                }}
               >
                 View on map
               </Button>

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
-import { useAppSelector } from "@/lib/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
 import { COLOR } from "@/constant/color";
@@ -16,6 +16,10 @@ import { useRouter } from "next/navigation";
 import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 import { REMOVE_ROUTE } from "@/apollo/mutations/route";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU, LABELMENU } from "@/constant/menu";
+import DeleteRouteModal from "@/components/modal/route";
+import { NOTIFICATION } from "@/constant/notification";
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -58,9 +62,8 @@ const RoutePage = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const [departure, setDeparture] = useState<number[]>([]);
-  const [arrival, setArrival] = useState<number[]>([]);
-
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [routeId, setRouteId] = useState<number>(-1);
   const [data, setData] = useState<DataType[]>([]);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -75,6 +78,10 @@ const RoutePage = () => {
   const checkStatusResponse: boolean = useAppSelector(
     (state) => state.responsive.checkStatusResponse
   );
+
+  const handleCloseModalDelete = () => {
+    setOpenModalDelete(false);
+  };
 
   const handleSearch = (
     selectedKeys: string[],
@@ -290,7 +297,7 @@ const RoutePage = () => {
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
-            onClick={() => { handleDeleteRoute(record.id) }}
+            onClick={() => { setRouteId(record.id); setOpenModalDelete(true); }}
           >
             <DeleteOutlined />
           </Button>
@@ -342,6 +349,9 @@ const RoutePage = () => {
   };
 
   const [removeRoute] = useMutation(REMOVE_ROUTE, {
+    onCompleted: async (data) => {
+      openNotificationWithIcon("success", NOTIFICATION.CONGRATS, "Route has been deleted successfully");
+    },
     onError: async (error: ApolloError) => {
       await handleError(error);
     }
@@ -366,6 +376,16 @@ const RoutePage = () => {
     tableParams?.sortField,
     JSON.stringify(tableParams.filters),
   ]);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const value: MenuState = {
+      keyMenu: KEYMENU.ROUTE,
+      labelMenu: LABELMENU.ROUTE,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
+  }, [dispatch]);
 
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -405,6 +425,12 @@ const RoutePage = () => {
             loading={loading}
             onChange={handleTableChange}
             dataSource={data}
+          />
+          <DeleteRouteModal
+            routeId={routeId ? `${routeId}` : ""}
+            open={openModalDelete}
+            onClose={handleCloseModalDelete}
+            onDelete={() => handleDeleteRoute(routeId)}
           />
         </ContentComponent>
       )}

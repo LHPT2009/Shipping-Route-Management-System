@@ -14,6 +14,9 @@ import { useHandleError } from "@/lib/hooks/error";
 import { authActions } from "@/lib/store/auth";
 import LogoutIcon from "../../public/svg/homepage/logout.svg";
 import NotiIcon from "../../public/svg/homepage/noti.svg";
+import Male from "../../public/images/homepage/male.png"
+import Link from "next/link";
+import Paragraph from "antd/es/typography/Paragraph";
 
 const { Header } = Layout;
 
@@ -123,14 +126,33 @@ const HeaderComponent = () => {
                     borderColor: checkStatusResponse ? "" : "#dee2e6",
                   }}
                 >
-                  <Flex justify="end" align="end" gap="small">
-                    <Flex justify="end" align="end" vertical>
-                      <Text strong>Lê Huỳnh Phương Tùng</Text>
-                      <Text type="secondary">Admin</Text>
+                  <Flex justify="flex-end" align="center" gap="1rem">
+                    <Flex align="flex-end" vertical>
+                      <Paragraph
+                        style={{
+                          fontSize: "1rem",
+                          marginBottom: "0",
+                          fontWeight: 500,
+                          color: COLOR.TEXT
+                        }}
+                      >
+                        Lê Huỳnh Phương Tùng
+                      </Paragraph>
+                      <Paragraph
+                        style={{
+                          fontSize: "0.85rem",
+                          marginBottom: "0",
+                          color: "#868e96"
+                        }}
+                      >
+                        Admin
+                      </Paragraph>
                     </Flex>
-                    <Flex style={{ marginBottom: "2px" }}>
-                      <AvatarComponent />
-                    </Flex>
+
+                    <Link href="/profile">
+                      <img style={{ width: "3rem", borderRadius: "50%" }} src={Male.src} alt="tung" />
+                    </Link>
+
                   </Flex>
                 </div>
               </Col>

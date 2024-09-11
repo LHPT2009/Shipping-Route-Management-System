@@ -20,6 +20,9 @@ import { LocationInterface } from "../../location.interface";
 import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
 import { UPDATE_ROUTE } from "@/apollo/mutations/route";
 import { NOTIFICATION } from "@/constant/notification";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU, LABELMENU } from "@/constant/menu";
 
 const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
@@ -183,6 +186,16 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
       });
     }
   }, [route, reset]);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const value: MenuState = {
+      keyMenu: KEYMENU.ROUTE,
+      labelMenu: LABELMENU.ROUTE,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
+  }, [dispatch]);
 
   const handleChangeLocation = (value: string, type: string) => {
     const currentValues = getValues();
@@ -746,10 +759,15 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             />
             <Flex align="center" justify="center">
               <Button
-                type="primary"
                 disabled={!isShowButtonDirection}
                 onClick={handleShowMap}
-                style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto" }}
+                style={{
+                  padding: "1.3rem 1.5rem",
+                  borderRadius: "0.4rem",
+                  margin: "0 auto",
+                  color: COLOR.PRIMARY,
+                  border: "1px solid #4f46e5",
+                }}
               >
                 View on map
               </Button>
