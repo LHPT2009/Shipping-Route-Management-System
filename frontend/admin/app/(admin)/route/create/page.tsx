@@ -18,6 +18,9 @@ import { LocationInterface } from "../location.interface";
 import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
 import { CREATE_ROUTE } from "@/apollo/mutations/route";
 import { NOTIFICATION } from "@/constant/notification";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { KEYMENU, LABELMENU } from "@/constant/menu";
+import { menuActions, MenuState } from "@/lib/store/menu";
 
 const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
@@ -130,6 +133,16 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
       });
     }
   }, [location, reset]);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const value: MenuState = {
+      keyMenu: KEYMENU.ROUTE,
+      labelMenu: LABELMENU.ROUTE,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
+  }, [dispatch]);
 
   const handleChangeLocation = (value: string, type: string) => {
     const currentValues = getValues();

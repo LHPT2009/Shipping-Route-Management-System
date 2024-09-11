@@ -6,10 +6,13 @@ import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useMutation } from "@apollo/client";
 import { NOTIFICATION } from "@/constant/notification";
 import { DELETE_USER } from "@/apollo/mutations/user";
-import { Modal } from "antd";
+import { Button, Flex, Modal } from "antd";
+import Paragraph from "antd/es/typography/Paragraph";
+import { COLOR } from "@/constant/color";
+import Title from "antd/es/typography/Title";
 
 interface CustomModalProps {
-  userId:string;
+  userId: string;
   open: boolean;
   onClose: () => void;
   refetch: () => void;
@@ -30,9 +33,9 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
-        "successfully"
+        "Account has been updated successfully"
       );
-      await refetch(); 
+      await refetch();
       onClose();
     },
     onError: async (error: ApolloError) => {
@@ -50,14 +53,55 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
 
   return (
     <Modal
-      title="Inform"
-      centered
       open={open}
       onOk={onOk}
       onCancel={onClose}
       width={300}
+      footer={null}
     >
-    Do you want to delete this user?
+      <Title style={{
+        fontSize: "1.5rem",
+        fontWeight: 700,
+        color: COLOR.TEXT,
+        marginBottom: 0,
+        marginTop: "0.8rem",
+      }}> Cautious !!!
+      </Title>
+      <Paragraph style={{
+        marginBottom: "2rem",
+        marginTop: "0.9rem"
+      }}>
+        Do you want to ban this user?
+      </Paragraph>
+      <Flex gap="1rem" style={{ marginBottom: "1.5rem" }}>
+        <Button
+          type="default"
+          className="login-form-button"
+          style={{
+            width: "100%",
+            borderRadius: "0.5rem",
+            height: "2.5rem",
+            border: "1px solid #4f46e5",
+            background: "white",
+            color: COLOR.PRIMARY,
+          }}
+          onClick={onClose}
+        >
+          No
+        </Button>
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+          style={{
+            width: "100%",
+            borderRadius: "0.5rem",
+            height: "2.5rem",
+          }}
+        >
+          Yes
+        </Button>
+      </Flex>
     </Modal>
   );
 };

@@ -11,6 +11,9 @@ import { UPDATE_ROLE_FOR_USER } from "@/apollo/mutations/user";
 import { NOTIFICATION } from "@/constant/notification";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
+import Title from "antd/es/typography/Title";
+import { COLOR } from "@/constant/color";
+import Paragraph from "antd/es/typography/Paragraph";
 
 interface CustomModalProps {
   userId: string;
@@ -61,9 +64,9 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
-        "successfully"
+        "Role has been assigned successfully"
       );
-      await refetch(); 
+      await refetch();
       onClose();
     },
     onError: async (error: ApolloError) => {
@@ -81,9 +84,9 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
       },
     });
   };
-  
+
   const findRoleByName = (list: Role[], roleName: string): Role | undefined => {
-    return list.find((role: Role) => 
+    return list.find((role: Role) =>
       role.name.toLowerCase().includes(roleName.toLowerCase())
     );
   };
@@ -91,14 +94,14 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
     onCompleted: async (data) => {
       const list = data?.getRoles?.data
       if (list) {
-        setListItem(list); 
-        const role  = findRoleByName(list, roleNameFilter);
-        console.log('role')  
-        console.log(role)  
-       }
+        setListItem(list);
+        const role = findRoleByName(list, roleNameFilter);
+        console.log('role')
+        console.log(role)
+      }
     }
   });
-  
+
   const options = listItem.map((value) => ({
     value: value.id,
     label: value.name
@@ -106,8 +109,6 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
 
   return (
     <Modal
-      title="Information Detail"
-      centered
       open={open}
       footer={false}
       onOk={onClose}
@@ -117,11 +118,27 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
         initialValues={{ remember: true }}
         onFinish={handleSubmit(onFinish)}
       >
+        <Title style={{
+          fontSize: "1.5rem",
+          fontWeight: 700,
+          color: COLOR.TEXT,
+          marginBottom: 0,
+          marginTop: "0.8rem",
+        }}> Assign role
+        </Title>
+
+        <Paragraph style={{
+          fontSize: "1.1rem",
+          marginTop: "0.9rem"
+        }}>
+          Enhancing security, streamlining management, improving efficiency, and ensuring compliance.
+        </Paragraph>
+
         <Form.Item
           name="roleId"
           style={{
             paddingBottom: errors.roleId ? "1rem" : 0,
-            marginTop: "2.7rem",
+            marginTop: "1.5rem",
           }}
           help={
             errors.roleId && (
@@ -138,15 +155,30 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
               <Select
                 {...field}
                 key="roleId"
-                style={{ width: 120 }}
-                options={ options }
+                style={{ width: "100%", height: "2.8rem" }}
+                options={options}
               />
             )}
           />
         </Form.Item>
 
         <Form.Item>
-          <Flex gap="small">
+          <Flex gap="1rem" style={{ marginTop: "1.5rem" }}>
+            <Button
+              type="default"
+              className="login-form-button"
+              style={{
+                width: "100%",
+                borderRadius: "0.5rem",
+                height: "2.8rem",
+                border: "1px solid #4f46e5",
+                background: "white",
+                color: COLOR.PRIMARY,
+              }}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
             <Button
               type="primary"
               htmlType="submit"
@@ -155,10 +187,9 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
                 width: "100%",
                 borderRadius: "0.5rem",
                 height: "2.8rem",
-                marginTop: "0.5rem",
               }}
             >
-              Update
+              Assign
             </Button>
           </Flex>
         </Form.Item>

@@ -270,8 +270,8 @@ const UserPage = () => {
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
-            onClick={() =>handleOpenModalDelete(String(record.id))}
-            >
+            onClick={() => handleOpenModalDelete(String(record.id))}
+          >
             <MinusCircleOutlined />
           </Button>
 
@@ -352,7 +352,7 @@ const UserPage = () => {
     }
   };
 
-  const handleOpenModalDelete = ( id: string ) => {
+  const handleOpenModalDelete = (id: string) => {
     setUserId(id);
     setOpenModalDelete(true);
   };
@@ -361,7 +361,7 @@ const UserPage = () => {
     setOpenModalDelete(false);
   };
 
-  const handleOpenModalAssign = ( userId: string, role: any ) => {
+  const handleOpenModalAssign = (userId: string, role: any) => {
     setUserId(userId);
     setRoleName(roleName);
     console.log(roleName)
@@ -377,33 +377,33 @@ const UserPage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-      <>
-        <ContentComponent>
-          <Table
-            rowKey={(record) => record.id}
-            className={styles['table-striped-rows']}
-            columns={columns}
-            pagination={tableParams.pagination}
-            loading={loading}
-            onChange={handleTableChange}
-            dataSource={data}
-            style={{ marginTop: "0.5rem" }}
+        <>
+          <ContentComponent>
+            <Table
+              rowKey={(record) => record.id}
+              className={styles['table-striped-rows']}
+              columns={columns}
+              pagination={tableParams.pagination}
+              loading={loading}
+              onChange={handleTableChange}
+              dataSource={data}
+              style={{ marginTop: "0.5rem" }}
+            />
+          </ContentComponent>
+          <DeleteUserModal
+            userId={userId ? `${userId}` : ""}
+            open={openModalDelete}
+            onClose={handleCloseModalDelete}
+            refetch={refetch}
           />
-        </ContentComponent>
-        <DeleteUserModal
-          userId={userId? `${userId}`: ""}
-          open={openModalDelete}
-          onClose={handleCloseModalDelete}
-          refetch={refetch}
-        />
-        <AssignUserModal
-          roleName={roleName? `${roleName}`: ""}
-          userId={userId? `${userId}`: ""}
-          open={openModalAssign}
-          onClose={handleCloseModalAssign}
-          refetch={refetch}
-        />
-      </>
+          <AssignUserModal
+            roleName={roleName ? `${roleName}` : ""}
+            userId={userId ? `${userId}` : ""}
+            open={openModalAssign}
+            onClose={handleCloseModalAssign}
+            refetch={refetch}
+          />
+        </>
       )}
     </div>
   );
