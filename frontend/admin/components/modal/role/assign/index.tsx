@@ -124,7 +124,7 @@ const AssginPermissionToRoleModal: React.FC<CustomModalProps> = ({
         {nameRole}
       </Tag>
       <Transfer
-        listStyle={{width: 213}}
+        listStyle={{ width: 213 }}
         dataSource={mockData}
         targetKeys={targetKeys}
         onChange={handleChange}
