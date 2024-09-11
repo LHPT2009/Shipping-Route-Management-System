@@ -12,43 +12,43 @@ import { Transport } from '../../transport/type/transport.type';
 
 @InputType()
 export class UpdateRoutesDto {
-  @Field({ nullable: true })
+  @Field()
   @IsNotEmpty()
   @IsString()
-  name?: string;
+  name: string;
 
-  @Field(() => ID, { nullable: true })
+  @Field(() => ID)
   @IsNotEmpty()
   @IsString()
-  departure?: Location;
+  departure: Location;
 
-  @Field({ nullable: true })
+  @Field()
   @IsNotEmpty()
   @IsDate()
-  departure_time?: Date;
+  departure_time: Date;
 
-  @Field(() => ID, { nullable: true })
+  @Field(() => ID)
   @IsNotEmpty()
   @IsString()
-  arrival?: Location;
+  arrival: Location;
 
-  @Field({ nullable: true })
+  @Field()
   @IsNotEmpty()
   @IsDate()
-  arrival_time?: Date;
+  arrival_time: Date;
 
-  @Field({ nullable: true })
+  @Field()
   @IsNotEmpty()
   @IsNumber()
-  distance?: number;
+  distance: number;
 
-  @Field(() => ID, { nullable: true })
+  @Field(() => ID)
   @IsNotEmpty()
   @IsString()
-  transport?: Transport;
+  transport: Transport;
 
-  @Field(() => StatusEnum, { nullable: true })
+  @Field(() => StatusEnum)
   @IsNotEmpty()
   @IsEnum(StatusEnum)
-  status?: StatusEnum;
+  status: StatusEnum;
 }

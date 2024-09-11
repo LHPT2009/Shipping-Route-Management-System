@@ -1,14 +1,12 @@
 "use client";
-import { Col, Form, Row, Input, Button, Typography, Flex } from "antd";
-import { Controller, useForm } from "react-hook-form";
+import { Col, Form, Row, Input, Button, Typography, Flex, Select, DatePicker } from "antd";
+import { Controller, set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useEffect, useState } from "react";
-import CustomModal from "@/components/modal/route";
 import { COLOR } from "@/constant/color";
 import Title from "antd/es/typography/Title";
-import MapImg from "@/public/images/route/map.png";
-import { ApolloError, useLazyQuery } from "@apollo/client";
+import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
@@ -16,9 +14,13 @@ import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "../../route.interface";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
-import { URL } from "@/constant/url";
 import MapComponent from "@/components/map";
 import ContentComponent from "@/components/content";
+import { GET_LOCATIONS, GET_TRANSPORTS } from "@/apollo/query/location";
+import { LocationInterface } from "../../location.interface";
+import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
+import { UPDATE_ROUTE } from "@/apollo/mutations/route";
+import { NOTIFICATION } from "@/constant/notification";
 
 const { Text } = Typography;
 
@@ -28,18 +30,29 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   const schema = yup
     .object({
-      name: yup.string(),
-      distance: yup.string(),
+      name: yup.string().required("Please enter route name"),
+      distance: yup.number(),
       status: yup.string(),
+      departureTimeInput: yup.string(),
+      arrivalTimeInput: yup.string(),
       departureTime: yup.string(),
-      arrivalTime: yup.string(),
-      departureLocation: yup.string(),
-      arrivalLocation: yup.string(),
+      arrivalTime: yup
+        .string(),
+        
+      departureLocation: yup
+        .string()
+        .required("Please choose departure location"),
+      arrivalLocation: yup
+        .string()
+        .required("Please choose arrival location")
+        .test('different-from-departure', 'Arrival location must be different from departure location', function (value) {
+          return value !== this.parent.departureLocation;
+        }),
       departureAddress: yup.string(),
       arrivalAddress: yup.string(),
-      shippingType: yup.string(),
-      vehicleType: yup.string(),
-      vehicleName: yup.string(),
+      shippingType: yup.string().required("Please choose shipping type"),
+      vehicleType: yup.string().required("Please choose vehicle type"),
+      vehicleName: yup.string().required("Please choose vehicle name"),
       lisencePlate: yup.string(),
     })
     .required();
@@ -48,24 +61,71 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     control,
     handleSubmit,
     formState: { errors },
-    reset
-  } = useForm({ resolver: yupResolver(schema) });
-
-  const onFinish = async (values: any) => {
-    console.log(values);
-  };
-
-  const [route, setRoute] = useState<RouteInterface>();
+    reset,
+    getValues
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const [isShowDirection, setIsShowDirection] = useState(false);
-
+  const [location, setLocations] = useState<LocationInterface[]>([]);
+  const [route, setRoute] = useState<RouteInterface>();
+  const [transport, setTransports] = useState<{ id: string, name: string; license_plate: string; shipping_type: string; vehicle_type: string }[]>([]);
+  const [optionLocation, setOptionLocation] = useState<{ value: string, label: string }[]>([]);
   const { openNotificationWithIcon } = useAntNotification();
+
+  const [vehicleTypeOption, setVehicleTypeOption] = useState<{ value: string, label: string }[]>([]);
+  const [vehicleNameOption, setVehicleNameOption] = useState<{ value: string, label: string }[]>([]);
+
+  const [departureCoordinate, setDepartureCoordinate] = useState<[number, number]>([0, 0]);
+  const [arrivalCoordinate, setArrivalCoordinate] = useState<[number, number]>([0, 0]);
+  const [isShowButtonDirection, setIsShowButtonDirection] = useState(false);
   const { handleError } = useHandleError();
 
-  const [getRouteById, { data, loading }] = useLazyQuery(GET_ROUTE_BY_ID, {
+  const [changeDepTime, setChangeDepTime] = useState(false);
+  const [changeArrTime, setChangeArrTime] = useState(false);
+  const [depLocationState, setDepLocationState] = useState<boolean>(false);
+  const [arrLocationState, setArrLocationState] = useState<boolean>(false);
+
+  const [getLocations, { loading }] = useLazyQuery(GET_LOCATIONS, {
+    onCompleted: async (data) => {
+      setLocations(data.getLocations.data);
+      setOptionLocation(data.getLocations.data.map((item: LocationInterface) => {
+        return {
+          value: item.id.toString(),
+          label: item.name,
+        };
+      }));
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const [getTransports] = useLazyQuery(GET_TRANSPORTS, {
+    onCompleted: async (data) => {
+      setTransports(data.getTransports.data);
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const [updateRoute] = useMutation(UPDATE_ROUTE, {
+    onCompleted: async (data) => {
+      router.push("/route");
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Route has been updated successfully");
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const [getRouteById] = useLazyQuery(GET_ROUTE_BY_ID, {
     onCompleted: async (data) => {
       setRoute(data.getRoute.data);
-      console.log("route", route);
+      setDepLocationState(true);
+      setArrLocationState(true);
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
@@ -73,44 +133,187 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   });
 
   useEffect(() => {
-    const fetchRoutes = async () => {
+    const fetchLocationsAndRoutes = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
       if (accessToken && expiresIn) {
+        await getLocations();
+        await getTransports();
         await getRouteById({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          },
           variables: {
             input: params.id
           },
         });
       }
     };
-    fetchRoutes();
+    fetchLocationsAndRoutes();
     if (route) {
+
+      const matchingItems = transport.filter((item: any) => item.shipping_type?.toString() === route.transport.shipping_type.toString());
+      const uniqueVehicleTypes = Array.from(new Set(matchingItems.map((item: any) => item.vehicle_type)));
+      const formattedVehicleTypes = uniqueVehicleTypes.map((type, index) => ({
+        value: route.transport.shipping_type.toString() === "1" ? (index + 3).toString() : index.toString(),
+        label: VehicleTypeEnum[type],
+      }));
+      setVehicleTypeOption(formattedVehicleTypes);
+
+      const matchingItemsVehicle = transport.filter((item: any) => item.shipping_type?.toString() === route.transport.shipping_type.toString() && item.vehicle_type?.toString() === route.transport.vehicle_type.toString());
+      const uniqueVehicleNames = Array.from(new Set(matchingItemsVehicle.map((item: any) => item.name)));
+      const formattedVehicleNames = uniqueVehicleNames.map((type, index) => ({
+        value: type,
+        label: type,
+      }));
+      setVehicleNameOption(formattedVehicleNames);
+
       reset({
         name: route.name,
-        distance: `${route.distance} km`,
-        status: StatusEnum[route.status],
-        departureTime: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
-        arrivalTime: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
-        departureLocation: route.departure.name,
-        arrivalLocation: route.arrival.name,
+        distance: route.distance,
+        status: route.status.toString(),
+        departureTimeInput: moment(route.departure_time).format('HH:mm | YYYY-MM-DD'),
+        arrivalTimeInput: moment(route.arrival_time).format('HH:mm | YYYY-MM-DD'),
+        departureLocation: route.departure.id.toString(),
+        arrivalLocation: route.arrival.id.toString(),
         departureAddress: route.departure.address,
         arrivalAddress: route.arrival.address,
-        shippingType: ShippingTypeEnum[route.transport.shipping_type],
-        vehicleType: VehicleTypeEnum[route.transport.vehicle_type],
+        shippingType: route.transport.shipping_type.toString(),
+        vehicleType: route.transport.vehicle_type.toString(),
         vehicleName: route.transport.name,
         lisencePlate: route.transport.license_plate,
       });
     }
   }, [route, reset]);
 
+  const handleChangeLocation = (value: string, type: string) => {
+    const currentValues = getValues();
+    if (type === "departure") {
+      reset({
+        ...currentValues,
+        departureLocation: value,
+        departureAddress: location.find((item) => item.id.toString() === value.toString())?.address,
+      });
+      setDepLocationState(true);
+    } else {
+      reset({
+        ...currentValues,
+        arrivalLocation: value,
+        arrivalAddress: location.find((item) => item.id.toString() === value.toString())?.address,
+      });
+      setArrLocationState(true);
+    }
+
+    const lastValues = getValues();
+    if (lastValues.departureLocation !== undefined && lastValues.arrivalLocation !== undefined) {
+      setIsShowButtonDirection(true);
+    }
+
+  };
+
+  const handleChangeShippingType = (value: string) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      shippingType: value,
+    });
+    if (transport.length > 0) {
+      const matchingItems = transport.filter((item: any) => item.shipping_type?.toString() === value);
+      const uniqueVehicleTypes = Array.from(new Set(matchingItems.map((item: any) => item.vehicle_type)));
+      const formattedVehicleTypes = uniqueVehicleTypes.map((type, index) => ({
+        value: value === "1" ? (index + 3).toString() : index.toString(),
+        label: VehicleTypeEnum[type],
+      }));
+      setVehicleTypeOption(formattedVehicleTypes);
+    }
+  };
+
+  const handleChangeVehicleType = (value: string) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      vehicleType: value,
+    });
+    if (transport.length > 0) {
+      const matchingItems = transport.filter((item: any) => item.shipping_type?.toString() === currentValues.shippingType && item.vehicle_type?.toString() === value);
+      const uniqueVehicleNames = Array.from(new Set(matchingItems.map((item: any) => item.name)));
+      const formattedVehicleNames = uniqueVehicleNames.map((type, index) => ({
+        value: type,
+        label: type,
+      }));
+      setVehicleNameOption(formattedVehicleNames);
+    }
+  };
+
+  const handleChangeVehicleName = (value: string) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      vehicleName: value,
+      lisencePlate: transport.find((item) => item.name === value)?.license_plate!,
+    });
+  };
+
+  const formatDateString = (inputDate: string): string => {
+    const date = new Date(inputDate);
+    return date.toISOString();
+  }
+
+  const handleShowMap = () => {
+    const lastValues = getValues();
+    if (lastValues.departureLocation !== undefined && lastValues.arrivalLocation !== undefined) {
+      const departureCoordiante = location.find((item) => item.id.toString() === lastValues.departureLocation.toString());
+      const arrivalCoordiante = location.find((item) => item.id.toString() === lastValues.arrivalLocation.toString());
+      const distance = calculateRouteDistances(departureCoordiante?.latitude!, departureCoordiante?.longitude!, arrivalCoordiante?.latitude!, arrivalCoordiante?.longitude!);
+      reset({
+        ...lastValues,
+        distance: distance,
+      });
+      setDepartureCoordinate([departureCoordiante?.longitude!, departureCoordiante?.latitude!]);
+      setArrivalCoordinate([arrivalCoordiante?.longitude!, arrivalCoordiante?.latitude!]);
+      setIsShowDirection(true);
+    }
+  }
+
+  const onFinish = async (values: any) => {
+
+    const idTransport = transport.find(
+      (item) => item.shipping_type.toString() === values.shippingType &&
+        item.vehicle_type.toString() === values.vehicleType &&
+        item.name === values.vehicleName &&
+        item.license_plate === values.lisencePlate
+    )?.id.toString();
+
+    await updateRoute({
+      variables: {
+        id: params.id.toString(),
+        input: {
+          name: values.name,
+          departure: values.departureLocation,
+          departure_time: values.departureTime ? formatDateString(values.departureTime) : moment(values.departureTimeInput, 'HH:mm | YYYY-MM-DD').toDate(),
+          arrival: values.arrivalLocation,
+          arrival_time: values.arrivalTime ? formatDateString(values.arrivalTime) : moment(values.arrivalTimeInput, 'HH:mm | YYYY-MM-DD').toDate(),
+          distance: values.distance,
+          transport: idTransport,
+          status: StatusEnum[values.status],
+        }
+      },
+    });
+
+
+  };
+
+  useEffect(()=>{
+    if(depLocationState && arrLocationState){
+      setIsShowButtonDirection(true);
+    } else {
+      setIsShowButtonDirection(false);
+    }
+  }, [depLocationState, arrLocationState])
+
   return (
     <ContentComponent>
-      <Form onFinish={handleSubmit(onFinish)} layout="vertical" style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}>
+      <Form
+        onFinish={handleSubmit(onFinish)}
+        layout="vertical"
+        style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}
+      >
         <Title level={4} style={{
           fontSize: "1.3rem",
           fontWeight: 700,
@@ -128,26 +331,40 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Name"
                   name="name"
+                  style={{
+                    paddingBottom: errors.name ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.name && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.name?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="name"
                     control={control}
                     render={({ field }) => (
-                      <Input key="name" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input
+                        key="name"
+                        {...field}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                      />
                     )}
                   />
                 </Form.Item>
               </Col>
               <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
                 <Form.Item
-                  label="Distance"
+                  label="Distance (km)"
                   name="distance"
                 >
                   <Controller
                     name="distance"
                     control={control}
                     render={({ field }) => (
-                      <Input key="distance" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="distance" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -161,7 +378,16 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     name="status"
                     control={control}
                     render={({ field }) => (
-                      <Input key="status" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        key="status"
+                        {...field}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        options={[
+                          { value: '0', label: 'Progress' },
+                          { value: '1', label: 'Finished' },
+                          { value: '2', label: 'Cancelled' }
+                        ]}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -169,32 +395,117 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             </Row>
             <Row gutter={[18, 0]}>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                <Form.Item
+                {changeDepTime ? <Form.Item
                   label="Departure time"
                   name="departureTime"
+                  style={{
+                    paddingBottom: errors.departureTime ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.departureTime && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.departureTime?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="departureTime"
                     control={control}
                     render={({ field }) => (
-                      <Input key="departureTime" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <DatePicker
+                        showTime
+                        format="HH:mm | YYYY-MM-DD"
+                        key="departureTime"
+                        {...field}
+                        style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                      />
                     )}
                   />
-                </Form.Item>
+                </Form.Item> : <Form.Item
+                  label="Departure time"
+                  name="departureTimeInput"
+                  style={{
+                    paddingBottom: errors.departureTimeInput ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.departureTimeInput && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.departureTimeInput?.message}
+                      </span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="departureTimeInput"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        key="departureTimeInput"
+                        {...field}
+                        onClick={() => setChangeDepTime(true)}
+                        style={{ cursor: "pointer", width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                      />
+                    )}
+                  />
+                </Form.Item>}
+
               </Col>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                <Form.Item
+                {changeArrTime ? <Form.Item
                   label="Arrival time"
                   name="arrivalTime"
+                  style={{
+                    paddingBottom: errors.arrivalTime ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.arrivalTime && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.arrivalTime?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="arrivalTime"
                     control={control}
                     render={({ field }) => (
-                      <Input key="arrivalTime" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <DatePicker
+                        showTime
+                        format="HH:mm | YYYY-MM-DD"
+                        key="departureTime"
+                        {...field}
+                        style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                      />
                     )}
                   />
-                </Form.Item>
+                </Form.Item> : <Form.Item
+                  label="Departure time"
+                  name="arrivalTimeInput"
+                  style={{
+                    paddingBottom: errors.arrivalTimeInput ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.arrivalTimeInput && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.arrivalTimeInput?.message}
+                      </span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="arrivalTimeInput"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        key="arrivalTimeInput"
+                        {...field}
+                        onClick={() => setChangeArrTime(true)}
+                        style={{ cursor: "pointer", width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                      />
+                    )}
+                  />
+                </Form.Item>}
               </Col>
             </Row>
             <Row gutter={[18, 0]}>
@@ -202,12 +513,34 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Departure"
                   name="departureLocation"
+                  style={{
+                    paddingBottom: errors.departureLocation ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.departureLocation && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.departureLocation?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="departureLocation"
                     control={control}
                     render={({ field }) => (
-                      <Input key="departureLocation" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        loading={loading}
+                        key="departureLocation"
+                        {...field}
+                        onChange={(value) => handleChangeLocation(value, 'departure')}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        optionFilterProp="label"
+                        showSearch
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={optionLocation}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -223,7 +556,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     name="departureAddress"
                     control={control}
                     render={({ field }) => (
-                      <Input key="departureAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="departureAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -234,12 +567,36 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Arrival"
                   name="arrivalLocation"
+                  style={{
+                    paddingBottom: errors.arrivalLocation ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.arrivalLocation && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.arrivalLocation?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="arrivalLocation"
                     control={control}
                     render={({ field }) => (
-                      <Input key="arrivalLocation" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        loading={loading}
+                        key="arrivalLocation"
+                        {...field}
+                        // onChange={handleChangeArrival}
+                        onChange={(value) => handleChangeLocation(value, 'arrival')}
+                        showSearch
+
+                        optionFilterProp="label"
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={optionLocation}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -255,7 +612,11 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     name="arrivalAddress"
                     control={control}
                     render={({ field }) => (
-                      <Input key="arrivalAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input
+                        disabled
+                        key="arrivalAddress"
+                        {...field}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -266,12 +627,31 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Shipping type"
                   name="shippingType"
+                  style={{
+                    paddingBottom: errors.shippingType ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.shippingType && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.shippingType?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="shippingType"
                     control={control}
                     render={({ field }) => (
-                      <Input key="shippingType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        key="shippingType"
+                        {...field}
+                        onChange={handleChangeShippingType}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        options={[
+                          { value: '0', label: 'Road' },
+                          { value: '1', label: 'Seaway' },
+                        ]}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -280,12 +660,28 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Vehicle type"
                   name="vehicleType"
+                  style={{
+                    paddingBottom: errors.vehicleType ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.vehicleType && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.vehicleType?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="vehicleType"
                     control={control}
                     render={({ field }) => (
-                      <Input key="vehicleType" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        key="vehicleType"
+                        {...field}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        onChange={handleChangeVehicleType}
+                        options={vehicleTypeOption}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -296,12 +692,28 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 <Form.Item
                   label="Vehicle name"
                   name="vehicleName"
+                  style={{
+                    paddingBottom: errors.vehicleName ? "1rem" : 0,
+                  }}
+                  help={
+                    errors.vehicleName && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>
+                        {errors.vehicleName?.message}
+                      </span>
+                    )
+                  }
                 >
                   <Controller
                     name="vehicleName"
                     control={control}
                     render={({ field }) => (
-                      <Input key="vehicleName" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Select
+                        key="vehicleName"
+                        {...field}
+                        style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                        onChange={handleChangeVehicleName}
+                        options={vehicleNameOption}
+                      />
                     )}
                   />
                 </Form.Item>
@@ -315,7 +727,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     name="lisencePlate"
                     control={control}
                     render={({ field }) => (
-                      <Input key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                      <Input disabled key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
                     )}
                   />
                 </Form.Item>
@@ -325,21 +737,16 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           </Col>
 
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-            {/* <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
-             */}
             <MapComponent
               isShowDirection={isShowDirection}
-              departure={[route?.departure.longitude!, route?.departure.latitude!]}
-              arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
+              departure={departureCoordinate}
+              arrival={arrivalCoordinate}
             />
             <Flex align="center" justify="center">
               <Button
                 type="primary"
-                onClick={() => {
-                  console.log("isShowDirection", isShowDirection);
-                  setIsShowDirection(true);
-                  console.log("isShowDirection", isShowDirection);
-                }}
+                disabled={!isShowButtonDirection}
+                onClick={handleShowMap}
                 style={{ padding: "1.3rem 1.5rem", borderRadius: "0.4rem", margin: "0 auto" }}
               >
                 View on map
@@ -347,12 +754,13 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
               <Button
-                // onClick={() => router.push(URL.ROUTE)}
+                onClick={() => router.push("/route")}
                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
                 Back to routes
               </Button>
               <Button
+                htmlType="submit"
                 type="primary"
                 style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
               >

@@ -10,3 +10,14 @@ export const CREATE_ROUTE = gql`
     }
   }
 `;
+
+export const UPDATE_ROUTE = gql`
+  mutation updateRoute($input: UpdateRoutesDto!, $id: ID!){
+    updateRoute(input: $input, id: $id){
+        status
+        message
+        data
+        error
+    }
+  }
+`;

@@ -43,7 +43,7 @@ export class RoutesResolver {
     return this.routesService.findOne(id);
   }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
   @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
@@ -52,7 +52,10 @@ export class RoutesResolver {
   ): Promise<ResponseDto<Route>> {
     return this.routesService.create(input);
   }
-
+  
+  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async updateRoute(
     @Args('id', { type: () => ID }) id: string,

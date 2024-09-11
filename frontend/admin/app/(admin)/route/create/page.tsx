@@ -24,7 +24,7 @@ import { NOTIFICATION } from "@/constant/notification";
 
 const { Text } = Typography;
 
-const RouteDetailPage = ({ params }: { params: { id: string } }) => {
+const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
 
@@ -107,6 +107,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   const [createRoute] = useMutation(CREATE_ROUTE, {
     onCompleted: async (data) => {
+      router.push("/route");
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "New route has been created successfully");
     },
     onError: async (error: ApolloError) => {
@@ -635,7 +636,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
               <Button
-                // onClick={() => router.push(URL.ROUTE)}
+                onClick={() => router.push("/route")}
                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
                 Back to routes
@@ -645,7 +646,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 type="primary"
                 style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
               >
-                Update
+                Create
               </Button>
             </Flex>
 
@@ -656,4 +657,4 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default RouteDetailPage;
+export default CreateRoutePage;

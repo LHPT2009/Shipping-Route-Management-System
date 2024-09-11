@@ -260,7 +260,6 @@ const UserPage = () => {
             type="primary"
             onClick={() => {
               // router.push(`/user/${record.id}/information`);
-              
             }}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
           >
