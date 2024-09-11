@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
-import { useAppSelector } from "@/lib/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
 import Title from "antd/es/typography/Title";
@@ -26,6 +26,8 @@ import ContentComponent from "@/components/content";
 import { GET_USERS } from "@/apollo/query/user";
 import AssignUserModal from "@/components/modal/user/assign";
 import DeleteUserModal from "@/components/modal/user/delete";
+import { menuActions, MenuState } from "@/lib/store/menu";
+import { KEYMENU, LABELMENU } from "@/constant/menu";
 
 const { Search } = Input;
 
@@ -371,6 +373,15 @@ const UserPage = () => {
   const handleCloseModalAssign = () => {
     setOpenModalAssign(false);
   };
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const value: MenuState = {
+      keyMenu: KEYMENU.USER,
+      labelMenu: LABELMENU.USER,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
+  }, [dispatch]);
 
   return (
     <div >

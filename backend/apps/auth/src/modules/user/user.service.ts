@@ -266,7 +266,7 @@ export class UserService {
       });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, item, []);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { email: ['Internal error occurs. Please contact to admin for more help.'] });
     }
   }
 

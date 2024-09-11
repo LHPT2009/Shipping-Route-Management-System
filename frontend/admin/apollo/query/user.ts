@@ -11,3 +11,13 @@ export const GET_USERS = gql`
   }
 `;
 
+export const GET_USER_BY_ID = gql`
+  query getUserById($id: ID!){
+    getUserById (id: $id){
+        status
+        message
+        data
+        error
+    }
+  }
+`;
