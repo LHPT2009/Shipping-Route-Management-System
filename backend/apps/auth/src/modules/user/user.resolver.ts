@@ -14,6 +14,7 @@ import { UserUpdateDto } from './dto/user-update.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { FilterUsersDto } from './dto/user-filter.dto';
 import { FilterUsersType } from './types/user-filter.types';
+import { UserUpdateRoleDto } from './dto/user-update-role';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -71,5 +72,20 @@ export class UserResolver {
     @Args('input') input: ChangePasswordDto,
   ): Promise<ResponseDto<UserEntity>> {
     return this.userService.changePassword(context, input);
+  }
+
+  @Mutation(() => ResponseDto<UserEntity>)
+  async updateRoleForUser(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('input') userUpdateRoleDto: UserUpdateRoleDto,
+  ): Promise<ResponseDto<UserEntity>> {
+    return this.userService.updateRoleForUser(id, userUpdateRoleDto);
+  }
+
+  @Mutation(() => ResponseDto<UserEntity>, { nullable: true })
+  async removeUser(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<ResponseDto<UserEntity>> {
+    return this.userService.remove(id);
   }
 }
