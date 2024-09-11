@@ -21,3 +21,16 @@ export const UPDATE_ROUTE = gql`
     }
   }
 `;
+
+export const REMOVE_ROUTE = gql`
+  mutation removeRoute($id: ID!){
+    removeRoute(id: $id){
+        status
+        message
+        data
+        error
+    }
+  }
+`;
+
+

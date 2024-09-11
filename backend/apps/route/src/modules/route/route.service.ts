@@ -114,7 +114,7 @@ export class RoutesService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
 
@@ -134,25 +134,21 @@ export class RoutesService {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { name: ['Route name already exists'] });
     }
 
-    // const route = this.routeRepository.create(updateRoutesDto);
-    // await this.routeRepository.save(route);
-    // return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
-
     const routeResponse = await this.findOne(id);
 
     const route = routeResponse.data as Route;
     Object.assign(route, updateRoutesDto);
     await this.routeRepository.save(route);
-    return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, route, []);
 
   }
 
   async remove(id: string): Promise<ResponseDto<Route>> {
     try {
       await this.routeRepository.delete(id);
-      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, null, null);
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
 }

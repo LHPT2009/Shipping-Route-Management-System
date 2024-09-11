@@ -64,6 +64,9 @@ export class RoutesResolver {
     return this.routesService.update(id, input);
   }
 
+  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async removeRoute(
     @Args('id', { type: () => ID }) id: string,
