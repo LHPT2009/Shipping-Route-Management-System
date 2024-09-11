@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { useEffect, useState } from "react";
 import { COLOR } from "@/constant/color";
 import Title from "antd/es/typography/Title";
-import { ApolloError, useLazyQuery } from "@apollo/client";
+import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
@@ -17,8 +17,10 @@ import moment from 'moment';
 import MapComponent from "@/components/map";
 import ContentComponent from "@/components/content";
 import { GET_LOCATIONS, GET_TRANSPORTS } from "@/apollo/query/location";
-import { LocationInterface } from "./location.interface";
+import { LocationInterface } from "../location.interface";
 import { calculateRouteDistances } from "@/utils/distance/calculate.distance";
+import { CREATE_ROUTE } from "@/apollo/mutations/route";
+import { NOTIFICATION } from "@/constant/notification";
 
 const { Text } = Typography;
 
@@ -32,9 +34,22 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
       distance: yup.number(),
       status: yup.string(),
       departureTime: yup.string().required("Please choose departure time"),
-      arrivalTime: yup.string().required("Please choose arrival time"),
-      departureLocation: yup.string().required("Please choose departure location"),
-      arrivalLocation: yup.string().required("Please choose arrival location"),
+      arrivalTime: yup
+        .string()
+        .required("Please choose arrival time")
+        .test('is-later', 'Arrival time must be later', function (value) {
+          const { departureTime } = this.parent;
+          return new Date(value) > new Date(departureTime);
+        }),
+      departureLocation: yup
+        .string()
+        .required("Please choose departure location"),
+      arrivalLocation: yup
+        .string()
+        .required("Please choose arrival location")
+        .test('different-from-departure', 'Arrival location must be different from departure location', function (value) {
+          return value !== this.parent.departureLocation;
+        }),
       departureAddress: yup.string(),
       arrivalAddress: yup.string(),
       shippingType: yup.string().required("Please choose shipping type"),
@@ -52,22 +67,18 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     getValues
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onFinish = async (values: any) => {
-    console.log("finished value: ", values);
-    // console.log(VehicleTypeEnum[values.vehicleType] )
-  };
-
-  // const [route, setRoute] = useState<RouteInterface>();
-
   const [isShowDirection, setIsShowDirection] = useState(false);
   const [location, setLocations] = useState<LocationInterface[]>([]);
-  const [transport, setTransports] = useState<{ name: string; license_plate: string; shipping_type: string; vehicle_type: string }[]>([]);
+  const [transport, setTransports] = useState<{ id: string, name: string; license_plate: string; shipping_type: string; vehicle_type: string }[]>([]);
   const [optionLocation, setOptionLocation] = useState<{ value: string, label: string }[]>([]);
   const { openNotificationWithIcon } = useAntNotification();
 
   const [vehicleTypeOption, setVehicleTypeOption] = useState<{ value: string, label: string }[]>([]);
   const [vehicleNameOption, setVehicleNameOption] = useState<{ value: string, label: string }[]>([]);
 
+  const [departureCoordinate, setDepartureCoordinate] = useState<[number, number]>([0, 0]);
+  const [arrivalCoordinate, setArrivalCoordinate] = useState<[number, number]>([0, 0]);
+  const [isShowButtonDirection, setIsShowButtonDirection] = useState(false);
   const { handleError } = useHandleError();
 
   const [getLocations, { loading }] = useLazyQuery(GET_LOCATIONS, {
@@ -94,36 +105,21 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     }
   });
 
+  const [createRoute] = useMutation(CREATE_ROUTE, {
+    onCompleted: async (data) => {
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "New route has been created successfully");
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
   useEffect(() => {
     const fetchLocations = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
       if (accessToken && expiresIn) {
-        // await getRouteById({
-        //   context: {
-        //     headers: {
-        //       authorization: `Bearer ${accessToken}`
-        //     }
-        //   },
-        //   variables: {
-        //     input: params.id
-        //   },
-        // });
-
-        await getLocations({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          }
-        });
-
-        await getTransports({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          }
-        });
+        await getLocations();
+        await getTransports();
       }
     };
     fetchLocations();
@@ -163,6 +159,9 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         ...lastValues,
         distance: distance,
       });
+      setDepartureCoordinate([departureCoordiante?.longitude!, departureCoordiante?.latitude!]);
+      setArrivalCoordinate([arrivalCoordiante?.longitude!, arrivalCoordiante?.latitude!]);
+      setIsShowButtonDirection(true);
     }
 
   };
@@ -180,8 +179,6 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         value: value === "1" ? (index + 3).toString() : index.toString(),
         label: VehicleTypeEnum[type],
       }));
-      console.log("shipping type: ", formattedVehicleTypes)
-
       setVehicleTypeOption(formattedVehicleTypes);
     }
   };
@@ -199,11 +196,9 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         value: type,
         label: type,
       }));
-      console.log("vehicle type: ", matchingItems)
       setVehicleNameOption(formattedVehicleNames);
     }
   };
-
 
   const handleChangeVehicleName = (value: string) => {
     const currentValues = getValues();
@@ -212,6 +207,37 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
       vehicleName: value,
       lisencePlate: transport.find((item) => item.name === value)?.license_plate!,
     });
+  };
+
+  const formatDateString = (inputDate: string): string => {
+    const date = new Date(inputDate);
+    return date.toISOString();
+  }
+
+  const onFinish = async (values: any) => {
+
+    const idTransport = transport.find(
+      (item) => item.shipping_type.toString() === values.shippingType &&
+        item.vehicle_type.toString() === values.vehicleType &&
+        item.name === values.vehicleName &&
+        item.license_plate === values.lisencePlate
+    )?.id.toString();
+
+    await createRoute({
+      variables: {
+        input: {
+          name: values.name,
+          departure: values.departureLocation,
+          departure_time: formatDateString(values.departureTime),
+          arrival: values.arrivalLocation,
+          arrival_time: formatDateString(values.arrivalTime),
+          distance: values.distance,
+          transport: idTransport,
+          status: values.status,
+        }
+      },
+    });
+
   };
 
   return (
@@ -590,16 +616,15 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           </Col>
 
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-            {/* <img src={MapImg.src} style={{ objectFit: "cover", borderRadius: "1rem", height: "32rem", marginBottom: "2rem", marginTop: "0.6rem" }} />
-             */}
-            {/* <MapComponent
+            <MapComponent
               isShowDirection={isShowDirection}
-              departure={[route?.departure.longitude!, route?.departure.latitude!]}
-              arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
-            /> */}
+              departure={departureCoordinate}
+              arrival={arrivalCoordinate}
+            />
             <Flex align="center" justify="center">
               <Button
                 type="primary"
+                disabled={!isShowButtonDirection}
                 onClick={() => {
                   setIsShowDirection(true);
                 }}

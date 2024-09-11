@@ -43,6 +43,9 @@ export class RoutesResolver {
     return this.routesService.findOne(id);
   }
 
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async createRoute(
     @Args('input') input: CreateRoutesDto,
