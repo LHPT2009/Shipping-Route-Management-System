@@ -90,15 +90,22 @@ export class RoutesService {
   async create(
     createRoutesDto: CreateRoutesDto,
   ): Promise<ResponseDto<Route>> {
-    try {
-      console.log("createRoutesDto", createRoutesDto);
-      const route = this.routeRepository.create(createRoutesDto);
-      await this.routeRepository.save(route);
-      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
 
-    } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    if (createRoutesDto.departure === createRoutesDto.arrival) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival: ['Departure and arrival must be different'] });
     }
+    if (new Date(createRoutesDto.departure_time) > new Date(createRoutesDto.arrival_time)) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival_time: ['Arrival time must be later than departure time'] });
+    }
+
+    const isExistRouteName = await this.routeRepository.findOneBy({ name: createRoutesDto.name });
+    if (isExistRouteName) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { name: ['Route name already exists'] });
+    }
+
+    const route = this.routeRepository.create(createRoutesDto);
+    await this.routeRepository.save(route);
+    return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
   }
 
   async findOne(id: string): Promise<ResponseDto<Route>> {
@@ -107,7 +114,7 @@ export class RoutesService {
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
 
@@ -115,25 +122,33 @@ export class RoutesService {
     id: string,
     updateRoutesDto: UpdateRoutesDto,
   ): Promise<ResponseDto<Route>> {
-    try {
-      const routeResponse = await this.findOne(id);
-
-      const route = routeResponse.data as Route;
-      Object.assign(route, updateRoutesDto);
-      await this.routeRepository.save(route);
-      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
-
-    } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    if (updateRoutesDto.departure === updateRoutesDto.arrival) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival: ['Departure and arrival must be different'] });
     }
+    if (new Date(updateRoutesDto.departure_time) > new Date(updateRoutesDto.arrival_time)) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival_time: ['Arrival time must be later than departure time'] });
+    }
+
+    const isExistRouteName = await this.routeRepository.findOneBy({ name: updateRoutesDto.name });
+    if (isExistRouteName) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { name: ['Route name already exists'] });
+    }
+
+    const routeResponse = await this.findOne(id);
+
+    const route = routeResponse.data as Route;
+    Object.assign(route, updateRoutesDto);
+    await this.routeRepository.save(route);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, route, []);
+
   }
 
   async remove(id: string): Promise<ResponseDto<Route>> {
     try {
       await this.routeRepository.delete(id);
-      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, null, null);
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
 }

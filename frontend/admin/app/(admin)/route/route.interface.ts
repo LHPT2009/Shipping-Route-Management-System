@@ -22,7 +22,7 @@ export interface RouteInterface {
   name: string;
   departure_time: string;
   arrival_time: string;
-  distance: string;
+  distance: number;
   status: StatusEnum;
   departure : {
     id: number;

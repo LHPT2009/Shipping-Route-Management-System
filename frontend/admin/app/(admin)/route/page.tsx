@@ -5,26 +5,17 @@ import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps }
 import { useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
-import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import * as yup from "yup";
-import { ApolloError, useLazyQuery } from "@apollo/client";
+import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route"
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import type { SorterResult } from 'antd/es/table/interface';
 import { useRouter } from "next/navigation";
-import MapIcon from "@/public/svg/route/map.svg";
-import InformationIcon from "@/public/svg/route/information.svg";
-import CustomModal from "@/components/modal/route";
 import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
-
-const { Search } = Input;
+import { REMOVE_ROUTE } from "@/apollo/mutations/route";
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -299,6 +290,7 @@ const RoutePage = () => {
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
+            onClick={() => { handleDeleteRoute(record.id) }}
           >
             <DeleteOutlined />
           </Button>
@@ -312,13 +304,9 @@ const RoutePage = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
+    fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
-      console.log(data.getRoutes.data);
       setData(data.getRoutes.data.routes);
       setTableParams({
         ...tableParams,
@@ -334,32 +322,42 @@ const RoutePage = () => {
     }
   });
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        await getRoutes({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          },
-          variables: {
-            input: {
-              page: tableParams.pagination?.current,
-              limit: tableParams.pagination?.pageSize,
-              name: tableParams.filters?.name?.[0],
-              departure: tableParams.filters?.departure?.[0],
-              arrival: tableParams.filters?.arrival?.[0],
-              shipping_type: tableParams.filters?.shipping_type?.[0],
-              status: tableParams.filters?.status?.[0],
-              sort_field: tableParams.sortField,
-              sort_order: tableParams.sortOrder,
-            }
-          },
-        });
+  const fetchRoutes = async () => {
+    await getRoutes({
+      variables: {
+        input: {
+          page: tableParams.pagination?.current,
+          limit: tableParams.pagination?.pageSize,
+          name: tableParams.filters?.name?.[0],
+          departure: tableParams.filters?.departure?.[0],
+          arrival: tableParams.filters?.arrival?.[0],
+          shipping_type: tableParams.filters?.shipping_type?.[0],
+          status: tableParams.filters?.status?.[0],
+          sort_field: tableParams.sortField,
+          sort_order: tableParams.sortOrder,
+        }
+      },
+    });
+
+  };
+
+  const [removeRoute] = useMutation(REMOVE_ROUTE, {
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
+  const handleDeleteRoute = async (id: number) => {
+    await removeRoute({
+      variables: {
+        id: id
       }
-    };
+    });
+    const newData = data.filter((item) => item.id !== id);
+    setData(newData);
+  }
+
+  useEffect(() => {
     fetchRoutes();
   }, [
     tableParams.pagination?.current,
@@ -368,12 +366,6 @@ const RoutePage = () => {
     tableParams?.sortField,
     JSON.stringify(tableParams.filters),
   ]);
-
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
 
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -406,7 +398,7 @@ const RoutePage = () => {
             New route
           </Button>
           <Table
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.name}
             className={styles['table-striped-rows']}
             columns={columns}
             pagination={tableParams.pagination}

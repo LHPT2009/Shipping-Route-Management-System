@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal } from "antd";
+import { GroupOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Flex, Form, Input, Modal } from "antd";
 import { COLOR } from "@/constant";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +12,8 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { NOTIFICATION } from "@/constant/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { ADD_ROLE } from "@/apollo/mutations/role";
+import Title from "antd/es/typography/Title";
+import Paragraph from "antd/es/typography/Paragraph";
 
 interface CustomModalProps {
   open: boolean;
@@ -38,7 +40,7 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
-        "successfully"
+        "New role has been created successfully!"
       );
       await refetch();
       onClose();
@@ -59,8 +61,6 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
   };
   return (
     <Modal
-      title="CreateRoleModal"
-      centered
       open={open}
       onOk={onClose}
       onCancel={onClose}
@@ -74,11 +74,26 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
         }}
         onFinish={handleSubmit(onFinish)}
       >
+        <Title style={{
+          fontSize: "1.5rem",
+          fontWeight: 700,
+          color: COLOR.TEXT,
+          marginBottom: 0,
+          marginTop: "0.8rem",
+        }}>Create new role</Title>
+
+        <Paragraph style={{
+          fontSize: "1.1rem",
+          marginTop: "0.9rem"
+        }}>
+          Creating a new role sets permissions and responsibilities to control user access.
+        </Paragraph>
+
         <Form.Item
           name="name"
           style={{
             paddingBottom: errors.name ? "1rem" : 0,
-            marginTop: "2.7rem",
+            marginTop: "1.6rem",
           }}
           help={
             errors.name && (
@@ -97,7 +112,7 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
                 {...field}
                 placeholder={"Enter your role name"}
                 prefix={
-                  <UserOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />
+                  <UsergroupAddOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />
                 }
                 style={{
                   borderRadius: "0.5rem",
@@ -110,19 +125,35 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
         </Form.Item>
 
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            style={{
-              width: "100%",
-              borderRadius: "0.5rem",
-              height: "2.8rem",
-              marginTop: "0.5rem",
-            }}
-          >
-            Create
-          </Button>
+          <Flex gap="1rem" style={{ marginTop: "1rem" }}>
+            <Button
+              type="default"
+              className="login-form-button"
+              style={{
+                width: "100%",
+                borderRadius: "0.5rem",
+                height: "2.8rem",
+                border: "1px solid #4f46e5",
+                background: "white",
+                color: COLOR.PRIMARY,
+              }}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              style={{
+                width: "100%",
+                borderRadius: "0.5rem",
+                height: "2.8rem",
+              }}
+            >
+              Create
+            </Button>
+          </Flex>
         </Form.Item>
       </Form>
     </Modal>
