@@ -62,7 +62,7 @@ export default function RootLayout({
                 },
                 Input: {
                   colorTextDisabled: "black"
-                }
+                },
               },
             }}
           >
