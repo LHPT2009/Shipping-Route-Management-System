@@ -89,7 +89,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   return <ReactMapGl
     {...viewState}
     onMove={evt => setViewState(evt.viewState)}
-    mapStyle="mapbox://styles/giahuy200202/cm0qlzogk00m301pm0jnpdx5j"
+    mapStyle="mapbox://styles/giahuy200202/cm0xb0dg000ys01que5h6hn0q"
     mapboxAccessToken={accessTokenMapBox}
     style={{
       borderRadius: "1rem ",

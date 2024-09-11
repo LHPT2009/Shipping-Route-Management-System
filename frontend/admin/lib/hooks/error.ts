@@ -9,7 +9,7 @@ import { getErrorMessage } from "@/utils/error/apollo.error";
 
 export const useHandleError = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
-  const [ getNewAccessToken ] = useGetNewAccessToken();
+  const [getNewAccessToken] = useGetNewAccessToken();
 
   const handleError = async (error: any) => {
     if (error.message === 'ERR_AUTH_LOGIN') {
@@ -25,6 +25,8 @@ export const useHandleError = () => {
       });
     } else if (error.message === 'ERR_TOKEN_INVALID') {
       openNotificationWithIcon('error', NOTIFICATION.ERROR, "Invalid token. Please login again");
+    } else if (error.message === 'ERR_ROLE_USER' || error.message === 'ERR_PERMISSION_USER') {
+      openNotificationWithIcon('error', NOTIFICATION.ERROR, "You do not have permission to access this feature. Please contact the administrator.");
     } else {
       const errorMessage: string = extractErrorMessages(getErrorMessage(error));
       openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);

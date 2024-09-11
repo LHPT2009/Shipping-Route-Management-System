@@ -2,8 +2,7 @@
 
 import * as React from 'react';
 import ReactMapGl, { GeolocateControl, Marker, Source, Layer, NavigationControl } from 'react-map-gl';
-import { useState, useEffect, useMemo, useCallback } from "react"
-import mapboxgl from 'mapbox-gl';
+import { useState, useEffect } from "react"
 import { layerStyle } from './map';
 
 const accessTokenMapBox = "pk.eyJ1IjoiZ2lhaHV5MjAwMjAyIiwiYSI6ImNtMHE4bmRmODA4dzgycnBzZTU1d2NsNXcifQ.lsuccu2uSdT83uYImY9Dxg";
@@ -89,7 +88,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   return <ReactMapGl
     {...viewState}
     onMove={evt => setViewState(evt.viewState)}
-    mapStyle="mapbox://styles/giahuy200202/cm0qlzogk00m301pm0jnpdx5j"
+    mapStyle="mapbox://styles/giahuy200202/cm0xb0dg000ys01que5h6hn0q"
     mapboxAccessToken={accessTokenMapBox}
     style={{
       borderRadius: "1rem ",
