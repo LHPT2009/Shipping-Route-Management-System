@@ -288,7 +288,7 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "9.35rem" }}>
               <Button
-                onClick={() => router.push("/route")}
+                onClick={() => router.push("/user")}
                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
                 Back to users
