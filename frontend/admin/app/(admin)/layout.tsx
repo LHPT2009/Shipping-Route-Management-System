@@ -7,12 +7,12 @@ import { ROLE } from "@/constant/role";
 import { ChildrenComponentProps } from "@/types/children";
 
 const LayoutAdmin: React.FC<ChildrenComponentProps> = ({ children }: ChildrenComponentProps) => {
-    return (
-        <LayoutAdminComponent>
-            <HeaderComponent />
-            <div style={{ margin: "6.5rem 1rem 0 13.58rem ", borderRadius: "0.5rem" }}> {children}</div>
-        </LayoutAdminComponent>
-    );
+  return (
+    <LayoutAdminComponent>
+      <HeaderComponent />
+      <div style={{ margin: "6.5rem 1rem 0 13.58rem ", borderRadius: "0.5rem" }}> {children}</div>
+    </LayoutAdminComponent>
+  );
 }
 
-export default withProtectedRoute(withRoleCheck(LayoutAdmin, [ROLE.ADMIN, ROLE.SUPERADMIN]));
+export default withProtectedRoute(withRoleCheck(LayoutAdmin, [ROLE.ADMIN]));

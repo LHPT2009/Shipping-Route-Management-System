@@ -13,20 +13,14 @@ export const useHandleError = () => {
 
   const handleError = async (error: any) => {
     if (error.message === 'ERR_AUTH_LOGIN') {
-      openNotificationWithIcon('error', NOTIFICATION.ERROR, "Please login to access this page");
     } else if (error.message === 'ERR_TOKEN_EXPIRED') {
-      const { accessToken } = await fetchCookies();
-      await getNewAccessToken({
-        context: {
-          headers: {
-            authorization: `Bearer ${accessToken}`
-          }
-        }
-      });
+      await getNewAccessToken({});
     } else if (error.message === 'ERR_TOKEN_INVALID') {
       openNotificationWithIcon('error', NOTIFICATION.ERROR, "Invalid token. Please login again");
     } else if (error.message === 'ERR_ROLE_USER' || error.message === 'ERR_PERMISSION_USER') {
       openNotificationWithIcon('error', NOTIFICATION.ERROR, "You don't have permission to access this page");
+    } else if (error.message === 'ERR_ACTIVE') {
+      openNotificationWithIcon('error', NOTIFICATION.ERROR, "Your account has been banned. Please contact admin for more assistance.");
     } else {
       const errorMessage: string = extractErrorMessages(getErrorMessage(error));
       openNotificationWithIcon('error', NOTIFICATION.ERROR, errorMessage);

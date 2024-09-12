@@ -71,7 +71,7 @@ export class UserService {
       }
 
       const [users, total] = await queryBuilder
-        .andWhere('roles.name != :adminRole', { adminRole: 'ADMIN' }) 
+        .andWhere('roles.name != :adminRole', { adminRole: 'ADMIN' })
         .skip((filterUsersDto.page - 1) * filterUsersDto.limit)
         .take(filterUsersDto.limit)
         .getManyAndCount();
@@ -249,9 +249,15 @@ export class UserService {
   async findOne(data: LoginInput): Promise<UserEntity> {
     let user: UserEntity;
     if (validEmail(data.email)) {
-      user = await this.userRepository.findOneBy({ email: data.email });
+      user = await this.userRepository.findOne({
+        where: { email: data.email },
+        relations: ['roles'], // Include the roles relation
+      });
     } else {
-      user = await this.userRepository.findOneBy({ username: data.email });
+      user = await this.userRepository.findOne({
+        where: { username: data.email },
+        relations: ['roles'], // Include the roles relation
+      });
     }
     if (!user) {
       throw new CustomValidationError('Not found', { username: ['User is not found'] });
@@ -385,9 +391,9 @@ export class UserService {
     return validationErrors;
   }
 
-  async updateRoleForUser( id: string, userUpdateRoleDto: UserUpdateRoleDto ): Promise<ResponseDto<UserEntity>> {
+  async updateRoleForUser(id: string, userUpdateRoleDto: UserUpdateRoleDto): Promise<ResponseDto<UserEntity>> {
     try {
-      const user = await this.userRepository.findOneBy({id});
+      const user = await this.userRepository.findOneBy({ id });
 
       Object.assign(user, userUpdateRoleDto);
       await this.userRepository.save(user);
@@ -398,9 +404,9 @@ export class UserService {
     }
   }
 
-  async updateStatusUser( id: string, updateStatusUserDto: UpdateStatusUserDto ): Promise<ResponseDto<UserEntity>> {
+  async updateStatusUser(id: string, updateStatusUserDto: UpdateStatusUserDto): Promise<ResponseDto<UserEntity>> {
     try {
-      const user = await this.userRepository.findOneBy({id});
+      const user = await this.userRepository.findOneBy({ id });
 
       Object.assign(user, updateStatusUserDto);
       await this.userRepository.save(user);

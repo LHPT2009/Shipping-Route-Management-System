@@ -85,6 +85,7 @@ const LoginPage = () => {
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
     },
     onError: async (error: ApolloError) => {
+      console.log(error.graphQLErrors[0])
       await handleError(error);
     }
   });

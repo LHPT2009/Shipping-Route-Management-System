@@ -9,6 +9,7 @@ import { STATUS, STATUS_CODE } from "common/constants/status"
 import { RefreshTokenService } from '../refreshtoken/refreshtoken.service';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 import { validUsernameOrEmail } from 'common/exception/validation/username-email.validation';
+import { UserEntity } from '../user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -18,16 +19,9 @@ export class AuthService {
     private refreshTokenService: RefreshTokenService,
   ) { }
 
-  async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
-
-    if (!validUsernameOrEmail(loginDTO.email)) {
-      throw new CustomValidationError('Invalid input', { username: ['Username is invalid'] });
-    }
-
-    const user = await this.userService.findOne(loginDTO);
-
+  async handleLogin(loginDTO: LoginInput, user: UserEntity): Promise<ResponseDto<{}>> {
     if (!user.active) {
-      throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your email hasn’t been confirmed yet. Please contact admin or check your inbox to activate your account.'] });
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your account has not been activated.'] });
     }
 
     const passwordMatched = await bcrypt.compare(
@@ -37,8 +31,10 @@ export class AuthService {
 
     if (passwordMatched) {
       const expiredIn = 1;
-      // const expiresAt = new Date(Date.now() + 1000).toISOString(); // 1s
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // day
+
+      // const expiredIn = 5; //5s
+      // const expiresAt = new Date(Date.now() + 5000).toISOString(); // 5s
 
       const payload: PayloadType = { email: user.email, userId: user.id };
       await this.refreshTokenService.createRefreshToken(payload);
@@ -49,6 +45,19 @@ export class AuthService {
       throw new CustomValidationError(STATUS.ERR_VALIDATION, { password: ['Password is wrong. Please try again'] });
     }
 
+  }
+
+  async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
+    const user = await this.userService.findOne(loginDTO);
+    return await this.handleLogin(loginDTO, user);
+  }
+
+  async loginAdmin(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
+    const user = await this.userService.findOne(loginDTO);
+    if (user.roles.name !== 'ADMIN') {
+      throw new CustomValidationError(STATUS.ERR_ACTIVE, { username: ['You do not have permission to access this page.'] });
+    }
+    return await this.handleLogin(loginDTO, user);
   }
 
   async logout(context: any): Promise<ResponseDto<{}>> {

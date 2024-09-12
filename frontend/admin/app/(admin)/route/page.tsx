@@ -196,7 +196,7 @@ const RoutePage = () => {
       key: 'departure',
       sorter: true,
       ...getColumnSearchProps('departure'),
-      width: '22%',
+      width: '24%',
     },
     {
       title: 'Arrival',
@@ -204,7 +204,7 @@ const RoutePage = () => {
       key: 'arrival',
       sorter: true,
       ...getColumnSearchProps('arrival'),
-      width: '22%',
+      width: '24%',
     },
     {
       title: 'Distance',
@@ -273,7 +273,7 @@ const RoutePage = () => {
       title: "Action",
       dataIndex: "Action",
       key: "Action",
-      width: "15%",
+      width: "11%",
       render: (_, record, index) => (
         <Flex align="center" gap="1rem">
           <Button
@@ -284,15 +284,6 @@ const RoutePage = () => {
             style={{ width: "2.3rem", borderRadius: "0.3rem" }}
           >
             <InfoCircleOutlined />
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              router.push(`/route/${record.id}/information`);
-            }}
-            style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
-          >
-            <EditOutlined />
           </Button>
           <Button
             type="primary"

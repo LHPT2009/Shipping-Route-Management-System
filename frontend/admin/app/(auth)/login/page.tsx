@@ -69,8 +69,8 @@ const LoginPage = () => {
 
   const [loginMutation] = useMutation(LOGIN, {
     onCompleted: async (data) => {
-      await setCookies("accessToken", data.login.data.accessToken);
-      await setCookies("expiresIn", data.login.data.expiresIn);
+      await setCookies("accessToken", data.loginAdmin.data.accessToken);
+      await setCookies("expiresIn", data.loginAdmin.data.expiresIn);
       router.push("/");
       openNotificationWithIcon(
         "success",
@@ -125,7 +125,7 @@ const LoginPage = () => {
             marginBottom: 0,
           }}
         >
-          Welcome back !
+          Administrator
         </Title>
 
         <Paragraph
@@ -208,27 +208,6 @@ const LoginPage = () => {
           />
         </Form.Item>
 
-        {/* Remember me */}
-        <Flex
-          justify="space-between"
-          align="flex-start"
-          style={{ marginTop: 0, padding: 0 }}
-        >
-          <Form.Item style={{ display: "flex", alignItems: "flex-start" }}>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-          <Link
-            href={"/forgot-password"}
-            style={{
-              fontSize: "0.95rem",
-              fontWeight: 600,
-              color: COLOR.PRIMARY,
-              marginTop: "0.3rem",
-            }}
-          >
-            Forgot password?
-          </Link>
-        </Flex>
 
         {/* Button login*/}
         <Form.Item>
@@ -240,57 +219,12 @@ const LoginPage = () => {
               width: "100%",
               borderRadius: "0.5rem",
               height: "2.8rem",
-              marginTop: "0.5rem",
+              marginTop: "2rem",
+              marginBottom: "1rem"
             }}
           >
             Log in
           </Button>
-        </Form.Item>
-
-        <Divider
-          style={{ borderColor: "#adb5bd", padding: "0 6rem", margin: 0 }}
-          plain
-        >
-          Or
-        </Divider>
-
-        <Form.Item>
-          <Button
-            htmlType="submit"
-            className="login-form-button"
-            style={{
-              width: "100%",
-              borderRadius: "0.5rem",
-              height: "2.8rem",
-              marginTop: "1.2rem",
-              background: "white",
-            }}
-          >
-            <Flex justify="center" align="center">
-              <img
-                src={GoogleImg.src}
-                alt="Google"
-                style={{
-                  width: "1.3rem",
-                  height: "1.3rem",
-                  marginRight: "0.8rem",
-                }}
-              />
-              Continue with Google
-            </Flex>
-          </Button>
-        </Form.Item>
-
-        <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
-          <Text style={{ fontSize: "0.95rem", color: "grey" }}>
-            Don't have an account?{" "}
-            <Link
-              href={URL.REGISTER}
-              style={{ color: COLOR.PRIMARY, fontWeight: 500 }}
-            >
-              Register now
-            </Link>
-          </Text>
         </Form.Item>
       </Form>
     </Flex>

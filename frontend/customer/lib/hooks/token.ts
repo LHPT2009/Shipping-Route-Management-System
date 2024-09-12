@@ -15,7 +15,7 @@ export const useGetNewAccessToken = () => {
       const { accessToken, expiresIn } = data.getRefreshAccessToken.data;
       await setCookies('accessToken', accessToken);
       await setCookies('expiresIn', expiresIn);
-      openNotificationWithIcon('success', "Success", "Your account has been login again. Please retry your action.");
+      openNotificationWithIcon('success', "Success", "Your account has been login again. Please refresh the page to continue the action.");
     },
     onError(error: ApolloError) {
       openNotificationWithIcon('error', NOTIFICATION.ERROR, "Invalid token. Please login again");

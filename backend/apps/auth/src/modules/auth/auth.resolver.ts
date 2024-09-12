@@ -16,6 +16,11 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'common/exception/guards/auth.guard';
 import { ResetPasswordInput } from './dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from './dto/reset_password_verify_email.input';
+import { Roles } from 'common/exception/guards/decorator/roles.decorator';
+import { ROLE } from 'common/constants/role';
+import { Permissions } from 'common/exception/guards/decorator/permissions.decorator';
+import { PERMISSION } from 'common/constants/permission';
+import { RoleGuard } from 'common/exception/guards/role.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -38,6 +43,14 @@ export class AuthResolver {
     input: LoginInput,
   ): Promise<ResponseDto<any>> {
     return this.authService.login(input);
+  }
+
+  @Mutation(() => ResponseDto<{}>)
+  loginAdmin(
+    @Args('input')
+    input: LoginInput,
+  ): Promise<ResponseDto<any>> {
+    return this.authService.loginAdmin(input);
   }
 
   @Mutation(() => ResponseDto<{}>)
