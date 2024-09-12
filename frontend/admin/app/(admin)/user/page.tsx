@@ -264,7 +264,7 @@ const UserPage = () => {
           </Button>
           <Button
             type="primary"
-            onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
+            onClick={() => handleOpenModalAssign(String(record.id))}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
           >
             <UsergroupAddOutlined />
@@ -272,7 +272,7 @@ const UserPage = () => {
           <Button
             type="primary"
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
-            onClick={() => handleOpenModalDelete(String(record.id))}
+            onClick={() => handleOpenModalDelete(String(record.id), String(record.status))}
           >
             <MinusCircleOutlined />
           </Button>
@@ -286,6 +286,7 @@ const UserPage = () => {
   const [openModalAssign, setOpenModalAssign] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [userId, setUserId] = useState("");
+  const [statusUser, setStatusUser] = useState("");
   const [roleName, setRoleName] = useState("");
 
   const { handleError } = useHandleError();
@@ -354,8 +355,9 @@ const UserPage = () => {
     }
   };
 
-  const handleOpenModalDelete = (id: string) => {
+  const handleOpenModalDelete = (id: string,status: string) => {
     setUserId(id);
+    setStatusUser(status);
     setOpenModalDelete(true);
   };
 
@@ -363,10 +365,9 @@ const UserPage = () => {
     setOpenModalDelete(false);
   };
 
-  const handleOpenModalAssign = (userId: string, role: any) => {
+  const handleOpenModalAssign = (userId: string) => {
     setUserId(userId);
     setRoleName(roleName);
-    console.log(roleName)
     setOpenModalAssign(true);
   };
 
@@ -403,6 +404,7 @@ const UserPage = () => {
           </ContentComponent>
           <DeleteUserModal
             userId={userId ? `${userId}` : ""}
+            statusUser={statusUser}
             open={openModalDelete}
             onClose={handleCloseModalDelete}
             refetch={refetch}

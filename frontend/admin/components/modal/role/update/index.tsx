@@ -168,7 +168,7 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
             )}
           />
         </Form.Item>
-
+      {roleName !== "CUSTOMER" && roleName !== "ADMIN" ?
         <Form.Item>
           <Flex gap="1rem" style={{ marginTop: "1rem" }}>
             <Button
@@ -200,6 +200,8 @@ const UpdateRoleModal: React.FC<CustomModalProps> = ({
             </Button>
           </Flex>
         </Form.Item>
+        :<div style={{height: "1rem"}}></div>
+      }
       </Form>
     </Modal>
   );

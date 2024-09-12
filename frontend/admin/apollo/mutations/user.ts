@@ -21,3 +21,14 @@ mutation ($id:ID!){
   }
 }
 `;
+
+export const UPDATE_STATUS_USER = gql`
+mutation ($id:ID! ,$input: UpdateStatusUserDto!){
+  updateStatusUser (id:$id ,input: $input){
+      status
+      message
+      data
+      error
+  }
+}
+`;

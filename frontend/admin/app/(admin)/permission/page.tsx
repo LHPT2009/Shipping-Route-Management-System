@@ -16,7 +16,7 @@ interface DataType {
 
 const PermissionPage = () => {
 
-  const { permissions } = usePermissions();
+  const { permissions,loading } = usePermissions();
 
   const dispatch = useAppDispatch();
 
@@ -51,6 +51,7 @@ const PermissionPage = () => {
               columns={columns}
               dataSource={permissions}
               className={styles['table-striped-rows']}
+              loading={loading}
             />
           </ContentComponent>
         </>

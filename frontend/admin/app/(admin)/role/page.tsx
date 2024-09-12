@@ -19,7 +19,7 @@ interface DataType {
 }
 
 const RolePage = () => {
-  const { roles, refetch } = useRoles();
+  const { roles, loading, refetch } = useRoles();
 
   const dispatch = useAppDispatch();
 
@@ -121,6 +121,7 @@ const RolePage = () => {
               columns={columns}
               dataSource={roles}
               className={styles['table-striped-rows']}
+              loading={loading}
             />
           </ContentComponent>
         </>

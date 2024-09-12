@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { GroupOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Flex, Form, Input, Modal } from "antd";
 import { COLOR } from "@/constant";
@@ -30,7 +30,14 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({ resolver: yupResolver(schema) });
+
+  useEffect(() => {
+      reset({
+        name: "",
+      });
+  }, [open]);
 
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
@@ -42,6 +49,7 @@ const CreateRoleModal: React.FC<CustomModalProps> = ({ open, onClose, refetch })
         NOTIFICATION.CONGRATS,
         "New role has been created successfully!"
       );
+      reset({ name: "" });
       await refetch();
       onClose();
     },

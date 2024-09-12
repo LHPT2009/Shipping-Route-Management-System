@@ -32,6 +32,7 @@ import { FilterUsersDto } from './dto/user-filter.dto';
 import { FilterUsersType } from './types/user-filter.types';
 import { User } from './types/user.types';
 import { UserUpdateRoleDto } from './dto/user-update-role';
+import { UpdateStatusUserDto } from './dto/user-update-status';
 
 @Injectable()
 export class UserService {
@@ -389,6 +390,19 @@ export class UserService {
       const user = await this.userRepository.findOneBy({id});
 
       Object.assign(user, userUpdateRoleDto);
+      await this.userRepository.save(user);
+      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
+
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
+
+  async updateStatusUser( id: string, updateStatusUserDto: UpdateStatusUserDto ): Promise<ResponseDto<UserEntity>> {
+    try {
+      const user = await this.userRepository.findOneBy({id});
+
+      Object.assign(user, updateStatusUserDto);
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
 

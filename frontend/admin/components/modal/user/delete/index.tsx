@@ -5,7 +5,7 @@ import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useMutation } from "@apollo/client";
 import { NOTIFICATION } from "@/constant/notification";
-import { DELETE_USER } from "@/apollo/mutations/user";
+import { UPDATE_STATUS_USER } from "@/apollo/mutations/user";
 import { Button, Flex, Modal } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import { COLOR } from "@/constant/color";
@@ -13,6 +13,7 @@ import Title from "antd/es/typography/Title";
 
 interface CustomModalProps {
   userId: string;
+  statusUser: string;
   open: boolean;
   onClose: () => void;
   refetch: () => void;
@@ -20,6 +21,7 @@ interface CustomModalProps {
 
 const DeleteUserModal: React.FC<CustomModalProps> = ({
   userId,
+  statusUser,
   open,
   onClose,
   refetch,
@@ -28,12 +30,12 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [deleteUser] = useMutation(DELETE_USER, {
+  const [updateStatusUser] = useMutation(UPDATE_STATUS_USER, {
     onCompleted: async () => {
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,
-        "Account has been updated successfully"
+        "Status has been updated successfully"
       );
       await refetch();
       onClose();
@@ -44,9 +46,12 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
   });
 
   const onOk = async () => {
-    await deleteUser({
+    await updateStatusUser({
       variables: {
-        id: userId
+        id: userId,
+        input: {
+          active:  statusUser === "Active" ? false: true 
+        }
       },
     });
   };
@@ -54,7 +59,6 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
   return (
     <Modal
       open={open}
-      onOk={onOk}
       onCancel={onClose}
       width={300}
       footer={null}
@@ -71,7 +75,7 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
         marginBottom: "2rem",
         marginTop: "0.9rem"
       }}>
-        Do you want to ban this user?
+        Do you want to {statusUser === "Active" ? "inactive" : "active"} this user?
       </Paragraph>
       <Flex gap="1rem" style={{ marginBottom: "1.5rem" }}>
         <Button
@@ -98,6 +102,7 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
             borderRadius: "0.5rem",
             height: "2.5rem",
           }}
+          onClick={onOk}
         >
           Yes
         </Button>

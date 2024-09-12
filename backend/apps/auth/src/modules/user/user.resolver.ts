@@ -15,6 +15,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { FilterUsersDto } from './dto/user-filter.dto';
 import { FilterUsersType } from './types/user-filter.types';
 import { UserUpdateRoleDto } from './dto/user-update-role';
+import { UpdateStatusUserDto } from './dto/user-update-status';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -80,6 +81,14 @@ export class UserResolver {
     @Args('input') userUpdateRoleDto: UserUpdateRoleDto,
   ): Promise<ResponseDto<UserEntity>> {
     return this.userService.updateRoleForUser(id, userUpdateRoleDto);
+  }
+
+  @Mutation(() => ResponseDto<UserEntity>)
+  async updateStatusUser(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('input') updateStatusUserDto: UpdateStatusUserDto,
+  ): Promise<ResponseDto<UserEntity>> {
+    return this.userService.updateStatusUser(id, updateStatusUserDto);
   }
 
   @Mutation(() => ResponseDto<UserEntity>, { nullable: true })

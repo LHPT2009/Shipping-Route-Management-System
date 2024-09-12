@@ -36,7 +36,7 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
   refetch,
 }) => {
   const [listItem, setListItem] = useState<Role[]>([]);
-  const [roleNameFilter, setRoleNameFilter] = useState<string>("");
+  const [itemId, setItemId] = useState<string | undefined>("");
 
   // Validate Yup
   const schema = yup
@@ -56,6 +56,25 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
     },
   });
 
+  useEffect(() => {
+    if (itemId) {
+      reset({
+        roleId: itemId || "",
+      });
+    }
+  }, [itemId, reset]);
+
+  const findRoleByName = (list: Role[], roleName: string): Role | undefined => {
+    return list.find((role: Role) =>
+      role.name.toLowerCase().includes(roleName.toLowerCase())
+    );
+  };
+
+  useEffect(() => {
+    const role = findRoleByName(listItem, roleName);
+    setItemId(role?.id)
+  },[open])
+  
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
@@ -85,19 +104,11 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
     });
   };
 
-  const findRoleByName = (list: Role[], roleName: string): Role | undefined => {
-    return list.find((role: Role) =>
-      role.name.toLowerCase().includes(roleName.toLowerCase())
-    );
-  };
   useQuery(GET_ROLES, {
     onCompleted: async (data) => {
       const list = data?.getRoles?.data
       if (list) {
         setListItem(list);
-        const role = findRoleByName(list, roleNameFilter);
-        console.log('role')
-        console.log(role)
       }
     }
   });
