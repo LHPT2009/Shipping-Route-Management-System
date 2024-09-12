@@ -47,10 +47,6 @@ export class SeedService implements OnApplicationBootstrap {
         },
         {
           name: ROLE.ADMIN,
-          permissions: [getPermission, postPermission],
-        },
-        {
-          name: ROLE.SUPERADMIN,
           permissions: allPermissions,
         },
       ]);
