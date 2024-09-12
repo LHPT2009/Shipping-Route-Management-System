@@ -129,11 +129,6 @@ export class RoutesService {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival_time: ['Arrival time must be later than departure time'] });
     }
 
-    const isExistRouteName = await this.routeRepository.findOneBy({ name: updateRoutesDto.name });
-    if (isExistRouteName) {
-      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { name: ['Route name already exists'] });
-    }
-
     const routeResponse = await this.findOne(id);
 
     const route = routeResponse.data as Route;

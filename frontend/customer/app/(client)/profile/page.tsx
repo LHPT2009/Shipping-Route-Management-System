@@ -6,7 +6,9 @@ import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";;
 import GeneralInformationComponent from "@/components/profile/account";
 import PersonalInformationComponent from "@/components/profile/personal";
-import withProtectedRoute from "@/components/auth/protection";
+import withRoleCheck from "@/components/auth/protection/withRoleCheck";
+import { ROLE } from "@/constant/role";
+import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 
 const ProfilePage = () => {
   return (
@@ -24,4 +26,4 @@ const ProfilePage = () => {
   );
 };
 
-export default withProtectedRoute(ProfilePage);
+export default withProtectedRoute(withRoleCheck(ProfilePage, [ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN]));

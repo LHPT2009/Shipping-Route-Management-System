@@ -173,8 +173,8 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         name: route.name,
         distance: route.distance,
         status: route.status.toString(),
-        departureTimeInput: moment(route.departure_time).format('HH:mm | YYYY-MM-DD'),
-        arrivalTimeInput: moment(route.arrival_time).format('HH:mm | YYYY-MM-DD'),
+        departureTimeInput: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
+        arrivalTimeInput: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
         departureLocation: route.departure.id.toString(),
         arrivalLocation: route.arrival.id.toString(),
         departureAddress: route.departure.address,
@@ -301,9 +301,9 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         input: {
           name: values.name,
           departure: values.departureLocation,
-          departure_time: values.departureTime ? formatDateString(values.departureTime) : moment(values.departureTimeInput, 'HH:mm | YYYY-MM-DD').toDate(),
+          departure_time: values.departureTime ? formatDateString(values.departureTime) : moment(values.departureTimeInput, 'HH:mm - DD/MM/YYYY').toDate(),
           arrival: values.arrivalLocation,
-          arrival_time: values.arrivalTime ? formatDateString(values.arrivalTime) : moment(values.arrivalTimeInput, 'HH:mm | YYYY-MM-DD').toDate(),
+          arrival_time: values.arrivalTime ? formatDateString(values.arrivalTime) : moment(values.arrivalTimeInput, 'HH:mm - DD/MM/YYYY').toDate(),
           distance: values.distance,
           transport: idTransport,
           status: StatusEnum[values.status],
@@ -430,7 +430,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     render={({ field }) => (
                       <DatePicker
                         showTime
-                        format="HH:mm | YYYY-MM-DD"
+                        format="HH:mm - DD/MM/YYYY"
                         key="departureTime"
                         {...field}
                         style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
@@ -487,7 +487,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                     render={({ field }) => (
                       <DatePicker
                         showTime
-                        format="HH:mm | YYYY-MM-DD"
+                        format="HH:mm - DD/MM/YYYY"
                         key="departureTime"
                         {...field}
                         style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}

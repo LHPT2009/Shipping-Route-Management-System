@@ -108,7 +108,7 @@ const SiderComponent = () => {
                 borderColor: COLOR.TEXT,
               }}
             >
-              Menu
+              Navigation Menu
             </Divider>
           </div>
           <Menu onClick={onClick} mode="vertical" items={items} selectedKeys={[selectedKey]}/>

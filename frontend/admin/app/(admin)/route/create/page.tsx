@@ -350,7 +350,7 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
                     render={({ field }) => (
                       <DatePicker
                         showTime
-                        format="HH:mm | YYYY-MM-DD"
+                        format="HH:mm - DD/MM/YYYY"
                         key="departureTime"
                         {...field}
                         style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
@@ -381,7 +381,7 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
                     render={({ field }) => (
                       <DatePicker
                         showTime
-                        format="HH:mm | YYYY-MM-DD"
+                        format="HH:mm - DD/MM/YYYY"
                         key="arrivalTime"
                         {...field}
                         style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}

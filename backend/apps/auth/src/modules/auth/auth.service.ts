@@ -27,7 +27,7 @@ export class AuthService {
     const user = await this.userService.findOne(loginDTO);
 
     if (!user.active) {
-      throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your email hasn’t been confirmed yet. Please contact admin or check your inbox to activate your account.'] });
     }
 
     const passwordMatched = await bcrypt.compare(
