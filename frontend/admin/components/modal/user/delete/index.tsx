@@ -17,6 +17,7 @@ interface CustomModalProps {
   open: boolean;
   onClose: () => void;
   refetch: () => void;
+  changeStatusUser: (id: string) => void;
 }
 
 const DeleteUserModal: React.FC<CustomModalProps> = ({
@@ -25,6 +26,7 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
   open,
   onClose,
   refetch,
+  changeStatusUser
 }) => {
 
   const { openNotificationWithIcon } = useAntNotification();
@@ -37,7 +39,7 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
         NOTIFICATION.CONGRATS,
         "Status has been updated successfully"
       );
-      await refetch();
+      changeStatusUser(userId);
       onClose();
     },
     onError: async (error: ApolloError) => {
@@ -50,7 +52,7 @@ const DeleteUserModal: React.FC<CustomModalProps> = ({
       variables: {
         id: userId,
         input: {
-          active:  statusUser === "Active" ? false: true 
+          active: statusUser === "Active" ? false : true
         }
       },
     });

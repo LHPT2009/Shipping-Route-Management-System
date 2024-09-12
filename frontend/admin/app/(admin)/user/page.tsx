@@ -12,7 +12,7 @@ import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import type { SorterResult } from 'antd/es/table/interface';
 import { useRouter } from "next/navigation";
-import {InfoCircleOutlined, SearchOutlined, SyncOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, SearchOutlined, SyncOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 import { GET_USERS } from "@/apollo/query/user";
 import AssignUserModal from "@/components/modal/user/assign";
@@ -157,7 +157,6 @@ const UserPage = () => {
       dataIndex: 'id',
       key: 'id',
       render: (text, record, index) => index + 1,
-      // width: '5%',
     },
     {
       title: 'Username',
@@ -165,20 +164,17 @@ const UserPage = () => {
       key: 'username',
       sorter: true,
       ...getColumnSearchProps('username'),
-      // width: '10%',
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
       ...getColumnSearchProps('email'),
-      // width: '22%',
     },
     {
       title: 'Role',
       dataIndex: 'roles',
       key: 'roles',
-      // width: '10%',
       render: (_, { roles }) => (
         <Tag
           style={{ borderRadius: "0.2rem", padding: "0.15rem 0.5rem", fontSize: "0.8rem" }}
@@ -299,6 +295,23 @@ const UserPage = () => {
     }
   });
 
+  const changeStatusUser = (id: string) => {
+    const userIndex = data.findIndex((item) => item.id.toString() === id);
+    if (userIndex != -1) {
+      let dataUpdate = [...data];
+      const updatedUser = {
+        ...dataUpdate[userIndex],
+        status: dataUpdate[userIndex].status === 'Active' ? 'Inactive' : 'Active',
+      };
+      dataUpdate = [
+        ...dataUpdate.slice(0, userIndex),
+        updatedUser,
+        ...dataUpdate.slice(userIndex + 1),
+      ];
+      setData(dataUpdate);
+    }
+  }
+
   useEffect(() => {
     const fetchUsers = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
@@ -340,13 +353,12 @@ const UserPage = () => {
       sortField: Array.isArray(sorter) ? undefined : sorter.field,
     });
 
-    // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
   };
 
-  const handleOpenModalDelete = (id: string,status: string) => {
+  const handleOpenModalDelete = (id: string, status: string) => {
     setUserId(id);
     setStatusUser(status);
     setOpenModalDelete(true);
@@ -395,6 +407,7 @@ const UserPage = () => {
           </ContentComponent>
           <DeleteUserModal
             userId={userId ? `${userId}` : ""}
+            changeStatusUser={() => changeStatusUser(`${userId}`)}
             statusUser={statusUser}
             open={openModalDelete}
             onClose={handleCloseModalDelete}
