@@ -8,26 +8,21 @@ import ContentComponent from "@/components/route";
 import styles from "./route.module.css";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import * as yup from "yup";
 import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { FilterDropdownProps } from "antd/es/table/interface";
-import { CarOutlined, EnvironmentOutlined, SearchOutlined } from "@ant-design/icons";
-import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from "@ant-design/icons";
 import type { SorterResult } from 'antd/es/table/interface';
-import qs from 'qs';
 import { useRouter } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
-import InformationIcon from "@/public/svg/route/information.svg";
-import withProtectedRoute from "@/components/auth/protection";
 import CustomModal from "@/components/modal/route";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU } from "@/constant";
+import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
+import withRoleCheck from "@/components/auth/protection/withRoleCheck";
+import { ROLE } from "@/constant/role";
 
 const { Search } = Input;
 
@@ -68,11 +63,11 @@ const RoutePage = () => {
   } = theme.useToken();
 
   const router = useRouter();
-  
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const value : MenuState ={
+    const value: MenuState = {
       keyMenu: KEYMENU.ROUTE,
     }
     dispatch(menuActions.changeInfoMenu(value))
@@ -329,7 +324,6 @@ const RoutePage = () => {
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     onCompleted: async (data) => {
-      console.log(data.getRoutes.data);
       setData(data.getRoutes.data.routes);
       setTableParams({
         ...tableParams,
@@ -347,29 +341,21 @@ const RoutePage = () => {
 
   useEffect(() => {
     const fetchRoutes = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        await getRoutes({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          },
-          variables: {
-            input: {
-              page: tableParams.pagination?.current,
-              limit: tableParams.pagination?.pageSize,
-              name: tableParams.filters?.name?.[0],
-              departure: tableParams.filters?.departure?.[0],
-              arrival: tableParams.filters?.arrival?.[0],
-              shipping_type: tableParams.filters?.shipping_type?.[0],
-              status: tableParams.filters?.status?.[0],
-              sort_field: tableParams.sortField,
-              sort_order: tableParams.sortOrder,
-            }
-          },
-        });
-      }
+      await getRoutes({
+        variables: {
+          input: {
+            page: tableParams.pagination?.current,
+            limit: tableParams.pagination?.pageSize,
+            name: tableParams.filters?.name?.[0],
+            departure: tableParams.filters?.departure?.[0],
+            arrival: tableParams.filters?.arrival?.[0],
+            shipping_type: tableParams.filters?.shipping_type?.[0],
+            status: tableParams.filters?.status?.[0],
+            sort_field: tableParams.sortField,
+            sort_order: tableParams.sortOrder,
+          }
+        },
+      });
     };
     fetchRoutes();
   }, [
@@ -441,4 +427,4 @@ const RoutePage = () => {
   );
 };
 
-export default withProtectedRoute(RoutePage);
+export default withProtectedRoute(withRoleCheck(RoutePage, [ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN]));

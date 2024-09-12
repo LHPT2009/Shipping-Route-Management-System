@@ -5,13 +5,15 @@ import AuthReducer from './auth';
 import UserReducer from './user';
 import ResponsiveReducer from './responsive';
 import MenuReducer from './menu';
+import LoadingReducer from './loading';
 
 export const store = configureStore({
   reducer: {
     auth: AuthReducer,
     user: UserReducer,
     responsive: ResponsiveReducer,
-    menu: MenuReducer
+    menu: MenuReducer,
+    loading: LoadingReducer,
   }
 })
 

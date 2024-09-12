@@ -12,13 +12,14 @@ import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "./route.interface";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
-import withProtectedRoute from "@/components/auth/protection";
 import { URL } from "@/constant/url";
 import MapComponent from "@/components/route/map";
+import withRoleCheck from "@/components/auth/protection/withRoleCheck";
+import { ROLE } from "@/constant/role";
+import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 
 const { Text } = Typography;
 
@@ -74,19 +75,11 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchRoutes = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        await getRouteById({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          },
-          variables: {
-            input: params.id
-          },
-        });
-      }
+      await getRouteById({
+        variables: {
+          input: params.id
+        },
+      });
     };
     fetchRoutes();
     if (route) {
@@ -342,6 +335,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                   margin: "0 auto",
                   color: COLOR.PRIMARY,
                   border: "1px solid #4f46e5",
+                  background: "white"
                 }}
               >
                 View on map
@@ -371,4 +365,4 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default withProtectedRoute(RouteDetailPage);
+export default withProtectedRoute(withRoleCheck(RouteDetailPage, [ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN]));
