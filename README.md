@@ -139,3 +139,8 @@ Step 3: Run next.js app
 ```console
 npm run dev
 ```
+
+## GROUP MEMBERS
+### Team 06 - JWAT Training Cyperlogitec Vietnam
+- Tran Dam Gia Huy
+- Le Huynh Phuong Tung
