@@ -279,6 +279,7 @@ const UserPage = () => {
   const { handleError } = useHandleError();
 
   const [getUsers, { loading, refetch }] = useLazyQuery(GET_USERS, {
+    fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
       setData(data.getUsers.data.users);
       setTableParams({
@@ -295,47 +296,23 @@ const UserPage = () => {
     }
   });
 
-  const changeStatusUser = (id: string) => {
-    const userIndex = data.findIndex((item) => item.id.toString() === id);
-    if (userIndex != -1) {
-      let dataUpdate = [...data];
-      const updatedUser = {
-        ...dataUpdate[userIndex],
-        status: dataUpdate[userIndex].status === 'Active' ? 'Inactive' : 'Active',
-      };
-      dataUpdate = [
-        ...dataUpdate.slice(0, userIndex),
-        updatedUser,
-        ...dataUpdate.slice(userIndex + 1),
-      ];
-      setData(dataUpdate);
-    }
-  }
+  const fetchUsers = async () => {
+    await getUsers({
+      variables: {
+        input: {
+          page: tableParams.pagination?.current,
+          limit: tableParams.pagination?.pageSize,
+          username: tableParams.filters?.username?.[0],
+          email: tableParams.filters?.email?.[0],
+          status: tableParams.filters?.status?.[0],
+          sort_field: tableParams.sortField,
+          sort_order: tableParams.sortOrder,
+        }
+      },
+    });
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const { accessToken, expiresIn } = await fetchCookies();
-      if (accessToken && expiresIn) {
-        await getUsers({
-          context: {
-            headers: {
-              authorization: `Bearer ${accessToken}`
-            }
-          },
-          variables: {
-            input: {
-              page: tableParams.pagination?.current,
-              limit: tableParams.pagination?.pageSize,
-              username: tableParams.filters?.username?.[0],
-              email: tableParams.filters?.email?.[0],
-              status: tableParams.filters?.status?.[0],
-              sort_field: tableParams.sortField,
-              sort_order: tableParams.sortOrder,
-            }
-          },
-        });
-      }
-    };
     fetchUsers();
   }, [
     tableParams.pagination?.current,
@@ -407,18 +384,17 @@ const UserPage = () => {
           </ContentComponent>
           <DeleteUserModal
             userId={userId ? `${userId}` : ""}
-            changeStatusUser={() => changeStatusUser(`${userId}`)}
             statusUser={statusUser}
             open={openModalDelete}
             onClose={handleCloseModalDelete}
-            refetch={refetch}
+            refetch={fetchUsers}
           />
           <AssignUserModal
             roleName={roleName ? `${roleName}` : ""}
             userId={userId ? `${userId}` : ""}
             open={openModalAssign}
             onClose={handleCloseModalAssign}
-            refetch={refetch}
+            refetch={fetchUsers}
           />
         </>
       )}

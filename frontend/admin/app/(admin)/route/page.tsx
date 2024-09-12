@@ -363,8 +363,7 @@ const RoutePage = () => {
         id: id
       }
     });
-    const newData = data.filter((item) => item.id !== id);
-    setData(newData);
+    fetchRoutes();
   }
 
   useEffect(() => {
