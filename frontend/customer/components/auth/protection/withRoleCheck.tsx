@@ -14,11 +14,11 @@ const withRoleCheck = (WrappedComponent: any, allowedRoles: string[]) => {
 
     useEffect(() => {
       const checkRole = async () => {
-        if (!loading && !error) { 
+        if (!loading && !error) {
           if (!allowedRoles.includes(nameRole)) {
             router.push('/unauthorized');
             dispatch(loadingActions.changeLoadingStatus(false))
-          }else{
+          } else {
             dispatch(loadingActions.changeLoadingStatus(false))
           }
         }

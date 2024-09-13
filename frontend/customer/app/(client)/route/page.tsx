@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
@@ -293,9 +293,27 @@ const RoutePage = () => {
           >
             Detail
           </Button>
-          <Button
+
+          {record.shipping_type === "Seaway" ? (
+            <Tooltip placement="bottom" title="Map is inavailable with seaway">
+              <Button
+                type="primary"
+                disabled={record.shipping_type === "Seaway"}
+                onClick={() => {
+                  const getDataById = data.find((item, index) => item.id === record.id)
+                  if (getDataById) {
+                    setDeparture([getDataById?.departureLongitude!, getDataById?.departureLatitude!])
+                    setArrival([getDataById?.arrivalLongitude!, getDataById?.arrivalLatitude!])
+                  }
+                  handleOpen();
+                }}
+                style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
+              >
+                <img src={MapIcon.src} style={{ width: "1.2rem", height: "2rem" }} />
+              </Button>
+            </Tooltip>
+          ) : <Button
             type="primary"
-            disabled={record.shipping_type === "Seaway"}
             onClick={() => {
               const getDataById = data.find((item, index) => item.id === record.id)
               if (getDataById) {
@@ -307,7 +325,7 @@ const RoutePage = () => {
             style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
           >
             <img src={MapIcon.src} style={{ width: "1.2rem", height: "2rem" }} />
-          </Button>
+          </Button>}
 
         </Flex>
       ),

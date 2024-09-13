@@ -24,6 +24,7 @@ import { NOTIFICATION } from "@/constant/notification";
 import { usernameRegex } from "@/utils/validation/username.regex";
 import { SIGNUP } from "@/apollo/mutations/auth";
 import { useHandleError } from "@/lib/hooks/error";
+import { useRouter } from "next/navigation";
 
 const { Text, Title } = Typography;
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
@@ -78,14 +79,23 @@ const RegisterComponent = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({ resolver: yupResolver(schema) });
 
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
-
+  const router = useRouter();
+  
   const [signupMutation, { loading, error, data }] = useMutation(SIGNUP, {
     onCompleted() {
+      reset({
+        username: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+      });
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Register successfully. Please check your email to verify your account.");
+      router.push(URL.LOGIN);
     },
     onError: async (error: ApolloError) => {
       await handleError(error);

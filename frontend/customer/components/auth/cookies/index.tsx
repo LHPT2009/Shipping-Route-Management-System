@@ -35,6 +35,7 @@ export default function CookiesComponent() {
       dispatch(userActions.setUserInformation(userData));
     },
     onError: async (error: ApolloError) => {
+      console.log(error.graphQLErrors[0])
       await handleError(error);
     }
   });
