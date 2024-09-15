@@ -15,7 +15,7 @@ import { GET_ROUTES } from "@/apollo/query/route";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import { SearchOutlined } from "@ant-design/icons";
 import type { SorterResult } from 'antd/es/table/interface';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
 import CustomModal from "@/components/modal/route";
 import { menuActions, MenuState } from "@/lib/store/menu";
@@ -80,13 +80,21 @@ const RoutePage = () => {
   const [arrival, setArrival] = useState<number[]>([]);
 
   const [data, setData] = useState<DataType[]>([]);
+  const searchParams = useSearchParams();
+
   const [tableParams, setTableParams] = useState<TableParams>({
+    filters: {
+      name: [searchParams.get("name") || ""],
+      departure: [searchParams.get("departure") || ""],
+      arrival: [searchParams.get("arrival") || ""],
+      shipping_type: [searchParams.get("shipping-type") ? searchParams.get("shipping-type")!.charAt(0).toUpperCase() + searchParams.get("shipping-type")!.slice(1) : ""],
+      status: [searchParams.get("status") ? searchParams.get("status")!.charAt(0).toUpperCase() + searchParams.get("status")!.slice(1) : ""]
+    },
     pagination: {
-      current: 1,
-      pageSize: 20,
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("page-size")) || 20,
     },
   });
-
   const checkStatusBackground: boolean = useAppSelector(
     (state) => state.responsive.checkStatusBackground
   );
@@ -359,6 +367,7 @@ const RoutePage = () => {
 
   useEffect(() => {
     const fetchRoutes = async () => {
+      console.log("tableParams", tableParams);
       await getRoutes({
         variables: {
           input: {
@@ -384,21 +393,33 @@ const RoutePage = () => {
     JSON.stringify(tableParams.filters),
   ]);
 
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
-
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
-    setTableParams({
+    setTableParams((prevParams) => ({
       pagination,
       filters,
-      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-      sortField: Array.isArray(sorter) ? undefined : sorter.field,
-    });
+      sortOrder: Array.isArray(sorter) ? prevParams.sortOrder : sorter.order,
+      sortField: Array.isArray(sorter) ? prevParams.sortField : sorter.field,
+    }));
 
-    // `dataSource` is useless since `pageSize` changed
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', String(pagination.current));
+    newSearchParams.set('page-size', String(pagination.pageSize));
+    newSearchParams.set('departure', String(filters.departure?.[0] || ''));
+    newSearchParams.set('arrival', String(filters.arrival?.[0] || ''));
+    newSearchParams.set('name', String(filters.name?.[0] || ''));
+    newSearchParams.set('shipping-type', String(filters.shipping_type?.[0] || ''));
+    newSearchParams.set('status', String(filters.status?.[0] || ''));
+
+    // Remove empty parameters
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
+    });
+    
+    router.replace(`?${newSearchParams.toString()}`);
+
+    // `data Source` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
