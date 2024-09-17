@@ -1,5 +1,5 @@
 "use client";
-import { Col, Form, Row, Input, Button, Typography, Flex } from "antd";
+import { Col, Form, Row, Input, Button, Typography, Flex, Tooltip } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -325,21 +325,37 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
               arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
             />
             <Flex align="center" justify="center">
-              <Button
-                onClick={() => {
-                  setIsShowDirection(true);
-                }}
-                style={{
-                  padding: "1.3rem 1.5rem",
-                  borderRadius: "0.4rem",
-                  margin: "0 auto",
-                  color: COLOR.PRIMARY,
-                  border: "1px solid #4f46e5",
-                  background: "white"
-                }}
-              >
-                View on map
-              </Button>
+              {route && ShippingTypeEnum[route.transport.shipping_type] === "Seaway" ?
+                <Tooltip placement="bottom" title="Map is inavailable with seaway">
+                  <Button
+                    disabled
+                    onClick={() => {
+                      setIsShowDirection(true);
+                    }}
+                    style={{
+                      padding: "1.3rem 1.5rem",
+                      borderRadius: "0.4rem",
+                      margin: "0 auto",
+                    }}
+                  >
+                    View on map
+                  </Button>
+                </Tooltip> : <Button
+                  onClick={() => {
+                    setIsShowDirection(true);
+                  }}
+                  style={{
+                    padding: "1.3rem 1.5rem",
+                    borderRadius: "0.4rem",
+                    margin: "0 auto",
+                    color: COLOR.PRIMARY,
+                    border: "1px solid #4f46e5",
+                    background: "white"
+                  }}
+                >
+                  View on map
+                </Button>}
+
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
               <Button
@@ -348,13 +364,15 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
               >
                 Back to routes
               </Button>
-              <Button
-                disabled
-                type="primary"
-                style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
-              >
-                Update
-              </Button>
+              <Tooltip placement="bottom" title="Update is inavailable" style={{width: "10rem"}}>
+                <Button
+                  disabled
+                  type="primary"
+                  style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
+                >
+                  Update
+                </Button>
+              </Tooltip>
             </Flex>
 
           </Col>

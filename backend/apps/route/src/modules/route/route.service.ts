@@ -27,6 +27,11 @@ export class RoutesService {
         .leftJoinAndSelect('route.arrival', 'arrival')
         .leftJoinAndSelect('route.transport', 'transport');
 
+      if (filterRoutesDto.search) {
+        queryBuilder.andWhere('(LOWER(route.name) LIKE LOWER(:search) OR LOWER(departure.name) LIKE LOWER(:search) OR LOWER(arrival.name) LIKE LOWER(:search))', {
+          search: `%${filterRoutesDto.search.toLowerCase()}%`
+        });
+      }
       if (filterRoutesDto.name) {
         queryBuilder.andWhere('LOWER(route.name) LIKE LOWER(:name)', { name: `%${filterRoutesDto.name.toLowerCase()}%` });
       }

@@ -15,7 +15,7 @@ import { GET_ROUTES } from "@/apollo/query/route";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import { SearchOutlined } from "@ant-design/icons";
 import type { SorterResult } from 'antd/es/table/interface';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
 import CustomModal from "@/components/modal/route";
 import { menuActions, MenuState } from "@/lib/store/menu";
@@ -23,6 +23,9 @@ import { KEYMENU } from "@/constant";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
+import * as yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const { Search } = Input;
 
@@ -80,13 +83,21 @@ const RoutePage = () => {
   const [arrival, setArrival] = useState<number[]>([]);
 
   const [data, setData] = useState<DataType[]>([]);
+  const searchParams = useSearchParams();
+
   const [tableParams, setTableParams] = useState<TableParams>({
+    filters: {
+      name: [searchParams.get("name") || ""],
+      departure: [searchParams.get("departure") || ""],
+      arrival: [searchParams.get("arrival") || ""],
+      shipping_type: [searchParams.get("shipping-type") ? searchParams.get("shipping-type")!.charAt(0).toUpperCase() + searchParams.get("shipping-type")!.slice(1) : ""],
+      status: [searchParams.get("status") ? searchParams.get("status")!.charAt(0).toUpperCase() + searchParams.get("status")!.slice(1) : ""]
+    },
     pagination: {
-      current: 1,
-      pageSize: 20,
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("page-size")) || 20,
     },
   });
-
   const checkStatusBackground: boolean = useAppSelector(
     (state) => state.responsive.checkStatusBackground
   );
@@ -340,6 +351,8 @@ const RoutePage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [search, setSearch] = useState<string>('');
+
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     onCompleted: async (data) => {
       setData(data.getRoutes.data.routes);
@@ -357,26 +370,29 @@ const RoutePage = () => {
     }
   });
 
+  const fetchRoutes = async () => {
+    await getRoutes({
+      variables: {
+        input: {
+          search: search,
+          page: tableParams.pagination?.current,
+          limit: tableParams.pagination?.pageSize,
+          name: tableParams.filters?.name?.[0],
+          departure: tableParams.filters?.departure?.[0],
+          arrival: tableParams.filters?.arrival?.[0],
+          shipping_type: tableParams.filters?.shipping_type?.[0],
+          status: tableParams.filters?.status?.[0],
+          sort_field: tableParams.sortField,
+          sort_order: tableParams.sortOrder,
+        }
+      },
+    });
+  };
+
   useEffect(() => {
-    const fetchRoutes = async () => {
-      await getRoutes({
-        variables: {
-          input: {
-            page: tableParams.pagination?.current,
-            limit: tableParams.pagination?.pageSize,
-            name: tableParams.filters?.name?.[0],
-            departure: tableParams.filters?.departure?.[0],
-            arrival: tableParams.filters?.arrival?.[0],
-            shipping_type: tableParams.filters?.shipping_type?.[0],
-            status: tableParams.filters?.status?.[0],
-            sort_field: tableParams.sortField,
-            sort_order: tableParams.sortOrder,
-          }
-        },
-      });
-    };
     fetchRoutes();
   }, [
+    search,
     tableParams.pagination?.current,
     tableParams.pagination?.pageSize,
     tableParams?.sortOrder,
@@ -384,21 +400,54 @@ const RoutePage = () => {
     JSON.stringify(tableParams.filters),
   ]);
 
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
+  // Validate Yup
+  const schema = yup
+    .object({
+      search: yup.string()
+    })
+    .required();
+
+  //useFrom hook
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onFinish = async (values: any) => {
+    setSearch(values.search);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('search', String(values.search));
+    router.replace(`?${newSearchParams.toString()}`);
+  };
 
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
-    setTableParams({
+    setTableParams((prevParams) => ({
       pagination,
       filters,
-      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-      sortField: Array.isArray(sorter) ? undefined : sorter.field,
+      sortOrder: Array.isArray(sorter) ? prevParams.sortOrder : sorter.order,
+      sortField: Array.isArray(sorter) ? prevParams.sortField : sorter.field,
+    }));
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', String(pagination.current));
+    newSearchParams.set('page-size', String(pagination.pageSize));
+    newSearchParams.set('departure', String(filters.departure?.[0] || ''));
+    newSearchParams.set('arrival', String(filters.arrival?.[0] || ''));
+    newSearchParams.set('name', String(filters.name?.[0] || ''));
+    newSearchParams.set('shipping-type', String(filters.shipping_type?.[0] || ''));
+    newSearchParams.set('status', String(filters.status?.[0] || ''));
+
+    // Remove empty parameters
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
     });
 
-    // `dataSource` is useless since `pageSize` changed
+    router.replace(`?${newSearchParams.toString()}`);
+
+    // `data Source` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
@@ -415,10 +464,46 @@ const RoutePage = () => {
             fontWeight: 700,
             color: COLOR.TEXT,
             textAlign: "center",
-            marginBottom: "3rem"
+            marginBottom: "2rem"
           }}>
             Routes
           </Title>
+
+          <Form
+            initialValues={{ remember: true }}
+            style={{
+              width: "28rem",
+              borderRadius: "1rem",
+              backgroundColor: COLOR.BACKGROUNDBODY,
+              textAlign: "left",
+              marginBottom: "2rem"
+            }}
+            onFinish={handleSubmit(onFinish)}
+          >
+            <Form.Item
+              name="search"
+              style={{ paddingBottom: errors.search ? "1rem" : 0, marginTop: "2.7rem" }}
+              help={
+                errors.search && (
+                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
+                )
+              }
+            >
+              <Controller
+                name="search"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    key="search"
+                    {...field}
+                    placeholder={"Search for route name, departure, arrival"}
+                    prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                    style={{ borderRadius: "0.5rem", height: "3rem", background: "white" }}
+                  />
+                )}
+              />
+            </Form.Item>
+          </Form>
 
           <Table
             rowKey={(record) => record.id}

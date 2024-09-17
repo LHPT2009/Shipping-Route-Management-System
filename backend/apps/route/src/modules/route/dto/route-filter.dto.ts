@@ -41,4 +41,7 @@ export class FilterRoutesDto {
 
   @Field({ nullable: true })
   sort_order?: string;
+
+  @Field({ nullable: true })
+  search?: string;
 }
