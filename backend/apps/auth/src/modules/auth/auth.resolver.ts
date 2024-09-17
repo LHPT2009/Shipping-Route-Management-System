@@ -16,6 +16,7 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'common/exception/guards/auth.guard';
 import { ResetPasswordInput } from './dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from './dto/reset_password_verify_email.input';
+import { LoginGoogleInput } from './dto/login_google.input';
 
 @Resolver()
 export class AuthResolver {
@@ -38,6 +39,14 @@ export class AuthResolver {
     input: LoginInput,
   ): Promise<ResponseDto<any>> {
     return this.authService.login(input);
+  }
+
+  @Mutation(() => ResponseDto<{}>)
+  loginWithGoogle(
+    @Args('input')
+    input: LoginGoogleInput,
+  ): Promise<ResponseDto<any>> {
+    return this.authService.loginWithGoogle(input);
   }
 
   @Mutation(() => ResponseDto<{}>)

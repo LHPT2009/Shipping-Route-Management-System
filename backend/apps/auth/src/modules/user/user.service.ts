@@ -150,6 +150,20 @@ export class UserService {
     }
   }
 
+  async createGoogleAccount(email: string): Promise<UserEntity> {
+    const role = new RoleEntity("1", ROLE.CUSTOMER)
+    const user = new UserEntity(
+      email.split('@')[0],
+      email,
+      "google-account-password",
+      null,
+      null,
+      role
+    );
+    await this.userRepository.save(user);
+    return user;
+  }
+
   private email_template(title: string, content: string, button: string, url: string, username: string): string {
     const templatePath = path.resolve(process.cwd(), 'apps/auth/src/modules/email/email_template.html');
     let htmlContent = fs.readFileSync(templatePath, 'utf-8');
@@ -201,8 +215,15 @@ export class UserService {
     if (!user) {
       throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
     }
+    const isGoogleAccount = await bcrypt.compare(
+      "google-account-password",
+      user.password,
+    );
+    if (isGoogleAccount) {
+      throw new CustomValidationError('Invalid input', { currentPassword: ['Your account must not be changed password.'] });
+    }
     if (!user.active) {
-      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your email hasn’t been confirmed yet. Please check your inbox to activate your account.'] });
+      throw new CustomValidationError(STATUS.VALIDATION_ERROR, { email: ['Your account has not been activated.'] });
     }
     const verifyToken = crypto.randomBytes(32).toString('base64url');
     const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
@@ -343,6 +364,14 @@ export class UserService {
     if (!user) {
       throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
     } else {
+      const isGoogleAccount = await bcrypt.compare(
+        "google-account-password",
+        user.password,
+      );
+      if (isGoogleAccount) {
+        throw new CustomValidationError('Invalid input', { currentPassword: ['Your account must not be changed password.'] });
+      }
+
       const passwordMatched = await bcrypt.compare(
         userDTO.currentPassword,
         user.password,
