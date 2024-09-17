@@ -9,11 +9,13 @@ import { UserEntity } from '../user/entity/user.entity';
 import { UserRepository } from '../user/user.repository';
 import { UserModule } from '../user/user.module';
 import { RefreshTokenModule } from '../refreshtoken/refreshtoken.module';
+import { KafkaModule } from '../kafka/kafka.module';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
     forwardRef(() => RefreshTokenModule),
+    KafkaModule,
     TypeOrmModule.forFeature([UserEntity, UserRepository]),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'secret'

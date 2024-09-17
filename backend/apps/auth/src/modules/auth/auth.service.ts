@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
@@ -8,13 +8,13 @@ import { ResponseDto } from 'common/response/responseDto';
 import { STATUS, STATUS_CODE } from "common/constants/status"
 import { RefreshTokenService } from '../refreshtoken/refreshtoken.service';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
-import { validUsernameOrEmail } from 'common/exception/validation/username-email.validation';
 import { UserEntity } from '../user/entity/user.entity';
 import { LoginGoogleInput } from './dto/login_google.input';
 import { Auth, google } from 'googleapis';
 import { UserRepository } from '../user/user.repository';
 import { RoleEntity } from '../role/entity/role.entity';
 import { ROLE } from 'common/constants/role';
+import { ProducerService } from '../kafka/producer.service';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +30,8 @@ export class AuthService {
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     this.oauthClient = new google.auth.OAuth2(clientId, clientSecret);
   }
+    private readonly producerService: ProducerService
+  ) { }
 
   async handleLogin(loginDTO: LoginInput, user: UserEntity): Promise<ResponseDto<{}>> {
     if (!user.active) {
@@ -60,6 +62,16 @@ export class AuthService {
   }
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
+
+    await this.producerService.produce({
+      topic: 'send-mail',
+      messages: [
+        {
+          value:"Hello World!"
+        }
+      ]
+    });
+
     const user = await this.userService.findOne(loginDTO);
     return await this.handleLogin(loginDTO, user);
   }

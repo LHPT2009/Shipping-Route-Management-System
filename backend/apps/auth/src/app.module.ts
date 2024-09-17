@@ -73,7 +73,7 @@ import { SeedService } from './seed/seed.service';
       },
     }),
 
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity])
   ],
   controllers: [AppController],
   providers: [AppService, UserService, UserRepository, EmailService, SeedService],
