@@ -14,7 +14,7 @@ import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
 import useAntNotification from "@/lib/hooks/notification";
 import { ApolloError, useMutation, useReactiveVar } from "@apollo/client";
-import { LOGIN } from "@/apollo/mutations/auth";
+import { LOGIN, LOGIN_WITH_GOOGLE } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { getErrorMessage } from "@/utils/error/apollo.error";
@@ -27,6 +27,7 @@ import { useGetNewAccessToken } from "@/lib/hooks/token";
 import { useHandleError } from "@/lib/hooks/error";
 import { useAppDispatch } from "@/lib/hooks/hooks";
 import { authActions } from "@/lib/store/auth";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 
 const { Title, Text } = Typography;
 
@@ -76,7 +77,7 @@ const LoginPage = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [loginMutation, {loading}] = useMutation(LOGIN, {
+  const [loginMutation, { loading }] = useMutation(LOGIN, {
     onCompleted: async (data) => {
       await setCookies('accessToken', data.login.data.accessToken);
       await setCookies('expiresIn', data.login.data.expiresIn);
@@ -85,7 +86,19 @@ const LoginPage = () => {
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
     },
     onError: async (error: ApolloError) => {
-      console.log(error.graphQLErrors[0])
+      await handleError(error);
+    }
+  });
+
+  const [loginWithGooleMutation] = useMutation(LOGIN_WITH_GOOGLE, {
+    onCompleted: async (data) => {
+      await setCookies('accessToken', data.loginWithGoogle.data.accessToken);
+      await setCookies('expiresIn', data.loginWithGoogle.data.expiresIn);
+      dispatch(authActions.setIsLogin(true));
+      router.push('/');
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Login successfully");
+    },
+    onError: async (error: ApolloError) => {
       await handleError(error);
     }
   });
@@ -100,6 +113,19 @@ const LoginPage = () => {
       },
     });
   };
+
+  const googleLoginHandler = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      await loginWithGooleMutation({
+        variables: {
+          input: {
+            token: tokenResponse.access_token
+          }
+        },
+      });
+    },
+    onError: error => openNotificationWithIcon('error', NOTIFICATION.ERROR, "Fail to login with Google. Please try again or login with another account."),
+  });
 
   return (
     <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
@@ -211,7 +237,7 @@ const LoginPage = () => {
 
         <Form.Item>
           <Button
-            htmlType="submit"
+            onClick={() => googleLoginHandler()}
             className="login-form-button"
             style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "1.2rem", background: "white" }}
           >

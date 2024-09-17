@@ -65,3 +65,14 @@ export const CHANGE_PASSWORD = gql`
     }
   }
 `;
+
+export const LOGIN_WITH_GOOGLE = gql`
+  mutation loginWithGoogle($input: LoginGoogleInput!) {
+    loginWithGoogle(input: $input) {
+        status
+        message
+        data
+        error
+    }
+  }
+`;
