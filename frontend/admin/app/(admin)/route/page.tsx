@@ -12,7 +12,7 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route"
 import { FilterDropdownProps } from "antd/es/table/interface";
 import type { SorterResult } from 'antd/es/table/interface';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 import { REMOVE_ROUTE } from "@/apollo/mutations/route";
@@ -20,6 +20,9 @@ import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU, LABELMENU } from "@/constant/menu";
 import DeleteRouteModal from "@/components/modal/route";
 import { NOTIFICATION } from "@/constant/notification";
+import * as yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -65,10 +68,19 @@ const RoutePage = () => {
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [routeId, setRouteId] = useState<number>(-1);
   const [data, setData] = useState<DataType[]>([]);
+  const [search, setSearch] = useState<string>('');
+  const searchParams = useSearchParams();
   const [tableParams, setTableParams] = useState<TableParams>({
+    filters: {
+      name: [searchParams.get("name") || ""],
+      departure: [searchParams.get("departure") || ""],
+      arrival: [searchParams.get("arrival") || ""],
+      shipping_type: [searchParams.get("shipping-type") ? searchParams.get("shipping-type")!.charAt(0).toUpperCase() + searchParams.get("shipping-type")!.slice(1) : ""],
+      status: [searchParams.get("status") ? searchParams.get("status")!.charAt(0).toUpperCase() + searchParams.get("status")!.slice(1) : ""]
+    },
     pagination: {
-      current: 1,
-      pageSize: 20,
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("page-size")) || 20,
     },
   });
 
@@ -324,6 +336,7 @@ const RoutePage = () => {
     await getRoutes({
       variables: {
         input: {
+          search: search,
           page: tableParams.pagination?.current,
           limit: tableParams.pagination?.pageSize,
           name: tableParams.filters?.name?.[0],
@@ -336,7 +349,6 @@ const RoutePage = () => {
         }
       },
     });
-
   };
 
   const [removeRoute] = useMutation(REMOVE_ROUTE, {
@@ -360,6 +372,7 @@ const RoutePage = () => {
   useEffect(() => {
     fetchRoutes();
   }, [
+    search,
     tableParams.pagination?.current,
     tableParams.pagination?.pageSize,
     tableParams?.sortOrder,
@@ -377,15 +390,54 @@ const RoutePage = () => {
     dispatch(menuActions.changeInfoMenu(value));
   }, [dispatch]);
 
+  // Validate Yup
+  const schema = yup
+    .object({
+      search: yup.string()
+    })
+    .required();
+
+  //useFrom hook
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onFinish = async (values: any) => {
+    setSearch(values.search);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('search', String(values.search));
+    router.replace(`?${newSearchParams.toString()}`);
+  };
+
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
-    setTableParams({
+    setTableParams((prevParams) => ({
       pagination,
       filters,
-      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-      sortField: Array.isArray(sorter) ? undefined : sorter.field,
+      sortOrder: Array.isArray(sorter) ? prevParams.sortOrder : sorter.order,
+      sortField: Array.isArray(sorter) ? prevParams.sortField : sorter.field,
+    }));
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', String(pagination.current));
+    newSearchParams.set('page-size', String(pagination.pageSize));
+    newSearchParams.set('departure', String(filters.departure?.[0] || ''));
+    newSearchParams.set('arrival', String(filters.arrival?.[0] || ''));
+    newSearchParams.set('name', String(filters.name?.[0] || ''));
+    newSearchParams.set('shipping-type', String(filters.shipping_type?.[0] || ''));
+    newSearchParams.set('status', String(filters.status?.[0] || ''));
+
+    // Remove empty parameters
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
     });
 
-    // `dataSource` is useless since `pageSize` changed
+    router.replace(`?${newSearchParams.toString()}`);
+
+    // `data Source` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
@@ -397,16 +449,46 @@ const RoutePage = () => {
         <></>
       ) : (
         <ContentComponent>
-          <Button
-            type="primary"
-            onClick={() => {
-              router.push(`/route/create`);
-            }}
-            style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
-          >
-            <PlusOutlined />
-            New route
-          </Button>
+          <Flex justify="space-between" align="flex-start" style={{marginTop: "1rem", marginBottom: "0.5rem"}}>
+            <Form
+              initialValues={{ remember: true }}
+              style={{
+                width: "28rem",
+                borderRadius: "1rem",
+              }}
+              onFinish={handleSubmit(onFinish)}
+            >
+              <Form.Item
+                name="search"
+                style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+              >
+                <Controller
+                  name="search"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="search"
+                      {...field}
+                      placeholder={"Search for route name, departure, arrival"}
+                      prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
+                      style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important"}}
+                    />
+                  )}
+                />
+              </Form.Item>
+            </Form>
+            <Button
+              type="primary"
+              onClick={() => {
+                router.push(`/route/create`);
+              }}
+              style={{ padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+            >
+              <PlusOutlined />
+              New route
+            </Button>
+          </Flex>
+
           <Table
             rowKey={(record) => record.name}
             className={styles['table-striped-rows']}

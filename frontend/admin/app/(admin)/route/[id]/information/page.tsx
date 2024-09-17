@@ -1,5 +1,5 @@
 "use client";
-import { Col, Form, Row, Input, Button, Typography, Flex, Select, DatePicker } from "antd";
+import { Col, Form, Row, Input, Button, Typography, Flex, Select, DatePicker, Tooltip } from "antd";
 import { Controller, set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -10,7 +10,7 @@ import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_ROUTE_BY_ID } from "@/apollo/query/route";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
-import { RouteInterface, StatusEnum, VehicleTypeEnum } from "../../route.interface";
+import { RouteInterface, ShippingTypeEnum, StatusEnum, VehicleTypeEnum } from "../../route.interface";
 import { useRouter } from "next/navigation";
 import moment from 'moment';
 import MapComponent from "@/components/map";
@@ -758,19 +758,34 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
               arrival={arrivalCoordinate}
             />
             <Flex align="center" justify="center">
-              <Button
-                disabled={!isShowButtonDirection}
-                onClick={handleShowMap}
-                style={{
-                  padding: "1.3rem 1.5rem",
-                  borderRadius: "0.4rem",
-                  margin: "0 auto",
-                  color: COLOR.PRIMARY,
-                  border: "1px solid #4f46e5",
-                }}
-              >
-                View on map
-              </Button>
+              {route && ShippingTypeEnum[route.transport.shipping_type] === "Seaway" ?
+                <Tooltip placement="bottom" title="Map is inavailable with seaway">
+                  <Button
+                    disabled
+                    onClick={handleShowMap}
+                    style={{
+                      padding: "1.3rem 1.5rem",
+                      borderRadius: "0.4rem",
+                      margin: "0 auto",
+                    }}
+                  >
+                    View on map
+                  </Button>
+                </Tooltip> : <Button
+                  disabled={!isShowButtonDirection}
+                  onClick={handleShowMap}
+                  style={{
+                    padding: "1.3rem 1.5rem",
+                    borderRadius: "0.4rem",
+                    margin: "0 auto",
+                    color: COLOR.PRIMARY,
+                    border: "1px solid #4f46e5",
+                  }}
+                >
+                  View on map
+                </Button>
+              }
+
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
               <Button

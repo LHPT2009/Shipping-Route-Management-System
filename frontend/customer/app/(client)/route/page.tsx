@@ -23,6 +23,9 @@ import { KEYMENU } from "@/constant";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
+import * as yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const { Search } = Input;
 
@@ -348,6 +351,8 @@ const RoutePage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [search, setSearch] = useState<string>('');
+
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     onCompleted: async (data) => {
       setData(data.getRoutes.data.routes);
@@ -365,33 +370,56 @@ const RoutePage = () => {
     }
   });
 
+  const fetchRoutes = async () => {
+    await getRoutes({
+      variables: {
+        input: {
+          search: search,
+          page: tableParams.pagination?.current,
+          limit: tableParams.pagination?.pageSize,
+          name: tableParams.filters?.name?.[0],
+          departure: tableParams.filters?.departure?.[0],
+          arrival: tableParams.filters?.arrival?.[0],
+          shipping_type: tableParams.filters?.shipping_type?.[0],
+          status: tableParams.filters?.status?.[0],
+          sort_field: tableParams.sortField,
+          sort_order: tableParams.sortOrder,
+        }
+      },
+    });
+  };
+
   useEffect(() => {
-    const fetchRoutes = async () => {
-      console.log("tableParams", tableParams);
-      await getRoutes({
-        variables: {
-          input: {
-            page: tableParams.pagination?.current,
-            limit: tableParams.pagination?.pageSize,
-            name: tableParams.filters?.name?.[0],
-            departure: tableParams.filters?.departure?.[0],
-            arrival: tableParams.filters?.arrival?.[0],
-            shipping_type: tableParams.filters?.shipping_type?.[0],
-            status: tableParams.filters?.status?.[0],
-            sort_field: tableParams.sortField,
-            sort_order: tableParams.sortOrder,
-          }
-        },
-      });
-    };
     fetchRoutes();
   }, [
+    search,
     tableParams.pagination?.current,
     tableParams.pagination?.pageSize,
     tableParams?.sortOrder,
     tableParams?.sortField,
     JSON.stringify(tableParams.filters),
   ]);
+
+  // Validate Yup
+  const schema = yup
+    .object({
+      search: yup.string()
+    })
+    .required();
+
+  //useFrom hook
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onFinish = async (values: any) => {
+    setSearch(values.search);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('search', String(values.search));
+    router.replace(`?${newSearchParams.toString()}`);
+  };
 
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
     setTableParams((prevParams) => ({
@@ -416,7 +444,7 @@ const RoutePage = () => {
         newSearchParams.delete(key);
       }
     });
-    
+
     router.replace(`?${newSearchParams.toString()}`);
 
     // `data Source` is useless since `pageSize` changed
@@ -436,10 +464,46 @@ const RoutePage = () => {
             fontWeight: 700,
             color: COLOR.TEXT,
             textAlign: "center",
-            marginBottom: "3rem"
+            marginBottom: "2rem"
           }}>
             Routes
           </Title>
+
+          <Form
+            initialValues={{ remember: true }}
+            style={{
+              width: "28rem",
+              borderRadius: "1rem",
+              backgroundColor: COLOR.BACKGROUNDBODY,
+              textAlign: "left",
+              marginBottom: "2rem"
+            }}
+            onFinish={handleSubmit(onFinish)}
+          >
+            <Form.Item
+              name="search"
+              style={{ paddingBottom: errors.search ? "1rem" : 0, marginTop: "2.7rem" }}
+              help={
+                errors.search && (
+                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
+                )
+              }
+            >
+              <Controller
+                name="search"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    key="search"
+                    {...field}
+                    placeholder={"Search for route name, departure, arrival"}
+                    prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                    style={{ borderRadius: "0.5rem", height: "3rem", background: "white" }}
+                  />
+                )}
+              />
+            </Form.Item>
+          </Form>
 
           <Table
             rowKey={(record) => record.id}
