@@ -25,14 +25,13 @@ export class AuthService {
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
     private userRepository: UserRepository,
+    private readonly producerService: ProducerService
   ) {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     this.oauthClient = new google.auth.OAuth2(clientId, clientSecret);
   }
-    private readonly producerService: ProducerService
-  ) { }
-
+   
   async handleLogin(loginDTO: LoginInput, user: UserEntity): Promise<ResponseDto<{}>> {
     if (!user.active) {
       throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your account has not been activated.'] });
@@ -98,6 +97,7 @@ export class AuthService {
       // const expiresAt = new Date(Date.now() + 5000).toISOString(); // 5s
 
       const payload: PayloadType = { email: tokenInfo.email, userId: user ? user.id : userAfterCreate.id };
+      console.log("payload", payload);
       await this.refreshTokenService.createRefreshToken(payload);
       const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}d` });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
