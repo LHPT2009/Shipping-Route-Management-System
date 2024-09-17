@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    .email-container {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      width: 450px;
+      margin: 20px auto;
+      padding: 30px 40px;
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+
+    .email-header {
+      margin-bottom: 20px;
+    }
+
+    .email-header h1 {
+      font-size: 28px;
+      color: #1e0a43;
+      margin: 0;
+    }
+
+    .email-content {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333;
+      display: block;
+    }
+
+    .email-content p {
+      margin: 20px 0;
+    }
+
+    .button {
+      padding: 12px 20px;
+      font-size: 16px;
+      color: #ffffff !important;
+      background-color: #4f46e5;
+      border-radius: 7px;
+      text-decoration: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .button:hover {
+      background-color: #3d39b1;
+    }
+
+    .more-space {
+      padding-bottom: 15px;
+    }
+
+    .email-footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .username-color {
+      color: #3d39b1;
+      font-weight: 600;
+    }
+
+    .color-link{
+      color: white;
+    }
+
+    .contact-us{
+      color: #3d39b1;
+      font-weight: 400;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="email-content">
+      <p>Hello <span class="username-color">{{username}}</span>,</p>
+      <p class="more-space">{{content}}</p>
+      <a href="{{url}}" class="button"><span class="color-link">{{button}}</span></a>
+    </div>
+    <div class="email-footer">
+      <p>If you did not make this request, please ignore this email or <a href="{{contact}}"><span class="contact-us">contact us</span></a></p>
+    </div>
+  </div>
+</body>
+
+</html>

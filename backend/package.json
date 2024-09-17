@@ -49,6 +49,7 @@
     "command": "^0.0.5",
     "graphql": "^16.9.0",
     "graphql-type-json": "^0.3.2",
+    "kafkajs": "^1.15.0",
     "nestjs-typeorm-paginate": "^4.0.4",
     "nodemailer": "^6.9.14",
     "passport-http-bearer": "^1.0.1",
