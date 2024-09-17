@@ -66,7 +66,10 @@ export default function RootLayout({
                 },
                 Input:{
                   colorTextDisabled: "#868e96"
-                }
+                },
+                Tooltip: {
+                  borderRadius: 5,
+                },
               },
             }}
           >
