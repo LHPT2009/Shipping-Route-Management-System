@@ -9,7 +9,6 @@ import { STATUS, STATUS_CODE } from "common/constants/status"
 import { RefreshTokenService } from '../refreshtoken/refreshtoken.service';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 import { UserEntity } from '../user/entity/user.entity';
-import { ProducerService } from '../kafka/producer.service';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +16,6 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
-    private readonly producerService: ProducerService
   ) { }
 
   async handleLogin(loginDTO: LoginInput, user: UserEntity): Promise<ResponseDto<{}>> {
@@ -49,16 +47,6 @@ export class AuthService {
   }
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
-
-    await this.producerService.produce({
-      topic: 'send-mail',
-      messages: [
-        {
-          value:"Hello World!"
-        }
-      ]
-    });
-
     const user = await this.userService.findOne(loginDTO);
     return await this.handleLogin(loginDTO, user);
   }
