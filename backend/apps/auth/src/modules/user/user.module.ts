@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
 import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
-import { EmailService } from '../email/email.service';
 import { UserResolver } from './user.resolver';
 import { UserRepository } from './user.repository';
 import { RoleModule } from '../role/role.module';
+import { KafkaModule } from '../kafka/kafka.module';
 
 @Module({
   imports: [
@@ -18,8 +18,9 @@ import { RoleModule } from '../role/role.module';
       },
     }),
     TypeOrmModule.forFeature([UserEntity]),
+    KafkaModule,
   ],
-  providers: [UserService, EmailService, UserResolver, UserRepository],
-  exports: [UserService, UserRepository, EmailService],
+  providers: [UserService, UserResolver, UserRepository],
+  exports: [UserService, UserRepository],
 })
 export class UserModule { }

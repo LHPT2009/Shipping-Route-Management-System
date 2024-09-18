@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
 import { SendMailConsumer } from './send-mail.consumer';
 import { KafkaModule } from './kafka/kafka.module';
+import { EmailService } from './email/email.service';
 
 @Module({
   imports: [
@@ -14,6 +15,8 @@ import { KafkaModule } from './kafka/kafka.module';
     }),
     KafkaModule
   ],
-  providers: [ SendMailConsumer ],
+  providers: [ 
+    EmailService, 
+    SendMailConsumer ],
 })
 export class NotificationModule {}

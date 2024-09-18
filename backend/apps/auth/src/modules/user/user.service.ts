@@ -1,24 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserEntity } from './entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { SignupInput } from './dto/signup.input';
 import { LoginInput } from '../auth/dto/login.input';
-// import { EmailService } from '../email/email.service';
 import { ResponseDto } from 'common/response/responseDto';
 import { UserRepository } from './user.repository';
 import { RoleEntity } from '../role/entity/role.entity';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
-import { instanceToPlain } from 'class-transformer';
 import * as crypto from 'crypto';
-import { graphql, GraphQLError } from 'graphql';
 import { validEmail } from 'common/exception/validation/email.validation';
 import { validUsername } from 'common/exception/validation/username.validation';
 import { validPassword } from 'common/exception/validation/password.validation';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
-import { EmailService } from '../email/email.service';
 import { ConfirmEmailInput } from '../auth/dto/confirm_email.input';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as bcrypt from 'bcryptjs';
 import { ResetPasswordInput } from '../auth/dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify_email.input';
@@ -27,21 +21,19 @@ import { PayloadType } from '../auth/types';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { validPhone } from 'common/exception/validation/phone.validation';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import e from 'express';
 import { FilterUsersDto } from './dto/user-filter.dto';
 import { FilterUsersType } from './types/user-filter.types';
-import { User } from './types/user.types';
 import { UserUpdateRoleDto } from './dto/user-update-role';
 import { UpdateStatusUserDto } from './dto/user-update-status';
+import { ProducerService } from '../kafka/producer.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepository: UserRepository,
-    private emailService: EmailService,
     private jwtService: JwtService,
+    private readonly producerService: ProducerService
   ) { }
-
   async findAll(filterUsersDto: FilterUsersDto): Promise<ResponseDto<{
     users: FilterUsersType[];
     total: number;
@@ -135,15 +127,26 @@ export class UserService {
 
         const url = `${process.env.CUSTOMER_EMAIL_URL}/${verifyToken}?email=${userDTO.email}`;
 
-        this.sendMail(
-          "Account activation",
-          "Thanks for registering! Please verify your email by clicking the button below to complete the process.",
-          "Activate your account",
-          verifyToken,
-          userDTO.email,
-          userDTO.username,
-          url
-        );
+        const item = {
+          title: "Account activation",
+          content: "Thanks for registering! Please verify your email by clicking the button below to complete the process.",
+          button: "Activate your account",
+          verifyToken: verifyToken,
+          email: userDTO.email,
+          username: userDTO.username,
+          url: url,
+        };
+        
+        const itemString = JSON.stringify(item);
+    
+        await this.producerService.produce({
+          topic: 'send-mail',
+          messages: [
+            {
+              value: itemString
+            }
+          ]
+        });
 
         return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
       }
@@ -162,32 +165,6 @@ export class UserService {
     );
     await this.userRepository.save(user);
     return user;
-  }
-
-  private email_template(title: string, content: string, button: string, url: string, username: string): string {
-    const templatePath = path.resolve(process.cwd(), 'apps/auth/src/modules/email/email_template.html');
-    let htmlContent = fs.readFileSync(templatePath, 'utf-8');
-    htmlContent = htmlContent.replace('{{url}}', url)
-      .replace('{{username}}', username)
-      .replace('{{contact}}', process.env.CUSTOMER_CONTACT_URL)
-      .replace('{{title}}', title)
-      .replace('{{content}}', content)
-      .replace('{{button}}', button);
-
-    return htmlContent;
-  }
-
-  sendMail(title: string, content: string, button: string, verifyToken: string, email: string, username: string, url: string) {
-    try {
-      const emailHtml = this.email_template(title, content, button, url, username);
-      this.emailService.sendEmail(
-        email,
-        'Verify a new account',
-        emailHtml
-      );
-    } catch (error) {
-      throw new Error(error.message);
-    }
   }
 
   async confirmEmail(userDTO: ConfirmEmailInput): Promise<ResponseDto<[]>> {
@@ -232,16 +209,27 @@ export class UserService {
     await this.userRepository.save(user);
 
     const url = `${process.env.CUSTOMER_RESET_PASSWORD_URL}/${verifyToken}?email=${userDTO.email}`;
+    
+    const item = {
+      title: "Reset password",
+      content: "Please click the button below to recover your account.",
+      button: "Reset your password",
+      verifyToken: verifyToken,
+      email: user.email,
+      username: user.username,
+      url: url,
+    };
+    
+    const itemString = JSON.stringify(item);
 
-    this.sendMail(
-      "Reset password",
-      "Please click the button below to recover your account.",
-      "Reset your password",
-      verifyToken,
-      user.email,
-      user.username,
-      url
-    );
+    await this.producerService.produce({
+      topic: 'send-mail',
+      messages: [
+        {
+          value: itemString
+        }
+      ]
+    });
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
   }
 

@@ -61,16 +61,6 @@ export class AuthService {
   }
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
-
-    await this.producerService.produce({
-      topic: 'send-mail',
-      messages: [
-        {
-          value:"Hello World!"
-        }
-      ]
-    });
-
     const user = await this.userService.findOne(loginDTO);
     return await this.handleLogin(loginDTO, user);
   }

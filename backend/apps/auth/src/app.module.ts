@@ -30,10 +30,10 @@ import { RoleEntity } from './modules/role/entity/role.entity';
 import { PermissionEntity } from './modules/permission/entity/permission.entity';
 import { UserService } from './modules/user/user.service';
 import { UserRepository } from './modules/user/user.repository';
-import { EmailService } from './modules/email/email.service';
 import { JwtModule } from '@nestjs/jwt';
 import { RefreshTokenEntity } from './modules/refreshtoken/entity/refreshtoken.entity';
 import { SeedService } from './seed/seed.service';
+import { KafkaModule } from './modules/kafka/kafka.module';
 
 @Module({
   imports: [
@@ -63,6 +63,7 @@ import { SeedService } from './seed/seed.service';
     RoleModule,
     PermissionModule,
     RefreshTokenModule,
+    KafkaModule,
 
     forwardRef(() => RoleModule),
 
@@ -76,7 +77,7 @@ import { SeedService } from './seed/seed.service';
     TypeOrmModule.forFeature([UserEntity])
   ],
   controllers: [AppController],
-  providers: [AppService, UserService, UserRepository, EmailService, SeedService],
+  providers: [AppService, UserService, UserRepository, SeedService],
 })
 export class AppModule implements NestModule {
   constructor(/*private dataSource: DataSource*/) {
