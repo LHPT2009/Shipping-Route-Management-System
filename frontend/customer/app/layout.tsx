@@ -10,6 +10,7 @@ import { COLOR } from "@/constant";
 import LogoImage from "@/public/logo/logoImage.png";
 import CookiesComponent from "@/components/auth/cookies";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,7 +59,6 @@ export default function RootLayout({
                 },
                 Modal: {
                   borderRadius: 8,
-                  padding: 0
                 },
                 Table: {
                   colorBgContainer: "#fff",
@@ -73,10 +73,12 @@ export default function RootLayout({
               },
             }}
           >
-            <Providers>
-              <CookiesComponent />
-              {children}
-            </Providers>
+            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+              <Providers>
+                <CookiesComponent />
+                {children}
+              </Providers>
+            </GoogleOAuthProvider>
           </ConfigProvider>
         </StyledComponentsRegistry>
       </body>
