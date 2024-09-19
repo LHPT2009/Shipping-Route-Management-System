@@ -39,6 +39,10 @@ export class RoleGuard implements CanActivate {
     }
 
     if (requiredPermissions) {
+      if(!userRole.permissions) {
+        throw new CustomValidationError(STATUS.ERR_PERMISSION_USER, {});
+      }
+
       const hasPermission = userRole.permissions.some(permission =>
         requiredPermissions.includes(permission)
       );

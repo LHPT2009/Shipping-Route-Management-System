@@ -26,6 +26,7 @@ import { ROLE } from "@/constant/role";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 
 const { Search } = Input;
 
@@ -530,4 +531,4 @@ const RoutePage = () => {
   );
 };
 
-export default withProtectedRoute(withRoleCheck(RoutePage, [ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN]));
+export default withProtectedRoute(withRoleCheck(RoutePage, RouteRoles, RoutePermissions));

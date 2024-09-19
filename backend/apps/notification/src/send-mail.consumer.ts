@@ -19,7 +19,7 @@ export class SendMailConsumer implements OnModuleInit {
   constructor(
     private readonly consumerService: ConsumerService,
     private readonly emailService: EmailService,
-  ) {}
+  ) { }
 
   email_template(title: string, content: string, button: string, url: string, username: string): string {
     const templatePath = path.resolve(process.cwd(), 'apps/notification/src/email/email_template.html');
@@ -43,7 +43,7 @@ export class SendMailConsumer implements OnModuleInit {
         emailHtml
       );
     } catch (error) {
-      throw new Error(error.message);
+      console.error(error);
     }
   }
 
@@ -51,9 +51,9 @@ export class SendMailConsumer implements OnModuleInit {
     await this.consumerService.consume(
       { topic: 'send-mail' },
       {
-        eachMessage: async ({message}) => {
-          const info : EmailItem = JSON.parse(message.value.toString());
-          this.sendMail(info.title,info.content,info.button,info.verifyToken,info.email,info.username,info.url)
+        eachMessage: async ({ message }) => {
+          const info: EmailItem = JSON.parse(message.value.toString());
+          this.sendMail(info.title, info.content, info.button, info.verifyToken, info.email, info.username, info.url)
         }
       }
     );

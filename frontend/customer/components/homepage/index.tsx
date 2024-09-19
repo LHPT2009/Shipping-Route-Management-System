@@ -37,12 +37,15 @@ const HompageComponent: React.FC = () => {
 
   const clickHandler = async () => {
     const { accessToken, expiresIn } = await fetchCookies();
-    if(accessToken && expiresIn) {
+    if (accessToken && expiresIn) {
       router.push(URL.ROUTE);
     } else {
       router.push(URL.REGISTER);
     }
   };
+
+  const screenWidth = UseScreenWidth();
+  const responsiveTitle = GetValueFromScreen(screenWidth, true, true, true);
 
   return (
     <div className={styles["wrapper"]}>
@@ -57,6 +60,7 @@ const HompageComponent: React.FC = () => {
             fontSize: "4.5rem",
             marginTop: "2rem",
             fontWeight: 700,
+            // color: responsiveTitle ? COLOR.TEXT : "red",
             color: COLOR.TEXT,
           }}
         >

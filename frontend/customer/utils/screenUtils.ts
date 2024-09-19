@@ -23,12 +23,12 @@ export const UseScreenWidth = (): number | null => {
 
 export const GetValueFromScreen = (
   screenWidth: number | null,
-  extraSmall: boolean,
-  small: boolean,
-  medium: boolean,
-  large: boolean,
-  extraLarge: boolean,
-  extraExtraLarge: boolean
+  extraSmall: boolean = false,
+  small: boolean = false,
+  medium: boolean = false,
+  large: boolean = false,
+  extraLarge: boolean = false,
+  extraExtraLarge: boolean = false
 ): boolean => {
   if (screenWidth === null) {
     return false; // or a default value

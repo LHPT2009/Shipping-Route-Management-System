@@ -12,10 +12,6 @@ import { UserEntity } from '../user/entity/user.entity';
 import { LoginGoogleInput } from './dto/login_google.input';
 import { Auth, google } from 'googleapis';
 import { UserRepository } from '../user/user.repository';
-import { RoleEntity } from '../role/entity/role.entity';
-import { ROLE } from 'common/constants/role';
-import { ProducerService } from '../kafka/producer.service';
-
 @Injectable()
 export class AuthService {
   private oauthClient: Auth.OAuth2Client;
@@ -25,7 +21,6 @@ export class AuthService {
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
     private userRepository: UserRepository,
-    private readonly producerService: ProducerService
   ) {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;

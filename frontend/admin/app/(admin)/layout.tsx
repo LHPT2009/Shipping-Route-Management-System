@@ -4,6 +4,7 @@ import LayoutAdminComponent from "@/components/layout/admin";
 import withProtectedRoute from "@/components/protection/withProtectedRoute";
 import withRoleCheck from "@/components/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
+import { AdminPermissions, AdminRoles } from "@/lib/permissions/admin";
 import { ChildrenComponentProps } from "@/types/children";
 
 const LayoutAdmin: React.FC<ChildrenComponentProps> = ({ children }: ChildrenComponentProps) => {
@@ -15,4 +16,4 @@ const LayoutAdmin: React.FC<ChildrenComponentProps> = ({ children }: ChildrenCom
   );
 }
 
-export default withProtectedRoute(withRoleCheck(LayoutAdmin, [ROLE.ADMIN]));
+export default withProtectedRoute(withRoleCheck(LayoutAdmin, AdminRoles, AdminPermissions));

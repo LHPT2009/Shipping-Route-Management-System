@@ -9,6 +9,7 @@ import PersonalInformationComponent from "@/components/profile/personal";
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
+import { UserProfilePermissions, UserProfileRoles } from "@/lib/permissions/user-profile";
 
 const ProfilePage = () => {
   return (
@@ -26,4 +27,4 @@ const ProfilePage = () => {
   );
 };
 
-export default withProtectedRoute(withRoleCheck(ProfilePage, [ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN]));
+export default withProtectedRoute(withRoleCheck(ProfilePage, UserProfileRoles, UserProfilePermissions));
