@@ -23,18 +23,23 @@ ChartJS.register(
   Legend
 );
 
-ChartJS.defaults.font.family = "Montserrat";
+ChartJS.defaults.font.family = "Rubik";
 
-const LineGraph: React.FC = () => {
+interface LineGraphProps {
+  locationNames: string[];
+  locationCounts: number[];
+}
+
+const LineGraph: React.FC<LineGraphProps> = ({ locationNames, locationCounts }) => {
   const chartData = {
-    xLabels: ["March", "April", "May", "June", "July", "August", "September"],
-    yLabels: [1000000, 4000000, 1000000, 12000000, 6000000, 8000000, 5000000],
+    xLabels: locationNames,
+    yLabels: locationCounts,
   };
 
   const labels: string[] = chartData.xLabels;
   const yLabels: number[] = chartData.yLabels;
-  const stepRevenue: number = Math.max(...chartData.yLabels) / 4;
-  const maxRevenue: number = Math.min(15000000, Math.max(...chartData.yLabels) + stepRevenue);
+  const stepRevenue: number = 1;
+  const maxRevenue: number = Math.round(Math.min(30, Math.max(...chartData.yLabels) + 5));
   const data = {
     labels,
     datasets: [

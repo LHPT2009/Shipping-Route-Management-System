@@ -181,8 +181,6 @@ export class RoutesService {
       });
   
       const sortedLocations = Object.entries(locationCounts)
-        .sort(([, a], [, b]) => b.count - a.count)
-        .slice(0, 7)
         .map(([id, { count, name }]) => ({ [name]: count }));
   
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, {
