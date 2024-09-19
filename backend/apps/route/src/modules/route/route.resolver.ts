@@ -73,4 +73,13 @@ export class RoutesResolver {
   ): Promise<ResponseDto<Route>> {
     return this.routesService.remove(id);
   }
+
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Query(() => ResponseDto<Route>)
+  async routeStatistics(): Promise<ResponseDto<any>> {
+    return this.routesService.routeStatistics();
+  }
+
 }

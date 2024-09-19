@@ -69,4 +69,12 @@ export class RoleResolver {
   // ) {
   //   return this.roleService.removePermissionFromRole(input);
   // }
+
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Query(() => ResponseDto<number>)
+  async roleStatistics(): Promise<ResponseDto<number>> {
+    return this.roleService.roleStatistics();
+  }
 }

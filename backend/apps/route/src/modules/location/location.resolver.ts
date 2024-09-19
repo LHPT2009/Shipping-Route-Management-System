@@ -4,6 +4,8 @@ import { Location } from './type/location.type';
 import { CreateLocationDto } from './dto/location-create.dto';
 import { UpdateLocationDto } from './dto/location-update.dto';
 import { ResponseDto } from 'common/response/responseDto';
+import { Roles } from 'common/exception/guards/decorator/roles.decorator';
+import { ROLE } from 'common/constants/role';
 
 @Resolver(() => Location)
 export class LocationsResolver {
@@ -41,5 +43,10 @@ export class LocationsResolver {
     @Args('id', { type: () => ID }) id: string,
   ): Promise<ResponseDto<Location>> {
     return this.locationsService.remove(id);
+  }
+
+  @Query(() => ResponseDto<number>)
+  async locationStatistics(): Promise<ResponseDto<any>> {
+    return this.locationsService.locationStatistics();
   }
 }

@@ -43,4 +43,9 @@ export class PermissionResolver {
   ): Promise<ResponseDto<PermissionEntity>> {
     return this.permissionService.remove(id);
   }
+
+  @Query(() => ResponseDto<number>)
+  async permissionStatistics(): Promise<ResponseDto<number>> {
+    return this.permissionService.permissionStatistics();
+  }
 }

@@ -97,4 +97,12 @@ export class UserResolver {
   ): Promise<ResponseDto<UserEntity>> {
     return this.userService.remove(id);
   }
+
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Query(() => ResponseDto<number>)
+  async userStatistics(): Promise<ResponseDto<any>> {
+    return this.userService.userStatistics();
+  }
 }

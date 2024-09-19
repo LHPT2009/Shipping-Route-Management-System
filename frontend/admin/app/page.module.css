@@ -1,0 +1,11 @@
+.content-container {
+  margin: 6.5rem 1rem 0 13.58rem;
+  border-radius: 0.5rem;
+  height: 50rem;
+}
+
+.tag-container {
+  height: 6.5rem;
+  width: 15%;
+  padding: 1rem;
+}

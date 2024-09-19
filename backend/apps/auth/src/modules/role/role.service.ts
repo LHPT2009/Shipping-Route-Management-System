@@ -101,4 +101,13 @@ export class RoleService {
 
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
   }
+
+  async roleStatistics(): Promise<ResponseDto<number>> {
+    try {
+      const totalRoles = await this.roleRepository.count();
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, totalRoles, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
 }

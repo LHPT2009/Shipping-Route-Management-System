@@ -65,4 +65,13 @@ export class TransportsService {
       return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
+
+  async transportStatistics(): Promise<ResponseDto<any>> {
+    try {
+      const totalTransports = await this.transportRepository.count();
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, totalTransports, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
 }

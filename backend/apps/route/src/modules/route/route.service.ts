@@ -13,7 +13,9 @@ import { FilterRouteType } from './type/route-filter.type';
 
 @Injectable()
 export class RoutesService {
-  constructor(private routeRepository: RouteRepository) { }
+  constructor(
+    private routeRepository: RouteRepository,
+  ) { }
 
   async findAll(filterRoutesDto: FilterRoutesDto): Promise<ResponseDto<{
     routes: FilterRouteType[];
@@ -147,6 +149,45 @@ export class RoutesService {
     try {
       await this.routeRepository.delete(id);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
+    } catch (error) {
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
+    }
+  }
+
+  async routeStatistics(): Promise<ResponseDto<any>> {
+    try {
+      const totalRoutes = await this.routeRepository.count();
+      const routes = await this.routeRepository.find();
+  
+      const locationCounts: { [key: string]: { count: number, name: string } } = {};
+  
+      routes.forEach(route => {
+        if (route.departure) {
+          const departureId = route.departure.id;
+          const departureName = route.departure.name;
+          if (!locationCounts[departureId]) {
+            locationCounts[departureId] = { count: 0, name: departureName };
+          }
+          locationCounts[departureId].count += 1;
+        }
+        if (route.arrival) {
+          const arrivalId = route.arrival.id;
+          const arrivalName = route.arrival.name;
+          if (!locationCounts[arrivalId]) {
+            locationCounts[arrivalId] = { count: 0, name: arrivalName };
+          }
+          locationCounts[arrivalId].count += 1;
+        }
+      });
+  
+      const sortedLocations = Object.entries(locationCounts)
+        .map(([id, { count, name }]) => ({ [name]: count }));
+  
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, {
+        totalRoutes,
+        topLocations: sortedLocations,
+      }, []);
+  
     } catch (error) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
     }

@@ -12,6 +12,6 @@ import { LocationEntity } from './entity/locations.entity';
     TypeOrmModule.forFeature([LocationEntity]),
   ],
   providers: [LocationsService, LocationsResolver, LocationRepository],
-  exports: [LocationsService],
+  exports: [LocationsService, LocationRepository],
 })
 export class LocationModule {}
