@@ -442,4 +442,13 @@ export class UserService {
       return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
+
+  async userStatistics(): Promise<ResponseDto<number>> {
+    try {
+      const totalUsers = await this.userRepository.count();
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, totalUsers, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
 }

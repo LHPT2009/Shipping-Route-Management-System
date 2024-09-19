@@ -55,4 +55,12 @@ export class TransportsResolver {
   ): Promise<ResponseDto<Transport>> {
     return this.transportsService.remove(id);
   }
+
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Query(() => ResponseDto<number>)
+  async transportStatistics(): Promise<ResponseDto<number>> {
+    return this.transportsService.transportStatistics();
+  }
 }

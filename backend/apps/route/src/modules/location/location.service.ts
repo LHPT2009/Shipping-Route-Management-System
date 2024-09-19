@@ -65,4 +65,13 @@ export class LocationsService {
       return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
+
+  async locationStatistics(): Promise<ResponseDto<number>> {
+    try {
+      const totalLocations = await this.locationRepository.count();
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, totalLocations, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
 }

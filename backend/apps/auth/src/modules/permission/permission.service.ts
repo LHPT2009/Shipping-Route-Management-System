@@ -60,4 +60,13 @@ export class PermissionService {
       return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
+
+  async permissionStatistics(): Promise<ResponseDto<number>> {
+    try {
+      const totalPermissions = await this.permissionRepository.count();
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, totalPermissions, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
 }
