@@ -353,7 +353,7 @@ const RoutePage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>(searchParams.get("search") || "");
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     onCompleted: async (data) => {
@@ -392,6 +392,7 @@ const RoutePage = () => {
   };
 
   useEffect(() => {
+    console.log("search", search)
     fetchRoutes();
   }, [
     search,
