@@ -20,6 +20,7 @@ import MapComponent from "@/components/route/map";
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
+import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 
 const { Text } = Typography;
 
@@ -383,4 +384,4 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default withProtectedRoute(withRoleCheck(RouteDetailPage, [ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN]));
+export default withProtectedRoute(withRoleCheck(RouteDetailPage, RouteRoles, RoutePermissions));
