@@ -33,9 +33,9 @@ export default function CookiesComponent() {
         role: data.getUserByToken.data.roles.name.charAt(0).toUpperCase() + data.getUserByToken.data.roles.name.slice(1).toLowerCase(),
       }
       dispatch(userActions.setUserInformation(userData));
+      dispatch(authActions.setIsLogin(true));
     },
     onError: async (error: ApolloError) => {
-      console.log(error.graphQLErrors[0])
       await handleError(error);
     }
   });
@@ -44,25 +44,7 @@ export default function CookiesComponent() {
     const fetchCurrentCookies = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
       if (accessToken && expiresIn) {
-        if (new Date(expiresIn).getTime() <= Date.now()) {
-          await getNewAccessToken({
-            context: {
-              headers: {
-                authorization: `Bearer ${accessToken}`
-              }
-            }
-          });
-          dispatch(authActions.setIsLogin(true));
-        } else {
-          await getUserByToken({
-            context: {
-              headers: {
-                authorization: `Bearer ${accessToken}`
-              }
-            }
-          });
-          dispatch(authActions.setIsLogin(true));
-        }
+        await getUserByToken({});
       }
     };
     fetchCurrentCookies();

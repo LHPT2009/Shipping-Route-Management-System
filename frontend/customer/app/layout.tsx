@@ -1,4 +1,3 @@
-// 'use client';
 
 import type { Metadata } from "next";
 import { Cookie, Inter } from "next/font/google";
@@ -11,6 +10,7 @@ import LogoImage from "@/public/logo/logoImage.png";
 import CookiesComponent from "@/components/auth/cookies";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import LoadingComponent from "@/components/loading";
 
 const inter = Inter({ subsets: ["latin"] });
 

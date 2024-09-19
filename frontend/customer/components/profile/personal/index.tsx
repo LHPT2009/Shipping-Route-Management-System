@@ -103,7 +103,6 @@ const PersonalInformationComponent: React.FC = () => {
 
   const onFinish = async (values: any) => {
     const { accessToken, expiresIn } = await fetchCookies();
-    if (accessToken && expiresIn) {
       await updateUserByToken({
         variables: {
           input: {
@@ -113,13 +112,7 @@ const PersonalInformationComponent: React.FC = () => {
             address: values.address,
           }
         },
-        context: {
-          headers: {
-            authorization: `Bearer ${accessToken}`
-          }
-        }
       });
-    }
   };
 
   return (

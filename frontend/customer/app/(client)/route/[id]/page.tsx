@@ -21,6 +21,8 @@ import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
+import { useAppSelector } from "@/lib/hooks/hooks";
+import LoadingComponent from "@/components/loading";
 
 const { Text } = Typography;
 
@@ -102,7 +104,10 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     }
   }, [route, reset]);
 
+  const isLoadingAccess = useAppSelector((state) => state.loading.loadingAccessToken);
+
   return (
+
     <div style={{ margin: "6.5rem auto 2rem auto", width: "80rem", }}>
       <Form onFinish={handleSubmit(onFinish)} layout="vertical" >
         <Title level={4} style={{
@@ -365,7 +370,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
               >
                 Back to routes
               </Button>
-              <Tooltip placement="bottom" title="Update is inavailable" style={{width: "10rem"}}>
+              <Tooltip placement="bottom" title="Update is inavailable" style={{ width: "10rem" }}>
                 <Button
                   disabled
                   type="primary"
@@ -380,7 +385,6 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         </Row>
       </Form>
     </div>
-
   );
 };
 

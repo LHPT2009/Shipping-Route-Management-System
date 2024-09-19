@@ -27,6 +27,7 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
+import LoadingComponent from "@/components/loading";
 
 const { Search } = Input;
 
@@ -85,7 +86,7 @@ const RoutePage = () => {
 
   const [data, setData] = useState<DataType[]>([]);
   const searchParams = useSearchParams();
-
+  const isLoadingAccess = useAppSelector((state) => state.loading.loadingAccessToken);
   const [tableParams, setTableParams] = useState<TableParams>({
     filters: {
       name: [searchParams.get("name") || ""],
@@ -459,6 +460,7 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
+
         <div style={{ width: "85rem", margin: "6.5rem auto 2rem auto" }}>
           <Title level={4} style={{
             fontSize: "2rem",
@@ -515,7 +517,6 @@ const RoutePage = () => {
             onChange={handleTableChange}
             dataSource={data}
           />
-
         </div>
       )}
 

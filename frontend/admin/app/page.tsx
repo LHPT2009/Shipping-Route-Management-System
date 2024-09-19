@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import useLoading from "@/lib/hooks/useLoading";
 import { ROLE } from "@/constant/role";
+import { AdminPermissions, AdminRoles } from "@/lib/permissions/admin";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -37,4 +38,4 @@ function Home() {
   );
 }
 
-export default withProtectedRoute(withRoleCheck(Home, [ROLE.SUPERADMIN,ROLE.ADMIN]));
+export default withProtectedRoute(withRoleCheck(Home, AdminRoles, AdminPermissions));

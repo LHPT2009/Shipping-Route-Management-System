@@ -76,7 +76,6 @@ const NewPasswordPage: React.FC<VerifyAccountProps> = ({params}) => {
       router.push("/login");
     },
     onError: async (error: ApolloError) => {
-      console.log(error.graphQLErrors[0]);
       await handleError(error);
     }
   });

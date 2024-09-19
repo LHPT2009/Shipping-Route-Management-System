@@ -1,4 +1,5 @@
-// useHandleError.ts
+"use client";
+
 import { useGetNewAccessToken } from "@/lib/hooks/token";
 // Adjust the import path as needed
 import { NOTIFICATION } from "@/constant/notification";
@@ -6,10 +7,13 @@ import useAntNotification from "./notification";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { extractErrorMessages } from "@/utils/error/format.error";
 import { getErrorMessage } from "@/utils/error/apollo.error";
+import { useAppDispatch } from "./hooks";
+import { loadingActions } from "../store/loading";
 
 export const useHandleError = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const [getNewAccessToken] = useGetNewAccessToken();
+  const dispatch = useAppDispatch();
 
   const handleError = async (error: any) => {
     if (error.message === 'ERR_AUTH_LOGIN') {

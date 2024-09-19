@@ -47,6 +47,7 @@ export class AuthService {
       const payload: PayloadType = { email: user.email, userId: user.id };
       await this.refreshTokenService.createRefreshToken(payload);
       const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}d` });
+      // const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}s` });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
 
     } else {

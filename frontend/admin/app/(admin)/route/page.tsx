@@ -317,6 +317,7 @@ const RoutePage = () => {
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
+      console.log("data in route admin", data.getRoutes.data.routes)
       setData(data.getRoutes.data.routes);
       setTableParams({
         ...tableParams,

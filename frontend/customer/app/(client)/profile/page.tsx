@@ -10,20 +10,26 @@ import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import { ROLE } from "@/constant/role";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 import { UserProfilePermissions, UserProfileRoles } from "@/lib/permissions/user-profile";
+import { useAppSelector } from "@/lib/hooks/hooks";
+import LoadingComponent from "@/components/loading";
 
 const ProfilePage = () => {
+  const isLoadingAccess = useAppSelector((state) => state.loading.loadingAccessToken);
+
   return (
-    <Flex vertical align="center" justify="center" style={{ width: "45rem", margin: "6.5rem auto 2rem auto" }}>
-      <Title level={4} style={{
-        fontSize: "2rem",
-        fontWeight: 700,
-        color: COLOR.TEXT,
-      }}>
-        My profile
-      </Title>
-      <GeneralInformationComponent />
-      <PersonalInformationComponent />
-    </Flex>
+    // isLoadingAccess ? <LoadingComponent /> : (
+      <Flex vertical align="center" justify="center" style={{ width: "45rem", margin: "6.5rem auto 2rem auto" }}>
+        <Title level={4} style={{
+          fontSize: "2rem",
+          fontWeight: 700,
+          color: COLOR.TEXT,
+        }}>
+          My profile
+        </Title>
+        <GeneralInformationComponent />
+        <PersonalInformationComponent />
+      </Flex>
+    // )
   );
 };
 
