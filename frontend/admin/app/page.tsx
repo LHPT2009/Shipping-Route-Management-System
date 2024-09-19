@@ -39,23 +39,17 @@ function Home() {
     // Add other properties if needed
   }
 
-  const [totalRoute, setTotalRoute] = useState(0);
   const [locationNames, setLocationNames] = useState<string[]>([]);
   const [locationCounts, setLocationCounts] = useState<number[]>([]);
   const [maxVisitName, setMaxVisitName] = useState("");
   const [maxVisitTime, setMaxVisitTime] = useState(0);
-  const [location, setLocation] = useState(0);
-  const [transport, setTransport] = useState(0);
-  const [user, setUser] = useState(0);
-  const [role, setRole] = useState(0);
-  const [permission, setPermission] = useState(0);
 
   const [dataStatistics, setDataStatistics] = useState<{
-    name: string[];
-    count: number[];
-    textColor: string[];
-    tagColor: string[];
-  } | null>(null);
+    name: string;
+    count: number;
+    textColor: string;
+    tagColor: string;
+  }[] | null>(null);
 
   const { handleError } = useHandleError();
 
@@ -65,44 +59,73 @@ function Home() {
       const locationNames = data.routeStatistics.data.topLocations.map((location: any) => Object.keys(location)[0]);
       const locationCounts = data.routeStatistics.data.topLocations.map((location: any) => Object.values(location)[0]);
 
-      setTotalRoute(data.routeStatistics.data.totalRoutes);
       setLocationNames(locationNames);
       setLocationCounts(locationCounts);
 
       const maxIndex = locationCounts.indexOf(Math.max(...locationCounts));
       setMaxVisitName(locationNames[maxIndex]);
       setMaxVisitTime(locationCounts[maxIndex]);
+
+      setDataStatistics([
+        ...(dataStatistics || []),
+        { name: "Route", count: data.routeStatistics.data.totalRoutes, textColor: "#08979c", tagColor: "cyan" },
+      ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
   const [getLocation, { loading: loadingLocation }] = useLazyQuery(LOCATION_STATISTIC, {
     fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => { setLocation(data.locationStatistics.data); },
+    onCompleted: async (data) => {
+      setDataStatistics([
+        ...(dataStatistics || []),
+        { name: "Location", count: data.locationStatistics.data, textColor: "#c41d7d", tagColor: "magenta" },
+      ])
+    },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
   const [getTransport, { loading: loadingTransport }] = useLazyQuery(TRANSPORT_STATISTIC, {
     fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => { setTransport(data.transportStatistics.data); },
+    onCompleted: async (data) => {
+      setDataStatistics([
+        ...(dataStatistics || []),
+        { name: "Transport", count: data.transportStatistics.data, textColor: "#d48806", tagColor: "gold" },
+      ])
+    },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
   const [getUser, { loading: loadingUser }] = useLazyQuery(USER_STATISTIC, {
     fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => { setUser(data.userStatistics.data); },
+    onCompleted: async (data) => {
+      setDataStatistics([
+        ...(dataStatistics || []),
+        { name: "User", count: data.userStatistics.data, textColor: "#389e0d", tagColor: "green" },
+      ])
+    },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
   const [getRole, { loading: loadingRole }] = useLazyQuery(ROLE_STATISTIC, {
     fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => { setRole(data.roleStatistics.data); },
+    onCompleted: async (data) => {
+      setDataStatistics([
+        ...(dataStatistics || []),
+        { name: "Role", count: data.roleStatistics.data, textColor: "#0958d9", tagColor: "blue" },
+      ])
+    },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
   const [getPermission, { loading: loadingPermission }] = useLazyQuery(PERMISSION_STATISTIC, {
     fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => { setPermission(data.permissionStatistics.data); },
+    onCompleted: async (data) => {
+      setDataStatistics([
+        ...(dataStatistics || []),
+        { name: "Permission", count: data.permissionStatistics.data, textColor: "#531dab", tagColor: "purple" },
+      ])
+    },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
@@ -114,12 +137,16 @@ function Home() {
     getRole();
     getPermission();
 
-    setDataStatistics({
-      name: ["Route", "Location", "Transport", "User", "Role", "Permission"],
-      count: [totalRoute, location, transport, user, role, permission],
-      textColor: ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae", "#00a388", "#f56a00"],
-      tagColor: ["cyan", "magenta", "orange", "green", "blue", "purple"]
-    })
+    // if (!loadingRoute && !loadingLocation || !loadingTransport || !loadingUser || !loadingRole || !loadingPermission) {
+    //   setDataStatistics([
+    //     { name: "Route", count: totalRoute, textColor: "#f56a00", tagColor: "cyan" },
+    //     { name: "Location", count: location, textColor: "#7265e6", tagColor: "magenta" },
+    //     { name: "Transport", count: transport, textColor: "#ffbf00", tagColor: "orange" },
+    //     { name: "User", count: user, textColor: "#00a2ae", tagColor: "green" },
+    //     { name: "Role", count: role, textColor: "#00a388", tagColor: "blue" },
+    //     { name: "Permission", count: permission, textColor: "#f56a00", tagColor: "purple" },
+    //   ])
+    // };
   }, []);
 
   if (showLoading) {
@@ -136,30 +163,12 @@ function Home() {
 
             {/* Statistics */}
             <Flex justify="space-between" align="center" style={{ width: "100%", height: "20rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
-              <Tag color="cyan" className={styles['tag-container']}>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>Locations</Title>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{location}</Title>
-              </Tag>
-              <Tag color="magenta" className={styles['tag-container']}>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>Locations</Title>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{location}</Title>
-              </Tag>
-              <Tag color="orange" className={styles['tag-container']}>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>Locations</Title>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{location}</Title>
-              </Tag>
-              <Tag color="green" className={styles['tag-container']}>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>Locations</Title>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{location}</Title>
-              </Tag>
-              <Tag color="blue" className={styles['tag-container']}>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>Locations</Title>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{location}</Title>
-              </Tag>
-              <Tag color="purple" className={styles['tag-container']}>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>Locations</Title>
-                <Title level={4} style={{ color: "#08979c", fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{location}</Title>
-              </Tag>
+              {dataStatistics?.map((data, index) => (
+                <Tag color={data.tagColor} className={styles['tag-container']} key={index}>
+                  <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
+                  <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
+                </Tag>
+              ))}
             </Flex>
 
             {/* Line graph */}
