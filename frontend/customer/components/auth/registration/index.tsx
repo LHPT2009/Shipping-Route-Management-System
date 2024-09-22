@@ -72,6 +72,11 @@ const RegisterComponent = () => {
         .string()
         .oneOf([yup.ref("password")], "Confirm password must match password")
         .required("Please enter your confirm password"),
+
+      agreementConfirm: yup
+        .boolean()
+        .oneOf([true], "Please confirm to our terms and privacy policy")
+        .required("Please confirm to our terms and privacy policy"),
     })
     .required();
 
@@ -85,7 +90,7 @@ const RegisterComponent = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
   const router = useRouter();
-  
+
   const [signupMutation, { loading, error, data }] = useMutation(SIGNUP, {
     onCompleted() {
       reset({
@@ -105,7 +110,7 @@ const RegisterComponent = () => {
   const onFinish = async (values: any) => {
     // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
     // dispatch(authActions.setRegisterEmail(values.email));
-
+    console.log(values);
     await signupMutation({
       variables: {
         input: {
@@ -255,12 +260,30 @@ const RegisterComponent = () => {
           />
         </Form.Item>
 
-        <Form.Item style={{ display: "flex", alignItems: "flex-start", marginTop: "1.5rem" }}>
-          <Checkbox>
-            I understand and agree to {" "}
-            <span style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Terms</span> and {" "}
-            <span style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Privacy Policy </span>
-          </Checkbox>
+        <Form.Item
+          name="agreementConfirm"
+          style={{ display: "flex", alignItems: "flex-start", marginTop: "1.5rem", paddingBottom: errors.passwordConfirm ? "1rem" : 0, marginBottom: "1.2rem" }}
+          help={
+            errors.agreementConfirm && (
+              <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.agreementConfirm?.message}</span>
+            )
+          }
+        >
+          <Controller
+            name="agreementConfirm"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                key="agreementConfirm"
+                {...field}
+              >
+                I understand and agree to {" "}
+                <span style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Terms</span> and {" "}
+                <span style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Privacy Policy </span>
+              </Checkbox>
+            )}
+          />
+
         </Form.Item>
 
         {/* Button register*/}
@@ -284,12 +307,6 @@ const RegisterComponent = () => {
         </Form.Item>
       </Form>
     </Flex>
-
-    // <DatePicker
-    //   {...field}
-    //   style={{ width: "50%", borderRadius: "8px" }}
-    //   placeholder="Birthday..."
-    // />
 
   );
 };
