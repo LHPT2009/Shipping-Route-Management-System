@@ -64,12 +64,12 @@ const RoutePage = () => {
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
+  const searchParams = useSearchParams();
   const searchInput = useRef<InputRef>(null);
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [routeId, setRouteId] = useState<number>(-1);
   const [data, setData] = useState<DataType[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const searchParams = useSearchParams();
+  const [search, setSearch] = useState<string>(searchParams.get("search") || "");
   const [tableParams, setTableParams] = useState<TableParams>({
     filters: {
       name: [searchParams.get("name") || ""],

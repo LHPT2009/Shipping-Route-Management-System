@@ -392,7 +392,6 @@ const RoutePage = () => {
   };
 
   useEffect(() => {
-    console.log("search", search)
     fetchRoutes();
   }, [
     search,
