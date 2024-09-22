@@ -8,6 +8,7 @@ import { CustomValidationError } from 'common/exception/validation/custom-valida
 export const authContext = async ({ req }) => {
 
   let accessToken: string = req.headers.authorization;
+  let clientType: string = req.headers.clienttype;
 
   if (accessToken && accessToken.startsWith('Bearer ')) {
     accessToken = accessToken.split(' ')[1];
@@ -29,9 +30,14 @@ export const authContext = async ({ req }) => {
       return {
         accessToken: accessToken,
         userRole: data,
+        clientType: clientType
       };
     } catch (err) {
       throw new CustomValidationError(STATUS.ERR_VALIDATION, { token: ['Token is Invaild.'] });
+    }
+  }else{
+    return {
+      clientType: clientType
     }
   }
 
