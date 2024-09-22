@@ -53,6 +53,7 @@ import CustomFormatError from 'common/exception/validation/custom-format-error';
             willSendRequest({ request, context }) {
               request.http.headers.set('access_token', context.accessToken ? context.accessToken : null);
               request.http.headers.set('user_role', context.userRole ? JSON.stringify(context.userRole) : null);
+              request.http.headers.set('client_type', context.clientType ? context.clientType : null);
             },
           });
         },
