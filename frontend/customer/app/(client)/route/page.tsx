@@ -359,6 +359,7 @@ const RoutePage = () => {
   const [search, setSearch] = useState<string>(searchParams.get("search") || "");
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
+    fetchPolicy: "cache-and-network",
     onCompleted: async (data) => {
       setData(data.getRoutes.data.routes);
       setTableParams({

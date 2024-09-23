@@ -210,7 +210,6 @@ const ChangePasswordModal: React.FC<CustomModalProps> = ({ open, onClose }) => {
           </Button>
         </Form.Item>
       </Flex>
-
     </Form>
   </Modal>
   );
