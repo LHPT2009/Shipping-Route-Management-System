@@ -21,6 +21,7 @@ import { LOCATION_STATISTIC, PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATIST
 import { useHandleError } from "@/lib/hooks/error";
 import styles from "./page.module.css";
 import { set } from "react-hook-form";
+import { get } from "http";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -129,24 +130,17 @@ function Home() {
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
-  useEffect(() => {
-    getRoute();
-    getLocation();
-    getTransport();
-    getUser();
-    getRole();
-    getPermission();
+  const getData = async () => {
+    await getRoute();
+    await getLocation();
+    await getTransport();
+    await getUser();
+    await getRole();
+    await getPermission();
+  }
 
-    // if (!loadingRoute && !loadingLocation || !loadingTransport || !loadingUser || !loadingRole || !loadingPermission) {
-    //   setDataStatistics([
-    //     { name: "Route", count: totalRoute, textColor: "#f56a00", tagColor: "cyan" },
-    //     { name: "Location", count: location, textColor: "#7265e6", tagColor: "magenta" },
-    //     { name: "Transport", count: transport, textColor: "#ffbf00", tagColor: "orange" },
-    //     { name: "User", count: user, textColor: "#00a2ae", tagColor: "green" },
-    //     { name: "Role", count: role, textColor: "#00a388", tagColor: "blue" },
-    //     { name: "Permission", count: permission, textColor: "#f56a00", tagColor: "purple" },
-    //   ])
-    // };
+  useEffect(() => {
+    getData();
   }, []);
 
   if (showLoading) {

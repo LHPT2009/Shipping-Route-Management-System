@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
@@ -19,6 +19,7 @@ import AssignUserModal from "@/components/modal/user/assign";
 import DeleteUserModal from "@/components/modal/user/delete";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU, LABELMENU } from "@/constant/menu";
+import Link from "next/link";
 
 const { Search } = Input;
 
@@ -244,7 +245,7 @@ const UserPage = () => {
         <Flex align="center" gap="1rem">
           <Button
             type="primary"
-            onClick={() => { router.push(`/user/${record.id}/information`) }}
+            onClick={() => { router.push(`/user/${record.id}`) }}
             style={{ width: "2.3rem", borderRadius: "0.3rem" }}
           >
             <InfoCircleOutlined />
@@ -370,6 +371,13 @@ const UserPage = () => {
         <></>
       ) : (
         <>
+          <Breadcrumb
+            items={[
+              { title: <Link href="/">Dashboard</Link>, },
+              { title: 'List users', }
+            ]}
+            style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+          />
           <ContentComponent>
             <Table
               rowKey={(record) => record.id}

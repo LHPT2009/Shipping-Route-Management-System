@@ -74,13 +74,6 @@ const ContactPage = () => {
 
   return (
     <Flex vertical align="center" justify="center" style={{ width: "60rem", margin: "6.5rem auto 2rem auto" }}>
-      <Title level={4} style={{
-        fontSize: "2rem",
-        fontWeight: 700,
-        color: COLOR.TEXT,
-      }}>
-        Contact us
-      </Title>
       <div className={styles["container"]}>
         <div className={styles["info-container"]}>
           <div className={styles["sub-info"]}>
