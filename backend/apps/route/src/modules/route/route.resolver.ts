@@ -18,8 +18,8 @@ import { FilterRouteType } from './type/route-filter.type';
 export class RoutesResolver {
   constructor(private routesService: RoutesService) { }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_LIST_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route[]>)
   async getRoutes(
@@ -33,8 +33,8 @@ export class RoutesResolver {
     return this.routesService.findAll(input);
   }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_DETAIL_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>, { nullable: true })
   async getRoute(
@@ -43,8 +43,8 @@ export class RoutesResolver {
     return this.routesService.findOne(id);
   }
 
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.CREATE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async createRoute(
@@ -52,9 +52,9 @@ export class RoutesResolver {
   ): Promise<ResponseDto<Route>> {
     return this.routesService.create(input);
   }
-  
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.UPDATE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async updateRoute(
@@ -64,8 +64,8 @@ export class RoutesResolver {
     return this.routesService.update(id, input);
   }
 
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.DELETE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async removeRoute(
@@ -75,7 +75,7 @@ export class RoutesResolver {
   }
 
   @Roles(ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_LIST_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>)
   async routeStatistics(): Promise<ResponseDto<any>> {

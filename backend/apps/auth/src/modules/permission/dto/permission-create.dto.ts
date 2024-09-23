@@ -5,4 +5,7 @@ export class CreatePermissionDto {
 
   @Field()
   name: string;
+
+  @Field()
+  description: string;
 }

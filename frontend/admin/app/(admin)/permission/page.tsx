@@ -16,7 +16,6 @@ interface DataType {
 }
 
 const PermissionPage = () => {
-
   const { permissions, loading } = usePermissions();
 
   const dispatch = useAppDispatch();
@@ -24,9 +23,9 @@ const PermissionPage = () => {
   useEffect(() => {
     const value: MenuState = {
       keyMenu: KEYMENU.PERMISSION,
-      labelMenu: LABELMENU.PERMISSION
-    }
-    dispatch(menuActions.changeInfoMenu(value))
+      labelMenu: LABELMENU.PERMISSION,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
   }, [dispatch]);
 
   const columns: TableColumnsType<DataType> = [
@@ -34,7 +33,12 @@ const PermissionPage = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-    }
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
   ];
 
   const checkStatusBackground: boolean = useAppSelector(
@@ -49,8 +53,8 @@ const PermissionPage = () => {
         <>
           <Breadcrumb
             items={[
-              { title: <Link href="/">Dashboard</Link>, },
-              { title: 'List permissions', }
+              { title: <Link href="/">Dashboard</Link> },
+              { title: "List permissions" },
             ]}
             style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
           />
@@ -58,7 +62,7 @@ const PermissionPage = () => {
             <Table
               columns={columns}
               dataSource={permissions}
-              className={styles['table-striped-rows']}
+              className={styles["table-striped-rows"]}
               loading={loading}
             />
           </ContentComponent>

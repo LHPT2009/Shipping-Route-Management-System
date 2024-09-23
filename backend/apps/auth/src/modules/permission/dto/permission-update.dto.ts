@@ -7,4 +7,9 @@ export class UpdatePermissionDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  description?: string;
 }

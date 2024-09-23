@@ -8,7 +8,6 @@ import { STATUS_CODE, STATUS } from 'common/constants/status';
 import { PermissionRepository } from '../permission/permission.repository';
 import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 import { In } from 'typeorm';
-import CustomFormatError from 'common/exception/validation/custom-format-error';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 
 @Injectable()
@@ -39,36 +38,36 @@ export class RoleService {
   }
 
   async create(createRoleDto: CreateRoleDto): Promise<ResponseDto<RoleEntity>> {
-      const { name } = createRoleDto;
+    const { name } = createRoleDto;
 
-      const existingRole = await this.roleRepository.findOne({where: { name: name }});
+    const existingRole = await this.roleRepository.findOne({ where: { name: name } });
 
-      if (existingRole) {
-        throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Name already exists'] });
-      }
+    if (existingRole) {
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Name already exists'] });
+    }
 
-      const item = this.roleRepository.create(createRoleDto);
-      await this.roleRepository.save(item);
-      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, item, []);
+    const item = this.roleRepository.create(createRoleDto);
+    await this.roleRepository.save(item);
+    return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, item, []);
   }
 
   async update(
     id: string,
     updateRoleDto: UpdateRoleDto,
   ): Promise<ResponseDto<RoleEntity>> {
-      const { name } = updateRoleDto;
+    const { name } = updateRoleDto;
 
-      const existingRole = await this.roleRepository.findOne({where: { name: name }});
+    const existingRole = await this.roleRepository.findOne({ where: { name: name } });
 
-      if (existingRole) {
-        throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Name already exists'] });
-      }
-      
-      const roleResponse = await this.findOne(id);
-      const role = roleResponse.data as RoleEntity;
-      Object.assign(role, updateRoleDto);
-      await this.roleRepository.save(role);
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, []);
+    if (existingRole) {
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Name already exists'] });
+    }
+
+    const roleResponse = await this.findOne(id);
+    const role = roleResponse.data as RoleEntity;
+    Object.assign(role, updateRoleDto);
+    await this.roleRepository.save(role);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, []);
   }
 
   async remove(id: string): Promise<ResponseDto<RoleEntity>> {

@@ -20,8 +20,8 @@ export class RoleResolver {
   constructor(private roleService: RoleService) { }
 
   @Query(() => ResponseDto<RoleEntity[]>)
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET)
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_LIST_ROLE)
   @UseGuards(AuthGuard, RoleGuard)
   async getRoles(): Promise<ResponseDto<RoleEntity[]>> {
     return this.roleService.findAll();
@@ -71,7 +71,7 @@ export class RoleResolver {
   // }
 
   @Roles(ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_LIST_ROLE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<number>)
   async roleStatistics(): Promise<ResponseDto<number>> {
