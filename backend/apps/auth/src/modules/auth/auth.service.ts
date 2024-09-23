@@ -1,4 +1,4 @@
-import { Injectable} from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
@@ -12,6 +12,9 @@ import { UserEntity } from '../user/entity/user.entity';
 import { LoginGoogleInput } from './dto/login_google.input';
 import { Auth, google } from 'googleapis';
 import { UserRepository } from '../user/user.repository';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+
 @Injectable()
 export class AuthService {
   private oauthClient: Auth.OAuth2Client;
@@ -21,12 +24,15 @@ export class AuthService {
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
     private userRepository: UserRepository,
+
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache
   ) {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     this.oauthClient = new google.auth.OAuth2(clientId, clientSecret);
   }
-   
+
   async handleLogin(loginDTO: LoginInput, user: UserEntity): Promise<ResponseDto<{}>> {
     if (!user.active) {
       throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your account has not been activated.'] });
@@ -58,6 +64,7 @@ export class AuthService {
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
     const user = await this.userService.findOne(loginDTO);
+    await this.cacheManager.set("check-redis", 'Save Info Login!');
     return await this.handleLogin(loginDTO, user);
   }
 

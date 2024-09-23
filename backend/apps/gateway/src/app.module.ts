@@ -23,7 +23,7 @@ import CustomFormatError from 'common/exception/validation/custom-format-error';
         },
       },
     ]),
-    
+
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {

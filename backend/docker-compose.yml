@@ -3,7 +3,14 @@ version: '3.8'
 name: backend
 
 services:
-
+  redis:
+    image: redis
+    command: /bin/sh -c "redis-server"
+    env_file:
+      - .env
+    ports:
+      - 6379:6379
+      
   postgres:
     container_name: postgres
     image: postgres:alpine

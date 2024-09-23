@@ -9,10 +9,12 @@ import { PermissionRepository } from '../permission/permission.repository';
 import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 import { In } from 'typeorm';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
+import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class RoleService {
   constructor(
+    private userRepository: UserRepository,
     private roleRepository: RoleRepository,
     private permissionRepository: PermissionRepository
   ) { }
@@ -71,12 +73,34 @@ export class RoleService {
   }
 
   async remove(id: string): Promise<ResponseDto<RoleEntity>> {
-    try {
-      await this.roleRepository.delete(id);
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
-    } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    const usersWithRole = await this.userRepository.find({
+      where: { roles: { id } },
+    });
+    if (usersWithRole.length > 0) {
+      throw new CustomValidationError(
+        STATUS.ERR_VALIDATION, {
+        name: [
+          'Role is associated with one or more users and cannot be deleted']
+      }
+      );
     }
+
+    const roleWithPermissions = await this.roleRepository.findOne({
+      where: { id },
+      relations: ['permissions'],
+    });
+
+    if (roleWithPermissions?.permissions.length > 0) {
+      throw new CustomValidationError(
+        STATUS.ERR_VALIDATION, {
+        name: [
+          'Role is associated with one or more permissions and cannot be deleted']
+      }
+      );
+    }
+
+    await this.roleRepository.delete(id);
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
   }
 
   async addPermissionToRole(input: PermissionToRoleDto): Promise<ResponseDto<RoleEntity>> {
