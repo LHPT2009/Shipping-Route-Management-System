@@ -27,40 +27,15 @@ import Male from "../../../public/images/homepage/male.png";
 import { UPDATE_PROFILE } from "@/apollo/mutations/user";
 import { usernameRegex } from "@/utils/validation/username.regex";
 import { phoneRegex } from "@/utils/validation/phone.regex";
+import ChangePasswordModal from "@/components/modal/profile";
 
 const ProfilePage = () => {
   const user: UserState = useAppSelector((state) => state.user);
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const handleOk = () => {
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
   const schema = yup
     .object({
-      // currentPassword: yup
-      //   .string()
-      //   .required("Please enter your current password"),
-
-      // newPassword: yup
-      //   .string()
-      //   .matches(passwordRegex, { message: "Please enter a stronger password (Min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit)" })
-      //   .required("Please enter your new password"),
-
-      // passwordConfirm: yup
-      //   .string()
-      //   .oneOf([yup.ref("newPassword")], "Confirm password must match password")
-      //   .required("Please enter your new confirm password"),
-
       username: yup
         .string()
         .matches(usernameRegex, { message: "Please enter a valid username" }),
@@ -75,7 +50,7 @@ const ProfilePage = () => {
 
       address: yup.string(),
 
-      status: yup.string(),
+      role: yup.string(),
     })
     .required();
 
@@ -127,22 +102,12 @@ const ProfilePage = () => {
         email: user.email,
         fullname: user.fullname,
         address: user.address,
-        status: "Active",
+        role: user.role,
       });
     }
   }, [user, reset]);
 
   const onFinish = async (values: any) => {
-    //call api
-    // await changePassword({
-    //   variables: {
-    //     input: {
-    //       currentPassword: values.currentPassword,
-    //       newPassword: values.newPassword,
-    //       passwordConfirm: values.passwordConfirm
-    //     }
-    //   }
-    // });
 
     await updateUserByToken({
       variables: {
@@ -154,6 +119,14 @@ const ProfilePage = () => {
         }
       },
     });
+  }
+
+  const onClose = () => {
+    setOpen(false);
+  }
+
+  const onOpen = () => {
+    setOpen(true);
   }
 
   return (
@@ -171,6 +144,12 @@ const ProfilePage = () => {
                 <Form.Item
                   label="Username"
                   name="username"
+                  style={{ paddingBottom: errors.username ? "1rem" : 0 }}
+                  help={
+                    errors.username && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.username?.message}</span>
+                    )
+                  }
                 >
                   <Controller
                     name="username"
@@ -187,15 +166,15 @@ const ProfilePage = () => {
               </Col>
               <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
                 <Form.Item
-                  label="Status"
-                  name="status"
+                  label="Role"
+                  name="role"
                 >
                   <Controller
-                    name="status"
+                    name="role"
                     control={control}
                     render={({ field }) => (
                       <Input
-                        key="status"
+                        key="role"
                         {...field}
                         disabled
                         style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
@@ -210,6 +189,12 @@ const ProfilePage = () => {
                 <Form.Item
                   label="Email"
                   name="email"
+                  style={{ paddingBottom: errors.email ? "1rem" : 0 }}
+                  help={
+                    errors.email && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.email?.message}</span>
+                    )
+                  }
                 >
                   <Controller
                     name="email"
@@ -251,6 +236,12 @@ const ProfilePage = () => {
                 <Form.Item
                   label="Phone number"
                   name="phone"
+                  style={{ paddingBottom: errors.phone ? "1rem" : 0 }}
+                  help={
+                    errors.phone && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.phone?.message}</span>
+                    )
+                  }
                 >
                   <Controller
                     name="phone"
@@ -308,20 +299,25 @@ const ProfilePage = () => {
             </Flex>
             <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.1rem" }}>
               <Button
-                onClick={() => { }}
+                onClick={onOpen}
                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
               >
                 Change password
               </Button>
               <Button
-                  htmlType="submit"
-                  type="primary"
+                loading={loading}
+                htmlType="submit"
+                type="primary"
                 style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
               >
                 Update
               </Button>
             </Flex>
           </Col>
+          <ChangePasswordModal
+            open={open}
+            onClose={onClose}
+          />
         </Row>
       </Form>
     </div>
