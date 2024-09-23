@@ -19,7 +19,7 @@ export class RoutesResolver {
   constructor(private routesService: RoutesService) { }
 
   @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_LIST_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route[]>)
   async getRoutes(
@@ -34,7 +34,7 @@ export class RoutesResolver {
   }
 
   @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_DETAIL_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>, { nullable: true })
   async getRoute(
@@ -44,7 +44,7 @@ export class RoutesResolver {
   }
 
   @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.CREATE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async createRoute(
@@ -52,9 +52,9 @@ export class RoutesResolver {
   ): Promise<ResponseDto<Route>> {
     return this.routesService.create(input);
   }
-  
+
   @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.UPDATE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async updateRoute(
@@ -65,7 +65,7 @@ export class RoutesResolver {
   }
 
   @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.DELETE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
   async removeRoute(
@@ -75,7 +75,7 @@ export class RoutesResolver {
   }
 
   @Roles(ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_LIST_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>)
   async routeStatistics(): Promise<ResponseDto<any>> {

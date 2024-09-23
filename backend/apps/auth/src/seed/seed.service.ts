@@ -24,11 +24,44 @@ export class SeedService implements OnApplicationBootstrap {
     const permissionCount = await permissionRepository.count();
     if (permissionCount === 0) {
       await permissionRepository.save([
-        { name: PERMISSION.GET },
-        { name: PERMISSION.POST },
-        { name: PERMISSION.PUT },
-        { name: PERMISSION.PATCH },
-        { name: PERMISSION.DELETE },
+        { name: PERMISSION.READ_LIST_ROLE, description: PERMISSION.READ_LIST_ROLE_DESCRIPTION },
+        { name: PERMISSION.READ_DETAIL_ROLE, description: PERMISSION.READ_DETAIL_ROLE_DESCRIPTION },
+        { name: PERMISSION.CREATE_ROLE, description: PERMISSION.CREATE_ROLE_DESCRIPTION },
+        { name: PERMISSION.UPDATE_ROLE, description: PERMISSION.UPDATE_ROLE_DESCRIPTION },
+        { name: PERMISSION.DELETE_ROLE, description: PERMISSION.DELETE_ROLE_DESCRIPTION },
+
+        { name: PERMISSION.READ_LIST_USER, description: PERMISSION.READ_LIST_USER_DESCRIPTION },
+        { name: PERMISSION.READ_DETAIL_USER, description: PERMISSION.READ_DETAIL_USER_DESCRIPTION },
+        { name: PERMISSION.CREATE_USER, description: PERMISSION.CREATE_USER_DESCRIPTION },
+        { name: PERMISSION.UPDATE_USER, description: PERMISSION.UPDATE_USER_DESCRIPTION },
+        { name: PERMISSION.DELETE_USER, description: PERMISSION.DELETE_USER_DESCRIPTION },
+
+        { name: PERMISSION.READ_LIST_PERMISSION, description: PERMISSION.READ_LIST_PERMISSION_DESCRIPTION },
+        { name: PERMISSION.READ_DETAIL_PERMISSION, description: PERMISSION.READ_DETAIL_PERMISSION_DESCRIPTION },
+        { name: PERMISSION.CREATE_PERMISSION, description: PERMISSION.CREATE_PERMISSION_DESCRIPTION },
+        { name: PERMISSION.UPDATE_PERMISSION, description: PERMISSION.UPDATE_PERMISSION_DESCRIPTION },
+        { name: PERMISSION.DELETE_PERMISSION, description: PERMISSION.DELETE_PERMISSION_DESCRIPTION },
+
+        { name: PERMISSION.READ_LIST_LOCATION, description: PERMISSION.READ_LIST_LOCATION_DESCRIPTION },
+        { name: PERMISSION.READ_DETAIL_LOCATION, description: PERMISSION.READ_DETAIL_LOCATION_DESCRIPTION },
+        { name: PERMISSION.CREATE_LOCATION, description: PERMISSION.CREATE_LOCATION_DESCRIPTION },
+        { name: PERMISSION.UPDATE_LOCATION, description: PERMISSION.UPDATE_LOCATION_DESCRIPTION },
+        { name: PERMISSION.DELETE_LOCATION, description: PERMISSION.DELETE_LOCATION_DESCRIPTION },
+
+        { name: PERMISSION.READ_LIST_TRANSPORT, description: PERMISSION.READ_LIST_TRANSPORT_DESCRIPTION },
+        { name: PERMISSION.READ_DETAIL_TRANSPORT, description: PERMISSION.READ_DETAIL_TRANSPORT_DESCRIPTION },
+        { name: PERMISSION.CREATE_TRANSPORT, description: PERMISSION.CREATE_TRANSPORT_DESCRIPTION },
+        { name: PERMISSION.UPDATE_TRANSPORT, description: PERMISSION.UPDATE_TRANSPORT_DESCRIPTION },
+        { name: PERMISSION.DELETE_TRANSPORT, description: PERMISSION.DELETE_TRANSPORT_DESCRIPTION },
+
+        { name: PERMISSION.READ_LIST_ROUTE, description: PERMISSION.READ_LIST_ROUTE_DESCRIPTION },
+        { name: PERMISSION.READ_DETAIL_ROUTE, description: PERMISSION.READ_DETAIL_ROUTE_DESCRIPTION },
+        { name: PERMISSION.CREATE_ROUTE, description: PERMISSION.CREATE_ROUTE_DESCRIPTION },
+        { name: PERMISSION.UPDATE_ROUTE, description: PERMISSION.UPDATE_ROUTE_DESCRIPTION },
+        { name: PERMISSION.DELETE_ROUTE, description: PERMISSION.DELETE_ROUTE_DESCRIPTION },
+
+        { name: PERMISSION.ASSIGN_PERMISSION_TO_ROLE, description: PERMISSION.ASSIGN_PERMISSION_TO_ROLE_DESCRIPTION },
+        { name: PERMISSION.ASSIGN_ROLE_TO_USER, description: PERMISSION.ASSIGN_ROLE_TO_USER_DESCRIPTION },
       ]);
     }
 
@@ -37,13 +70,14 @@ export class SeedService implements OnApplicationBootstrap {
     // Step 3: Seed Roles
     const roleCountafter = await roleRepository.count();
     if (roleCountafter === 0) {
-      const getPermission = allPermissions.find(permission => permission.name === PERMISSION.GET);
-      const postPermission = allPermissions.find(permission => permission.name === PERMISSION.POST);
+      const readListRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_LIST_ROUTE);
+      const readDetailRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_ROUTE);
+      const readDetailUser = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_USER);
 
       await roleRepository.save([
         {
           name: ROLE.CUSTOMER,
-          permissions: [getPermission],
+          permissions: [readListRoute, readDetailRoute, readDetailUser],
         },
         {
           name: ROLE.ADMIN,

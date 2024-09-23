@@ -15,17 +15,16 @@ interface DataType {
 }
 
 const PermissionPage = () => {
-
-  const { permissions,loading } = usePermissions();
+  const { permissions, loading } = usePermissions();
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const value : MenuState ={
+    const value: MenuState = {
       keyMenu: KEYMENU.PERMISSION,
-      labelMenu: LABELMENU.PERMISSION
-    }
-    dispatch(menuActions.changeInfoMenu(value))
+      labelMenu: LABELMENU.PERMISSION,
+    };
+    dispatch(menuActions.changeInfoMenu(value));
   }, [dispatch]);
 
   const columns: TableColumnsType<DataType> = [
@@ -33,7 +32,12 @@ const PermissionPage = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-    }
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
   ];
 
   const checkStatusBackground: boolean = useAppSelector(
@@ -50,7 +54,7 @@ const PermissionPage = () => {
             <Table
               columns={columns}
               dataSource={permissions}
-              className={styles['table-striped-rows']}
+              className={styles["table-striped-rows"]}
               loading={loading}
             />
           </ContentComponent>

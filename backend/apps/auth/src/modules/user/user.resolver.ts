@@ -34,8 +34,8 @@ export class UserResolver {
   }
 
   @Query(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_DETAIL_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async getUserById(
     @Args('id', { type: () => ID }) id: string,
@@ -44,8 +44,8 @@ export class UserResolver {
   }
 
   @Query(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_DETAIL_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async getUserByToken(
     @Context() context: any
@@ -55,7 +55,7 @@ export class UserResolver {
 
   @Mutation(() => ResponseDto<UserEntity>, { nullable: true })
   @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.UPDATE_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async updateUserByToken(
     @Context() context: any,
@@ -66,7 +66,7 @@ export class UserResolver {
 
   @Mutation(() => ResponseDto<UserEntity>, { nullable: true })
   @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.UPDATE_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async changePassword(
     @Context() context: any,
@@ -99,7 +99,7 @@ export class UserResolver {
   }
 
   @Roles(ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_LIST_USER)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<number>)
   async userStatistics(): Promise<ResponseDto<any>> {

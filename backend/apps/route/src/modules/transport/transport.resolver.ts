@@ -18,7 +18,7 @@ export class TransportsResolver {
 
   @Query(() => ResponseDto<Transport[]>)
   @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
-  @Permissions(PERMISSION.GET)
+  @Permissions(PERMISSION.READ_LIST_TRANSPORT)
   @UseGuards(AuthGuard, RoleGuard)
   async getTransports(): Promise<ResponseDto<Transport[]>> {
     return this.transportsService.findAll();
@@ -26,7 +26,7 @@ export class TransportsResolver {
 
   @Query(() => ResponseDto<Transport>, { nullable: true })
   @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST)
+  @Permissions(PERMISSION.READ_DETAIL_TRANSPORT)
   @UseGuards(AuthGuard, RoleGuard)
   async getTransport(
     @Args('id', { type: () => ID }) id: string,
@@ -57,7 +57,7 @@ export class TransportsResolver {
   }
 
   @Roles(ROLE.ADMIN)
-  @Permissions(PERMISSION.GET, PERMISSION.POST, PERMISSION.PUT, PERMISSION.DELETE)
+  @Permissions(PERMISSION.READ_LIST_TRANSPORT)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<number>)
   async transportStatistics(): Promise<ResponseDto<number>> {
