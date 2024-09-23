@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
@@ -23,6 +23,7 @@ import { NOTIFICATION } from "@/constant/notification";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -449,63 +450,73 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <ContentComponent>
-          <Flex justify="space-between" align="flex-start" style={{marginTop: "1rem", marginBottom: "0.5rem"}}>
-            <Form
-              initialValues={{ remember: true }}
-              style={{
-                width: "28rem",
-                borderRadius: "1rem",
-              }}
-              onFinish={handleSubmit(onFinish)}
-            >
-              <Form.Item
-                name="search"
-                style={{ paddingBottom: errors.search ? "1rem" : 0 }}
-              >
-                <Controller
-                  name="search"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      key="search"
-                      {...field}
-                      placeholder={"Search for route name, departure, arrival"}
-                      prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
-                      style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important"}}
-                    />
-                  )}
-                />
-              </Form.Item>
-            </Form>
-            <Button
-              type="primary"
-              onClick={() => {
-                router.push(`/route/create`);
-              }}
-              style={{ padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
-            >
-              <PlusOutlined />
-              New route
-            </Button>
-          </Flex>
+        <>
+          <Breadcrumb
+            items={[
+              { title: <Link href="/">Dashboard</Link>, },
+              { title: 'List routes', }
+            ]}
+            style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+          />
 
-          <Table
-            rowKey={(record) => record.name}
-            className={styles['table-striped-rows']}
-            columns={columns}
-            pagination={tableParams.pagination}
-            loading={loading}
-            onChange={handleTableChange}
-            dataSource={data}
-          />
-          <DeleteRouteModal
-            routeId={routeId ? `${routeId}` : ""}
-            open={openModalDelete}
-            onClose={handleCloseModalDelete}
-            onDelete={() => handleDeleteRoute(routeId)}
-          />
-        </ContentComponent>
+          <ContentComponent>
+            <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.5rem" }}>
+              <Form
+                initialValues={{ remember: true }}
+                style={{
+                  width: "28rem",
+                  borderRadius: "1rem",
+                }}
+                onFinish={handleSubmit(onFinish)}
+              >
+                <Form.Item
+                  name="search"
+                  style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                >
+                  <Controller
+                    name="search"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        key="search"
+                        {...field}
+                        placeholder={"Search for route name, departure, arrival"}
+                        prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
+                        style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
+                      />
+                    )}
+                  />
+                </Form.Item>
+              </Form>
+              <Button
+                type="primary"
+                onClick={() => {
+                  router.push(`/route/create`);
+                }}
+                style={{ padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+              >
+                <PlusOutlined />
+                New route
+              </Button>
+            </Flex>
+
+            <Table
+              rowKey={(record) => record.name}
+              className={styles['table-striped-rows']}
+              columns={columns}
+              pagination={tableParams.pagination}
+              loading={loading}
+              onChange={handleTableChange}
+              dataSource={data}
+            />
+            <DeleteRouteModal
+              routeId={routeId ? `${routeId}` : ""}
+              open={openModalDelete}
+              onClose={handleCloseModalDelete}
+              onDelete={() => handleDeleteRoute(routeId)}
+            />
+          </ContentComponent>
+        </>
       )}
 
     </div>

@@ -1,5 +1,5 @@
 "use client";
-import { Col, Form, Row, Input, Button, Typography, Flex, Tooltip } from "antd";
+import { Col, Form, Row, Input, Button, Typography, Flex, Tooltip, Breadcrumb } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -23,6 +23,8 @@ import withProtectedRoute from "@/components/auth/protection/withProtectedRoute"
 import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 import { useAppSelector } from "@/lib/hooks/hooks";
 import LoadingComponent from "@/components/loading";
+import Link from "next/link";
+import { HomeOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -109,16 +111,23 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   return (
 
     <div style={{ margin: "6.5rem auto 2rem auto", width: "80rem", }}>
+      <Breadcrumb
+        items={[{
+          title: (
+            <Link href="/">
+              <Flex align="center" gap="0.5rem">
+                <HomeOutlined />
+                <span>Homepage</span>
+              </Flex>
+            </Link>
+          )
+        },
+        { title: <Link href="/route">List routes</Link> },
+        { title: route?.name, }
+        ]}
+        style={{ paddingLeft: "0.5rem", marginBottom: "1.5rem" }}
+      />
       <Form onFinish={handleSubmit(onFinish)} layout="vertical" >
-        <Title level={4} style={{
-          fontSize: "2rem",
-          fontWeight: 700,
-          color: COLOR.TEXT,
-          textAlign: "center",
-          marginBottom: "3rem"
-        }}>
-          Route details
-        </Title>
         <Row gutter={[8, 8]} style={{ border: "1px solid #ced4da", borderRadius: "1rem", padding: "3rem 3rem 2rem 3rem" }}>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             {/* content */}
@@ -361,26 +370,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 >
                   View on map
                 </Button>}
-
             </Flex>
-            <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
-              <Button
-                onClick={() => router.push(URL.ROUTE)}
-                style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
-              >
-                Back to routes
-              </Button>
-              <Tooltip placement="bottom" title="Update is inavailable" style={{ width: "10rem" }}>
-                <Button
-                  disabled
-                  type="primary"
-                  style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
-                >
-                  Update
-                </Button>
-              </Tooltip>
-            </Flex>
-
           </Col>
         </Row>
       </Form>

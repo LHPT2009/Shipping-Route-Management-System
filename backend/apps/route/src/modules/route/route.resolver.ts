@@ -18,7 +18,7 @@ import { FilterRouteType } from './type/route-filter.type';
 export class RoutesResolver {
   constructor(private routesService: RoutesService) { }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
   @Permissions(PERMISSION.READ_LIST_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route[]>)
@@ -33,7 +33,7 @@ export class RoutesResolver {
     return this.routesService.findAll(input);
   }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
   @Permissions(PERMISSION.READ_DETAIL_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>, { nullable: true })
@@ -43,7 +43,7 @@ export class RoutesResolver {
     return this.routesService.findOne(id);
   }
 
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Roles(ROLE.ADMIN)
   @Permissions(PERMISSION.CREATE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
@@ -53,7 +53,7 @@ export class RoutesResolver {
     return this.routesService.create(input);
   }
 
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Roles(ROLE.ADMIN)
   @Permissions(PERMISSION.UPDATE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
@@ -64,7 +64,7 @@ export class RoutesResolver {
     return this.routesService.update(id, input);
   }
 
-  @Roles(ROLE.ADMIN, ROLE.SUPERADMIN)
+  @Roles(ROLE.ADMIN)
   @Permissions(PERMISSION.DELETE_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<Route>)
