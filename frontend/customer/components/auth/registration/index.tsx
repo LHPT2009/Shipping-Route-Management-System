@@ -108,9 +108,6 @@ const RegisterComponent = () => {
   });
 
   const onFinish = async (values: any) => {
-    // dispatch(authActions.changeRegisterStatus(RegisterStatus.VERIFY));
-    // dispatch(authActions.setRegisterEmail(values.email));
-    console.log(values);
     await signupMutation({
       variables: {
         input: {

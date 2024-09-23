@@ -207,26 +207,24 @@ const HompageComponent: React.FC = () => {
             with complete information.
           </Paragraph>
 
-          <Link href={URL.LOGIN}>
-            <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
-              <Title
-                level={5}
-                style={{
-                  fontSize: "1.2rem",
-                  marginBottom: "0.3rem",
-                  textAlign: "left",
-                  color: COLOR.PRIMARY,
-                }}
-              >
-                Start viewing routes
-              </Title>
-              <img
-                style={{ width: "1rem" }}
-                src={RightArrow.src}
-                alt="right-arrow"
-              />
-            </Flex>
-          </Link>
+          <Flex align="center" style={{ gap: "1rem", marginTop: "4rem", cursor: "pointer" }} onClick={clickHandler}>
+            <Title
+              level={5}
+              style={{
+                fontSize: "1.2rem",
+                marginBottom: "0.3rem",
+                textAlign: "left",
+                color: COLOR.PRIMARY,
+              }}
+            >
+              Start viewing routes
+            </Title>
+            <img
+              style={{ width: "1rem" }}
+              src={RightArrow.src}
+              alt="right-arrow"
+            />
+          </Flex>
         </div>
       </div>
 
@@ -265,7 +263,7 @@ const HompageComponent: React.FC = () => {
             improve operational efficiency.
           </Paragraph>
 
-          <Link href={URL.LOGIN}>
+          <Link href={"http://localhost:4000"}>
             <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
               <Title
                 level={5}

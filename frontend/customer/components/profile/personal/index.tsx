@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ChildrenComponentProps } from "@/types/children";
 import { Button, Flex, Form, Input } from "antd";
 import styles from "../profile.module.css";
@@ -25,10 +25,12 @@ import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { NOTIFICATION } from "@/constant/notification";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import ChangePasswordModal from "@/components/modal/profile";
 
 const PersonalInformationComponent: React.FC = () => {
 
   const user: UserState = useAppSelector((state) => state.user);
+  const [open, setOpen] = useState<boolean>(false);
 
   const schema = yup
     .object({
@@ -89,6 +91,14 @@ const PersonalInformationComponent: React.FC = () => {
     }
   });
 
+  const onClose = () => {
+    setOpen(false);
+  }
+
+  const onOpen = () => {
+    setOpen(true);
+  }
+
   useEffect(() => {
     if (user) {
       reset({
@@ -102,17 +112,16 @@ const PersonalInformationComponent: React.FC = () => {
   }, [user, reset]);
 
   const onFinish = async (values: any) => {
-    const { accessToken, expiresIn } = await fetchCookies();
-      await updateUserByToken({
-        variables: {
-          input: {
-            fullname: values.fullname,
-            username: values.username,
-            phone_number: values.phone,
-            address: values.address,
-          }
-        },
-      });
+    await updateUserByToken({
+      variables: {
+        input: {
+          fullname: values.fullname,
+          username: values.username,
+          phone_number: values.phone,
+          address: values.address,
+        }
+      },
+    });
   };
 
   return (
@@ -277,9 +286,12 @@ const PersonalInformationComponent: React.FC = () => {
             Update profile
           </Button>
         </Form.Item>
-
       </Form>
 
+      <ChangePasswordModal
+        open={open}
+        onClose={onClose}
+      />
     </div>
   );
 };

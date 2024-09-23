@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
@@ -13,7 +13,7 @@ import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route";
 import { FilterDropdownProps } from "antd/es/table/interface";
-import { SearchOutlined } from "@ant-design/icons";
+import { HomeOutlined, SearchOutlined } from "@ant-design/icons";
 import type { SorterResult } from 'antd/es/table/interface';
 import { useRouter, useSearchParams } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
@@ -28,6 +28,8 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 import LoadingComponent from "@/components/loading";
+import Link from "next/link";
+import Paragraph from "antd/es/typography/Paragraph";
 
 const { Search } = Input;
 
@@ -98,6 +100,7 @@ const RoutePage = () => {
     pagination: {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("page-size")) || 20,
+      total: 0,
     },
   });
   const checkStatusBackground: boolean = useAppSelector(
@@ -356,6 +359,7 @@ const RoutePage = () => {
   const [search, setSearch] = useState<string>(searchParams.get("search") || "");
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
+    fetchPolicy: "cache-and-network",
     onCompleted: async (data) => {
       setData(data.getRoutes.data.routes);
       setTableParams({
@@ -460,53 +464,64 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-
         <div style={{ width: "85rem", margin: "6.5rem auto 2rem auto" }}>
-          <Title level={4} style={{
-            fontSize: "2rem",
-            fontWeight: 700,
-            color: COLOR.TEXT,
-            textAlign: "center",
-            marginBottom: "2rem"
-          }}>
-            Routes
-          </Title>
-
-          <Form
-            initialValues={{ remember: true }}
-            style={{
-              width: "28rem",
-              borderRadius: "1rem",
-              backgroundColor: COLOR.BACKGROUNDBODY,
-              textAlign: "left",
-              marginBottom: "2rem"
-            }}
-            onFinish={handleSubmit(onFinish)}
-          >
-            <Form.Item
-              name="search"
-              style={{ paddingBottom: errors.search ? "1rem" : 0, marginTop: "2.7rem" }}
-              help={
-                errors.search && (
-                  <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
-                )
-              }
+          <Breadcrumb
+            items={[{
+              title: (
+                <Link href="/">
+                  <Flex align="center" gap="0.5rem">
+                    <HomeOutlined />
+                    <span>Homepage</span>
+                  </Flex>
+                </Link>
+              )
+            },
+            { title: 'List routes', }
+            ]}
+            style={{ paddingLeft: "0.5rem" }}
+          />
+          <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
+            <Form
+              initialValues={{ remember: true }}
+              style={{
+                width: "28rem",
+                borderRadius: "1rem",
+                backgroundColor: COLOR.BACKGROUNDBODY,
+                textAlign: "left",
+                marginBottom: "0",
+              }}
+              onFinish={handleSubmit(onFinish)}
             >
-              <Controller
+              <Form.Item
                 name="search"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    key="search"
-                    {...field}
-                    placeholder={"Search for route name, departure, arrival"}
-                    prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
-                    style={{ borderRadius: "0.5rem", height: "3rem", background: "white" }}
-                  />
-                )}
-              />
-            </Form.Item>
-          </Form>
+                style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                help={
+                  errors.search && (
+                    <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
+                  )
+                }
+              >
+                <Controller
+                  name="search"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="search"
+                      {...field}
+                      placeholder={"Search for route name, departure, arrival"}
+                      prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                      style={{ borderRadius: "0.5rem", height: "3rem", background: "white" }}
+                    />
+                  )}
+                />
+              </Form.Item>
+            </Form>
+
+            <Tag color="geekblue" style={{ padding: "0 1rem", height: "3rem", borderRadius: "0.3rem", paddingTop: 0, display: "flex", alignItems: "center" }}>
+              <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
+            </Tag>
+
+          </Flex>
 
           <Table
             rowKey={(record) => record.id}
