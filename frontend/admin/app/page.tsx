@@ -166,7 +166,7 @@ function Home() {
             </Flex>
 
             {/* Line graph */}
-            <div style={{ width: "100%", height: "40rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
+            <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
               <Title level={4} style={{
                 fontSize: "1.3rem",
                 fontWeight: 700,
@@ -186,7 +186,7 @@ function Home() {
                 <span style={{ color: "#495057", fontWeight: "400" }}> is the most visited location with </span>
                 {maxVisitTime} times
               </Title>
-              <div style={{ height: "30rem" }}>
+              <div style={{ height: "35rem", paddingRight: "2.5rem" }}>
                 <LineGraph locationCounts={locationCounts} locationNames={locationNames} />
               </div>
             </div>
