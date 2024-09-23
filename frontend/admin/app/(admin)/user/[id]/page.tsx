@@ -276,20 +276,7 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
 
             <Col xs={24} sm={24} md={24} lg={1} xl={1} xxl={1}></Col>
             <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
-              <img src={Male.src} alt="male" style={{ width: "19rem", borderRadius: "0.5rem", margin: "0 auto" }} />
-              <Flex align="center" justify="center">
-                <Button
-                  style={{
-                    padding: "1.3rem 1.5rem",
-                    borderRadius: "0.4rem",
-                    margin: "2.5rem auto 0 auto",
-                    color: COLOR.PRIMARY,
-                    border: "1px solid #4f46e5",
-                  }}
-                >
-                  Upload avatar
-                </Button>
-              </Flex>
+              <img src={Male.src} alt="male" style={{ width: "20rem", borderRadius: "0.5rem", margin: "7rem auto" }} />
             </Col>
           </Row>
         </Form>
