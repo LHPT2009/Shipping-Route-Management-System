@@ -46,7 +46,7 @@ const HompageComponent: React.FC = () => {
 
   const screenWidth = UseScreenWidth();
   const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
-  console.log("responsive", responsive);
+
   return (
     <div className={styles["wrapper"]}>
       {/* Title */}
@@ -448,7 +448,7 @@ const HompageComponent: React.FC = () => {
         <div className={styles["support-content"]}>
           <Title
             style={{
-              fontSize: "3rem",
+              fontSize: responsive ? "1.6rem" : "3rem",
               fontWeight: 700,
               color: COLOR.TEXT,
             }}
@@ -458,20 +458,20 @@ const HompageComponent: React.FC = () => {
 
           <Paragraph
             style={{
-              fontSize: "1.2rem",
+              fontSize: responsive ? "1.1rem" : "1.2rem",
               marginTop: "2rem",
               marginBottom: "0",
             }}
           >
             {" "}
-            24/7 Support Across All Channels: Reliable Assistance Anytime,
-            Anywhere.
+            24/7 Support Across All Channels: Reliable Assistance Anytime, Anywhere.
           </Paragraph>
 
           <Flex
+            vertical={responsive}
             justify="center"
             align="center"
-            style={{ margin: "4.5rem auto 0 auto" }}
+            style={{ margin: responsive ? "3.5rem auto 0 auto" : "4.5rem auto 0 auto" }}
           >
             <div className={styles["team-card"]}>
               <img
@@ -482,11 +482,11 @@ const HompageComponent: React.FC = () => {
               />
               <Title
                 level={5}
-                style={{ color: COLOR.TEXT, marginTop: "1.5rem" }}
+                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
               >
                 Phone support
               </Title>
-              <Paragraph style={{ margin: 0 }}>0602249017</Paragraph>
+              <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>0602249017</Paragraph>
             </div>
 
             <div className={styles["team-card"]}>
@@ -498,11 +498,11 @@ const HompageComponent: React.FC = () => {
               />
               <Title
                 level={5}
-                style={{ color: COLOR.TEXT, marginTop: "1.5rem" }}
+                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
               >
                 Email support
               </Title>
-              <Paragraph style={{ margin: 0 }}>
+              <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>
                 support.srouting@gmail.com
               </Paragraph>
             </div>
@@ -516,7 +516,7 @@ const HompageComponent: React.FC = () => {
               />
               <Title
                 level={5}
-                style={{ color: COLOR.TEXT, marginTop: "1.5rem" }}
+                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
               >
                 Meet at the office
               </Title>
@@ -532,7 +532,7 @@ const HompageComponent: React.FC = () => {
       <div className={styles["team-container"]}>
         <Title
           style={{
-            fontSize: "3rem",
+            fontSize: responsive ? "2rem" : "3rem",
             marginTop: "6rem",
             fontWeight: 700,
             color: COLOR.TEXT,
@@ -543,7 +543,7 @@ const HompageComponent: React.FC = () => {
 
         <Paragraph
           style={{
-            fontSize: "1.2rem",
+            fontSize: responsive ? "1.1rem" : "1.2rem",
             marginTop: "2rem",
             marginBottom: "0",
           }}
@@ -555,8 +555,7 @@ const HompageComponent: React.FC = () => {
 
         <Paragraph
           style={{
-            fontSize: "1.2rem",
-            // marginTop: "2rem",
+            fontSize: responsive ? "1.1rem" : "1.2rem",
           }}
         >
           Get to know the faces behind our project.
@@ -564,9 +563,10 @@ const HompageComponent: React.FC = () => {
 
         {/* Team members */}
         <Flex
+          vertical={responsive}
           justify="center"
-          align="flex-start"
-          style={{ marginTop: "4.5rem", gap: "8rem" }}
+          align={responsive ? "center" : "flex-start"}
+          style={{ marginTop: responsive ? "3.5rem" : "4.5rem", gap: responsive ? "4rem" : "8rem" }}
         >
           <div className={styles["team-card"]}>
             <img className={styles["avatar"]} src={Tung.src} alt="tung" />
@@ -617,9 +617,10 @@ const HompageComponent: React.FC = () => {
       {/* Get started */}
       <div className={styles["get-started-container"]}>
         <Flex
+          vertical={responsive}
           justify="space-between"
           align="center"
-          style={{ gap: "2rem", width: "85%" }}
+          style={{ gap: "2rem", width: responsive ? "90%" : "85%" }}
         >
           <div>
             <h1 className={styles["get-started-header"]}>
@@ -627,7 +628,7 @@ const HompageComponent: React.FC = () => {
             </h1>
             <Paragraph
               style={{
-                fontSize: "1.3rem",
+                fontSize: responsive ? "1.1rem" : "1.3rem",
                 marginTop: "1.5rem",
                 textAlign: "left",
                 color: "white",
@@ -642,7 +643,9 @@ const HompageComponent: React.FC = () => {
             type="primary"
             style={{
               fontSize: "1.2rem",
-              padding: "2rem 2.7rem",
+              padding: responsive ? "1.6rem 2.2rem" : "2rem 2.7rem",
+              width: responsive ? "100%" : "auto",
+              marginBottom: responsive ? "1rem" : "0",
               border: "none",
               color: COLOR.TEXT,
               fontWeight: 600,
