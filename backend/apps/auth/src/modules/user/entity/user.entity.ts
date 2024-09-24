@@ -43,6 +43,9 @@ export class UserEntity implements UserInterface {
   @Column({ nullable: true })
   verify_token: string;
 
+  @Column()
+  img: string;
+
   @Column({ type: 'timestamptz', nullable: true })
   verify_token_expires: Date;
 
@@ -72,6 +75,7 @@ export class UserEntity implements UserInterface {
     this.fullname = '';
     this.phone_number = '';
     this.address = '';
+    this.img = '';
   }
 
   @BeforeInsert()

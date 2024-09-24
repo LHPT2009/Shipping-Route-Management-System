@@ -73,11 +73,11 @@ export class SeedService implements OnApplicationBootstrap {
       const readListRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_LIST_ROUTE);
       const readDetailRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_ROUTE);
       const readDetailUser = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_USER);
-
+      const updateDetailUser = allPermissions.find(permission => permission.name === PERMISSION.UPDATE_USER);
       await roleRepository.save([
         {
           name: ROLE.CUSTOMER,
-          permissions: [readListRoute, readDetailRoute, readDetailUser],
+          permissions: [readListRoute, readDetailRoute, readDetailUser, updateDetailUser],
         },
         {
           name: ROLE.ADMIN,
@@ -107,7 +107,8 @@ export class SeedService implements OnApplicationBootstrap {
           active: true,
           roles: { id: "1", name: ROLE.CUSTOMER }, // Assuming ROLE.USER corresponds to role id 1
           verify_token: verifyToken,
-          verify_token_expires: verifyTokenExpires
+          verify_token_expires: verifyTokenExpires,
+          img: ''
         };
       });
 
@@ -122,7 +123,8 @@ export class SeedService implements OnApplicationBootstrap {
           active: true,
           roles: { id: "2", name: ROLE.ADMIN },
           verify_token: verifyToken,
-          verify_token_expires: verifyTokenExpires
+          verify_token_expires: verifyTokenExpires,
+          img: ''
         },
         ...users
       ]);

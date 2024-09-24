@@ -164,12 +164,14 @@ const UserPage = () => {
       dataIndex: 'username',
       key: 'username',
       sorter: true,
+      width: '10%',
       ...getColumnSearchProps('username'),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      width: '20%',
       ...getColumnSearchProps('email'),
     },
     {
@@ -189,7 +191,7 @@ const UserPage = () => {
       title: 'Permission',
       dataIndex: 'permissions',
       key: 'permissions',
-      // width: '25%',
+      width: '25%',
       render: (_, { status, permissions }) => (
         <div>
           {Array.isArray(permissions) && permissions.length > 0 ? permissions.map((perm, index) => (
@@ -199,8 +201,14 @@ const UserPage = () => {
                 borderRadius: "0.2rem",
                 padding: "0.15rem 0.5rem",
                 fontSize: "0.8rem",
+                marginBottom: "0.5rem"
               }}
-              color={perm === 'GET' ? 'blue' : perm === 'POST' ? 'green' : perm === 'PUT' ? 'orange' : perm === 'PATCH' ? 'cyan' : 'red'}
+              color={
+                perm.toLowerCase().includes("read") ? 'blue'
+                  : perm.toLowerCase().includes("create") ? 'green'
+                    : perm.toLowerCase().includes("update") ? 'orange'
+                      : 'red'
+              }
             >
               {perm}
             </Tag>

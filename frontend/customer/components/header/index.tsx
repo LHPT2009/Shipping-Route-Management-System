@@ -95,7 +95,6 @@ const HeaderComponent = () => {
           display: "flex",
           alignItems: "center",
           height: "5.5rem",
-          // padding: "1rem",
         }}
       >
         <Col span={6} style={{ marginBottom: "0.8rem" }}>
@@ -153,7 +152,7 @@ const HeaderComponent = () => {
                 </Paragraph>
               </div>
               <Link href="/profile">
-                <img style={{ width: "3rem", borderRadius: "50%" }} src={Male.src} alt="tung" />
+                <img style={{ width: "3rem", height: "3rem", borderRadius: "50%" }} src={user.img !== "" ? user.img : Male.src} alt="tung" />
               </Link>
               <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />
             </Flex>

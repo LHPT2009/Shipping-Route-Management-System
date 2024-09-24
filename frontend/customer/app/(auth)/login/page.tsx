@@ -206,15 +206,11 @@ const LoginPage = () => {
         </Form.Item>
 
         {/* Remember me */}
-        <Flex justify="space-between" align="flex-start" style={{ marginTop: 0, padding: 0 }}>
-          <Form.Item style={{ display: "flex", alignItems: "flex-start" }}>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
+        <Flex justify="flex-end" align="center" style={{ marginTop: 0, padding: 0, width: "100%" }}>
           <Link href={"/forgot-password"} style={{
             fontSize: "0.95rem",
             fontWeight: 600,
             color: COLOR.PRIMARY,
-            marginTop: "0.3rem"
           }}>Forgot password?</Link>
         </Flex>
 
@@ -225,7 +221,7 @@ const LoginPage = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "0.5rem" }}
+            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", marginTop: "1.5rem" }}
           >
             Log in
           </Button>

@@ -337,6 +337,7 @@ export class UserService {
       if (userDTO.address) {
         user.address = userDTO.address;
       }
+      user.img = userDTO.img;
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
     }
