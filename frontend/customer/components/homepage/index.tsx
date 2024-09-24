@@ -533,7 +533,7 @@ const HompageComponent: React.FC = () => {
         <Title
           style={{
             fontSize: responsive ? "2rem" : "3rem",
-            marginTop: "6rem",
+            marginTop: responsive ? "4rem" : "6rem",
             fontWeight: 700,
             color: COLOR.TEXT,
           }}
