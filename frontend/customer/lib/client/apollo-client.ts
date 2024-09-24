@@ -14,6 +14,7 @@ const authLink = setContext(async (_, { headers }) => {
       ...headers,
       // ...(accessToken && { authorization: accessToken }),
       ...(accessToken && { authorization: `Bearer ${accessToken}` }),
+      clienttype: process.env.NEXT_PUBLIC_CLIENT_TYPE
     },
   };
 });
