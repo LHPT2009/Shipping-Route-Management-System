@@ -71,3 +71,15 @@
     height: 3.5rem;
     margin-right: 1rem;
 }
+
+@media screen and (max-width: 1200px) {
+    .footer_main{
+        flex-direction: column;
+    }
+    .footer > .footer_main > .footer_content {
+        gap: 1rem;
+    }
+    .footer > .footer_main {
+        padding: 3rem;
+    }
+}

@@ -642,8 +642,8 @@ const HompageComponent: React.FC = () => {
             onClick={clickHandler}
             type="primary"
             style={{
-              fontSize: "1.2rem",
-              padding: responsive ? "1.6rem 2.2rem" : "2rem 2.7rem",
+              fontSize: responsive ? "1.1rem" : "1.2rem",
+              padding: responsive ? "1.55rem 2.2rem" : "2rem 2.7rem",
               width: responsive ? "100%" : "auto",
               marginBottom: responsive ? "1rem" : "0",
               border: "none",
