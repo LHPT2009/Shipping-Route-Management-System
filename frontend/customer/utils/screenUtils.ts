@@ -30,6 +30,7 @@ export const GetValueFromScreen = (
   extraLarge: boolean = false,
   extraExtraLarge: boolean = false
 ): boolean => {
+  console.log("screenWidth", screenWidth);
   if (screenWidth === null) {
     return false; // or a default value
   }
