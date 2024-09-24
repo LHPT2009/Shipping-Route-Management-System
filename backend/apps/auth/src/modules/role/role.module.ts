@@ -16,6 +16,6 @@ import { JwtService } from '@nestjs/jwt';
 
   ],
   providers: [RoleService, RoleResolver, RoleRepository, JwtService],
-  exports: [RoleService],
+  exports: [RoleService, RoleRepository],
 })
 export class RoleModule { }

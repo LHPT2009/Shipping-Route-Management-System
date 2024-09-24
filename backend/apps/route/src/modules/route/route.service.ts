@@ -24,6 +24,7 @@ export class RoutesService {
     limit: number;
   }>> {
     try {
+
       const queryBuilder = this.routeRepository.createQueryBuilder('route')
         .leftJoinAndSelect('route.departure', 'departure')
         .leftJoinAndSelect('route.arrival', 'arrival')

@@ -25,7 +25,7 @@ export class CustomErrorInterceptor implements NestInterceptor {
         const customErr:string = err.extensions?.response?.errors[0].message;
         if (clientType !== 'developer') {
           if (err.message === "ERR_VALIDATION" || (customErr && customErr === "ERR_VALIDATION")) {
-            throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Something is invalid. Please check again'] });
+            throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Your information is invalid. Please check again'] });
           }
         }
         throw err;

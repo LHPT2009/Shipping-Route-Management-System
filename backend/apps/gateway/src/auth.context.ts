@@ -22,9 +22,9 @@ export const authContext = async ({ req }) => {
         url: 'localhost:50051',
       },
     });
-  
+
     const appService = new AppService(client);
-  
+
     try {
       const data = await lastValueFrom(appService.getUserRoleById(decoded.userId));
       return {
@@ -35,10 +35,9 @@ export const authContext = async ({ req }) => {
     } catch (err) {
       throw new CustomValidationError(STATUS.ERR_VALIDATION, { token: ['Token is Invaild.'] });
     }
-  }else{
+  } else {
     return {
       clientType: clientType
     }
   }
-
 };

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RoleRepository } from './role.repository';
 import { CreateRoleDto } from './dto/role-create.dto';
 import { UpdateRoleDto } from './dto/role-update.dto';
@@ -10,13 +10,18 @@ import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 import { In } from 'typeorm';
 import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
 import { UserRepository } from '../user/user.repository';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { UserEntity } from '../user/entity/user.entity';
 
 @Injectable()
 export class RoleService {
   constructor(
     private userRepository: UserRepository,
     private roleRepository: RoleRepository,
-    private permissionRepository: PermissionRepository
+    private permissionRepository: PermissionRepository,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache
   ) { }
 
   async findAll(): Promise<ResponseDto<RoleEntity[]>> {
@@ -69,6 +74,26 @@ export class RoleService {
     const role = roleResponse.data as RoleEntity;
     Object.assign(role, updateRoleDto);
     await this.roleRepository.save(role);
+
+    //Update redis cache
+    const usersInRedisAffected: string[] | null = await this.usersInRedisAffectedByRole(id);
+    if (usersInRedisAffected.length > 0) {
+      const permissionNames = role.permissions.map(permission => permission.name);
+
+      await Promise.all(usersInRedisAffected.map(async (userId) => {
+        const value: {
+          id: string;
+          role: string;
+          permissions: string[];
+        } = {
+          id: userId,
+          role: updateRoleDto.name,
+          permissions: permissionNames,
+        };
+        await this.cacheManager.set(userId, value);
+      }));
+    }
+
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, []);
   }
 
@@ -100,6 +125,15 @@ export class RoleService {
     }
 
     await this.roleRepository.delete(id);
+
+    //Update redis cache
+    const usersInRedisAffected: string[] | null = await this.usersInRedisAffectedByRole(id);
+    if (usersInRedisAffected.length > 0) {
+      await Promise.all(usersInRedisAffected.map(async (userId) => {
+        await this.cacheManager.del(userId);
+      }));
+    }
+
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
   }
 
@@ -122,6 +156,25 @@ export class RoleService {
 
     await this.roleRepository.save(role);
 
+    //Update redis cache
+    const usersInRedisAffected: string[] | null = await this.usersInRedisAffectedByRole(roleId);
+    if (usersInRedisAffected.length > 0) {
+
+      const permissionNames = permissions.map(permission => permission.name);
+
+      await Promise.all(usersInRedisAffected.map(async (userId) => {
+        const value: {
+          id: string;
+          role: string;
+          permissions: string[];
+        } = {
+          id: userId,
+          role: role.name,
+          permissions: permissionNames,
+        };
+        await this.cacheManager.set(userId, value);
+      }));
+    }
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
   }
 
@@ -132,5 +185,21 @@ export class RoleService {
     } catch (error) {
       return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
+  }
+
+  async usersInRedisAffectedByRole(roleId: string): Promise<string[] | null> {
+    const users: UserEntity[] = await this.userRepository.find({
+      where: { roles: { id: roleId } },
+      relations: ['roles']
+    });
+
+    const usersInRedis: string[] | null = await this.cacheManager.store.keys();
+    console.log("usersInRedis", usersInRedis);
+
+    const usersInRedisAffected: string[] | null = usersInRedis.filter(
+      userId => users.some(user => user.id.toString() === userId)
+    );
+
+    return usersInRedisAffected;
   }
 }

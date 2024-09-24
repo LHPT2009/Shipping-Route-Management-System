@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from './entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { SignupInput } from './dto/signup.input';
@@ -26,13 +26,20 @@ import { FilterUsersType } from './types/user-filter.types';
 import { UserUpdateRoleDto } from './dto/user-update-role';
 import { UpdateStatusUserDto } from './dto/user-update-status';
 import { ProducerService } from '../kafka/producer.service';
+import { RoleRepository } from '../role/role.repository';
+import { instanceToPlain } from 'class-transformer';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
     private jwtService: JwtService,
-    private readonly producerService: ProducerService
+    private readonly producerService: ProducerService,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache
   ) { }
   async findAll(filterUsersDto: FilterUsersDto): Promise<ResponseDto<{
     users: FilterUsersType[];
@@ -136,9 +143,9 @@ export class UserService {
           username: userDTO.username,
           url: url,
         };
-        
+
         const itemString = JSON.stringify(item);
-    
+
         await this.producerService.produce({
           topic: 'send-mail',
           messages: [
@@ -209,7 +216,7 @@ export class UserService {
     await this.userRepository.save(user);
 
     const url = `${process.env.CUSTOMER_RESET_PASSWORD_URL}/${verifyToken}?email=${userDTO.email}`;
-    
+
     const item = {
       title: "Reset password",
       content: "Please click the button below to recover your account.",
@@ -219,7 +226,7 @@ export class UserService {
       username: user.username,
       url: url,
     };
-    
+
     const itemString = JSON.stringify(item);
 
     await this.producerService.produce({
@@ -412,9 +419,40 @@ export class UserService {
   async updateRoleForUser(id: string, userUpdateRoleDto: UserUpdateRoleDto): Promise<ResponseDto<UserEntity>> {
     try {
       const user = await this.userRepository.findOneBy({ id });
-
       Object.assign(user, userUpdateRoleDto);
       await this.userRepository.save(user);
+
+      //Update redis
+      const usersInRedis: string[] | null = await this.cacheManager.store.keys();
+
+      const userInRedisAffected: string | null = usersInRedis.find(
+        redisUserId => user.id.toString() === redisUserId
+      );
+
+      console.log("userInRedisAffected", userInRedisAffected);
+
+      if (userInRedisAffected) {
+        const role: RoleEntity = await this.roleRepository.findOne({
+          where: { id: userUpdateRoleDto.roles },
+          relations: ['permissions'],
+        });
+
+        const roleName = instanceToPlain(role).name;
+        const permissionNames = instanceToPlain(role).permissions.map(permission => permission.name);
+
+        const result: {
+          id: string;
+          role: string;
+          permissions: string[];
+        } = {
+          id: user.id,
+          role: roleName,
+          permissions: permissionNames,
+        };
+
+        console.log("result", result);
+        await this.cacheManager.set(userInRedisAffected, result);
+      }
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
 
     } catch (error) {

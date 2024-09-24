@@ -7,7 +7,6 @@ import { LocationModule } from '../location/location.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RouteEntity } from './entity/routes.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { LocationRepository } from '../location/location.repository';
 
 @Module({
   imports: [
