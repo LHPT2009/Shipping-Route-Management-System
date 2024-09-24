@@ -16,7 +16,7 @@ const FooterComponent = () => {
 
   return <footer className={classes.footer}>
     <div className={classes.footer_main}>
-      <div className={classes.footer_content} style={{ marginBottom: responsive ? "2rem" : "0" }}>
+      <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>About us</strong>
         <div className={classes.footer_nav}>
           <Link href='/about'>Introduction</Link>
@@ -24,7 +24,7 @@ const FooterComponent = () => {
           <Link href='#contact'>Contact</Link>
         </div>
       </div>
-      <div className={classes.footer_content} style={{ marginBottom: responsive ? "2rem" : "0" }}>
+      <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>Support</strong>
         <div className={classes.footer_nav}>
           <Link href='#help_booking'>Import Route Instructions</Link>
@@ -32,14 +32,14 @@ const FooterComponent = () => {
           <Link href='#questions'>Frequently Asked Questions</Link>
         </div>
       </div>
-      <div className={classes.footer_content} style={{ marginBottom: responsive ? "2rem" : "0" }}>
+      <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>Policy</strong>
         <div className={classes.footer_nav}>
           <Link href='#policy'>Terms of Use</Link>
           <Link href='#info_policy'>Privacy Policy</Link>
         </div>
       </div>
-      <div className={classes.footer_content} style={{ marginBottom: responsive ? "2rem" : "0" }}>
+      <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>Contact us</strong>
         <div className={classes.footer_nav}>
           <Link href='#email'>support.srouting@gmail.com</Link>
@@ -50,7 +50,7 @@ const FooterComponent = () => {
       </div>
       <div className={classes.footer_content}>
         <strong>Certificate</strong>
-        <div className={classes.footer_nav} style={{ marginTop: responsive ? "1rem" : 0 }}>
+        <div className={classes.footer_nav} style={{ marginTop: responsive ? "0.5rem" : 0 }}>
           <img className={classes.cert} width={160} src={Cert.src} alt='certificate' />
         </div>
       </div>

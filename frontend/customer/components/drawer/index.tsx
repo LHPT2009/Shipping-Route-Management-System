@@ -29,7 +29,7 @@ const DrawerComponent: React.FC = () => {
         size="large"
         icon={<MenuOutlined />}
         onClick={showDrawer}
-        style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
+        style={{ color: COLOR.PRIMARY, backgroundColor: "#fff", marginTop: "0.8rem" }}
       />
       <Drawer
         title={
@@ -49,42 +49,13 @@ const DrawerComponent: React.FC = () => {
                     display: "flex",
                     width: "100%",
                     alignItems: "center",
-                    justifyContent: "start",
-                  }}
-                >
-                  <Space size="small" style={{ top: "-35px" }}>
-                    <NotificationComponent />
-                  </Space>
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <Image width={200} height={50} src={logoFull} alt="Logo" />
-                </Col>
-                <Col
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "end",
-                  }}
-                >
-                  <Space size="middle">
-                    <AvatarComponent />
-                  </Space>
+                  <Image width={165} height={30} src={logoFull} alt="Logo" />
                 </Col>
               </Header>
             </Row>
-          </>
-        }
-        footer={
-          <>
-            <FooterComponent />
           </>
         }
         placement="left"

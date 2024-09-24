@@ -33,22 +33,7 @@ const HeaderComponent = () => {
   const user: UserState = useAppSelector((state) => state.user);
   const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
 
-  const extraSmall = true;
-  const small = true;
-  const medium = false;
-  const large = false;
-  const extraLarge = false;
-  const extraExtraLarge = false;
-
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const { handleError } = useHandleError();
 
@@ -95,6 +80,7 @@ const HeaderComponent = () => {
           display: "flex",
           alignItems: "center",
           height: "5.5rem",
+          padding: "1rem",
         }}
       >
         <Col span={6} style={{ marginBottom: "0.8rem" }}>
@@ -107,7 +93,7 @@ const HeaderComponent = () => {
           )}
         </Col>
 
-        <Col span={12} style={{ marginBottom: "0.8rem" }}>
+        <Col span={responsive ? 0 : 12} style={{ marginBottom: "0.8rem" }}>
           <Flex justify='center' align='center' >
 
             {!responsive ? (
@@ -119,15 +105,13 @@ const HeaderComponent = () => {
                 />
               </>
             ) : (
-              <>
-                <Image width={170} src={logoFull} alt="Logo" />
-              </>
+              <></>
             )}
 
           </Flex>
         </Col>
 
-        <Col span={6}>
+        <Col span={responsive ? 18 : 6}>
 
           {isLogin ?
             <Flex justify='end' align='center' gap="1rem">
