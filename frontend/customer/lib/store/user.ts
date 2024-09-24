@@ -9,6 +9,7 @@ export interface UserState {
   address: string;
   phone: string;
   role: string;
+  img: string;
 }
 
 const initialState: UserState = {
@@ -18,6 +19,7 @@ const initialState: UserState = {
   address: "",
   phone: "",
   role: "",
+  img: "",
 };
 
 export const userSlice = createSlice({
@@ -31,6 +33,7 @@ export const userSlice = createSlice({
       state.address = action.payload.address;
       state.phone = action.payload.phone;
       state.role = action.payload.role;
+      state.img = action.payload.img;
     },
     clearUserInformation(state, action: PayloadAction) {
       state.username = "";
@@ -39,7 +42,10 @@ export const userSlice = createSlice({
       state.address = "";
       state.phone = "";
       state.role = "";
-    }
+    },
+    setUserImg(state, action: PayloadAction<string>) {
+      state.img = action.payload;
+    },  
   },
 });
 

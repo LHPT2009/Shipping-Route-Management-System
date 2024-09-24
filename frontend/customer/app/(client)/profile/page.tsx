@@ -1,39 +1,33 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Button, Col, Flex, Form, Input, Row, Spin } from "antd";
-import Title from "antd/es/typography/Title";
+import { Button, Col, Flex, Form, Input, Row, Tooltip } from "antd";
 import { COLOR } from "@/constant/color";;
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
-import { ROLE } from "@/constant/role";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 import { UserProfilePermissions, UserProfileRoles } from "@/lib/permissions/user-profile";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-import LoadingComponent from "@/components/loading";
-import Link from "next/link";
-import ContentComponent from "@/components/route";
 import { userActions, UserState } from "@/lib/store/user";
 import * as yup from "yup";
-import { passwordRegex } from "@/utils/validation/password.regex";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useMutation } from "@apollo/client";
 import { CHANGE_PASSWORD } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import Male from "../../../public/images/homepage/male.png";
 import { UPDATE_PROFILE } from "@/apollo/mutations/user";
 import { usernameRegex } from "@/utils/validation/username.regex";
 import { phoneRegex } from "@/utils/validation/phone.regex";
 import ChangePasswordModal from "@/components/modal/profile";
+import { CldUploadWidget } from "next-cloudinary";
+import { ClearOutlined, CloseOutlined, CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const ProfilePage = () => {
   const user: UserState = useAppSelector((state) => state.user);
-
+  
   const [open, setOpen] = useState<boolean>(false);
-
   const schema = yup
     .object({
       username: yup
@@ -84,7 +78,8 @@ const ProfilePage = () => {
         fullname: data.updateUserByToken.data.fullname,
         address: data.updateUserByToken.data.address,
         phone: data.updateUserByToken.data.phone_number,
-        role: user.role
+        role: user.role,
+        img: user.img,
       }
       dispatch(userActions.setUserInformation(userData));
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "User information was updated successfully");
@@ -116,6 +111,7 @@ const ProfilePage = () => {
           username: values.username,
           phone_number: values.phone,
           address: values.address,
+          img: user.img,
         }
       },
     });
@@ -282,22 +278,54 @@ const ProfilePage = () => {
 
           <Col xs={24} sm={24} md={24} lg={1} xl={1} xxl={1}></Col>
           <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
-            <img src={Male.src} alt="male" style={{ width: "14rem", borderRadius: "0.5rem", margin: "0 auto" }} />
-            <Flex align="center" justify="center">
-              <Button
-                style={{
-                  padding: "1.3rem 1.5rem",
-                  borderRadius: "0.4rem",
-                  margin: "2.5rem auto 0 auto",
-                  color: COLOR.PRIMARY,
-                  border: "1px solid #4f46e5",
-                  background: "white",
+            <img
+              src={user.img ? user.img : Male.src}
+              alt="male"
+              style={{ width: "14rem", borderRadius: "50%", margin: "0 auto", objectFit: "cover", height: "14rem" }}
+            />
+
+            <Flex align="center" justify="center" gap="1rem" style={{ margin: "2.5rem auto 0 auto" }}>
+              <Tooltip placement="bottom" title="Remove current avatar">
+                <Button
+                  type="primary"
+                  onClick={() => dispatch(userActions.setUserImg(""))}
+                  style={{
+                    width: "3rem",
+                    height: "2.5rem",
+                    borderRadius: "0.4rem",
+                    background: "#e03131"
+                  }}
+                >
+                  <CloseOutlined />
+                </Button>
+              </Tooltip>
+              <CldUploadWidget
+                uploadPreset="qacqqy78"
+                onSuccess={(result: any) => {
+                  const url: string = result.info.secure_url;
+                  dispatch(userActions.setUserImg(url));
                 }}
               >
-                Upload avatar
-              </Button>
+                {({ open }) => {
+                  return (
+                    <Tooltip placement="bottom" title="Upload avatar">
+                      <Button
+                        type="primary"
+                        onClick={() => open()}
+                        style={{
+                          width: "3rem",
+                          height: "2.5rem",
+                          borderRadius: "0.4rem",
+                        }}
+                      >
+                        <CloudUploadOutlined style={{ fontSize: "1.3rem" }} />
+                      </Button>
+                    </Tooltip>
+                  );
+                }}
+              </CldUploadWidget>
             </Flex>
-            <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.1rem" }}>
+            <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.05rem" }}>
               <Button
                 onClick={onOpen}
                 style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}

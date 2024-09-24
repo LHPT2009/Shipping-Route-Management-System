@@ -29,4 +29,9 @@ export class UserUpdateDto {
   @IsOptional()
   @IsString()
   address?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  img?: string;
 }

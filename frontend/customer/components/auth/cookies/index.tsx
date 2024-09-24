@@ -31,6 +31,7 @@ export default function CookiesComponent() {
         address: data.getUserByToken.data.address,
         phone: data.getUserByToken.data.phone_number,
         role: data.getUserByToken.data.roles.name.charAt(0).toUpperCase() + data.getUserByToken.data.roles.name.slice(1).toLowerCase(),
+        img: data.getUserByToken.data.img,
       }
       dispatch(userActions.setUserInformation(userData));
       dispatch(authActions.setIsLogin(true));

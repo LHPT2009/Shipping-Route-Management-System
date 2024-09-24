@@ -21,6 +21,7 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
   const [usernameBreadcrumb, setUsernameBreadcrumb] = useState<string>("");
+  const [userImg, setUserImg] = useState<string>("");
 
   const schema = yup
     .object({
@@ -61,6 +62,7 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
         address: data.getUserById.data.address,
       });
       setUsernameBreadcrumb(data.getUserById.data.username);
+      setUserImg(data.getUserById.data.img);
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
@@ -276,7 +278,7 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
 
             <Col xs={24} sm={24} md={24} lg={1} xl={1} xxl={1}></Col>
             <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
-              <img src={Male.src} alt="male" style={{ width: "20rem", borderRadius: "0.5rem", margin: "7rem auto" }} />
+              <img src={userImg ? userImg : Male.src} alt="male" style={{ width: "20rem", height: "20rem", borderRadius: "50%", margin: "7rem auto" }} />
             </Col>
           </Row>
         </Form>
