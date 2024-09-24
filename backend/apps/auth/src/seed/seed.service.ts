@@ -73,11 +73,11 @@ export class SeedService implements OnApplicationBootstrap {
       const readListRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_LIST_ROUTE);
       const readDetailRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_ROUTE);
       const readDetailUser = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_USER);
-
+      const updateDetailUser = allPermissions.find(permission => permission.name === PERMISSION.UPDATE_USER);
       await roleRepository.save([
         {
           name: ROLE.CUSTOMER,
-          permissions: [readListRoute, readDetailRoute, readDetailUser],
+          permissions: [readListRoute, readDetailRoute, readDetailUser, updateDetailUser],
         },
         {
           name: ROLE.ADMIN,

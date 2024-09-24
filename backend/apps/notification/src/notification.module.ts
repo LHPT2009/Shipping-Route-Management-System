@@ -4,9 +4,11 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/ap
 import { SendMailConsumer } from './send-mail.consumer';
 import { KafkaModule } from './kafka/kafka.module';
 import { EmailService } from './email/email.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
@@ -17,6 +19,7 @@ import { EmailService } from './email/email.service';
   ],
   providers: [ 
     EmailService, 
-    SendMailConsumer ],
+    SendMailConsumer 
+  ],
 })
 export class NotificationModule {}
