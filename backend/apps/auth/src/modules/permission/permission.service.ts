@@ -42,7 +42,6 @@ export class PermissionService {
   async update(id: string, updatePermissionDto: UpdatePermissionDto): Promise<ResponseDto<PermissionEntity>> {
     try {
       const permissionResponse = await this.findOne(id);
-
       const permission = permissionResponse.data as PermissionEntity;
       Object.assign(permission, updatePermissionDto);
       await this.permissionRepository.save(permission);

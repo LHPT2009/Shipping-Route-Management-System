@@ -12,8 +12,6 @@ import { UserEntity } from '../user/entity/user.entity';
 import { LoginGoogleInput } from './dto/login_google.input';
 import { Auth, google } from 'googleapis';
 import { UserRepository } from '../user/user.repository';
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -24,9 +22,6 @@ export class AuthService {
     private jwtService: JwtService,
     private refreshTokenService: RefreshTokenService,
     private userRepository: UserRepository,
-
-    @Inject(CACHE_MANAGER)
-    private cacheManager: Cache
   ) {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -64,7 +59,6 @@ export class AuthService {
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
     const user = await this.userService.findOne(loginDTO);
-    await this.cacheManager.set("check-redis", 'Save Info Login!');
     return await this.handleLogin(loginDTO, user);
   }
 
