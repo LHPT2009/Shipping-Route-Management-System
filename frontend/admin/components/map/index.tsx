@@ -4,9 +4,6 @@ import * as React from 'react';
 import ReactMapGl, { GeolocateControl, Marker, Source, Layer, NavigationControl } from 'react-map-gl';
 import { useState, useEffect } from "react"
 import { layerStyle } from './map';
-
-const accessTokenMapBox = "pk.eyJ1IjoiZ2lhaHV5MjAwMjAyIiwiYSI6ImNtMHE4bmRmODA4dzgycnBzZTU1d2NsNXcifQ.lsuccu2uSdT83uYImY9Dxg";
-
 interface MapComponentProps {
   isShowDirection: boolean;
   departure: number[];
@@ -31,7 +28,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [coords, setCoords] = useState([]);
 
   const getRoute = async () => {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${departure[0]},${departure[1]};${arrival[0]},${arrival[1]}?steps=true&geometries=geojson&access_token=${accessTokenMapBox}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${departure[0]},${departure[1]};${arrival[0]},${arrival[1]}?steps=true&geometries=geojson&access_token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN_MAP_BOX}`;
     const res = await fetch(url);
     const data = await res.json();
     const coords = data.routes[0].geometry.coordinates;
@@ -89,7 +86,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     {...viewState}
     onMove={evt => setViewState(evt.viewState)}
     mapStyle="mapbox://styles/giahuy200202/cm0xb0dg000ys01que5h6hn0q"
-    mapboxAccessToken={accessTokenMapBox}
+    mapboxAccessToken={process.env.NEXT_PUBLIC_ACCESS_TOKEN_MAP_BOX}
     style={{
       borderRadius: "1rem ",
       overflow: 'hidden',

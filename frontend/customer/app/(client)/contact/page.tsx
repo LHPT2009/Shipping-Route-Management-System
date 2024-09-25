@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from "react";
-import { Button, Flex, Form, Input, Spin } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";;
 import styles from "./contact.module.css";
@@ -61,7 +61,6 @@ const ContactPage = () => {
     control,
     handleSubmit,
     formState: { errors },
-    reset
   } = useForm({
     resolver: yupResolver(schema),
   });

@@ -13,21 +13,16 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
 import useAntNotification from "@/lib/hooks/notification";
-import { ApolloError, useMutation, useReactiveVar } from "@apollo/client";
+import { ApolloError, useMutation } from "@apollo/client";
 import { LOGIN, LOGIN_WITH_GOOGLE } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
-import { extractErrorMessages } from "@/utils/error/format.error";
-import { getErrorMessage } from "@/utils/error/apollo.error";
 import { usernameEmailRegex } from "@/utils/validation/username-email.regex";
 import { setCookies } from "@/utils/cookies/handle.cookies";
-import { routeModule } from "next/dist/build/templates/app-page";
 import { useRouter } from "next/navigation";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
-import { useGetNewAccessToken } from "@/lib/hooks/token";
 import { useHandleError } from "@/lib/hooks/error";
 import { useAppDispatch } from "@/lib/hooks/hooks";
 import { authActions } from "@/lib/store/auth";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const { Title, Text } = Typography;
 
@@ -37,7 +32,7 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
 
   const screenWidth = UseScreenWidth();
-  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+  const responsive: boolean = GetValueFromScreen(screenWidth, true, true, true, true);
 
   // Validate Yup
   const schema = yup

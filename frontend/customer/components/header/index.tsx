@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { Layout, Row, Col, Space, Button, Divider } from "antd";
+import React from "react";
+import { Layout, Col, Button } from "antd";
 import DrawerComponent from "../drawer";
 import logoFull from "@/public/logo/logoFull.png";
 import Image from "next/image";
@@ -17,7 +17,7 @@ import Male from "../../public/images/homepage/male.png";
 import Paragraph from "antd/es/typography/Paragraph";
 import LogoutIcon from "../../public/svg/homepage/logout.svg";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { GET_USER_BY_TOKEN, LOGOUT } from "@/apollo/query/auth";
+import { LOGOUT } from "@/apollo/query/auth";
 import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
 import { useHandleError } from "@/lib/hooks/error";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
@@ -159,7 +159,7 @@ const HeaderComponent = () => {
                 onClick={clickHandler}
                 type="primary"
                 style={{
-                  padding:  responsive ? "1.3rem 1.3rem" : "1.5rem 1.6rem",
+                  padding: responsive ? "1.3rem 1.3rem" : "1.5rem 1.6rem",
                   fontSize: "0.95rem",
                   border: "none",
                 }}

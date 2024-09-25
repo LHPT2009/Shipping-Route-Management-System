@@ -6,7 +6,7 @@ import {
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Form, Input, Button, Typography, Flex, Checkbox, notification } from "antd";
+import { Form, Input, Button, Typography, Flex, Checkbox } from "antd";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
