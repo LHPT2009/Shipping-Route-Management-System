@@ -25,6 +25,7 @@ import { useAppSelector } from "@/lib/hooks/hooks";
 import LoadingComponent from "@/components/loading";
 import Link from "next/link";
 import { HomeOutlined } from "@ant-design/icons";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const { Text } = Typography;
 
@@ -106,11 +107,13 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     }
   }, [route, reset]);
 
-  const isLoadingAccess = useAppSelector((state) => state.loading.loadingAccessToken);
+
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   return (
 
-    <div style={{ margin: "6.5rem auto 2rem auto", width: "80rem", }}>
+    <div style={{ margin: "6.5rem auto 2rem auto", width: responsive ? "90%" : "80rem", }}>
       <Breadcrumb
         items={[{
           title: (
@@ -128,7 +131,51 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
         style={{ paddingLeft: "0.5rem", marginBottom: "1.5rem" }}
       />
       <Form onFinish={handleSubmit(onFinish)} layout="vertical" >
-        <Row gutter={[8, 8]} style={{ border: "1px solid #ced4da", borderRadius: "1rem", padding: "3rem 3rem 2rem 3rem" }}>
+        <Row gutter={[8, 8]} style={{
+          border: "1px solid #ced4da",
+          borderRadius: "1rem",
+          padding: responsive ? "1.5rem" : "3rem 3rem 2rem 3rem"
+        }}>
+          {responsive && <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <MapComponent
+              isShowDirection={isShowDirection}
+              departure={[route?.departure.longitude!, route?.departure.latitude!]}
+              arrival={[route?.arrival.longitude!, route?.arrival.latitude!]}
+              heightProps="25em"
+            />
+            <Flex align="center" justify="center" style={{marginBottom: "2rem"}}>
+              {route && ShippingTypeEnum[route.transport.shipping_type] === "Seaway" ?
+                <Tooltip placement="bottom" title="Map is inavailable with seaway">
+                  <Button
+                    disabled
+                    onClick={() => {
+                      setIsShowDirection(true);
+                    }}
+                    style={{
+                      padding: "1.3rem 1.5rem",
+                      borderRadius: "0.4rem",
+                      margin: "0 auto",
+                    }}
+                  >
+                    View on map
+                  </Button>
+                </Tooltip> : <Button
+                  onClick={() => {
+                    setIsShowDirection(true);
+                  }}
+                  style={{
+                    padding: "1.3rem 1.5rem",
+                    borderRadius: "0.4rem",
+                    margin: "0 auto",
+                    color: COLOR.PRIMARY,
+                    border: "1px solid #4f46e5",
+                    background: "white"
+                  }}
+                >
+                  View on map
+                </Button>}
+            </Flex>
+          </Col>}
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             {/* content */}
             <Row gutter={[18, 0]}>
@@ -333,7 +380,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
           </Col>
 
-          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          {!responsive && <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <MapComponent
               isShowDirection={isShowDirection}
               departure={[route?.departure.longitude!, route?.departure.latitude!]}
@@ -371,7 +418,8 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                   View on map
                 </Button>}
             </Flex>
-          </Col>
+          </Col>}
+
         </Row>
       </Form>
     </div>

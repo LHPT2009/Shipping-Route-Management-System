@@ -33,26 +33,11 @@ const { Title, Text } = Typography;
 
 const LoginPage = () => {
 
-  const screenWidth = UseScreenWidth();
   const router = useRouter();
-  const extraSmall = true;
-  const small = true;
-  const medium = false;
-  const large = false;
-  const extraLarge = false;
-  const extraExtraLarge = false;
-
   const dispatch = useAppDispatch();
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   // Validate Yup
   const schema = yup
@@ -128,13 +113,18 @@ const LoginPage = () => {
   });
 
   return (
-    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+    <Flex justify="center" align="center"
+      style={{
+        minHeight: "100vh",
+        width: "100vw"
+      }}
+    >
       {contextHolder}
       <Form
         initialValues={{ remember: true }}
         style={{
-          width: "35rem",
-          padding: "3rem 3rem 1rem 3rem",
+          width: responsive ? "90%" : "35rem",
+          padding: responsive ? "3rem 2rem 1rem 2rem" : "3rem 3rem 1rem 3rem",
           margin: "2rem 0",
           borderRadius: "1rem",
           backgroundColor: COLOR.BACKGROUNDBODY,

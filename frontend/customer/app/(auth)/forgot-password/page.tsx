@@ -29,15 +29,7 @@ const ForgotPasswordPage = () => {
   const extraLarge = false;
   const extraExtraLarge = false;
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const schema = yup
     .object({
@@ -78,14 +70,13 @@ const ForgotPasswordPage = () => {
 
   return (
 
-    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+    <Flex justify="center" align="center" style={{ minHeight: "100vh", width: "100vw" }}>
       <Form
         layout="vertical"
         initialValues={{ remember: true }}
         style={{
-          width: "35rem",
-          height: "auto",
-          padding: "3rem 3rem 1rem 3rem",
+          width: responsive ? "90%" : "35rem",
+          padding: responsive ? "3rem 2rem 1rem 2rem" : "3rem 3rem 1rem 3rem",
           margin: "2rem 0",
           borderRadius: "1rem",
           backgroundColor: COLOR.BACKGROUNDBODY,

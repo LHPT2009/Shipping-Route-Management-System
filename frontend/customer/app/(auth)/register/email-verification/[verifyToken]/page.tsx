@@ -26,14 +26,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
   const searchParams = useSearchParams()
   const email = searchParams.get("email");
 
-  const extraSmall = true;
-  const small = true;
-  const medium = false;
-  const large = false;
-  const extraLarge = false;
-  const extraExtraLarge = false;
-
-  const responsive = GetValueFromScreen(screenWidth, extraSmall, small, medium, large, extraLarge, extraExtraLarge);
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const {
     handleSubmit,
@@ -65,16 +58,15 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
 
   return (
 
-    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+    <Flex justify="center" align="center" style={{ minHeight: "100vh", width: "100vw" }}>
       {loading ?
         <Spin size="large" /> :
         <Form
           layout="vertical"
           initialValues={{ remember: true }}
           style={{
-            width: "35rem",
-            height: "auto",
-            padding: "3rem 3rem 1rem 3rem",
+            width: responsive ? "90%" : "35rem",
+            padding: responsive ? "3rem 2rem 1rem 2rem" : "3rem 3rem 1rem 3rem",
             margin: "2rem 0",
             borderRadius: "1rem",
             backgroundColor: COLOR.BACKGROUNDBODY,
@@ -96,7 +88,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
             Your account has been successfully verified with the email <span style={{ color: COLOR.PRIMARY }}> {email}</span>
           </Paragraph>
 
-          <img src={VerifyImg.src} alt="VerifyImg" style={{ width: "20rem", height: "auto", margin: "1rem auto" }} />
+          <img src={VerifyImg.src} alt="VerifyImg" style={{ width: responsive ? "15rem" : "20rem", height: "auto", margin: "1rem auto" }} />
 
           <Form.Item>
             <Button

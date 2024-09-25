@@ -121,7 +121,7 @@ const HeaderComponent = () => {
                     fontSize: "1rem",
                     marginBottom: "0",
                     fontWeight: 500,
-                    color: COLOR.TEXT
+                    color: COLOR.TEXT,
                   }}
                 >
                   {user.username}
@@ -146,10 +146,11 @@ const HeaderComponent = () => {
                 onClick={() => router.push(URL.LOGIN)}
                 type="link"
                 style={{
-                  padding: "1.5rem 2rem",
+                  padding: responsive ? "1.3rem 1.8rem" : "1.5rem 2rem",
                   border: "none",
                   fontWeight: 500,
-                  color: COLOR.PRIMARY
+                  color: COLOR.PRIMARY,
+                  fontSize: responsive ? "0.95rem" : "1rem",
                 }}
               >
                 Login
@@ -158,7 +159,8 @@ const HeaderComponent = () => {
                 onClick={clickHandler}
                 type="primary"
                 style={{
-                  padding: "1.5rem 1.6rem",
+                  padding:  responsive ? "1.3rem 1.3rem" : "1.5rem 1.6rem",
+                  fontSize: "0.95rem",
                   border: "none",
                 }}
               >

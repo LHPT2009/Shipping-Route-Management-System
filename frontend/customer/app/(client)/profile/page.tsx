@@ -23,10 +23,11 @@ import { phoneRegex } from "@/utils/validation/phone.regex";
 import ChangePasswordModal from "@/components/modal/profile";
 import { CldUploadWidget } from "next-cloudinary";
 import { ClearOutlined, CloseOutlined, CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const ProfilePage = () => {
   const user: UserState = useAppSelector((state) => state.user);
-  
+
   const [open, setOpen] = useState<boolean>(false);
   const schema = yup
     .object({
@@ -70,6 +71,7 @@ const ProfilePage = () => {
       await handleError(error);
     }
   });
+  
   const [updateUserByToken] = useMutation(UPDATE_PROFILE, {
     onCompleted: async (data) => {
       const userData: UserState = {
@@ -125,14 +127,72 @@ const ProfilePage = () => {
     setOpen(true);
   }
 
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+
   return (
-    <div style={{ width: "75rem", margin: "6.5rem auto 2rem auto" }}>
+    <div style={{ width: responsive ? "95%" : "75rem", margin: "6.5rem auto 2rem auto" }}>
       <Form
         onFinish={handleSubmit(onFinish)}
         layout="vertical"
         style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}
       >
         <Row gutter={[8, 8]} style={{ border: "1px solid #ced4da", borderRadius: "1rem", padding: "3rem 3rem 2rem 3rem" }} >
+
+          {responsive && <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+            <img
+              src={user.img ? user.img : Male.src}
+              alt="male"
+              style={{ width: "14rem", borderRadius: "50%", margin: "0 auto", objectFit: "cover", height: "14rem" }}
+            />
+
+            <Flex align="center" justify="center" gap="1rem"
+              style={{
+                margin: "2.5rem auto 0 auto",
+                marginBottom: responsive ? "3rem" : "0"
+              }}>
+              <Tooltip placement="bottom" title="Remove current avatar">
+                <Button
+                  type="primary"
+                  onClick={() => dispatch(userActions.setUserImg(""))}
+                  style={{
+                    width: "3rem",
+                    height: "2.5rem",
+                    borderRadius: "0.4rem",
+                    background: "#e03131"
+                  }}
+                >
+                  <CloseOutlined />
+                </Button>
+              </Tooltip>
+              <CldUploadWidget
+                uploadPreset="qacqqy78"
+                onSuccess={(result: any) => {
+                  const url: string = result.info.secure_url;
+                  dispatch(userActions.setUserImg(url));
+                }}
+              >
+                {({ open }) => {
+                  return (
+                    <Tooltip placement="bottom" title="Upload avatar">
+                      <Button
+                        type="primary"
+                        onClick={() => open()}
+                        style={{
+                          width: "3rem",
+                          height: "2.5rem",
+                          borderRadius: "0.4rem",
+                        }}
+                      >
+                        <CloudUploadOutlined style={{ fontSize: "1.3rem" }} />
+                      </Button>
+                    </Tooltip>
+                  );
+                }}
+              </CldUploadWidget>
+            </Flex>
+          </Col>}
+
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             {/* content */}
             <Row gutter={[18, 0]}>
@@ -274,10 +334,33 @@ const ProfilePage = () => {
               </Col>
             </Row>
 
+            {responsive &&
+              <Flex
+                align="center"
+                justify="flex-end"
+                gap="1rem"
+                style={{ marginTop: responsive ? "2rem" : "8.05rem", marginBottom: responsive ? "1rem" : 0 }}
+              >
+                <Button
+                  onClick={onOpen}
+                  style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
+                >
+                  Change password
+                </Button>
+                <Button
+                  loading={loading}
+                  htmlType="submit"
+                  type="primary"
+                  style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
+                >
+                  Update
+                </Button>
+              </Flex>}
+
           </Col>
 
           <Col xs={24} sm={24} md={24} lg={1} xl={1} xxl={1}></Col>
-          <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+          {!responsive && <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
             <img
               src={user.img ? user.img : Male.src}
               alt="male"
@@ -341,12 +424,14 @@ const ProfilePage = () => {
                 Update
               </Button>
             </Flex>
-          </Col>
+          </Col>}
+
           <ChangePasswordModal
             open={open}
             onClose={onClose}
           />
         </Row>
+
       </Form>
     </div>
   );
