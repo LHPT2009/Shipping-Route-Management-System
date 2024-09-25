@@ -194,7 +194,8 @@ function Home() {
           </Flex>
 
         </div>
-      )}
+      )
+      }
     </LayoutAdminComponent>
   );
 }
