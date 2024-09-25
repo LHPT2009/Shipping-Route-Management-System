@@ -20,20 +20,17 @@ import { HealthModule } from './modules/health/health.module';
 import { LocationModule } from './modules/location/location.module';
 import { TransportModule } from './modules/transport/transport.module';
 import { SeedService } from './seed/seed.service';
+import { dataSourceOptions } from 'db/data-source';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      database: process.env.POSTGRES_DB,
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      entities: [RouteEntity, LocationEntity, TransportEntity],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(
+      {
+        ...dataSourceOptions,
+        entities: [RouteEntity, LocationEntity, TransportEntity]
+      }
+    ),
 
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,

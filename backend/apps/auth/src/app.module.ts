@@ -36,6 +36,7 @@ import { SeedService } from './seed/seed.service';
 import { KafkaModule } from './modules/kafka/kafka.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
+import { dataSourceOptions } from 'db/data-source';
 
 @Module({
   imports: [
@@ -46,16 +47,6 @@ import * as redisStore from 'cache-manager-redis-store';
       host: 'localhost',
       port: 6379,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      database: process.env.POSTGRES_DB,
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      entities: [UserEntity, RoleEntity, PermissionEntity, RefreshTokenEntity],
-      synchronize: true,
-    }),
 
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
@@ -64,6 +55,13 @@ import * as redisStore from 'cache-manager-redis-store';
       },
       context: ({ req }) => ({ req }),
     }),
+
+    TypeOrmModule.forRoot(
+      {
+        ...dataSourceOptions,
+        entities: [UserEntity, RoleEntity, PermissionEntity, RefreshTokenEntity]
+      }
+    ),
 
     HealthModule,
     AuthModule,
