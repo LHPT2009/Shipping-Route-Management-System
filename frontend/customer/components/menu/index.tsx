@@ -67,7 +67,7 @@ const onClick: MenuProps["onClick"] = (e) => {
         />
       ) : (
         <Menu
-          style={{ height: "100%", borderRight: 0 }}
+          style={{ height: "20rem", borderRight: 0 }}
           mode="inline"
           items={MENULIST}
           onClick={onClick}

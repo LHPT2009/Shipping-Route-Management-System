@@ -45,7 +45,7 @@ const HompageComponent: React.FC = () => {
   };
 
   const screenWidth = UseScreenWidth();
-  const responsiveTitle = GetValueFromScreen(screenWidth, true, true, true);
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   return (
     <div className={styles["wrapper"]}>
@@ -57,10 +57,9 @@ const HompageComponent: React.FC = () => {
 
         <Title
           style={{
-            fontSize: "4.5rem",
+            fontSize: responsive ? "2.2rem" : "4.5rem",
             marginTop: "2rem",
             fontWeight: 700,
-            // color: responsiveTitle ? COLOR.TEXT : "red",
             color: COLOR.TEXT,
           }}
         >
@@ -69,7 +68,7 @@ const HompageComponent: React.FC = () => {
 
         <Paragraph
           style={{
-            fontSize: "1.3rem",
+            fontSize: responsive ? "1rem" : "1.3rem",
             marginTop: "2.2rem",
           }}
         >
@@ -80,12 +79,18 @@ const HompageComponent: React.FC = () => {
         <Button
           onClick={clickHandler}
           type="primary"
-          style={{
+          style={responsive ? {
+            margin: "2rem",
+            fontSize: "1rem",
+            padding: "1.5rem 2.3rem",
+            border: "none",
+          } : {
             margin: "2rem",
             fontSize: "1.2rem",
             padding: "1.8rem 2.7rem",
             border: "none",
-          }}
+          }
+          }
         >
           Get started
         </Button>
@@ -93,9 +98,15 @@ const HompageComponent: React.FC = () => {
 
       {/* Routing images */}
       <Flex
+        vertical={responsive}
+        gap={responsive ? "2.5rem" : "0"}
         justify="space-between"
         align="center"
-        style={{
+        style={responsive ? {
+          margin: "0 auto",
+          width: "100%",
+          padding: "2rem"
+        } : {
           margin: "3.5rem auto 0 auto",
           width: "66rem",
         }}
@@ -121,8 +132,8 @@ const HompageComponent: React.FC = () => {
       <div className={styles["similar-website-container"]}>
         <Title
           style={{
-            fontSize: "2rem",
-            marginTop: "6rem",
+            fontSize: responsive ? "1.8rem" : "2rem",
+            marginTop: responsive ? "3rem" : "6rem",
             fontWeight: 700,
             color: COLOR.TEXT,
           }}
@@ -137,6 +148,7 @@ const HompageComponent: React.FC = () => {
           style={{
             marginTop: "3rem",
             gap: "3rem",
+            flexWrap: responsive ? "wrap" : "nowrap",
           }}
         >
           <img
@@ -170,125 +182,265 @@ const HompageComponent: React.FC = () => {
       {/* Description customers*/}
       <div
         className={styles["description-container"]}
-        style={{ marginTop: "6rem", border: "2px solid #dee2e6" }}
+        style={{
+          marginTop: "5rem",
+          padding: "1rem"
+        }}
       >
-        <img
-          className={styles["img-container-customer"]}
-          src={Map.src}
-          alt="route-description"
-        />
-        <div className={styles["content-container-customer"]}>
-          <div className={styles["for-customer-container"]}>
-            <h5 className={styles["for-customer-header"]}>For customers</h5>
-          </div>
-
-          <Title
-            style={{
-              fontSize: "2.6rem",
-              fontWeight: 700,
-              color: COLOR.TEXT,
-              textAlign: "left",
-              marginTop: "2rem",
-            }}
-          >
-            {" "}
-            Simplified shipping route discovery through our website{" "}
-          </Title>
-
-          <Paragraph
-            style={{
-              fontSize: "1.2rem",
-              marginTop: "2rem",
-              textAlign: "left",
-            }}
-          >
-            Instead of researching locations and estimating delivery times on
-            mutiple platforms, you can now get everything through the website
-            with complete information.
-          </Paragraph>
-
-          <Flex align="center" style={{ gap: "1rem", marginTop: "4rem", cursor: "pointer" }} onClick={clickHandler}>
-            <Title
-              level={5}
-              style={{
-                fontSize: "1.2rem",
-                marginBottom: "0.3rem",
-                textAlign: "left",
-                color: COLOR.PRIMARY,
-              }}
-            >
-              Start viewing routes
-            </Title>
+        {responsive ?
+          <div style={{
+            border: responsive ? "2px solid #dee2e6" : "none",
+            borderRadius: "1.5rem",
+            paddingBottom: "1rem"
+          }}>
             <img
-              style={{ width: "1rem" }}
-              src={RightArrow.src}
-              alt="right-arrow"
+              className={styles["img-container"]}
+              src={Map.src}
+              alt="route-description"
             />
-          </Flex>
-        </div>
+            <div className={styles["content-container"]}>
+              <div className={styles["for-customer-container"]}>
+                <h5 className={styles["for-customer-header"]}>For customers</h5>
+              </div>
+
+              <Title
+                style={{
+                  fontSize: "1.8rem",
+                  fontWeight: 700,
+                  color: COLOR.TEXT,
+                  textAlign: "left",
+                  marginTop: "2rem",
+                }}
+              >
+                {" "}
+                Simplified shipping route discovery through our website
+              </Title>
+
+              <Paragraph
+                style={{
+                  fontSize: "1rem",
+                  marginTop: "2rem",
+                  textAlign: "left",
+                }}
+              >
+                Instead of researching locations and estimating delivery times on
+                mutiple platforms, you can now get everything through the website
+                with complete information.
+              </Paragraph>
+
+              <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem" }} onClick={clickHandler}>
+                <Title
+                  level={5}
+                  style={{
+                    fontSize: "1.1rem",
+                    marginBottom: "0.3rem",
+                    textAlign: "left",
+                    color: COLOR.PRIMARY,
+                  }}
+                >
+                  Start viewing routes
+                </Title>
+                <img
+                  style={{ width: "0.9rem" }}
+                  src={RightArrow.src}
+                  alt="right-arrow"
+                />
+              </Flex>
+
+            </div>
+          </div> :
+          <div style={{ display: "flex", border: "2px solid #dee2e6", borderRadius: "1.7rem" }}>
+            <img
+              className={styles["img-container-customer"]}
+              src={Map.src}
+              alt="route-description"
+            />
+            <div className={styles["content-container-customer"]}>
+              <div className={styles["for-customer-container"]}>
+                <h5 className={styles["for-customer-header"]}>For customers</h5>
+              </div>
+
+              <Title
+                style={{
+                  fontSize: "2.6rem",
+                  fontWeight: 700,
+                  color: COLOR.TEXT,
+                  textAlign: "left",
+                  marginTop: "2rem",
+                }}
+              >
+                {" "}
+                Simplified shipping route discovery through our website
+              </Title>
+
+              <Paragraph
+                style={{
+                  fontSize: "1.2rem",
+                  marginTop: "2rem",
+                  textAlign: "left",
+                }}
+              >
+                Instead of researching locations and estimating delivery times on
+                mutiple platforms, you can now get everything through the website
+                with complete information.
+              </Paragraph>
+
+
+              <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }} onClick={clickHandler}>
+                <Title
+                  level={5}
+                  style={{
+                    fontSize: "1.2rem",
+                    marginBottom: "0.3rem",
+                    textAlign: "left",
+                    color: COLOR.PRIMARY,
+                  }}
+                >
+                  Start viewing routes
+                </Title>
+                <img
+                  style={{ width: "1rem" }}
+                  src={RightArrow.src}
+                  alt="right-arrow"
+                />
+              </Flex>
+            </div>
+          </div>
+        }
+
       </div>
 
       {/* Description managers*/}
       <div
         className={styles["description-container"]}
-        style={{ marginTop: "6rem", border: "2px solid #dee2e6" }}
+        style={{
+          marginTop: responsive ? "2rem" : "6rem",
+          padding: "1rem",
+        }}
       >
-        <div className={styles["content-container"]}>
-          <div className={styles["for-customer-container"]}>
-            <h5 className={styles["for-customer-header"]}>For managers</h5>
-          </div>
+        {responsive ?
+          <div style={{
+            border: responsive ? "2px solid #dee2e6" : "none",
+            borderRadius: "1.5rem",
+            paddingBottom: "1rem"
+          }}>
+            <img
+              className={styles["img-container"]}
+              src={RouteDescription.src}
+              alt="route-description"
+            />
+            <div className={styles["content-container"]}>
+              <div className={styles["for-customer-container"]}>
+                <h5 className={styles["for-customer-header"]}>For managers</h5>
+              </div>
 
-          <Title
-            style={{
-              fontSize: "2.6rem",
-              fontWeight: 700,
-              color: COLOR.TEXT,
-              textAlign: "left",
-              marginTop: "2rem",
-            }}
-          >
-            {" "}
-            Streamlined route planning with user-friendly creation tools
-          </Title>
-
-          <Paragraph
-            style={{
-              fontSize: "1.2rem",
-              marginTop: "2rem",
-              textAlign: "left",
-            }}
-          >
-            Effortlessly design and manage routes with our intuitive and
-            accessible tools, crafted to simplify your planning process and
-            improve operational efficiency.
-          </Paragraph>
-
-          <Link href={"http://localhost:4000"}>
-            <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
               <Title
-                level={5}
                 style={{
-                  fontSize: "1.2rem",
-                  marginBottom: "0.3rem",
+                  fontSize: "1.8rem",
+                  fontWeight: 700,
+                  color: COLOR.TEXT,
                   textAlign: "left",
-                  color: COLOR.PRIMARY,
+                  marginTop: "2rem",
                 }}
               >
-                Start creating routes
+                {" "}
+                Streamlined route planning with user-friendly creation tools
               </Title>
-              <img
-                style={{ width: "1rem" }}
-                src={RightArrow.src}
-                alt="right-arrow"
-              />
-            </Flex>
-          </Link>
-        </div>
-        <img
-          className={styles["img-container"]}
-          src={RouteDescription.src}
-          alt="route-description"
-        />
+
+              <Paragraph
+                style={{
+                  fontSize: "1rem",
+                  marginTop: "2rem",
+                  textAlign: "left",
+                }}
+              >
+                Effortlessly design and manage routes with our intuitive and
+                accessible tools, crafted to simplify your planning process and
+                improve operational efficiency.
+              </Paragraph>
+
+              <Link href={"http://localhost:4000"}>
+                <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem" }}>
+                  <Title
+                    level={5}
+                    style={{
+                      fontSize: "1.1rem",
+                      marginBottom: "0.3rem",
+                      textAlign: "left",
+                      color: COLOR.PRIMARY,
+                    }}
+                  >
+                    Start creating routes
+                  </Title>
+                  <img
+                    style={{ width: "0.9rem" }}
+                    src={RightArrow.src}
+                    alt="right-arrow"
+                  />
+                </Flex>
+              </Link>
+            </div>
+          </div> :
+          <div style={{ display: "flex", border: "2px solid #dee2e6", borderRadius: "1.7rem" }}>
+            <div className={styles["content-container"]}>
+              <div className={styles["for-customer-container"]}>
+                <h5 className={styles["for-customer-header"]}>For managers</h5>
+              </div>
+
+              <Title
+                style={{
+                  fontSize: "2.6rem",
+                  fontWeight: 700,
+                  color: COLOR.TEXT,
+                  textAlign: "left",
+                  marginTop: "2rem",
+                }}
+              >
+                {" "}
+                Streamlined route planning with user-friendly creation tools
+              </Title>
+
+              <Paragraph
+                style={{
+                  fontSize: "1.2rem",
+                  marginTop: "2rem",
+                  textAlign: "left",
+                }}
+              >
+                Effortlessly design and manage routes with our intuitive and
+                accessible tools, crafted to simplify your planning process and
+                improve operational efficiency.
+              </Paragraph>
+
+              <Link href={"http://localhost:4000"}>
+                <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
+                  <Title
+                    level={5}
+                    style={{
+                      fontSize: "1.2rem",
+                      marginBottom: "0.3rem",
+                      textAlign: "left",
+                      color: COLOR.PRIMARY,
+                    }}
+                  >
+                    Start creating routes
+                  </Title>
+                  <img
+                    style={{ width: "1rem" }}
+                    src={RightArrow.src}
+                    alt="right-arrow"
+                  />
+                </Flex>
+              </Link>
+            </div>
+            <img
+              className={styles["img-container"]}
+              src={RouteDescription.src}
+              alt="route-description"
+            />
+          </div>
+        }
+
       </div>
 
       {/* Support */}
@@ -296,7 +448,7 @@ const HompageComponent: React.FC = () => {
         <div className={styles["support-content"]}>
           <Title
             style={{
-              fontSize: "3rem",
+              fontSize: responsive ? "1.6rem" : "3rem",
               fontWeight: 700,
               color: COLOR.TEXT,
             }}
@@ -306,20 +458,20 @@ const HompageComponent: React.FC = () => {
 
           <Paragraph
             style={{
-              fontSize: "1.2rem",
+              fontSize: responsive ? "1.1rem" : "1.2rem",
               marginTop: "2rem",
               marginBottom: "0",
             }}
           >
             {" "}
-            24/7 Support Across All Channels: Reliable Assistance Anytime,
-            Anywhere.
+            24/7 Support Across All Channels: Reliable Assistance Anytime, Anywhere.
           </Paragraph>
 
           <Flex
+            vertical={responsive}
             justify="center"
             align="center"
-            style={{ margin: "4.5rem auto 0 auto" }}
+            style={{ margin: responsive ? "3.5rem auto 0 auto" : "4.5rem auto 0 auto" }}
           >
             <div className={styles["team-card"]}>
               <img
@@ -330,11 +482,11 @@ const HompageComponent: React.FC = () => {
               />
               <Title
                 level={5}
-                style={{ color: COLOR.TEXT, marginTop: "1.5rem" }}
+                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
               >
                 Phone support
               </Title>
-              <Paragraph style={{ margin: 0 }}>0602249017</Paragraph>
+              <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>0602249017</Paragraph>
             </div>
 
             <div className={styles["team-card"]}>
@@ -346,11 +498,11 @@ const HompageComponent: React.FC = () => {
               />
               <Title
                 level={5}
-                style={{ color: COLOR.TEXT, marginTop: "1.5rem" }}
+                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
               >
                 Email support
               </Title>
-              <Paragraph style={{ margin: 0 }}>
+              <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>
                 support.srouting@gmail.com
               </Paragraph>
             </div>
@@ -364,7 +516,7 @@ const HompageComponent: React.FC = () => {
               />
               <Title
                 level={5}
-                style={{ color: COLOR.TEXT, marginTop: "1.5rem" }}
+                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
               >
                 Meet at the office
               </Title>
@@ -380,8 +532,8 @@ const HompageComponent: React.FC = () => {
       <div className={styles["team-container"]}>
         <Title
           style={{
-            fontSize: "3rem",
-            marginTop: "6rem",
+            fontSize: responsive ? "2rem" : "3rem",
+            marginTop: responsive ? "4rem" : "6rem",
             fontWeight: 700,
             color: COLOR.TEXT,
           }}
@@ -391,7 +543,7 @@ const HompageComponent: React.FC = () => {
 
         <Paragraph
           style={{
-            fontSize: "1.2rem",
+            fontSize: responsive ? "1.1rem" : "1.2rem",
             marginTop: "2rem",
             marginBottom: "0",
           }}
@@ -403,8 +555,7 @@ const HompageComponent: React.FC = () => {
 
         <Paragraph
           style={{
-            fontSize: "1.2rem",
-            // marginTop: "2rem",
+            fontSize: responsive ? "1.1rem" : "1.2rem",
           }}
         >
           Get to know the faces behind our project.
@@ -412,9 +563,10 @@ const HompageComponent: React.FC = () => {
 
         {/* Team members */}
         <Flex
+          vertical={responsive}
           justify="center"
-          align="flex-start"
-          style={{ marginTop: "4.5rem", gap: "8rem" }}
+          align={responsive ? "center" : "flex-start"}
+          style={{ marginTop: responsive ? "3.5rem" : "4.5rem", gap: responsive ? "4rem" : "8rem" }}
         >
           <div className={styles["team-card"]}>
             <img className={styles["avatar"]} src={Tung.src} alt="tung" />
@@ -465,9 +617,10 @@ const HompageComponent: React.FC = () => {
       {/* Get started */}
       <div className={styles["get-started-container"]}>
         <Flex
+          vertical={responsive}
           justify="space-between"
           align="center"
-          style={{ gap: "2rem", width: "85%" }}
+          style={{ gap: "2rem", width: responsive ? "90%" : "85%" }}
         >
           <div>
             <h1 className={styles["get-started-header"]}>
@@ -475,7 +628,7 @@ const HompageComponent: React.FC = () => {
             </h1>
             <Paragraph
               style={{
-                fontSize: "1.3rem",
+                fontSize: responsive ? "1.1rem" : "1.3rem",
                 marginTop: "1.5rem",
                 textAlign: "left",
                 color: "white",
@@ -489,8 +642,10 @@ const HompageComponent: React.FC = () => {
             onClick={clickHandler}
             type="primary"
             style={{
-              fontSize: "1.2rem",
-              padding: "2rem 2.7rem",
+              fontSize: responsive ? "1.1rem" : "1.2rem",
+              padding: responsive ? "1.55rem 2.2rem" : "2rem 2.7rem",
+              width: responsive ? "100%" : "auto",
+              marginBottom: responsive ? "1rem" : "0",
               border: "none",
               color: COLOR.TEXT,
               fontWeight: 600,
