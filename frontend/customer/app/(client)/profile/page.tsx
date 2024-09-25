@@ -71,6 +71,7 @@ const ProfilePage = () => {
       await handleError(error);
     }
   });
+  
   const [updateUserByToken] = useMutation(UPDATE_PROFILE, {
     onCompleted: async (data) => {
       const userData: UserState = {
@@ -332,6 +333,29 @@ const ProfilePage = () => {
                 </Form.Item>
               </Col>
             </Row>
+
+            {responsive &&
+              <Flex
+                align="center"
+                justify="flex-end"
+                gap="1rem"
+                style={{ marginTop: responsive ? "2rem" : "8.05rem", marginBottom: responsive ? "1rem" : 0 }}
+              >
+                <Button
+                  onClick={onOpen}
+                  style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
+                >
+                  Change password
+                </Button>
+                <Button
+                  loading={loading}
+                  htmlType="submit"
+                  type="primary"
+                  style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
+                >
+                  Update
+                </Button>
+              </Flex>}
 
           </Col>
 

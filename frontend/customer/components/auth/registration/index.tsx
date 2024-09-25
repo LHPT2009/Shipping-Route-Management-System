@@ -31,7 +31,6 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 
 const RegisterComponent = () => {
-  const screenWidth = UseScreenWidth();
   const dispatch = useAppDispatch();
 
   const extraSmall = true;
@@ -41,15 +40,8 @@ const RegisterComponent = () => {
   const extraLarge = false;
   const extraExtraLarge = false;
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const schema = yup
     .object({
