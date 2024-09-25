@@ -3,7 +3,6 @@ import React from "react";
 
 import { Flex, Layout } from "antd";
 import { ChildrenComponentProps } from "@/types/children";
-import { COLOR } from "@/constant";
 
 const { Content } = Layout;
 

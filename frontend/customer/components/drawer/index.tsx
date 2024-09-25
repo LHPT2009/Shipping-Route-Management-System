@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import { Drawer, Space, Divider, Col, Row, Layout, Avatar } from "antd";
+import { Drawer, Col, Row, Layout, Avatar } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import logoFull from "@/public/logo/logoFull.png";
-import NotificationComponent from "../dropdown/notification";
-import AvatarComponent from "../dropdown/avatar";
-import FooterComponent from "../footer";
 import { COLOR } from "@/constant";
 import MenuComponent from "../menu";
 

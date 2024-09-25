@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { ChildrenComponentProps } from "../../types/children";
+import React from "react";
 import styles from "./homepage.module.css";
 
-import { Button, Card, Flex, Space, Typography } from "antd";
+import { Button, Flex, Typography } from "antd";
 import { COLOR } from "../../constant/color";
 
 import Route_1 from "../../public/images/homepage/route_1.jpg";
@@ -30,7 +29,7 @@ import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 const HompageComponent: React.FC = () => {
   const router = useRouter();

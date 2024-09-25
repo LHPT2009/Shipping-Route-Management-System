@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { Button, Col, Flex, Form, Input, Row, Tooltip } from "antd";
+import { Breadcrumb, Button, Col, Flex, Form, Input, Row, Tooltip } from "antd";
 import { COLOR } from "@/constant/color";;
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
@@ -22,8 +22,9 @@ import { usernameRegex } from "@/utils/validation/username.regex";
 import { phoneRegex } from "@/utils/validation/phone.regex";
 import ChangePasswordModal from "@/components/modal/profile";
 import { CldUploadWidget } from "next-cloudinary";
-import { ClearOutlined, CloseOutlined, CloudUploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { CloseOutlined, CloudUploadOutlined, HomeOutlined } from "@ant-design/icons";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import Link from "next/link";
 
 const ProfilePage = () => {
   const user: UserState = useAppSelector((state) => state.user);
@@ -62,17 +63,7 @@ const ProfilePage = () => {
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD, {
-    onCompleted: async (data) => {
-      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "New password was updated successfully");
-      setOpen(false);
-    },
-    onError: async (error: ApolloError) => {
-      await handleError(error);
-    }
-  });
-  
-  const [updateUserByToken] = useMutation(UPDATE_PROFILE, {
+  const [updateUserByToken, { loading }] = useMutation(UPDATE_PROFILE, {
     onCompleted: async (data) => {
       const userData: UserState = {
         username: data.updateUserByToken.data.username,
@@ -132,6 +123,21 @@ const ProfilePage = () => {
 
   return (
     <div style={{ width: responsive ? "95%" : "75rem", margin: "6.5rem auto 2rem auto" }}>
+      <Breadcrumb
+        items={[{
+          title: (
+            <Link href="/">
+              <Flex align="center" gap="0.5rem">
+                <HomeOutlined />
+                <span>Homepage</span>
+              </Flex>
+            </Link>
+          )
+        },
+        { title: 'User profile', }
+        ]}
+        style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+      />
       <Form
         onFinish={handleSubmit(onFinish)}
         layout="vertical"

@@ -21,15 +21,7 @@ const { Text, Title } = Typography;
 
 const ForgotPasswordPage = () => {
   const screenWidth = UseScreenWidth();
-
-  const extraSmall = true;
-  const small = true;
-  const medium = false;
-  const large = false;
-  const extraLarge = false;
-  const extraExtraLarge = false;
-
-  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+  const responsive: boolean = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const schema = yup
     .object({

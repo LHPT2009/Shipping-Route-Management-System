@@ -16,8 +16,6 @@ import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useMutation } from "@apollo/client";
 import { RESET_PASSWORD } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
-import { VerifyType } from "@/components/auth/verification";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 const { Text, Title } = Typography;
@@ -26,11 +24,11 @@ interface VerifyAccountProps {
   params: any; // Replace 'any' with the appropriate type for the 'params' property
 }
 
-const NewPasswordPage: React.FC<VerifyAccountProps> = ({params}) => {
+const NewPasswordPage: React.FC<VerifyAccountProps> = ({ params }) => {
   const screenWidth = UseScreenWidth();
   const router = useRouter();
 
-  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+  const responsive: boolean = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const schema = yup
     .object({
@@ -51,11 +49,11 @@ const NewPasswordPage: React.FC<VerifyAccountProps> = ({params}) => {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
-  
+
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [resetPassword, {loading}] = useMutation(RESET_PASSWORD, {
+  const [resetPassword, { loading }] = useMutation(RESET_PASSWORD, {
     onCompleted: () => {
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Your password has been reset successfully. Please login again with your new password.");
       router.push("/login");
