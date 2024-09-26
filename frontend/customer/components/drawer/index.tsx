@@ -61,7 +61,7 @@ const DrawerComponent: React.FC = () => {
         open={open}
         style={{ width: "80vw" }}
       >
-        <MenuComponent responsive={true} defaultSelectedKeys={["1"]} />
+        <MenuComponent responsive={true} defaultSelectedKeys={["1"]} open={open} setOpen={setOpen} />
       </Drawer>
     </>
   );
