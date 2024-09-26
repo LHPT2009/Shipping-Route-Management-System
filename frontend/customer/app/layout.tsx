@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import { Cookie, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./provider";
 import StyledComponentsRegistry from "@/lib/antd/AntdRegistry";
@@ -10,7 +10,6 @@ import LogoImage from "@/public/logo/logoImage.png";
 import CookiesComponent from "@/components/auth/cookies";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import LoadingComponent from "@/components/loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -64,7 +63,7 @@ export default function RootLayout({
                   colorBgContainer: "#fff",
                   borderRadius: 8,
                 },
-                Input:{
+                Input: {
                   colorTextDisabled: "#868e96"
                 },
                 Tooltip: {

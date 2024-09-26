@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from "react";
-import { Button, Flex, Form, Input, Spin } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";;
 import styles from "./contact.module.css";
@@ -18,13 +18,14 @@ import TextArea from "antd/es/input/TextArea";
 import { useAppDispatch } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU } from "@/constant";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const ContactPage = () => {
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const value : MenuState ={
+    const value: MenuState = {
       keyMenu: KEYMENU.CONTACT,
     }
     dispatch(menuActions.changeInfoMenu(value))
@@ -60,7 +61,6 @@ const ContactPage = () => {
     control,
     handleSubmit,
     formState: { errors },
-    reset
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -68,12 +68,19 @@ const ContactPage = () => {
   const { openNotificationWithIcon } = useAntNotification();
 
   const onFinish = async (values: any) => {
-    console.log(values)
     openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "We have received your information and will get in touch with you as soon as possible.");
   };
 
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+
   return (
-    <Flex vertical align="center" justify="center" style={{ width: "60rem", margin: "6.5rem auto 2rem auto" }}>
+    <Flex vertical align="center" justify="center"
+      style={{
+        width: responsive ? "95%" : "60rem",
+        margin: "6.5rem auto 2rem auto"
+      }}
+    >
       <div className={styles["container"]}>
         <div className={styles["info-container"]}>
           <div className={styles["sub-info"]}>

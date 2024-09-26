@@ -1,14 +1,8 @@
-import { Layout } from "antd";
 import classes from './footer.module.css';
-import PaymentCertificate from '../../public/images/footer/payment_cert.png';
-import Momo from '../../public/images/footer/momo.png';
-import Zalo from '../../public/images/footer/zalo.png';
 import Cert from '../../public/images/footer/cert.png';
 import Social from '../../public/images/footer/social.png';
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-
-// const { Footer } = Layout;
 
 const FooterComponent = () => {
   const screenWidth = UseScreenWidth();

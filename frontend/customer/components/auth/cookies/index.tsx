@@ -15,8 +15,6 @@ import { authActions } from "@/lib/store/auth";
 
 export default function CookiesComponent() {
 
-  const [getNewAccessToken] = useGetNewAccessToken();
-
   const dispatch = useAppDispatch();
   const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
 

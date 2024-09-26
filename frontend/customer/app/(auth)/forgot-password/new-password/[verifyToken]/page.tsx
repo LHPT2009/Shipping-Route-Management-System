@@ -16,8 +16,6 @@ import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useMutation } from "@apollo/client";
 import { RESET_PASSWORD } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
-import { VerifyType } from "@/components/auth/verification";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 const { Text, Title } = Typography;
@@ -26,26 +24,11 @@ interface VerifyAccountProps {
   params: any; // Replace 'any' with the appropriate type for the 'params' property
 }
 
-const NewPasswordPage: React.FC<VerifyAccountProps> = ({params}) => {
+const NewPasswordPage: React.FC<VerifyAccountProps> = ({ params }) => {
   const screenWidth = UseScreenWidth();
   const router = useRouter();
 
-  const extraSmall = true;
-  const small = true;
-  const medium = false;
-  const large = false;
-  const extraLarge = false;
-  const extraExtraLarge = false;
-
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const responsive: boolean = GetValueFromScreen(screenWidth, true, true, true, true);
 
   const schema = yup
     .object({
@@ -66,11 +49,11 @@ const NewPasswordPage: React.FC<VerifyAccountProps> = ({params}) => {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
-  
+
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [resetPassword, {loading}] = useMutation(RESET_PASSWORD, {
+  const [resetPassword, { loading }] = useMutation(RESET_PASSWORD, {
     onCompleted: () => {
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Your password has been reset successfully. Please login again with your new password.");
       router.push("/login");
@@ -94,14 +77,13 @@ const NewPasswordPage: React.FC<VerifyAccountProps> = ({params}) => {
 
   return (
 
-    <Flex justify="center" align="center" style={{ minHeight: !responsive ? "100vh" : "auto", width: "100vw" }}>
+    <Flex justify="center" align="center" style={{ minHeight: "100vh", width: "100vw" }}>
       <Form
         layout="vertical"
         initialValues={{ remember: true }}
         style={{
-          width: "35rem",
-          height: "auto",
-          padding: "3rem 3rem 1rem 3rem",
+          width: responsive ? "90%" : "35rem",
+          padding: responsive ? "3rem 2rem 1rem 2rem" : "3rem 3rem 1rem 3rem",
           margin: "2rem 0",
           borderRadius: "1rem",
           backgroundColor: COLOR.BACKGROUNDBODY,

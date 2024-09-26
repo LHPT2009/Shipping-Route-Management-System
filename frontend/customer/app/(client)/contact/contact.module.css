@@ -6,7 +6,6 @@
 .container{
   display: flex;
   margin: 2rem;
-  /* height: 65rem; */
   width: 100%;
 }
 
@@ -40,4 +39,22 @@
   font-weight: 400;
   border-bottom: 1px solid #dee2e6  ;
   width: 10rem;
+}
+
+@media screen and (max-width: 1200px) {
+  .container{
+    flex-direction: column;
+  }
+  .info-container{
+    border-radius: 2rem;
+    width: 100%;
+  }
+
+  .contact-container{
+    width: 100%;
+    margin-top: 2rem;
+    border-radius: 2rem;
+    border: 1px solid #dee2e6;
+    padding-bottom: 1rem;
+  }
 }

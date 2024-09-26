@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Flex, Form, Input, Modal } from "antd";
-import MapComponent from "@/components/route/map";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
 import * as yup from "yup";
@@ -46,7 +45,6 @@ const ChangePasswordModal: React.FC<CustomModalProps> = ({ open, onClose }) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const dispatch = useAppDispatch();
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
@@ -94,9 +92,6 @@ const ChangePasswordModal: React.FC<CustomModalProps> = ({ open, onClose }) => {
       layout="vertical"
       initialValues={{ remember: true }}
       style={{
-        // width: "35rem",
-        height: "auto",
-        // padding: "1rem",
         margin: "2rem 0",
         borderRadius: "1rem",
         backgroundColor: COLOR.BACKGROUNDBODY,

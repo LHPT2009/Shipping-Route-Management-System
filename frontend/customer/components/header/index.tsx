@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { Layout, Row, Col, Space, Button, Divider } from "antd";
+import React from "react";
+import { Layout, Col, Button } from "antd";
 import DrawerComponent from "../drawer";
 import logoFull from "@/public/logo/logoFull.png";
 import Image from "next/image";
@@ -17,7 +17,7 @@ import Male from "../../public/images/homepage/male.png";
 import Paragraph from "antd/es/typography/Paragraph";
 import LogoutIcon from "../../public/svg/homepage/logout.svg";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { GET_USER_BY_TOKEN, LOGOUT } from "@/apollo/query/auth";
+import { LOGOUT } from "@/apollo/query/auth";
 import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
 import { useHandleError } from "@/lib/hooks/error";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
@@ -121,7 +121,7 @@ const HeaderComponent = () => {
                     fontSize: "1rem",
                     marginBottom: "0",
                     fontWeight: 500,
-                    color: COLOR.TEXT
+                    color: COLOR.TEXT,
                   }}
                 >
                   {user.username}
@@ -146,10 +146,11 @@ const HeaderComponent = () => {
                 onClick={() => router.push(URL.LOGIN)}
                 type="link"
                 style={{
-                  padding: "1.5rem 2rem",
+                  padding: responsive ? "1.3rem 1.8rem" : "1.5rem 2rem",
                   border: "none",
                   fontWeight: 500,
-                  color: COLOR.PRIMARY
+                  color: COLOR.PRIMARY,
+                  fontSize: responsive ? "0.95rem" : "1rem",
                 }}
               >
                 Login
@@ -158,7 +159,8 @@ const HeaderComponent = () => {
                 onClick={clickHandler}
                 type="primary"
                 style={{
-                  padding: "1.5rem 1.6rem",
+                  padding: responsive ? "1.3rem 1.3rem" : "1.5rem 1.6rem",
+                  fontSize: "0.95rem",
                   border: "none",
                 }}
               >

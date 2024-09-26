@@ -1,14 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb } from "antd";
-import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
+import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb } from "antd";
+import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-// import RouteModal from "@/components/modal/route";
-import ContentComponent from "@/components/route";
 import styles from "./route.module.css";
-import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
-import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route";
@@ -22,14 +18,13 @@ import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU } from "@/constant";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
-import { ROLE } from "@/constant/role";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
-import LoadingComponent from "@/components/loading";
 import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const { Search } = Input;
 
@@ -80,6 +75,9 @@ const RoutePage = () => {
     dispatch(menuActions.changeInfoMenu(value))
   }, [dispatch]);
 
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
@@ -105,9 +103,6 @@ const RoutePage = () => {
   });
   const checkStatusBackground: boolean = useAppSelector(
     (state) => state.responsive.checkStatusBackground
-  );
-  const checkStatusResponse: boolean = useAppSelector(
-    (state) => state.responsive.checkStatusResponse
   );
 
   const handleSearch = (
@@ -349,7 +344,6 @@ const RoutePage = () => {
 
   ];
 
-  const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
 
   const [open, setOpen] = useState(false);
@@ -464,7 +458,7 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <div style={{ width: "85rem", margin: "6.5rem auto 2rem auto" }}>
+        <div style={{ width: responsive ? "90%" : "85rem", margin: "6.5rem auto 2rem auto" }}>
           <Breadcrumb
             items={[{
               title: (
@@ -484,7 +478,7 @@ const RoutePage = () => {
             <Form
               initialValues={{ remember: true }}
               style={{
-                width: "28rem",
+                width: responsive ? "60%" : "28rem",
                 borderRadius: "1rem",
                 backgroundColor: COLOR.BACKGROUNDBODY,
                 textAlign: "left",
@@ -508,16 +502,25 @@ const RoutePage = () => {
                     <Input
                       key="search"
                       {...field}
-                      placeholder={"Search for route name, departure, arrival"}
+                      placeholder={responsive ? "Search for location" : "Search for route name, departure, arrival"}
                       prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
-                      style={{ borderRadius: "0.5rem", height: "3rem", background: "white" }}
+                      style={{ borderRadius: "0.4rem", height: "3rem", background: "white" }}
                     />
                   )}
                 />
               </Form.Item>
             </Form>
 
-            <Tag color="geekblue" style={{ padding: "0 1rem", height: "3rem", borderRadius: "0.3rem", paddingTop: 0, display: "flex", alignItems: "center" }}>
+            <Tag color="geekblue"
+              style={{
+                padding: "0 1rem",
+                height: "3rem",
+                borderRadius: "0.4rem",
+                paddingTop: 0,
+                display: "flex", alignItems: "center",
+                marginBottom: responsive ? "1.5rem" : 0,
+              }}
+            >
               <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
             </Tag>
 
@@ -531,6 +534,7 @@ const RoutePage = () => {
             loading={loading}
             onChange={handleTableChange}
             dataSource={data}
+            scroll={{ x: 'max-content' }}
           />
         </div>
       )}
