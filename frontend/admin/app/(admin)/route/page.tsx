@@ -24,6 +24,8 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { Content } from "antd/es/layout/layout";
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -445,81 +447,105 @@ const RoutePage = () => {
     }
   };
 
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   return (
     <div >
       {!checkStatusBackground ? (
         <></>
       ) : (
         <>
-          <Breadcrumb
-            items={[
-              { title: <Link href="/">Dashboard</Link>, },
-              { title: 'List routes', }
-            ]}
-            style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
-          />
-
-          <ContentComponent>
-            <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.5rem" }}>
-              <Form
-                initialValues={{ remember: true }}
-                style={{
-                  width: "28rem",
-                  borderRadius: "1rem",
-                }}
-                onFinish={handleSubmit(onFinish)}
-              >
-                <Form.Item
-                  name="search"
-                  style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+          <div>
+            <Content style={{ marginInlineStart: responsive ? 20 : 215, marginTop: responsive ? "190px" : "70px" }}>
+              <Breadcrumb
+                items={[
+                  { title: <Link href="/">Dashboard</Link>, },
+                  { title: 'List routes', }
+                ]}
+                style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+              />
+            </Content>
+            <ContentComponent>
+              <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.5rem" }}>
+                <Form
+                  initialValues={{ remember: true }}
+                  style={{
+                    width: "28rem",
+                    borderRadius: "1rem",
+                  }}
+                  onFinish={handleSubmit(onFinish)}
                 >
-                  <Controller
+                  <Form.Item
                     name="search"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        key="search"
-                        {...field}
-                        placeholder={"Search for route name, departure, arrival"}
-                        prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
-                        style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
-                      />
-                    )}
-                  />
-                </Form.Item>
-              </Form>
-              <Button
-                type="primary"
-                onClick={() => {
-                  router.push(`/route/create`);
-                }}
-                style={{ padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
-              >
-                <PlusOutlined />
-                New route
-              </Button>
-            </Flex>
+                    style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                  >
+                    <Controller
+                      name="search"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          key="search"
+                          {...field}
+                          placeholder={"Search for route name, departure, arrival"}
+                          prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
+                          style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
+                        />
+                      )}
+                    />
+                  </Form.Item>
+                </Form>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    router.push(`/route/create`);
+                  }}
+                  style={{ padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                >
+                  <PlusOutlined />
+                  New route
+                </Button>
+              </Flex>
 
-            <Table
-              rowKey={(record) => record.name}
-              className={styles['table-striped-rows']}
-              columns={columns}
-              pagination={tableParams.pagination}
-              loading={loading}
-              onChange={handleTableChange}
-              dataSource={data}
-            />
-            <DeleteRouteModal
-              routeId={routeId ? `${routeId}` : ""}
-              open={openModalDelete}
-              onClose={handleCloseModalDelete}
-              onDelete={() => handleDeleteRoute(routeId)}
-            />
-          </ContentComponent>
+              <Table
+                rowKey={(record) => record.name}
+                className={styles['table-striped-rows']}
+                columns={columns}
+                pagination={tableParams.pagination}
+                loading={loading}
+                onChange={handleTableChange}
+                dataSource={data}
+                scroll={{ x: 1500 }}
+              />
+              <DeleteRouteModal
+                routeId={routeId ? `${routeId}` : ""}
+                open={openModalDelete}
+                onClose={handleCloseModalDelete}
+                onDelete={() => handleDeleteRoute(routeId)}
+              />
+            </ContentComponent>
+          </div>
         </>
-      )}
+      )
+      }
 
-    </div>
+    </div >
   );
 };
 

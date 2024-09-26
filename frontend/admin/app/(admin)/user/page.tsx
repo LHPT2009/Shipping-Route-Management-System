@@ -20,6 +20,8 @@ import DeleteUserModal from "@/components/modal/user/delete";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU, LABELMENU } from "@/constant/menu";
 import Link from "next/link";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { Content } from "antd/es/layout/layout";
 
 const { Search } = Input;
 
@@ -373,20 +375,45 @@ const UserPage = () => {
     dispatch(menuActions.changeInfoMenu(value));
   }, [dispatch]);
 
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   return (
     <div >
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <>
-          <Breadcrumb
-            items={[
-              { title: <Link href="/">Dashboard</Link>, },
-              { title: 'List users', }
-            ]}
-            style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
-          />
+        <div>
+          <Content style={{ marginInlineStart: responsive ? 20 : 215, marginTop: responsive ? "190px" : "70px" }}>
+            <Breadcrumb
+              items={[
+                { title: <Link href="/">Dashboard</Link>, },
+                { title: 'List users', }
+              ]}
+              style={{
+                paddingLeft: "0.5rem", marginBottom: "1rem"
+              }}
+            />
+          </Content>
+
           <ContentComponent>
+
             <Table
               rowKey={(record) => record.id}
               className={styles['table-striped-rows']}
@@ -396,6 +423,7 @@ const UserPage = () => {
               onChange={handleTableChange}
               dataSource={data}
               style={{ marginTop: "0.5rem" }}
+              scroll={{ x: 1500 }}
             />
           </ContentComponent>
           <DeleteUserModal
@@ -412,7 +440,7 @@ const UserPage = () => {
             onClose={handleCloseModalAssign}
             refetch={fetchUsers}
           />
-        </>
+        </div>
       )}
     </div>
   );

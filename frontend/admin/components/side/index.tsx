@@ -48,11 +48,12 @@ const SiderComponent = () => {
   const router = useRouter();
 
   const onClick: MenuProps["onClick"] = (e) => {
-    const value : MenuState ={
-      keyMenu:e.key,
+    const value: MenuState = {
+      keyMenu: e.key,
       labelMenu: e.key
     }
     dispatch(menuActions.changeInfoMenu(value))
+    dispatch(responsiveActions.changeStatusBackground(true));
     if (e.key === "dashboard") {
       router.push(`/`);
     } else {
@@ -83,14 +84,18 @@ const SiderComponent = () => {
           await dispatch(responsiveActions.changeStatusBackground(collapsed));
         }
       }}
-      style={{ height: "100vh", backgroundColor: "#fff", position: "fixed", zIndex: "100",  }}
+      style={{
+        height: '100vh',
+        position: 'fixed',
+        zIndex: 2000,
+      }}
     >
-      <Layout style={{ height: "100%", padding: "16px 0px"  }}>
+      <Layout style={{ height: "100%", padding: "16px 0px" }}>
         <Header
           style={{ display: "flex", padding: "0px 10px", height: "150px", borderRadius: "0.5rem" }}
         >
           <Flex justify="center" align="center">
-            <Image src={logoFull} style={{width: "85%"}} alt="Logo" />
+            <Image src={logoFull} style={{ width: "85%" }} alt="Logo" />
           </Flex>
         </Header>
         <Content
@@ -111,9 +116,9 @@ const SiderComponent = () => {
               Navigation Menu
             </Divider>
           </div>
-          <Menu onClick={onClick} mode="vertical" items={items} selectedKeys={[selectedKey]}/>
+          <Menu onClick={onClick} mode="vertical" items={items} selectedKeys={[selectedKey]} />
         </Content>
-        <Footer style={{borderRadius: "0.5rem"}}>
+        <Footer style={{ borderRadius: "0.5rem" }}>
           <Flex justify="center" align="center">
             <div>@2024 - T6</div>
           </Flex>

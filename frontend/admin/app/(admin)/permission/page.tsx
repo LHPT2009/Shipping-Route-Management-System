@@ -9,6 +9,8 @@ import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU, LABELMENU } from "@/constant";
 import styles from "./permission.module.css";
 import Link from "next/link";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { Content } from "antd/es/layout/layout";
 
 interface DataType {
   id: string;
@@ -45,27 +47,54 @@ const PermissionPage = () => {
     (state) => state.responsive.checkStatusBackground
   );
 
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   return (
     <>
       {!checkStatusBackground ? (
         <></>
       ) : (
         <>
-          <Breadcrumb
-            items={[
-              { title: <Link href="/">Dashboard</Link> },
-              { title: "List permissions" },
-            ]}
-            style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
-          />
-          <ContentComponent>
-            <Table
-              columns={columns}
-              dataSource={permissions}
-              className={styles["table-striped-rows"]}
-              loading={loading}
-            />
-          </ContentComponent>
+          <div>
+            <Content style={{ marginInlineStart: responsive ? 20 : 215, marginTop: responsive ? "190px" : "70px" }}>
+              <Breadcrumb
+                items={[
+                  { title: <Link href="/">Dashboard</Link> },
+                  { title: "List permissions" },
+                ]}
+                style={{
+                  paddingLeft: "0.5rem",
+                  marginBottom: "1rem"
+                }}
+              />
+            </Content>
+
+            <ContentComponent>
+              <Table
+                columns={columns}
+                dataSource={permissions}
+                className={styles["table-striped-rows"]}
+                loading={loading}
+              />
+            </ContentComponent>
+          </div>
         </>
       )}
     </>

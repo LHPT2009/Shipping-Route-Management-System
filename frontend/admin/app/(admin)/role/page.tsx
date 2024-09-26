@@ -13,6 +13,8 @@ import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import styles from "./role.module.css";
 import { PlusOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { Content } from "antd/es/layout/layout";
 
 interface DataType {
   id: string;
@@ -103,35 +105,58 @@ const RolePage = () => {
     (state) => state.responsive.checkStatusBackground
   );
 
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   return (
     <>
       {!checkStatusBackground ? (
         <></>
       ) : (
         <>
-          <Breadcrumb
-            items={[
-              { title: <Link href="/">Dashboard</Link>, },
-              { title: 'List roles', }
-            ]}
-            style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
-          />
-          <ContentComponent>
-            <Button
-              type="primary"
-              onClick={handleOpenModalCreate}
-              style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
-            >
-              <PlusOutlined />
-              New role
-            </Button>
-            <Table
-              columns={columns}
-              dataSource={roles}
-              className={styles['table-striped-rows']}
-              loading={loading}
-            />
-          </ContentComponent>
+          <div>
+            <Content style={{ marginInlineStart: responsive ? 20 : 215, marginTop: responsive ? "190px" : "70px" }}>
+              <Breadcrumb
+                items={[
+                  { title: <Link href="/">Dashboard</Link>, },
+                  { title: 'List roles', }
+                ]}
+                style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+              />
+            </Content>
+            <ContentComponent>
+              <Button
+                type="primary"
+                onClick={handleOpenModalCreate}
+                style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
+              >
+                <PlusOutlined />
+                New role
+              </Button>
+              <Table
+                columns={columns}
+                dataSource={roles}
+                className={styles['table-striped-rows']}
+                loading={loading}
+              />
+            </ContentComponent>
+          </div>
         </>
       )}
       <CreateRoleModal
