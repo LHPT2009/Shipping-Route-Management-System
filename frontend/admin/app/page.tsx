@@ -20,8 +20,6 @@ import { ApolloError, useLazyQuery } from "@apollo/client";
 import { LOCATION_STATISTIC, PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATISTIC, TRANSPORT_STATISTIC, USER_STATISTIC } from "@/apollo/query/statistic";
 import { useHandleError } from "@/lib/hooks/error";
 import styles from "./page.module.css";
-import { set } from "react-hook-form";
-import { get } from "http";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -150,52 +148,53 @@ function Home() {
   return (
     <LayoutAdminComponent>
       <HeaderComponent />
-      {loadingRoute || loadingLocation || loadingTransport || loadingUser || loadingRole || loadingPermission ? <LoadingComponent /> : (
+      <div style={{ marginTop: "70px" }}>
+        <ContentComponent>
+          {loadingRoute || loadingLocation || loadingTransport || loadingUser || loadingRole || loadingPermission ? <LoadingComponent /> : (
+            <div style={{ height: "900px" }}>
+              <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem", height: "50rem" }} gap="2rem">
 
-        <div className={styles['content-container']}>
-          <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem", height: "50rem" }} gap="2rem">
+                {/* Statistics */}
+                <Flex justify="space-between" align="center" style={{ width: "100%", height: "20rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
+                  {dataStatistics?.map((data, index) => (
+                    <Tag color={data.tagColor} className={styles['tag-container']} key={index}>
+                      <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
+                      <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
+                    </Tag>
+                  ))}
+                </Flex>
 
-            {/* Statistics */}
-            <Flex justify="space-between" align="center" style={{ width: "100%", height: "20rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
-              {dataStatistics?.map((data, index) => (
-                <Tag color={data.tagColor} className={styles['tag-container']} key={index}>
-                  <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
-                  <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
-                </Tag>
-              ))}
-            </Flex>
+                {/* Line graph */}
+                <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
+                  <Title level={4} style={{
+                    fontSize: "1.3rem",
+                    fontWeight: 700,
+                    color: "#495057",
+                  }}>
+                    Visit frequency for the location
+                  </Title>
 
-            {/* Line graph */}
-            <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
-              <Title level={4} style={{
-                fontSize: "1.3rem",
-                fontWeight: 700,
-                color: "#495057",
-              }}>
-                Visit frequency for the location
-              </Title>
+                  <Title level={4} style={{
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                    color: COLOR.PRIMARY,
+                    marginBottom: "2.5rem",
+                    marginTop: "1rem",
+                  }}>
+                    {maxVisitName}
+                    <span style={{ color: "#495057", fontWeight: "400" }}> is the most visited location with </span>
+                    {maxVisitTime} times
+                  </Title>
+                  <div style={{ height: "35rem", paddingRight: "2.5rem" }}>
+                    <LineGraph locationCounts={locationCounts} locationNames={locationNames} />
+                  </div>
+                </div>
 
-              <Title level={4} style={{
-                fontSize: "1rem",
-                fontWeight: 700,
-                color: COLOR.PRIMARY,
-                marginBottom: "2.5rem",
-                marginTop: "1rem",
-              }}>
-                {maxVisitName}
-                <span style={{ color: "#495057", fontWeight: "400" }}> is the most visited location with </span>
-                {maxVisitTime} times
-              </Title>
-              <div style={{ height: "35rem", paddingRight: "2.5rem" }}>
-                <LineGraph locationCounts={locationCounts} locationNames={locationNames} />
-              </div>
+              </Flex>
             </div>
-
-          </Flex>
-
-        </div>
-      )
-      }
+          )}
+        </ContentComponent>
+      </div>
     </LayoutAdminComponent>
   );
 }

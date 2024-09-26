@@ -9,12 +9,14 @@ const LayoutAdminComponent: React.FC<ChildrenComponentProps> = ({
   children,
 }: ChildrenComponentProps) => {
   return (
-    <Layout style={{ height: "100vh", borderRadius: "1rem" }}>
-      <SiderComponent />
-      <Layout>
-        {children}
+    <>
+      <Layout style={{ height: "100vh", borderRadius: "1rem" }}>
+        <SiderComponent />
+        <Layout>
+          {children}
+        </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 };
 

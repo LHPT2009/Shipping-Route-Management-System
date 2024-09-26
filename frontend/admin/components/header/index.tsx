@@ -1,12 +1,9 @@
 "use client";
 
 import React from "react";
-import { Avatar, Col, Flex, Layout, Row, theme, Typography } from "antd";
-import NotificationComponent from "../dropdown/notification";
-import AvatarComponent from "../dropdown/avatar";
+import { Col, Flex, Layout, Row, theme, Typography } from "antd";
 import { COLOR } from "@/constant";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-import { LeftCircleOutlined, MoonOutlined } from "@ant-design/icons";
 import { deleteCookies, getCookies } from "@/utils/cookies/handle.cookies";
 import { ApolloError, useLazyQuery } from "@apollo/client";
 import { LOGOUT } from "@/apollo/query/auth";
@@ -17,10 +14,11 @@ import NotiIcon from "../../public/svg/homepage/noti.svg";
 import Male from "../../public/images/homepage/male.png"
 import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const { Header } = Layout;
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const HeaderComponent = () => {
   const {
@@ -57,8 +55,27 @@ const HeaderComponent = () => {
     });
   };
 
+  const screenWidth = UseScreenWidth();
+
+  const extraSmall = true;
+  const small = true;
+  const medium = false;
+  const large = false;
+  const extraLarge = false;
+  const extraExtraLarge = false;
+
+  const responsive = GetValueFromScreen(
+    screenWidth,
+    extraSmall,
+    small,
+    medium,
+    large,
+    extraLarge,
+    extraExtraLarge
+  );
+
   return (
-    <div style={{ width: "100%", position: "fixed", zIndex: 100, paddingTop: 0, margin: "0 0 0 12.5rem", paddingRight: "12.5rem" }}>
+    <div>
       {!checkStatusBackground ? <>
         <Header
           style={{
@@ -71,12 +88,20 @@ const HeaderComponent = () => {
         >
         </Header>
       </> :
-        <div style={{ background: "#f8f9fa", padding: "16px 16px 16px 16px " }}>
+        <div style={{
+          background: "#f8f9fa",
+          padding: responsive ? "0" : "20px",
+          width: "100%"
+        }}>
           <Header
             style={{
-              padding: checkStatusResponse ? "0 16px 155px 16px" : "0 16px 0 16px",
+              padding: checkStatusResponse ? "0 16px 165px 16px" : "0 16px 0 16px",
               background: colorBgContainer,
               borderRadius: "0.5rem",
+              marginInlineStart: responsive ? "0" : "195px",
+              position: "fixed",
+              zIndex: 1000,
+              width: responsive ? "100%" : "calc(100vw - 247px)"
             }}
           >
             <Row style={{ width: "100%" }}>
@@ -87,12 +112,6 @@ const HeaderComponent = () => {
                   }}
                 >
                   <Flex justify="start" align="start" gap="small">
-                    {/* <Avatar
-                    shape="circle"
-                    size="large"
-                    icon={<LeftCircleOutlined  />}
-                    style={{ color: COLOR.PRIMARY, backgroundColor: "#fff" }}
-                  /> */}
                     <Title level={4} style={{
                       fontSize: "1.5rem",
                       fontWeight: 700,
@@ -101,7 +120,6 @@ const HeaderComponent = () => {
                     }}>
                       {getlabelMenu === "Dashboard" ? "Dashboard" : `${getlabelMenu} management`}
                     </Title>
-                    {/* <Title level={3}>{getlabelMenu}</Title> */}
                   </Flex>
                 </div>
               </Col>
@@ -112,7 +130,7 @@ const HeaderComponent = () => {
                     marginRight: "20px"
                   }}
                 >
-                  <Flex justify="end" align="end" gap="1.5rem" style={{ paddingRight: "1rem" }}>
+                  <Flex justify="end" align="end" gap="1.5rem">
                     <img src={NotiIcon.src} alt="logout" style={{ width: "1.35rem", cursor: "pointer" }} />
                     <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />
                   </Flex>
@@ -157,6 +175,19 @@ const HeaderComponent = () => {
                 </div>
               </Col>
             </Row>
+          </Header>
+          <Header
+            style={{
+              background: COLOR.BACKGROUNDLAYOUT,
+              marginInlineStart: responsive ? "0" : "190px",
+              position: "fixed",
+              zIndex: 100,
+              width: responsive ? "100vw" : "88vw",
+              top: "0px",
+              height: "100px",
+              borderRadius: "0.5rem",
+            }}
+          >
           </Header>
         </div>
       }

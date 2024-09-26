@@ -10,7 +10,7 @@ export const UseScreenWidth = (): number | null => {
       }
     };
 
-    updateWidth(); // Set initial width
+    updateWidth();
     window.addEventListener("resize", updateWidth);
 
     return () => {
