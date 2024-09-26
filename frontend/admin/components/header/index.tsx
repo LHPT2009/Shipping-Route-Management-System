@@ -100,7 +100,7 @@ const HeaderComponent = () => {
               borderRadius: "0.5rem",
               marginInlineStart: responsive ? "0" : "195px",
               position: "fixed",
-              zIndex: 1000,
+              zIndex: 150,
               width: responsive ? "100%" : "calc(100vw - 247px)"
             }}
           >
