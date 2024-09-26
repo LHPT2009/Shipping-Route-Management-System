@@ -10,36 +10,51 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const MenuComponent: React.FC<MenuComponentProps> = ({
   responsive,
+  open,
+  setOpen
 }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
- const MENULIST: MenuItem[] = [
-  {
-    key: KEYMENU.HOME,
-    label: LABELMENU.HOME,
-  },
-  {
-    key: KEYMENU.ROUTE,
-    label: LABELMENU.ROUTE,
-  },
-  {
-    key: KEYMENU.CONTACT,
-    label: LABELMENU.CONTACT,
-  },
-];
+  const MENULIST: MenuItem[] = [
+    {
+      key: KEYMENU.HOME,
+      label: LABELMENU.HOME,
+    },
+    {
+      key: KEYMENU.ROUTE,
+      label: LABELMENU.ROUTE,
+    },
+    {
+      key: KEYMENU.CONTACT,
+      label: LABELMENU.CONTACT,
+    },
+  ];
 
-const onClick: MenuProps["onClick"] = (e) => {
-  const value : MenuState ={
-    keyMenu:e.key,
-  }
-  dispatch(menuActions.changeInfoMenu(value))
-  if (e.key === KEYMENU.HOME) {
-    router.push(`/`);
-  } else {
-    router.push(`/${e.key}`);
-  }
-};
+  const onClickDrawer: MenuProps["onClick"] = (e) => {
+    setOpen(false);
+    const value: MenuState = {
+      keyMenu: e.key,
+    }
+    dispatch(menuActions.changeInfoMenu(value))
+    if (e.key === KEYMENU.HOME) {
+      router.push(`/`);
+    } else {
+      router.push(`/${e.key}`);
+    }
+  };
+
+  const onClick: MenuProps["onClick"] = (e) => {
+    const value: MenuState = {
+      keyMenu: e.key,
+    }
+    dispatch(menuActions.changeInfoMenu(value))
+    if (e.key === KEYMENU.HOME) {
+      router.push(`/`);
+    } else {
+      router.push(`/${e.key}`);
+    }
+  };
 
   const getKeyMenu: string = useAppSelector((state) => state.menu.keyMenu);
 
@@ -70,7 +85,7 @@ const onClick: MenuProps["onClick"] = (e) => {
           style={{ height: "20rem", borderRight: 0 }}
           mode="inline"
           items={MENULIST}
-          onClick={onClick}
+          onClick={onClickDrawer}
           selectedKeys={[selectedKey]}
         />
       )}
