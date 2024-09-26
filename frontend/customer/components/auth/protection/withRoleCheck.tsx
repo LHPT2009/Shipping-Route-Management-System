@@ -14,14 +14,19 @@ const withRoleCheck = (WrappedComponent: any, allowedRoles: string[], allowedPer
 
     useEffect(() => {
       const checkRole = async () => {
-        if (!loading && !error) {
-          if (!allowedRoles.includes(nameRole) || !allowedPermissions.some((permission) => namePermission.includes(permission))) {
+        if (!loading)
+          if (!error) {
+            if (!allowedRoles.includes(nameRole) || !allowedPermissions.some((permission) => namePermission.includes(permission))) {
+              router.push('/unauthorized');
+              dispatch(loadingActions.changeLoadingStatus(false))
+            } else {
+              dispatch(loadingActions.changeLoadingStatus(false))
+            }
+          }
+          else {
             router.push('/unauthorized');
             dispatch(loadingActions.changeLoadingStatus(false))
-          } else {
-            dispatch(loadingActions.changeLoadingStatus(false))
           }
-        }
       };
 
       checkRole();

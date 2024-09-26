@@ -15,10 +15,10 @@ import moment from 'moment';
 import MapComponent from "@/components/route/map";
 import withRoleCheck from "@/components/auth/protection/withRoleCheck";
 import withProtectedRoute from "@/components/auth/protection/withProtectedRoute";
-import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 import Link from "next/link";
 import { HomeOutlined } from "@ant-design/icons";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { RouteDetailPermissions, RouteDetailRoles } from "@/lib/permissions/route-detail";
 
 const { Text } = Typography;
 
@@ -419,4 +419,4 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default withProtectedRoute(withRoleCheck(RouteDetailPage, RouteRoles, RoutePermissions));
+export default withProtectedRoute(withRoleCheck(RouteDetailPage, RouteDetailRoles, RouteDetailPermissions));
