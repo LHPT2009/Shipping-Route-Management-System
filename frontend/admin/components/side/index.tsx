@@ -87,7 +87,7 @@ const SiderComponent = () => {
       style={{
         height: '100vh',
         position: 'fixed',
-        zIndex: 2000,
+        zIndex: 1000,
       }}
     >
       <Layout style={{ height: "100%", padding: "16px 0px" }}>
