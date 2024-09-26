@@ -6,7 +6,6 @@ import { ResponseDto } from '../../../../../common/response/responseDto';
 import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
 import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
 import { CreateRoutesDto } from './dto/route-create.dto';
-import { instanceToPlain } from 'class-transformer';
 import { UpdateRoutesDto } from './dto/route-update.dto';
 
 describe('RoutesService', () => {
@@ -62,7 +61,6 @@ describe('RoutesService', () => {
       };
 
       const result: ResponseDto<{ total: number, page: number, limit: number, routes: any[] }> = await service.findAll(filterRoutesDto);
-
       expect(result).toEqual(new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, {
         total: 0,
         page: 1,
@@ -193,8 +191,6 @@ describe('RoutesService', () => {
         status: 0,
       };
 
-      // const route = { id: '20' };
-      // repository.findOneBy = jest.fn().mockResolvedValue(route);
       const route = { id: '20', ...updateRoutesDto };
 
       jest.spyOn(service, 'findOne').mockImplementation((id: string) => {
