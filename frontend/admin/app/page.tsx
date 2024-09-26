@@ -20,6 +20,7 @@ import { ApolloError, useLazyQuery } from "@apollo/client";
 import { LOCATION_STATISTIC, PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATISTIC, TRANSPORT_STATISTIC, USER_STATISTIC } from "@/apollo/query/statistic";
 import { useHandleError } from "@/lib/hooks/error";
 import styles from "./page.module.css";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -32,6 +33,9 @@ function Home() {
 
   const getLoadingStatus = useAppSelector((state) => state.loading.loadingStatus);
   const showLoading = useLoading(getLoadingStatus);
+
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
 
   interface RouteStatistics {
     topLocations: string[];
@@ -145,27 +149,40 @@ function Home() {
     return <LoadingComponent />;
   }
 
+  // responsive ? "12rem" :
   return (
     <LayoutAdminComponent>
       <HeaderComponent />
-      <div style={{ marginTop: "70px" }}>
+      <div style={{ marginTop: responsive ? "12rem" : "70px" }}>
+        <ContentComponent>
+          {/* Statistics */}
+          <Flex
+            vertical={responsive}
+            gap="1rem"
+            justify="space-between"
+            align="center"
+            style={{
+              width: "100%",
+              background: "white",
+              borderRadius: "0.5rem",
+              padding: "1rem"
+            }}
+          >
+            {dataStatistics?.map((data, index) => (
+              <Tag color={data.tagColor} className={styles['tag-container']} style={{ width: responsive ? "80%" : "15%" }} key={index}>
+                <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
+                <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
+              </Tag>
+            ))}
+          </Flex>
+        </ContentComponent>
         <ContentComponent>
           {loadingRoute || loadingLocation || loadingTransport || loadingUser || loadingRole || loadingPermission ? <LoadingComponent /> : (
             <div style={{ height: "900px" }}>
               <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem", height: "50rem" }} gap="2rem">
 
-                {/* Statistics */}
-                <Flex justify="space-between" align="center" style={{ width: "100%", height: "20rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
-                  {dataStatistics?.map((data, index) => (
-                    <Tag color={data.tagColor} className={styles['tag-container']} key={index}>
-                      <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
-                      <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
-                    </Tag>
-                  ))}
-                </Flex>
-
                 {/* Line graph */}
-                <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 2rem" }}>
+                <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 1rem" }}>
                   <Title level={4} style={{
                     fontSize: "1.3rem",
                     fontWeight: 700,

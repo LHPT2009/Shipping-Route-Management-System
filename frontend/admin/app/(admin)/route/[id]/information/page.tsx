@@ -24,6 +24,7 @@ import { useAppDispatch } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU, LABELMENU } from "@/constant/menu";
 import Link from "next/link";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const RouteDetailPage = ({ params }: { params: { id: string } }) => {
 
@@ -321,6 +322,9 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
     }
   }, [depLocationState, arrLocationState])
 
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
+  
   return (
     <>
       <Breadcrumb
@@ -329,7 +333,12 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
           { title: <Link href="/route">List routes</Link> },
           { title: route?.name },
         ]}
-        style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+        style={{ 
+          paddingLeft: "0.5rem", 
+          marginBottom: "1rem", 
+          marginTop: responsive ? "12rem" : 0,
+          marginLeft: responsive ? "1rem" : 0,
+         }}
       />
 
       <ContentComponent>
@@ -757,6 +766,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 isShowDirection={isShowDirection}
                 departure={departureCoordinate}
                 arrival={arrivalCoordinate}
+                heightProps={responsive ? "22rem" : "32rem"}
               />
               <Flex align="center" justify="center">
                 {route && ShippingTypeEnum[route.transport.shipping_type] === "Seaway" ?
@@ -788,7 +798,7 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
                 }
 
               </Flex>
-              <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
+              <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: responsive ? "4rem" : "8.85rem" }}>
                 <Button
                   onClick={() => router.push("/route")}
                   style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}

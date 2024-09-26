@@ -16,6 +16,8 @@ import { GET_USER_BY_ID } from "@/apollo/query/user";
 import { KEYMENU, LABELMENU } from "@/constant/menu";
 import Male from "@/public/images/homepage/male.png"
 import Link from "next/link";
+import responsive from "@/lib/store/responsive";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const UserInformationPage = ({ params }: { params: { id: string } }) => {
 
@@ -93,6 +95,9 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
     console.log(values);
   };
 
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
+
   return (
     <>
       <Breadcrumb
@@ -101,12 +106,28 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
           { title: <Link href="/user">List users</Link> },
           { title: usernameBreadcrumb, }
         ]}
-        style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+        style={{
+          paddingLeft: "0.5rem",
+          marginBottom: "1rem",
+          marginTop: responsive ? "12rem" : 0,
+          marginLeft: responsive ? "1rem" : 0,
+        }}
       />
 
       <ContentComponent>
         <Form onFinish={handleSubmit(onFinish)} layout="vertical" style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}>
           <Row gutter={[8, 8]}>
+            {responsive && <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+              <img src={userImg ? userImg : Male.src} alt="male"
+                style={{
+                  width: responsive ? "15rem" : "20rem",
+                  height: responsive ? "15rem" : "20rem",
+                  borderRadius: "50%",
+                  margin: responsive ? "1rem auto":"7rem auto"
+                }}
+              />
+            </Col>}
+
             <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
               {/* content */}
               <Row gutter={[18, 0]}>
@@ -277,9 +298,10 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
             </Col>
 
             <Col xs={24} sm={24} md={24} lg={1} xl={1} xxl={1}></Col>
-            <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+            {!responsive && <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
               <img src={userImg ? userImg : Male.src} alt="male" style={{ width: "20rem", height: "20rem", borderRadius: "50%", margin: "7rem auto" }} />
-            </Col>
+            </Col>}
+
           </Row>
         </Form>
       </ContentComponent>

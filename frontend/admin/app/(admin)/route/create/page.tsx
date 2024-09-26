@@ -22,6 +22,7 @@ import { useAppDispatch } from "@/lib/hooks/hooks";
 import { KEYMENU, LABELMENU } from "@/constant/menu";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import Link from "next/link";
+import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 
 const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
@@ -251,6 +252,9 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
   };
 
+  const screenWidth = UseScreenWidth();
+  const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
+  
   return (
     <>
       <Breadcrumb
@@ -259,7 +263,12 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
           { title: <Link href="/route">List routes</Link> },
           { title: "New route" },
         ]}
-        style={{ paddingLeft: "0.5rem", marginBottom: "1rem" }}
+        style={{ 
+          paddingLeft: "0.5rem", 
+          marginBottom: "1rem", 
+          marginTop: responsive ? "12rem" : 0,
+          marginLeft: responsive ? "1rem" : 0,
+         }}
       />
       <ContentComponent>
         <Form onFinish={handleSubmit(onFinish)} layout="vertical" style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}>
@@ -632,6 +641,7 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
                 isShowDirection={isShowDirection}
                 departure={departureCoordinate}
                 arrival={arrivalCoordinate}
+                heightProps={responsive ? "22rem" : "32rem"}
               />
               <Flex align="center" justify="center">
                 <Button
@@ -650,7 +660,7 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
                   View on map
                 </Button>
               </Flex>
-              <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: "8.85rem" }}>
+              <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: responsive ? "4rem" : "8.85rem" }}>
                 <Button
                   onClick={() => router.push("/route")}
                   style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}

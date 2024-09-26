@@ -35,13 +35,14 @@ const ContentComponent: React.FC<ChildrenComponentProps> = ({ children }) => {
         marginInlineStart: responsive ? 0 : 215,
         marginRight: "20px",
         marginLeft: responsive ? 20 : 215,
+        marginBottom: "1rem"
       }}
     >
       <div
         style={{
           padding: 24,
           background: colorBgContainer,
-          borderRadius: "0.5rem"
+          borderRadius: "0.5rem",
         }}
       >
         {children}

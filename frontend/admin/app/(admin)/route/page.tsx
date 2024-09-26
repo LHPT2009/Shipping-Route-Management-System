@@ -531,7 +531,7 @@ const RoutePage = () => {
                 loading={loading}
                 onChange={handleTableChange}
                 dataSource={data}
-                scroll={{ x: 1500 }}
+                scroll={{ x: responsive ? 1500 : 0 }}
               />
               <DeleteRouteModal
                 routeId={routeId ? `${routeId}` : ""}

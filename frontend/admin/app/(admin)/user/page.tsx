@@ -423,7 +423,7 @@ const UserPage = () => {
               onChange={handleTableChange}
               dataSource={data}
               style={{ marginTop: "0.5rem" }}
-              scroll={{ x: 1500 }}
+              scroll={{ x: responsive ? 1500 : 0 }}
             />
           </ContentComponent>
           <DeleteUserModal
