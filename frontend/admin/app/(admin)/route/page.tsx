@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-// import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
 import { COLOR } from "@/constant/color";
 import useAntNotification from "@/lib/hooks/notification";
@@ -320,7 +319,6 @@ const RoutePage = () => {
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
-      console.log("data in route admin", data.getRoutes.data.routes)
       setData(data.getRoutes.data.routes);
       setTableParams({
         ...tableParams,
