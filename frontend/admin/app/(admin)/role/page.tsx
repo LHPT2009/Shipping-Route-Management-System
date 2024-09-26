@@ -66,10 +66,6 @@ const RolePage = () => {
     setOpenModalAssignPermissionToRole(false);
   };
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   const columns: TableColumnsType<DataType> = [
     {
       title: "Name",

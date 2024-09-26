@@ -46,8 +46,16 @@ const items: MenuItem[] = [
 const SiderComponent = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [collapsed, setCollapsed] = useState(false)
+
+  const statusResponse: boolean = useAppSelector(
+    (state) => state.responsive.checkStatusResponse
+  );
 
   const onClick: MenuProps["onClick"] = (e) => {
+    if (statusResponse) {
+      setCollapsed(true)
+    }
     const value: MenuState = {
       keyMenu: e.key,
       labelMenu: e.key
@@ -73,13 +81,17 @@ const SiderComponent = () => {
     <Sider
       breakpoint="md"
       collapsedWidth="0"
+      collapsed={collapsed}
       onBreakpoint={async (broken) => {
         if (broken === false) {
+          setCollapsed(false)
           await dispatch(responsiveActions.changeStatusBackground(true));
         }
         await dispatch(responsiveActions.changeStatusResponse(broken));
+
       }}
       onCollapse={async (collapsed, type) => {
+        setCollapsed(collapsed)
         if (type === "clickTrigger") {
           await dispatch(responsiveActions.changeStatusBackground(collapsed));
         }
