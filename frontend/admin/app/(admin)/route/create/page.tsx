@@ -23,6 +23,7 @@ import { KEYMENU, LABELMENU } from "@/constant/menu";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { Content } from "antd/es/layout/layout";
 
 const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
@@ -254,432 +255,434 @@ const CreateRoutePage = ({ params }: { params: { id: string } }) => {
 
   const screenWidth = UseScreenWidth();
   const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
-  
+
   return (
     <>
-      <Breadcrumb
-        items={[
-          { title: <Link href="/">Dashboard</Link> },
-          { title: <Link href="/route">List routes</Link> },
-          { title: "New route" },
-        ]}
-        style={{ 
-          paddingLeft: "0.5rem", 
-          marginBottom: "1rem", 
-          marginTop: responsive ? "12rem" : 0,
-          marginLeft: responsive ? "1rem" : 0,
-         }}
-      />
-      <ContentComponent>
-        <Form onFinish={handleSubmit(onFinish)} layout="vertical" style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}>
-          <Row gutter={[8, 8]}>
-            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-              {/* content */}
-              <Row gutter={[18, 0]}>
+      <div>
+        <Content style={{ marginInlineStart: responsive ? 20 : 215, marginTop: responsive ? "190px" : "70px" }}>
+          <Breadcrumb
+            items={[
+              { title: <Link href="/">Dashboard</Link> },
+              { title: <Link href="/route">List routes</Link> },
+              { title: "New route" },
+            ]}
+            style={{
+              paddingLeft: "0.5rem",
+              marginBottom: "1rem",
+            }}
+          />
+        </Content>
+        <ContentComponent>
+          <Form onFinish={handleSubmit(onFinish)} layout="vertical" style={{ padding: "0.5rem 0.5rem 0 0.5rem" }}>
+            <Row gutter={[8, 8]}>
+              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                {/* content */}
+                <Row gutter={[18, 0]}>
 
-                <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
-                  <Form.Item
-                    label="Name"
-                    name="name"
-                    style={{
-                      paddingBottom: errors.name ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.name && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.name?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                  <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
+                    <Form.Item
+                      label="Name"
                       name="name"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          key="name"
-                          {...field}
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          placeholder="Enter route name"
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
-                  <Form.Item
-                    label="Distance (km)"
-                    name="distance"
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.name ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.name && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.name?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="name"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            key="name"
+                            {...field}
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            placeholder="Enter route name"
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
+                    <Form.Item
+                      label="Distance (km)"
                       name="distance"
-                      control={control}
-                      render={({ field }) => (
-                        <Input disabled key="distance" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
-                  <Form.Item
-                    label="Status"
-                    name="status"
-                  >
-                    <Controller
+                    >
+                      <Controller
+                        name="distance"
+                        control={control}
+                        render={({ field }) => (
+                          <Input disabled key="distance" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={7} xl={7} xxl={7}>
+                    <Form.Item
+                      label="Status"
                       name="status"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          disabled
-                          key="status" {...field}
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                  <Form.Item
-                    label="Departure time"
-                    name="departureTime"
-                    style={{
-                      paddingBottom: errors.departureTime ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.departureTime && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.departureTime?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                    >
+                      <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            disabled
+                            key="status" {...field}
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+                    <Form.Item
+                      label="Departure time"
                       name="departureTime"
-                      control={control}
-                      render={({ field }) => (
-                        <DatePicker
-                          showTime
-                          format="HH:mm - DD/MM/YYYY"
-                          key="departureTime"
-                          {...field}
-                          style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          placeholder="Select departure time"
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                  <Form.Item
-                    label="Arrival time"
-                    name="arrivalTime"
-                    style={{
-                      paddingBottom: errors.arrivalTime ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.arrivalTime && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.arrivalTime?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.departureTime ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.departureTime && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.departureTime?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="departureTime"
+                        control={control}
+                        render={({ field }) => (
+                          <DatePicker
+                            showTime
+                            format="HH:mm - DD/MM/YYYY"
+                            key="departureTime"
+                            {...field}
+                            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            placeholder="Select departure time"
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+                    <Form.Item
+                      label="Arrival time"
                       name="arrivalTime"
-                      control={control}
-                      render={({ field }) => (
-                        <DatePicker
-                          showTime
-                          format="HH:mm - DD/MM/YYYY"
-                          key="arrivalTime"
-                          {...field}
-                          style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          placeholder="Select arrival time"
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
-                  <Form.Item
-                    label="Departure"
-                    name="departureLocation"
-                    style={{
-                      paddingBottom: errors.departureLocation ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.departureLocation && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.departureLocation?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.arrivalTime ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.arrivalTime && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.arrivalTime?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="arrivalTime"
+                        control={control}
+                        render={({ field }) => (
+                          <DatePicker
+                            showTime
+                            format="HH:mm - DD/MM/YYYY"
+                            key="arrivalTime"
+                            {...field}
+                            style={{ width: "100%", borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            placeholder="Select arrival time"
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+                    <Form.Item
+                      label="Departure"
                       name="departureLocation"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          loading={loading}
-                          key="departureLocation"
-                          {...field}
-                          // onChange={handleChangeDeparture}
-                          onChange={(value) => handleChangeLocation(value, 'departure')}
-                          showSearch
-                          placeholder="Search to select departure location"
-                          optionFilterProp="label"
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                          }
-                          options={optionLocation}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
-                  <Form.Item
-                    label="Departure address"
-                    name="departureAddress"
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.departureLocation ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.departureLocation && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.departureLocation?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="departureLocation"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            loading={loading}
+                            key="departureLocation"
+                            {...field}
+                            // onChange={handleChangeDeparture}
+                            onChange={(value) => handleChangeLocation(value, 'departure')}
+                            showSearch
+                            placeholder="Search to select departure location"
+                            optionFilterProp="label"
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            filterSort={(optionA, optionB) =>
+                              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                            }
+                            options={optionLocation}
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+                    <Form.Item
+                      label="Departure address"
                       name="departureAddress"
-                      control={control}
-                      render={({ field }) => (
-                        <Input disabled key="departureAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
-                  <Form.Item
-                    label="Arrival"
-                    name="arrivalLocation"
-                    style={{
-                      paddingBottom: errors.arrivalLocation ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.arrivalLocation && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.arrivalLocation?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                    >
+                      <Controller
+                        name="departureAddress"
+                        control={control}
+                        render={({ field }) => (
+                          <Input disabled key="departureAddress" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+                    <Form.Item
+                      label="Arrival"
                       name="arrivalLocation"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          loading={loading}
-                          key="arrivalLocation"
-                          {...field}
-                          // onChange={handleChangeArrival}
-                          onChange={(value) => handleChangeLocation(value, 'arrival')}
-                          showSearch
-                          placeholder="Search to select arrival location"
-                          optionFilterProp="label"
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                          }
-                          options={optionLocation}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
-                  <Form.Item
-                    label="Arrival address"
-                    name="arrivalAddress"
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.arrivalLocation ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.arrivalLocation && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.arrivalLocation?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="arrivalLocation"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            loading={loading}
+                            key="arrivalLocation"
+                            {...field}
+                            // onChange={handleChangeArrival}
+                            onChange={(value) => handleChangeLocation(value, 'arrival')}
+                            showSearch
+                            placeholder="Search to select arrival location"
+                            optionFilterProp="label"
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            filterSort={(optionA, optionB) =>
+                              (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                            }
+                            options={optionLocation}
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={22} xl={22} xxl={22}>
+                    <Form.Item
+                      label="Arrival address"
                       name="arrivalAddress"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          disabled
-                          key="arrivalAddress"
-                          {...field}
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                  <Form.Item
-                    label="Shipping type"
-                    name="shippingType"
-                    style={{
-                      paddingBottom: errors.shippingType ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.shippingType && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.shippingType?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                    >
+                      <Controller
+                        name="arrivalAddress"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            disabled
+                            key="arrivalAddress"
+                            {...field}
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+                    <Form.Item
+                      label="Shipping type"
                       name="shippingType"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          key="shippingType"
-                          {...field}
-                          placeholder="Select shipping type"
-                          onChange={handleChangeShippingType}
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          options={[
-                            { value: '0', label: 'Road' },
-                            { value: '1', label: 'Seaway' },
-                          ]}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                  <Form.Item
-                    label="Vehicle type"
-                    name="vehicleType"
-                    style={{
-                      paddingBottom: errors.vehicleType ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.vehicleType && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.vehicleType?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.shippingType ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.shippingType && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.shippingType?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="shippingType"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            key="shippingType"
+                            {...field}
+                            placeholder="Select shipping type"
+                            onChange={handleChangeShippingType}
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            options={[
+                              { value: '0', label: 'Road' },
+                              { value: '1', label: 'Seaway' },
+                            ]}
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+                    <Form.Item
+                      label="Vehicle type"
                       name="vehicleType"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          key="vehicleType"
-                          {...field}
-                          placeholder="Select vehicle type"
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          onChange={handleChangeVehicleType}
-                          options={vehicleTypeOption}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={[18, 0]}>
-                <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                  <Form.Item
-                    label="Vehicle name"
-                    name="vehicleName"
-                    style={{
-                      paddingBottom: errors.vehicleName ? "1rem" : 0,
-                    }}
-                    help={
-                      errors.vehicleName && (
-                        <span style={{ color: "red", fontSize: "0.9rem" }}>
-                          {errors.vehicleName?.message}
-                        </span>
-                      )
-                    }
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.vehicleType ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.vehicleType && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.vehicleType?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="vehicleType"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            key="vehicleType"
+                            {...field}
+                            placeholder="Select vehicle type"
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            onChange={handleChangeVehicleType}
+                            options={vehicleTypeOption}
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={[18, 0]}>
+                  <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+                    <Form.Item
+                      label="Vehicle name"
                       name="vehicleName"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          key="vehicleName"
-                          {...field}
-                          placeholder="Select vehicle name"
-                          style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
-                          onChange={handleChangeVehicleName}
-                          options={vehicleNameOption}
-                        />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
-                  <Form.Item
-                    label="Lisence plate"
-                    name="lisencePlate"
-                  >
-                    <Controller
+                      style={{
+                        paddingBottom: errors.vehicleName ? "1rem" : 0,
+                      }}
+                      help={
+                        errors.vehicleName && (
+                          <span style={{ color: "red", fontSize: "0.9rem" }}>
+                            {errors.vehicleName?.message}
+                          </span>
+                        )
+                      }
+                    >
+                      <Controller
+                        name="vehicleName"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            key="vehicleName"
+                            {...field}
+                            placeholder="Select vehicle name"
+                            style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
+                            onChange={handleChangeVehicleName}
+                            options={vehicleNameOption}
+                          />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12} lg={11} xl={11} xxl={11}>
+                    <Form.Item
+                      label="Lisence plate"
                       name="lisencePlate"
-                      control={control}
-                      render={({ field }) => (
-                        <Input disabled key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
-                      )}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
+                    >
+                      <Controller
+                        name="lisencePlate"
+                        control={control}
+                        render={({ field }) => (
+                          <Input disabled key="lisencePlate" {...field} style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }} />
+                        )}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
 
-            </Col>
+              </Col>
 
-            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-              <MapComponent
-                isShowDirection={isShowDirection}
-                departure={departureCoordinate}
-                arrival={arrivalCoordinate}
-                heightProps={responsive ? "22rem" : "32rem"}
-              />
-              <Flex align="center" justify="center">
-                <Button
-                  disabled={!isShowButtonDirection}
-                  onClick={() => {
-                    setIsShowDirection(true);
-                  }}
-                  style={{
-                    padding: "1.3rem 1.5rem",
-                    borderRadius: "0.4rem",
-                    margin: "0 auto",
-                    color: COLOR.PRIMARY,
-                    border: "1px solid #4f46e5",
-                  }}
-                >
-                  View on map
-                </Button>
-              </Flex>
-              <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: responsive ? "4rem" : "8.85rem" }}>
-                <Button
-                  onClick={() => router.push("/route")}
-                  style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
-                >
-                  Back to routes
-                </Button>
-                <Button
-                  htmlType="submit"
-                  type="primary"
-                  style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
-                >
-                  Create
-                </Button>
-              </Flex>
+              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                <MapComponent
+                  isShowDirection={isShowDirection}
+                  departure={departureCoordinate}
+                  arrival={arrivalCoordinate}
+                  heightProps={responsive ? "22rem" : "32rem"}
+                />
+                <Flex align="center" justify="center">
+                  <Button
+                    disabled={!isShowButtonDirection}
+                    onClick={() => {
+                      setIsShowDirection(true);
+                    }}
+                    style={{
+                      padding: "1.3rem 1.5rem",
+                      borderRadius: "0.4rem",
+                      margin: "0 auto",
+                      color: COLOR.PRIMARY,
+                      border: "1px solid #4f46e5",
+                    }}
+                  >
+                    View on map
+                  </Button>
+                </Flex>
+                <Flex align="center" justify="flex-end" gap="1rem" style={{ marginTop: responsive ? "4rem" : "8.85rem" }}>
+                  <Button
+                    onClick={() => router.push("/route")}
+                    style={{ width: "50%", height: "2.7rem", borderRadius: "0.4rem", margin: "0 auto", background: "white", color: COLOR.PRIMARY, border: "1px solid #4f46e5" }}
+                  >
+                    Back to routes
+                  </Button>
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{ width: "50%", height: "2.65rem", borderRadius: "0.4rem", margin: "0 auto" }}
+                  >
+                    Create
+                  </Button>
+                </Flex>
 
-            </Col>
-          </Row>
-        </Form>
-      </ContentComponent>
+              </Col>
+            </Row>
+          </Form>
+        </ContentComponent>
+      </div>
     </>
   );
 };
