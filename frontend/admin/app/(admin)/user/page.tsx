@@ -159,7 +159,7 @@ const UserPage = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => index + 1,
+      sorter: true,
     },
     {
       title: 'Username',
