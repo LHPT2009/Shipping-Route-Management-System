@@ -227,7 +227,7 @@ const HompageComponent: React.FC = () => {
                 with complete information.
               </Paragraph>
 
-              <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem" }} onClick={clickHandler}>
+              <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem", cursor: "pointer" }} onClick={clickHandler}>
                 <Title
                   level={5}
                   style={{
@@ -285,7 +285,7 @@ const HompageComponent: React.FC = () => {
               </Paragraph>
 
 
-              <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }} onClick={clickHandler}>
+              <Flex align="center" style={{ gap: "1rem", marginTop: "4rem", cursor: "pointer" }} onClick={clickHandler}>
                 <Title
                   level={5}
                   style={{
