@@ -21,6 +21,8 @@ import { LOCATION_STATISTIC, PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATIST
 import { useHandleError } from "@/lib/hooks/error";
 import styles from "./page.module.css";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { ArrowRightOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -37,11 +39,6 @@ function Home() {
   const screenWidth = UseScreenWidth();
   const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
 
-  interface RouteStatistics {
-    topLocations: string[];
-    // Add other properties if needed
-  }
-
   const [locationNames, setLocationNames] = useState<string[]>([]);
   const [locationCounts, setLocationCounts] = useState<number[]>([]);
   const [maxVisitName, setMaxVisitName] = useState("");
@@ -52,6 +49,7 @@ function Home() {
     count: number;
     textColor: string;
     tagColor: string;
+    href: string;
   }[] | null>(null);
 
   const { handleError } = useHandleError();
@@ -71,29 +69,7 @@ function Home() {
 
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Route", count: data.routeStatistics.data.totalRoutes, textColor: "#08979c", tagColor: "cyan" },
-      ])
-    },
-    onError: async (error: ApolloError) => { await handleError(error); }
-  });
-
-  const [getLocation, { loading: loadingLocation }] = useLazyQuery(LOCATION_STATISTIC, {
-    fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => {
-      setDataStatistics([
-        ...(dataStatistics || []),
-        { name: "Location", count: data.locationStatistics.data, textColor: "#c41d7d", tagColor: "magenta" },
-      ])
-    },
-    onError: async (error: ApolloError) => { await handleError(error); }
-  });
-
-  const [getTransport, { loading: loadingTransport }] = useLazyQuery(TRANSPORT_STATISTIC, {
-    fetchPolicy: 'cache-and-network',
-    onCompleted: async (data) => {
-      setDataStatistics([
-        ...(dataStatistics || []),
-        { name: "Transport", count: data.transportStatistics.data, textColor: "#d48806", tagColor: "gold" },
+        { name: "Routes", count: data.routeStatistics.data.totalRoutes, textColor: "#d48806", tagColor: "gold", href: "/route" },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
@@ -104,7 +80,7 @@ function Home() {
     onCompleted: async (data) => {
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "User", count: data.userStatistics.data, textColor: "#389e0d", tagColor: "green" },
+        { name: "Users", count: data.userStatistics.data, textColor: "#08979c", tagColor: "cyan", href: "/user" },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
@@ -115,7 +91,7 @@ function Home() {
     onCompleted: async (data) => {
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Role", count: data.roleStatistics.data, textColor: "#0958d9", tagColor: "blue" },
+        { name: "Roles", count: data.roleStatistics.data, textColor: "#0958d9", tagColor: "blue", href: "/role" },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
@@ -126,17 +102,15 @@ function Home() {
     onCompleted: async (data) => {
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Permission", count: data.permissionStatistics.data, textColor: "#531dab", tagColor: "purple" },
+        { name: "Permissions", count: data.permissionStatistics.data, textColor: "#531dab", tagColor: "purple", href: "/permission" },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
   const getData = async () => {
-    await getRoute();
-    await getLocation();
-    await getTransport();
     await getUser();
+    await getRoute();
     await getRole();
     await getPermission();
   }
@@ -156,10 +130,11 @@ function Home() {
       <div style={{ marginTop: responsive ? "12rem" : "70px" }}>
         <ContentComponent>
           {/* Statistics */}
+
           <Flex
             vertical={responsive}
-            gap="1rem"
-            justify="space-between"
+            gap="2rem"
+            justify="center"
             align="center"
             style={{
               width: "100%",
@@ -169,15 +144,17 @@ function Home() {
             }}
           >
             {dataStatistics?.map((data, index) => (
-              <Tag color={data.tagColor} className={styles['tag-container']} style={{ width: responsive ? "80%" : "15%" }} key={index}>
-                <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
-                <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
+              <Tag color={data.tagColor} className={styles['tag-container']} style={{ width: responsive ? "80%" : "20%" }} key={index}>
+                <Link href={data.href}>
+                  <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
+                  <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
+                </Link>
               </Tag>
             ))}
           </Flex>
         </ContentComponent>
         <ContentComponent>
-          {loadingRoute || loadingLocation || loadingTransport || loadingUser || loadingRole || loadingPermission ? <LoadingComponent /> : (
+          {loadingRoute || loadingUser || loadingRole || loadingPermission ? <LoadingComponent /> : (
             <div style={{ height: "900px" }}>
               <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem", height: "50rem" }} gap="2rem">
 

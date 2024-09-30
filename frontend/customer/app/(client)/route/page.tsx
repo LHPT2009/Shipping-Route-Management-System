@@ -86,7 +86,6 @@ const RoutePage = () => {
 
   const [data, setData] = useState<DataType[]>([]);
   const searchParams = useSearchParams();
-  const isLoadingAccess = useAppSelector((state) => state.loading.loadingAccessToken);
   const [tableParams, setTableParams] = useState<TableParams>({
     filters: {
       name: [searchParams.get("name") || ""],
@@ -201,8 +200,8 @@ const RoutePage = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => index + 1,
       width: '5%',
+      sorter: true,
     },
     {
       title: 'Name',
@@ -390,6 +389,14 @@ const RoutePage = () => {
   };
 
   useEffect(() => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      search: searchParams.get("search") || "",
+    });
+  }, []);
+
+  useEffect(() => {
     fetchRoutes();
   }, [
     search,
@@ -412,12 +419,29 @@ const RoutePage = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
+    getValues
   } = useForm({ resolver: yupResolver(schema) });
 
   const onFinish = async (values: any) => {
     setSearch(values.search);
+    setTableParams({
+      ...tableParams,
+      pagination: {
+        ...tableParams.pagination,
+        current: 1,
+        pageSize: 20
+      },
+    });
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('search', String(values.search));
+    newSearchParams.set('page', String(1));
+    newSearchParams.set('page-size', String(20));
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
+    });
     router.replace(`?${newSearchParams.toString()}`);
   };
 

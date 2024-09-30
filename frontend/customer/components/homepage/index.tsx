@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
+import { GithubOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
 
@@ -581,12 +582,12 @@ const HompageComponent: React.FC = () => {
               Tung is a software engineer with a passion for creating innovative
               and efficient solutions to complex problem.
             </Paragraph>
-            <img
-              style={{ margin: "1.5rem auto 0 auto" }}
-              width={190}
-              alt="credit_cert"
-              src={Social.src}
-            />
+            <Flex justify="center" align="center" gap="0.5rem" style={{marginTop: "1.5rem"}}>
+              <GithubOutlined style={{ fontSize: "1.8rem" }} />
+              <Link href="https://github.com/LHPT2009" style={{color: COLOR.PRIMARY}}>
+                LHPT2009
+              </Link>
+            </Flex>
           </div>
 
           <div className={styles["team-card"]}>
@@ -603,12 +604,12 @@ const HompageComponent: React.FC = () => {
               Huy is a full-stack website developer skilled in building both
               intuitive front-end interfaces and scalable back-end solutions.
             </Paragraph>
-            <img
-              style={{ margin: "1.5rem auto 0 auto" }}
-              width={190}
-              alt="credit_cert"
-              src={Social.src}
-            />
+            <Flex justify="center" align="center" gap="0.5rem" style={{marginTop: "1.5rem"}}>
+              <GithubOutlined style={{ fontSize: "1.8rem" }} />
+              <Link href="https://github.com/giahuy200202" style={{color: COLOR.PRIMARY}}>
+                giahuy200202
+              </Link>
+            </Flex>
           </div>
         </Flex>
       </div>

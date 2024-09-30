@@ -193,7 +193,7 @@ const RoutePage = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      render: (text, record, index) => index + 1,
+      sorter: true,
       width: '5%',
     },
     {
@@ -372,6 +372,14 @@ const RoutePage = () => {
   }
 
   useEffect(() => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      search: searchParams.get("search") || "",
+    });
+  }, []);
+
+  useEffect(() => {
     fetchRoutes();
   }, [
     search,
@@ -404,12 +412,30 @@ const RoutePage = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
+    getValues
   } = useForm({ resolver: yupResolver(schema) });
 
   const onFinish = async (values: any) => {
     setSearch(values.search);
+    setTableParams({
+      ...tableParams,
+      pagination: {
+        ...tableParams.pagination,
+        current: 1,
+        pageSize: 20
+      },
+    });
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('search', String(values.search));
+    newSearchParams.set('page', String(1));
+    newSearchParams.set('page-size', String(20));
+
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
+    });
     router.replace(`?${newSearchParams.toString()}`);
   };
 
@@ -430,7 +456,6 @@ const RoutePage = () => {
     newSearchParams.set('shipping-type', String(filters.shipping_type?.[0] || ''));
     newSearchParams.set('status', String(filters.status?.[0] || ''));
 
-    // Remove empty parameters
     Array.from(newSearchParams.entries()).forEach(([key, value]) => {
       if (!value) {
         newSearchParams.delete(key);
@@ -438,7 +463,6 @@ const RoutePage = () => {
     });
 
     router.replace(`?${newSearchParams.toString()}`);
-
     // `data Source` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);

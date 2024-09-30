@@ -102,6 +102,8 @@ const HeaderComponent = () => {
                   mode="horizontal"
                   defaultSelectedKeys={["1"]}
                   responsive={responsive}
+                  open={false}
+                  setOpen={() => { }}
                 />
               </>
             ) : (
