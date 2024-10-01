@@ -4,16 +4,16 @@ import { Role } from './type/role.type';
 import { CreateRoleDto } from './dto/role-create.dto';
 import { UpdateRoleDto } from './dto/role-update.dto';
 import { UseGuards } from '@nestjs/common';
-import { ResponseDto } from 'common/response/responseDto';
+import { ResponseDto } from '../../../../../common/response/responseDto';
 import { RoleEntity } from './entity/role.entity';
 import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
 import { PermissionToRoleDto } from './dto/permission-to-role.dto';
 
-import { RoleGuard } from 'common/exception/guards/role.guard';
-import { Roles } from 'common/exception/guards/decorator/roles.decorator';
-import { Permissions } from 'common/exception/guards/decorator/permissions.decorator';
-import { ROLE } from 'common/constants/role';
-import { PERMISSION } from 'common/constants/permission';
+import { RoleGuard } from '../../../../../common/exception/guards/role.guard';
+import { Roles } from '../../../../../common/exception/guards/decorator/roles.decorator';
+import { Permissions } from '../../../../../common/exception/guards/decorator/permissions.decorator';
+import { ROLE } from '../../../../../common/constants/role';
+import { PERMISSION } from '../../../../../common/constants/permission';
 
 @Resolver(() => Role)
 export class RoleResolver {

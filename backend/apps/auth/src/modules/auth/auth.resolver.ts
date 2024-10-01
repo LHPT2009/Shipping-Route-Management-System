@@ -9,15 +9,15 @@ import { AuthService } from './auth.service';
 import { SignupInput } from './dto/signup.input';
 import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
-import { ResponseDto } from 'common/response/responseDto';
+import { ResponseDto } from '../../../../../common/response/responseDto';
 import { UserEntity } from '../user/entity/user.entity';
 import { ConfirmEmailInput } from './dto/confirm_email.input';
 import { UseGuards, UseInterceptors } from '@nestjs/common';
-import { AuthGuard } from 'common/exception/guards/auth.guard';
+import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
 import { ResetPasswordInput } from './dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from './dto/reset_password_verify_email.input';
 import { LoginGoogleInput } from './dto/login_google.input';
-import { CustomErrorInterceptor } from 'common/exception/interceptor/gql-errors.interceptor';
+import { CustomErrorInterceptor } from '../../../../../common/exception/interceptor/gql-errors.interceptor';
 
 @Resolver()
 @UseInterceptors(CustomErrorInterceptor)

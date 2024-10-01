@@ -4,10 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
 import { LoginInput } from './dto/login.input';
 import { UserService } from '../user/user.service';
-import { ResponseDto } from 'common/response/responseDto';
-import { STATUS, STATUS_CODE } from "common/constants/status"
+import { ResponseDto } from '../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from "../../../../../common/constants/status"
 import { RefreshTokenService } from '../refreshtoken/refreshtoken.service';
-import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
+import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
 import { UserEntity } from '../user/entity/user.entity';
 import { LoginGoogleInput } from './dto/login_google.input';
 import { Auth, google } from 'googleapis';

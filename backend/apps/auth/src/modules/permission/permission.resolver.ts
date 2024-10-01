@@ -3,7 +3,7 @@ import { PermissionService } from './permission.service';
 import { Permission } from './type/permission.type';
 import { CreatePermissionDto } from './dto/permission-create.dto';
 import { UpdatePermissionDto } from './dto/permission-update.dto';
-import { ResponseDto } from 'common/response/responseDto';
+import { ResponseDto } from '../../../../../common/response/responseDto';
 import { PermissionEntity } from './entity/permission.entity';
 
 @Resolver(() => Permission)

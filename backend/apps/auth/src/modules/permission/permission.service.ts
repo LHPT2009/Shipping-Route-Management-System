@@ -3,8 +3,8 @@ import { PermissionRepository } from './permission.repository';
 import { PermissionEntity } from './entity/permission.entity';
 import { CreatePermissionDto } from './dto/permission-create.dto';
 import { UpdatePermissionDto } from './dto/permission-update.dto';
-import { ResponseDto } from 'common/response/responseDto';
-import { STATUS, STATUS_CODE } from "common/constants/status"
+import { ResponseDto } from '../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from "../../../../../common/constants/status"
 
 @Injectable()
 export class PermissionService {

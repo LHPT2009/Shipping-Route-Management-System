@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { RefreshTokenRepository } from './refreshtoken.repository';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from '../auth/types';
-import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
-import { ResponseDto } from 'common/response/responseDto';
-import { STATUS, STATUS_CODE } from 'common/constants/status';
+import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
+import { ResponseDto } from '../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
 
 @Injectable()
 export class RefreshTokenService {

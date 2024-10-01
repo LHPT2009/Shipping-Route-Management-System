@@ -23,7 +23,13 @@
     "migration:create": "npm run typeorm -- migration:create ./apps/migrations/src/create-file",
     "migration:revert": "npm run typeorm -- -d ./db/data-source.ts migration:revert",
     "migration:show": "npm run typeorm -- migration:show -d ./db/data-source.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "start:auth": "nest start --project auth",
+    "start:notification": "nest start --project notification",
+    "start:route": "nest start --project route",
+    "start:gateway": "wait-on tcp:3000 tcp:3001 tcp:3002 && nest start --project gateway",
+    "start:services": "concurrently \"npm run start:auth\" \"npm run start:notification\" \"npm run start:route\"",
+    "start:all": "npm run start:services && npm run start:gateway"
   },
   "dependencies": {
     "@apollo/gateway": "^2.8.3",
@@ -56,6 +62,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "command": "^0.0.5",
+    "concurrently": "^9.0.1",
     "googleapis": "^144.0.0",
     "graphql": "^16.9.0",
     "graphql-type-json": "^0.3.2",
@@ -71,7 +78,8 @@
     "speakeasy": "^2.0.0",
     "ts-morph": "^21.0.1",
     "ts-proto": "^1.181.1",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "wait-on": "^8.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

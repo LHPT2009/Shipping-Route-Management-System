@@ -1,14 +1,7 @@
 import {
-  IsString,
-  IsNotEmpty,
   IsNumber,
-  IsDate,
-  IsEnum,
 } from 'class-validator';
-import { Field, InputType, ID } from '@nestjs/graphql';
-import { StatusEnum } from '../interface/routes.interface';
-import { Location } from '../../location/type/location.type';
-import { Transport } from '../../transport/type/transport.type';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class FilterRoutesDto {

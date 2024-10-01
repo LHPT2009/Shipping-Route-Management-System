@@ -1,5 +1,5 @@
 import { Resolver, Query, Context } from '@nestjs/graphql';
-import { ResponseDto } from 'common/response/responseDto';
+import { ResponseDto } from '../../../../../common/response/responseDto';
 import { RefreshTokenService } from './refreshtoken.service';
 import { RefreshToken } from './type/refreshtoken.type';
 

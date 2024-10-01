@@ -1,9 +1,8 @@
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import {
   BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
-import { ResponseDto } from 'common/response/responseDto';
+import { ResponseDto } from '../../../common/response/responseDto';
 
 interface CustomGraphQLFormattedError extends GraphQLFormattedError {
   status?: number;
