@@ -11,7 +11,4 @@ export class LocationRepository extends Repository<LocationEntity> {
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
-  //   async findByName(name: string): Promise<Location | undefined> {
-  //     return await this.findOne({ where: { name } });
-  //   }
 }

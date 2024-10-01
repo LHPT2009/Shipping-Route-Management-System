@@ -99,8 +99,6 @@ export class RoutesService {
     createRoutesDto: CreateRoutesDto,
   ): Promise<ResponseDto<Route>> {
 
-    console.log(createRoutesDto)
-
     if (createRoutesDto.departure === createRoutesDto.arrival) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival: ['Departure and arrival must be different'] });
     }
