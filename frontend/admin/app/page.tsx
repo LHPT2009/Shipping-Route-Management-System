@@ -23,6 +23,9 @@ import styles from "./page.module.css";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { get } from "http";
+import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 
 function Home() {
   const dispatch = useAppDispatch();
@@ -75,15 +78,16 @@ function Home() {
     onError: async (error: ApolloError) => { await handleError(error); }
   });
 
-  const [getUser, { loading: loadingUser }] = useLazyQuery(USER_STATISTIC, {
-    fetchPolicy: 'cache-and-network',
+  const [getUser] = useLazyQuery(USER_STATISTIC, {
+    // fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
+      console.log("get data user", data);
       setDataStatistics([
         ...(dataStatistics || []),
         { name: "Users", count: data.userStatistics.data, textColor: "#08979c", tagColor: "cyan", href: "/user" },
       ])
     },
-    onError: async (error: ApolloError) => { await handleError(error); }
+    onError: async (error: ApolloError) => { console.log(error); await handleError(error); }
   });
 
   const [getRole, { loading: loadingRole }] = useLazyQuery(ROLE_STATISTIC, {
@@ -123,7 +127,6 @@ function Home() {
     return <LoadingComponent />;
   }
 
-  // responsive ? "12rem" :
   return (
     <LayoutAdminComponent>
       <HeaderComponent />
@@ -154,7 +157,7 @@ function Home() {
           </Flex>
         </ContentComponent>
         <ContentComponent>
-          {loadingRoute || loadingUser || loadingRole || loadingPermission ? <LoadingComponent /> : (
+          {loadingRoute  || loadingRole || loadingPermission ? <LoadingComponent /> : (
             <div style={{ height: "900px" }}>
               <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem", height: "50rem" }} gap="2rem">
 

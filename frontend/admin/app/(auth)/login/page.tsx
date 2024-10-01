@@ -71,7 +71,8 @@ const LoginPage = () => {
     onCompleted: async (data) => {
       await setCookies("accessToken", data.loginAdmin.data.accessToken);
       await setCookies("expiresIn", data.loginAdmin.data.expiresIn);
-      router.push("/");
+      dispatch(authActions.setIsLogin(true));
+      window.location.href = "/";
       openNotificationWithIcon(
         "success",
         NOTIFICATION.CONGRATS,

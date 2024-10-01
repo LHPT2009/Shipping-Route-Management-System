@@ -8,12 +8,11 @@ const useLoading = (loadingStatus: boolean) => {
     if (loadingStatus) {
       setShowLoading(true);
 
-      // Xóa timeout nếu có
       if (loadingTimeout) {
         clearTimeout(loadingTimeout);
       }
     } else {
-      // Đặt timeout để tắt loading sau 1 giây
+
       const timeout = setTimeout(() => {
         setShowLoading(false);
       }, 1000);
@@ -21,7 +20,6 @@ const useLoading = (loadingStatus: boolean) => {
       setLoadingTimeout(timeout);
     }
 
-    // Dọn dẹp timeout khi component bị unmount hoặc khi loadingStatus thay đổi
     return () => {
       if (loadingTimeout) {
         clearTimeout(loadingTimeout);
