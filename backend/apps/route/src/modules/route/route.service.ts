@@ -4,9 +4,9 @@ import { Route } from './type/route.type';
 import { CreateRoutesDto } from './dto/route-create.dto';
 import { UpdateRoutesDto } from './dto/route-update.dto';
 import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from 'common/constants/status';
+import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
 import { FilterRoutesDto } from './dto/route-filter.dto';
-import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
+import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
 import { ShippingTypeEnum } from '../transport/interface/transports.interface';
 import { StatusEnum } from './interface/routes.interface';
 import { FilterRouteType } from './type/route-filter.type';
@@ -99,6 +99,8 @@ export class RoutesService {
     createRoutesDto: CreateRoutesDto,
   ): Promise<ResponseDto<Route>> {
 
+    console.log(createRoutesDto)
+
     if (createRoutesDto.departure === createRoutesDto.arrival) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival: ['Departure and arrival must be different'] });
     }
@@ -117,13 +119,11 @@ export class RoutesService {
   }
 
   async findOne(id: string): Promise<ResponseDto<Route>> {
-    try {
-      const route = await this.routeRepository.findOneBy({ id });
-      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
-
-    } catch (error) {
-      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
+    const route = await this.routeRepository.findOneBy({ id });
+    if (!route) {
+      throw new CustomValidationError(STATUS.ERR_NOT_FOUND, { route: ["Route is not exist"] });
     }
+    return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, route, []);
   }
 
   async update(
@@ -136,7 +136,7 @@ export class RoutesService {
     if (new Date(updateRoutesDto.departure_time) > new Date(updateRoutesDto.arrival_time)) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival_time: ['Arrival time must be later than departure time'] });
     }
-
+    
     const routeResponse = await this.findOne(id);
 
     const route = routeResponse.data as Route;
@@ -159,9 +159,9 @@ export class RoutesService {
     try {
       const totalRoutes = await this.routeRepository.count();
       const routes = await this.routeRepository.find();
-  
+
       const locationCounts: { [key: string]: { count: number, name: string } } = {};
-  
+
       routes.forEach(route => {
         if (route.departure) {
           const departureId = route.departure.id;
@@ -180,15 +180,15 @@ export class RoutesService {
           locationCounts[arrivalId].count += 1;
         }
       });
-  
+
       const sortedLocations = Object.entries(locationCounts)
         .map(([id, { count, name }]) => ({ [name]: count }));
-  
+
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, {
         totalRoutes,
         topLocations: sortedLocations,
       }, []);
-  
+
     } catch (error) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { route: [STATUS.ERR_INTERNAL_SERVER] });
     }
