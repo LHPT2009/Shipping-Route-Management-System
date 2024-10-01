@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
-import { STATUS } from 'common/constants/status';
-import { CustomValidationError } from 'common/exception/validation/custom-validation-error';
+import { STATUS } from '../../../common/constants/status';
+import { CustomValidationError } from '../../../common/exception/validation/custom-validation-error';
 import * as dotenv from 'dotenv';
 
 dotenv.config();

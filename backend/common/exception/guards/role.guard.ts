@@ -6,7 +6,7 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector } from '@nestjs/core';
 import { CustomValidationError } from '../validation/custom-validation-error';
-import { STATUS } from 'common/constants/status';
+import { STATUS } from '../../../common/constants/status';
 
 interface UserRole {
   id: string;
