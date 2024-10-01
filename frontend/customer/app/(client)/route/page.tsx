@@ -482,7 +482,7 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <div style={{ width: responsive ? "90%" : "85rem", margin: "6.5rem auto 2rem auto" }}>
+        <div style={{ width: "90%", margin: "6.5rem auto 2rem auto" }}>
           <Breadcrumb
             items={[{
               title: (

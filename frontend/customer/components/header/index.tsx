@@ -23,6 +23,7 @@ import { useHandleError } from "@/lib/hooks/error";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { userActions, UserState } from "@/lib/store/user";
 import { authActions } from "@/lib/store/auth";
+import { menuActions } from "@/lib/store/menu";
 const { Header } = Layout;
 
 const HeaderComponent = () => {
@@ -80,7 +81,7 @@ const HeaderComponent = () => {
           display: "flex",
           alignItems: "center",
           height: "5.5rem",
-          padding: "1rem",
+          padding: responsive ? "1rem" : "1rem 3rem",
         }}
       >
         <Col span={6} style={{ marginBottom: "0.8rem" }}>
@@ -137,7 +138,7 @@ const HeaderComponent = () => {
                   {user.role}
                 </Paragraph>
               </div>
-              <Link href="/profile">
+              <Link href="/profile" onClick={() => {dispatch(menuActions.changeInfoMenu({keyMenu: ""}))}}>
                 <img style={{ width: "3rem", height: "3rem", borderRadius: "50%" }} src={user.img !== "" ? user.img : Male.src} alt="tung" />
               </Link>
               <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />

@@ -157,38 +157,36 @@ function Home() {
           </Flex>
         </ContentComponent>
         <ContentComponent>
-          {loadingRoute  || loadingRole || loadingPermission ? <LoadingComponent /> : (
-            <div style={{ height: "900px" }}>
-              <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem", height: "50rem" }} gap="2rem">
+          {loadingRoute || loadingRole || loadingPermission ? <LoadingComponent /> : (
+            <Flex vertical justify="space-between" align="center" style={{ marginBottom: "1rem" }} gap="2rem">
 
-                {/* Line graph */}
-                <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 1rem" }}>
-                  <Title level={4} style={{
-                    fontSize: "1.3rem",
-                    fontWeight: 700,
-                    color: "#495057",
-                  }}>
-                    Visit frequency for the location
-                  </Title>
+              {/* Line graph */}
+              <div style={{ width: "100%", height: "44rem", background: "white", borderRadius: "0.5rem", padding: "1.5rem 1rem" }}>
+                <Title level={4} style={{
+                  fontSize: "1.3rem",
+                  fontWeight: 700,
+                  color: "#495057",
+                }}>
+                  Visit frequency for the location
+                </Title>
 
-                  <Title level={4} style={{
-                    fontSize: "1rem",
-                    fontWeight: 700,
-                    color: COLOR.PRIMARY,
-                    marginBottom: "2.5rem",
-                    marginTop: "1rem",
-                  }}>
-                    {maxVisitName}
-                    <span style={{ color: "#495057", fontWeight: "400" }}> is the most visited location with </span>
-                    {maxVisitTime} times
-                  </Title>
-                  <div style={{ height: "35rem", paddingRight: "2.5rem" }}>
-                    <LineGraph locationCounts={locationCounts} locationNames={locationNames} />
-                  </div>
+                <Title level={4} style={{
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  color: COLOR.PRIMARY,
+                  marginBottom: "2.5rem",
+                  marginTop: "1rem",
+                }}>
+                  {maxVisitName}
+                  <span style={{ color: "#495057", fontWeight: "400" }}> is the most visited location with </span>
+                  {maxVisitTime} times
+                </Title>
+                <div style={{ height: "35rem", paddingRight: "2.5rem" }}>
+                  <LineGraph locationCounts={locationCounts} locationNames={locationNames} />
                 </div>
+              </div>
 
-              </Flex>
-            </div>
+            </Flex>
           )}
         </ContentComponent>
       </div>

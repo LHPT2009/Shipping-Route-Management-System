@@ -1,4 +1,3 @@
-import { KEYMENU } from "@/constant";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface MenuState {
