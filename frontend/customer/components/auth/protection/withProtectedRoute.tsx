@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/lib/hooks/hooks';
 import { loadingActions } from '@/lib/store/loading';
 
 const withProtectedRoute = (WrappedComponent: any) => {
-  return (props: any) => {
+  const WithProtectedRoute = (props: any) => {
     const router = useRouter();
     const dispatch = useAppDispatch();
 
@@ -24,6 +24,10 @@ const withProtectedRoute = (WrappedComponent: any) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithProtectedRoute.displayName = `WithProtectedRoute(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return WithProtectedRoute;
 };
 
 export default withProtectedRoute;

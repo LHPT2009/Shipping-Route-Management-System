@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb } from "antd";
 import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
@@ -25,6 +25,7 @@ import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import LoadingComponent from "@/components/loading";
 
 const { Search } = Input;
 
@@ -482,85 +483,87 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <div style={{ width: "90%", margin: "6.5rem auto 2rem auto" }}>
-          <Breadcrumb
-            items={[{
-              title: (
-                <Link href="/">
-                  <Flex align="center" gap="0.5rem">
-                    <HomeOutlined />
-                    <span>Homepage</span>
-                  </Flex>
-                </Link>
-              )
-            },
-            { title: 'List routes', }
-            ]}
-            style={{ paddingLeft: "0.5rem" }}
-          />
-          <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
-            <Form
-              initialValues={{ remember: true }}
-              style={{
-                width: responsive ? "60%" : "28rem",
-                borderRadius: "1rem",
-                backgroundColor: COLOR.BACKGROUNDBODY,
-                textAlign: "left",
-                marginBottom: "0",
-              }}
-              onFinish={handleSubmit(onFinish)}
-            >
-              <Form.Item
-                name="search"
-                style={{ paddingBottom: errors.search ? "1rem" : 0 }}
-                help={
-                  errors.search && (
-                    <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
-                  )
-                }
+        <Suspense fallback={<LoadingComponent />}>
+          <div style={{ width: "90%", margin: "6.5rem auto 2rem auto" }}>
+            <Breadcrumb
+              items={[{
+                title: (
+                  <Link href="/">
+                    <Flex align="center" gap="0.5rem">
+                      <HomeOutlined />
+                      <span>Homepage</span>
+                    </Flex>
+                  </Link>
+                )
+              },
+              { title: 'List routes', }
+              ]}
+              style={{ paddingLeft: "0.5rem" }}
+            />
+            <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
+              <Form
+                initialValues={{ remember: true }}
+                style={{
+                  width: responsive ? "60%" : "28rem",
+                  borderRadius: "1rem",
+                  backgroundColor: COLOR.BACKGROUNDBODY,
+                  textAlign: "left",
+                  marginBottom: "0",
+                }}
+                onFinish={handleSubmit(onFinish)}
               >
-                <Controller
+                <Form.Item
                   name="search"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      key="search"
-                      {...field}
-                      placeholder={responsive ? "Search for location" : "Search for route name, departure, arrival"}
-                      prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
-                      style={{ borderRadius: "0.4rem", height: "3rem", background: "white" }}
-                    />
-                  )}
-                />
-              </Form.Item>
-            </Form>
+                  style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                  help={
+                    errors.search && (
+                      <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
+                    )
+                  }
+                >
+                  <Controller
+                    name="search"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        key="search"
+                        {...field}
+                        placeholder={responsive ? "Search for location" : "Search for route name, departure, arrival"}
+                        prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                        style={{ borderRadius: "0.4rem", height: "3rem", background: "white" }}
+                      />
+                    )}
+                  />
+                </Form.Item>
+              </Form>
 
-            <Tag color="geekblue"
-              style={{
-                padding: "0 1rem",
-                height: "3rem",
-                borderRadius: "0.4rem",
-                paddingTop: 0,
-                display: "flex", alignItems: "center",
-                marginBottom: responsive ? "1.5rem" : 0,
-              }}
-            >
-              <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
-            </Tag>
+              <Tag color="geekblue"
+                style={{
+                  padding: "0 1rem",
+                  height: "3rem",
+                  borderRadius: "0.4rem",
+                  paddingTop: 0,
+                  display: "flex", alignItems: "center",
+                  marginBottom: responsive ? "1.5rem" : 0,
+                }}
+              >
+                <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
+              </Tag>
 
-          </Flex>
+            </Flex>
 
-          <Table
-            rowKey={(record) => record.id}
-            className={styles['table-striped-rows']}
-            columns={columns}
-            pagination={tableParams.pagination}
-            loading={loading}
-            onChange={handleTableChange}
-            dataSource={data}
-            scroll={{ x: 'max-content' }}
-          />
-        </div>
+            <Table
+              rowKey={(record) => record.id}
+              className={styles['table-striped-rows']}
+              columns={columns}
+              pagination={tableParams.pagination}
+              loading={loading}
+              onChange={handleTableChange}
+              dataSource={data}
+              scroll={{ x: 'max-content' }}
+            />
+          </div>
+        </Suspense>
       )}
 
       {data && data.length !== 0 && departure.length != 0 && arrival.length != 0 && (

@@ -1,8 +1,10 @@
 version: "3.8"
-name: frontend
+name: frontend-customer
 services:
-  nextjs-app:
+  customer:
     build: .
-    container_name: nextjs_container
+    container_name: customer
     ports:
       - "3000:3000"
+    env_file:
+      - .env

@@ -8,4 +8,3 @@ logs
 tmp
 *.bak
 *.swp
-.env
