@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransportsResolver } from './transport.resolver';
-import { TransportsService } from './transport.service';
-import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
-import { RoleGuard } from '../../../../../common/exception/guards/role.guard';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
+import { TransportsResolver } from '../transport.resolver';
+import { TransportsService } from '../transport.service';
+import { AuthGuard } from '../../../../../../common/exception/guards/auth.guard';
+import { RoleGuard } from '../../../../../../common/exception/guards/role.guard';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
 import { listTransports } from './mock/list-transports';
 import { totalTransports } from './mock/total-transports';
 

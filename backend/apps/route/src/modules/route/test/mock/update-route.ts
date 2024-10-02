@@ -1,4 +1,4 @@
-import { UpdateRoutesDto } from "../dto/route-update.dto";
+import { UpdateRoutesDto } from "../../dto/route-update.dto";
 
 export const updateRoutesDto: UpdateRoutesDto = {
   name: 'Route 1',

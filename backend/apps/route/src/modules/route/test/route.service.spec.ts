@@ -1,18 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoutesService } from './route.service';
-import { RouteRepository } from './route.repository';
-import { FilterRoutesDto } from './dto/route-filter.dto';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
-import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
-import { CreateRoutesDto } from './dto/route-create.dto';
-import { UpdateRoutesDto } from './dto/route-update.dto';
+import { RoutesService } from '../route.service';
+import { RouteRepository } from '../route.repository';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
+import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
 import { createRoutesDto } from './mock/create-route';
 import { filterRoutesDto } from './mock/filter-route';
 import { updateRoutesDto } from './mock/update-route';
 import { getRoute } from './mock/get-route';
-import { Route } from './type/route.type';
+import { Route } from '../type/route.type';
 import { statistizieRoute } from './mock/statisticize-route';
+import { CreateRoutesDto } from '../dto/route-create.dto';
 
 describe('RoutesService', () => {
   let service: RoutesService;

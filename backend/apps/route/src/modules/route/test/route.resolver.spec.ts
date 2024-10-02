@@ -1,17 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoutesResolver } from './route.resolver';
-import { RoutesService } from './route.service';
-import { CreateRoutesDto } from './dto/route-create.dto';
-import { UpdateRoutesDto } from './dto/route-update.dto';
-import { FilterRoutesDto } from './dto/route-filter.dto';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
-import { Route } from './type/route.type';
+import { RoutesResolver } from '../route.resolver';
+import { RoutesService } from '../route.service';
+import { CreateRoutesDto } from '../dto/route-create.dto';
+import { UpdateRoutesDto } from '../dto/route-update.dto';
+import { FilterRoutesDto } from '../dto/route-filter.dto';
+import { JwtModule } from '@nestjs/jwt';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
 import { getRoute } from './mock/get-route';
-import { create } from 'domain';
-import { createRoutesDto } from './mock/create-route';
-import { updateRoutesDto } from './mock/update-route';
 import { statistizieRoute } from './mock/statisticize-route';
 
 describe('RoutesResolver', () => {

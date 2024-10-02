@@ -1,5 +1,5 @@
-import { ShippingTypeEnum, VehicleTypeEnum } from '../interface/transports.interface';
-import { Transport } from '../type/transport.type';
+import { ShippingTypeEnum, VehicleTypeEnum } from '../../interface/transports.interface';
+import { Transport } from '../../type/transport.type';
 
 export const listTransports: Transport[] = [
   {

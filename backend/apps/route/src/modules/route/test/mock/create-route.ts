@@ -1,8 +1,7 @@
+import { CreateRoutesDto } from "../../dto/route-create.dto";
 
-import { Route } from "../type/route.type";
 
-export const getRoute: Route = {
-  id: '1',
+export const createRoutesDto: CreateRoutesDto = {
   name: 'Route 105',
   departure: {
     id: '1',
