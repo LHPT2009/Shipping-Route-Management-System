@@ -54,7 +54,6 @@ describe('AuthResolver', () => {
         expect(authResolver).toBeDefined();
     });
 
-    // Additional tests can be uncommented and used as required
     describe('signup', () => {
         it('should return a created user', async () => {
             const input: SignupInput = {
@@ -80,33 +79,60 @@ describe('AuthResolver', () => {
         });
     });
 
-    // describe('login', () => {
-    //     it('should return login response', async () => {
-    //         const input: LoginInput = { email: 'test@example.com', password: 'password' };
-    //         const result = { data: { token: 'test_token' }, errors: null };
-    //         jest.spyOn(authService, 'login').mockResolvedValue(result);
+    describe('login', () => {
+        it('should return login response', async () => {
+            const input: LoginInput = { email: 'test@example.com', password: 'password' };
 
-    //         expect(await authResolver.login(input)).toEqual(result);
-    //     });
-    // });
+            const result: ResponseDto<{}> = {
+                status: 200,
+                message: 'SUCCESS',
+                data: {
+                    accessToken: 'test_token',
+                    expiresIn: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 1-day expiration
+                },
+                error: null,
+            };
 
-    // describe('loginWithGoogle', () => {
-    //     it('should return Google login response', async () => {
-    //         const input = { token: 'google_token' };
-    //         const result = { data: { token: 'test_token' }, errors: null };
-    //         jest.spyOn(authService, 'loginWithGoogle').mockResolvedValue(result);
+            jest.spyOn(authService, 'login').mockResolvedValue(result);
 
-    //         expect(await authResolver.loginWithGoogle(input)).toEqual(result);
-    //     });
-    // });
+            expect(await authResolver.login(input)).toEqual(result);
+        });
+    });
 
-    // describe('logout', () => {
-    //     it('should return logout response', async () => {
-    //         const context = { req: { user: { id: '1' } } };
-    //         const result = { data: {}, errors: null };
-    //         jest.spyOn(authService, 'logout').mockResolvedValue(result);
+    describe('loginWithGoogle', () => {
+        it('should return Google login response', async () => {
+            const input = { token: 'google_token' };
 
-    //         expect(await authResolver.logoutAccount(context)).toEqual(result);
-    //     });
-    // });
+            const result: ResponseDto<{}> = {
+                status: 200,
+                message: 'SUCCESS',
+                data: {
+                    accessToken: 'test_token',
+                    expiresIn: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 1-day expiration
+                },
+                error: null,
+            };
+
+            jest.spyOn(authService, 'loginWithGoogle').mockResolvedValue(result);
+
+            expect(await authResolver.loginWithGoogle(input)).toEqual(result);
+        });
+    });
+
+    describe('logout', () => {
+        it('should return logout response', async () => {
+            const context = { req: { user: { id: '1' } } };
+
+            const result: ResponseDto<{}> = {
+                status: 200,
+                message: 'SUCCESS',
+                data: null,
+                error: null,
+            };
+
+            jest.spyOn(authService, 'logout').mockResolvedValue(result);
+
+            expect(await authResolver.logoutAccount(context)).toEqual(result);
+        });
+    });
 });

@@ -194,7 +194,6 @@ export class RoleService {
     });
 
     const usersInRedis: string[] | null = await this.cacheManager.store.keys();
-    console.log("usersInRedis", usersInRedis);
 
     const usersInRedisAffected: string[] | null = usersInRedis.filter(
       userId => users.some(user => user.id.toString() === userId)

@@ -63,13 +63,6 @@ export class RoleResolver {
     return this.roleService.addPermissionToRole(input);
   }
 
-  // @Mutation(() => ResponseDto<RoleEntity>)
-  // async removePermissionFromRole(
-  //   @Args('input') input: PermissionToRoleDto,
-  // ) {
-  //   return this.roleService.removePermissionFromRole(input);
-  // }
-
   @Roles(ROLE.ADMIN)
   @Permissions(PERMISSION.READ_LIST_ROLE)
   @UseGuards(AuthGuard, RoleGuard)

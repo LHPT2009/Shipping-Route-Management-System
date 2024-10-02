@@ -429,8 +429,6 @@ export class UserService {
         redisUserId => user.id.toString() === redisUserId
       );
 
-      console.log("userInRedisAffected", userInRedisAffected);
-
       if (userInRedisAffected) {
         const role: RoleEntity = await this.roleRepository.findOne({
           where: { id: userUpdateRoleDto.roles },
@@ -450,7 +448,6 @@ export class UserService {
           permissions: permissionNames,
         };
 
-        console.log("result", result);
         await this.cacheManager.set(userInRedisAffected, result);
       }
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);

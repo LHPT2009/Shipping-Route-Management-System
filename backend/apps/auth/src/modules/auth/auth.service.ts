@@ -15,7 +15,7 @@ import { UserRepository } from '../user/user.repository';
 
 @Injectable()
 export class AuthService {
-  private oauthClient: Auth.OAuth2Client;
+  oauthClient: Auth.OAuth2Client;
 
   constructor(
     private userService: UserService,
