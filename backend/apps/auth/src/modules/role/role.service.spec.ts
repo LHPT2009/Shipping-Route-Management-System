@@ -12,13 +12,10 @@ import { RoleEntity } from './entity/role.entity';
 import { ResponseDto } from '../../../../../common/response/responseDto';
 import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
 import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
+import { PermissionEntity } from '../permission/entity/permission.entity';
 
 describe('RoleService', () => {
     let service: RoleService;
-    let roleRepository: RoleRepository;
-    let userRepository: UserRepository;
-    let permissionRepository: PermissionRepository;
-    let cacheManager: Cache;
 
     const mockRoleRepository = {
         find: jest.fn(),
@@ -70,10 +67,6 @@ describe('RoleService', () => {
         }).compile();
 
         service = module.get<RoleService>(RoleService);
-        roleRepository = module.get<RoleRepository>(RoleRepository);
-        userRepository = module.get<UserRepository>(UserRepository);
-        permissionRepository = module.get<PermissionRepository>(PermissionRepository);
-        cacheManager = module.get<Cache>(CACHE_MANAGER);
     });
 
     afterEach(() => {
@@ -134,21 +127,57 @@ describe('RoleService', () => {
         });
     });
 
-    // describe('update', () => {
-    //     it('should update a role successfully', async () => {
-    //         const id = '1';
-    //         const updateRoleDto = { name: 'updatedRole' };
-    //         const existingRole = { id: '1', name: 'role1', permissions: [] };
+    describe('update', () => {
+        it('should successfully update a role and refresh the cache', async () => {
+            const roleId = '1';
+            const updateRoleDto: UpdateRoleDto = { name: 'Updated Role' };
+            const existingRole = null; // No existing role with the same name
 
-    //         mockRoleRepository.findOne.mockResolvedValue(null);
-    //         mockRoleRepository.findOne.mockResolvedValue(existingRole);
-    //         mockRoleRepository.save.mockResolvedValue({ ...existingRole, ...updateRoleDto });
+            // Mock the role to update
+            const roleToUpdate = new RoleEntity(roleId, 'Old Role'); // Set ID and current name
+            roleToUpdate.permissions = [new PermissionEntity()]; // Mock existing permissions
+            roleToUpdate.permissions[0].name = 'VIEW_USERS'; // Add permission details
 
-    //         const result = await service.update(id, updateRoleDto);
+            const usersAffected = ['user1', 'user2']; // Mock affected users in Redis
 
-    //         expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { ...existingRole, ...updateRoleDto }, []));
-    //     });
-    // });
+            // Mock repository methods
+            mockRoleRepository.findOne
+                .mockResolvedValueOnce(existingRole) // No existing role with the same name
+                .mockResolvedValueOnce(roleToUpdate); // Returning the role to be updated
+
+            // Mock the usersInRedisAffectedByRole method to return the affected users
+            jest.spyOn(service, 'usersInRedisAffectedByRole').mockResolvedValue(usersAffected);
+
+            // Mocking keys in Redis store
+            mockCacheManager.store.keys.mockResolvedValueOnce(usersAffected); // Mocking users in Redis
+
+            const result = await service.update(roleId, updateRoleDto); // Call the update method
+
+            // Expectations
+            expect(mockRoleRepository.findOne).toHaveBeenCalledWith({ where: { name: updateRoleDto.name } });
+            expect(mockRoleRepository.save).toHaveBeenCalledWith(expect.objectContaining({ name: updateRoleDto.name }));
+            expect(mockCacheManager.set).toHaveBeenCalledTimes(usersAffected.length);
+
+            usersAffected.forEach(userId => {
+                expect(mockCacheManager.set).toHaveBeenCalledWith(userId, expect.objectContaining({ role: updateRoleDto.name }));
+            });
+
+            expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, roleToUpdate, []));
+        });
+
+        it('should throw an error if the role name already exists', async () => {
+            const roleId = '1';
+            const updateRoleDto: UpdateRoleDto = { name: 'Existing Role' };
+
+            // Mock existing role entity with the same name and provide id
+            const existingRole = new RoleEntity(roleId, 'Existing Role'); // Pass id and name
+
+            // Simulate existing role with the same name
+            mockRoleRepository.findOne.mockResolvedValueOnce(existingRole);
+
+            await expect(service.update(roleId, updateRoleDto)).rejects.toThrow(CustomValidationError);
+        });
+    });
 
     describe('remove', () => {
         it('should remove a role successfully', async () => {
