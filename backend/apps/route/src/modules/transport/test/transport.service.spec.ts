@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransportsService } from './transport.service';
-import { TransportRepository } from './transport.repository';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
-import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
+import { TransportsService } from '../transport.service';
+import { TransportRepository } from '../transport.repository';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
+import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
 import { listTransports } from './mock/list-transports';
 import { totalTransports } from './mock/total-transports';
 

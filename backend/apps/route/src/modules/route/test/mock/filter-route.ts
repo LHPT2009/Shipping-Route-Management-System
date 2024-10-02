@@ -1,4 +1,4 @@
-import { FilterRoutesDto } from "../dto/route-filter.dto";
+import { FilterRoutesDto } from "../../dto/route-filter.dto";
 
 export const filterRoutesDto: FilterRoutesDto = {
   search: '',

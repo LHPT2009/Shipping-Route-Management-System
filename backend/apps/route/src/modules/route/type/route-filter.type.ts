@@ -1,7 +1,5 @@
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
 import { StatusEnum } from '../interface/routes.interface';
-import { Location } from '../../location/type/location.type';
-import { Transport } from '../../transport/type/transport.type';
 
 registerEnumType(StatusEnum, {
   name: 'StatusEnum',

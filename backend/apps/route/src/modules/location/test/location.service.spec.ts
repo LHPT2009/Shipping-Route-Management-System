@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LocationsService } from './location.service';
-import { LocationRepository } from './location.repository';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
+import { LocationsService } from '../location.service';
+import { LocationRepository } from '../location.repository';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
 import { listLocations } from './mock/list-locations';
-import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
+import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
 import { totalLocations } from './mock/total-locations';
 
 describe('LocationsService', () => {

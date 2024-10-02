@@ -13,7 +13,6 @@ export class LocationsService {
     try {
       const locations = await this.locationRepository.find();
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, locations, []);
-
     } catch (error) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { location: [STATUS.ERR_INTERNAL_SERVER] });
     }

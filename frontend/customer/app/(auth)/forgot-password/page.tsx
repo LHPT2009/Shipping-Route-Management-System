@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Form, Input, Button, Typography, Flex } from "antd";
 import Link from "next/link";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -16,13 +16,15 @@ import { useHandleError } from "@/lib/hooks/error";
 import { RESET_PASSWORD_VERIFY_EMAIL } from "@/apollo/mutations/auth";
 import { ApolloError, useMutation } from "@apollo/client";
 import { NOTIFICATION } from "@/constant/notification";
+import CountdownTimer from "@/components/countdown";
+import { useState } from "react";
 
 const { Text, Title } = Typography;
 
 const ForgotPasswordPage = () => {
   const screenWidth = UseScreenWidth();
   const responsive: boolean = GetValueFromScreen(screenWidth, true, true, true, true);
-
+  const [isCountdown, setIsCountdown] = useState<boolean>(false);
   const schema = yup
     .object({
       email: yup
@@ -41,7 +43,7 @@ const ForgotPasswordPage = () => {
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
-  const [resetPasswordVerifyMutation, {data, loading}] = useMutation(RESET_PASSWORD_VERIFY_EMAIL, {
+  const [resetPasswordVerifyMutation, { data, loading }] = useMutation(RESET_PASSWORD_VERIFY_EMAIL, {
     onCompleted: () => {
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "Please check your email for the password reset link. If you don’t receive an email, use the \"Resend\" button to request a new one.");
     },
@@ -49,8 +51,10 @@ const ForgotPasswordPage = () => {
       await handleError(error);
     }
   });
-  
+
   const onFinish = async (values: any) => {
+    console.log("123")
+    setIsCountdown(true);
     await resetPasswordVerifyMutation({
       variables: {
         input: {
@@ -58,6 +62,10 @@ const ForgotPasswordPage = () => {
         }
       },
     });
+  };
+
+  const handleCountdownComplete = () => {
+    setIsCountdown(false);
   };
 
   return (
@@ -127,18 +135,21 @@ const ForgotPasswordPage = () => {
           </Button>
         </Form.Item>
 
-        {!data ? null : <Paragraph
-          style={{
-            fontSize: "1rem",
-            marginTop: "1rem",
-            fontWeight: "500",
-            textAlign: "center",
-          }}
-        >
-          Didn’t receive the email? Click {""}
-          <Button type="link" htmlType="submit" style={{ color: COLOR.PRIMARY, fontWeight: "600", padding: 0 }}> Resend </Button> 
-          {" "} to try again
-        </Paragraph>}
+        {!data ? null :
+          <Paragraph
+            style={{
+              fontSize: "1rem",
+              marginTop: "2rem",
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            Didn't receive the email?{" "}
+            {isCountdown ? <CountdownTimer totalSec={60} onComplete={handleCountdownComplete} /> :
+              <Button type="link" htmlType="submit" style={{ color: COLOR.PRIMARY, fontWeight: "600", padding: 0 }}>
+                Click here to resend
+              </Button>}
+          </Paragraph>}
 
         <Form.Item style={{ textAlign: "center" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>

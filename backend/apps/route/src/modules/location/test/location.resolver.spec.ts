@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LocationsResolver } from './location.resolver';
-import { LocationsService } from './location.service';
-import { ResponseDto } from '../../../../../common/response/responseDto';
+import { LocationsResolver } from '../location.resolver';
+import { LocationsService } from '../location.service';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
 import { listLocations } from './mock/list-locations';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
 import { totalLocations } from './mock/total-locations';
 
 describe('LocationsResolver', () => {
