@@ -2,11 +2,10 @@
 import { COLOR } from "@/constant";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Form, Button, Typography, Flex, Spin } from "antd";
-import Link from "next/link";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Paragraph from "antd/es/typography/Paragraph";
 import { URL } from "@/constant/url";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from 'next/navigation'
 import VerifyImg from "../../../../../public/images/verify/email.png"
 import { ApolloError, useMutation } from "@apollo/client";
@@ -54,7 +53,7 @@ const VerifyAccount: React.FC<VerifyAccountProps> = ({params}) => {
       });
     };
     fetchData();
-  }, [])
+  }, [confirmEmailMutation, params.verifyToken]);
 
   return (
 

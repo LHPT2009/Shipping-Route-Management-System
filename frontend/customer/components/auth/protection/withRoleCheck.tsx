@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/lib/hooks/hooks';
 import { loadingActions } from '@/lib/store/loading';
 
 const withRoleCheck = (WrappedComponent: any, allowedRoles: string[], allowedPermissions: string[]) => {
-  return (props: any) => {
+  const WithRoleCheck = (props: any) => {
     const router = useRouter();
     const dispatch = useAppDispatch();
 
@@ -34,6 +34,10 @@ const withRoleCheck = (WrappedComponent: any, allowedRoles: string[], allowedPer
 
     return <WrappedComponent {...props} />;
   };
+
+  WithRoleCheck.displayName = `WithRoleCheck(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return WithRoleCheck;
 };
 
 export default withRoleCheck;

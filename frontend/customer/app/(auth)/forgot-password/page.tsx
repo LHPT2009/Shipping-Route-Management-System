@@ -94,7 +94,7 @@ const ForgotPasswordPage = () => {
         <Paragraph style={{
           fontSize: "1.1rem",
           marginTop: "0.9rem"
-        }}>No worries! We'll send you reset instructions. Please enter the email linked to your account.</Paragraph>
+        }}>No worries! We&apos;ll send you reset instructions. Please enter the email linked to your account.</Paragraph>
 
         {/* Email */}
         <Form.Item
@@ -144,7 +144,7 @@ const ForgotPasswordPage = () => {
               textAlign: "center",
             }}
           >
-            Didn't receive the email?{" "}
+            Didn&apos;t receive the email?{" "}
             {isCountdown ? <CountdownTimer totalSec={60} onComplete={handleCountdownComplete} /> :
               <Button type="link" htmlType="submit" style={{ color: COLOR.PRIMARY, fontWeight: "600", padding: 0 }}>
                 Click here to resend

@@ -1,13 +1,12 @@
 "use client";
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Divider, Typography, Checkbox, Flex } from "antd";
+import { Button, Form, Input, Divider, Typography, Flex } from "antd";
 import { COLOR } from "@/constant";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import GoogleImg from "../../../public/images/login/google.png"
-
 import * as yup from "yup";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
@@ -231,7 +230,7 @@ const LoginPage = () => {
 
         <Form.Item style={{ textAlign: "center", marginTop: "2.8rem" }}>
           <Text style={{ fontSize: "0.95rem", color: "grey" }}>
-            Don't have an account? {" "}
+            Don&apos;t have an account? {" "}
             <Link href={URL.REGISTER} style={{ color: COLOR.PRIMARY, fontWeight: 500 }}>Register now</Link>
           </Text>
         </Form.Item>

@@ -1,8 +1,10 @@
 version: "3.8"
-name: frontend
+name: frontend-admin
 services:
-  nextjs-app:
+  admin:
     build: .
-    container_name: nextjs_container
+    container_name: admin
     ports:
-      - "3000:3000"
+      - "4000:4000"
+    env_file:
+      - .env
