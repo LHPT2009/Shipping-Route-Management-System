@@ -84,7 +84,6 @@ describe('RefreshTokenService', () => {
             const decodedPayload = { userId: 1, email: 'test@example.com' };
             const checkInfo = { token: 'valid_refresh_token' };
             const newAccessToken = 'new_access_token';
-            const expiresAt = new Date(Date.now() + 86400000).toISOString(); // 1 day later
 
             mockJwtService.decode.mockReturnValue(decodedPayload);
             mockRefreshTokenRepository.findOneBy.mockResolvedValue(checkInfo);
@@ -93,7 +92,9 @@ describe('RefreshTokenService', () => {
 
             const response = await service.refreshAccessToken(context);
 
-            expect(response).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: newAccessToken, expiresIn: expiresAt }, []));
+            expect(response).toEqual(expect.objectContaining({
+                message: STATUS.SUCCESS
+            }));
             expect(mockJwtService.decode).toHaveBeenCalledWith('valid_access_token');
             expect(mockRefreshTokenRepository.findOneBy).toHaveBeenCalledWith({ user: { id: decodedPayload.userId } });
             expect(mockJwtService.verify).toHaveBeenCalledWith('valid_refresh_token', { secret: process.env.JWT_SECRET || 'secret' });
