@@ -218,7 +218,7 @@ const RoutePage = () => {
       key: 'departure',
       sorter: true,
       ...getColumnSearchProps('departure'),
-      width: '21%',
+      width: '20%',
     },
     {
       title: 'Arrival',
@@ -226,7 +226,7 @@ const RoutePage = () => {
       key: 'arrival',
       sorter: true,
       ...getColumnSearchProps('arrival'),
-      width: '21%',
+      width: '20%',
     },
     {
       title: 'Distance',
@@ -320,7 +320,7 @@ const RoutePage = () => {
                 }}
                 style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
               >
-                <img src={MapIcon.src} style={{ width: "1.2rem", height: "2rem" }} />
+                <img src={MapIcon.src} style={{ width: "1.1rem", height: "2rem" }} />
               </Button>
             </Tooltip>
           ) : <Button
@@ -335,7 +335,7 @@ const RoutePage = () => {
             }}
             style={{ borderRadius: "0.3rem", fontSize: "0.9rem" }}
           >
-            <img src={MapIcon.src} style={{ width: "1.2rem", height: "2rem" }} />
+            <img src={MapIcon.src} style={{ width: "1.1rem", height: "2rem" }} />
           </Button>}
 
         </Flex>
@@ -483,87 +483,85 @@ const RoutePage = () => {
       {!checkStatusBackground ? (
         <></>
       ) : (
-        <Suspense fallback={<LoadingComponent />}>
-          <div style={{ width: "90%", margin: "6.5rem auto 2rem auto" }}>
-            <Breadcrumb
-              items={[{
-                title: (
-                  <Link href="/">
-                    <Flex align="center" gap="0.5rem">
-                      <HomeOutlined />
-                      <span>Homepage</span>
-                    </Flex>
-                  </Link>
-                )
-              },
-              { title: 'List routes', }
-              ]}
-              style={{ paddingLeft: "0.5rem" }}
-            />
-            <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
-              <Form
-                initialValues={{ remember: true }}
-                style={{
-                  width: responsive ? "60%" : "28rem",
-                  borderRadius: "1rem",
-                  backgroundColor: COLOR.BACKGROUNDBODY,
-                  textAlign: "left",
-                  marginBottom: "0",
-                }}
-                onFinish={handleSubmit(onFinish)}
+        <div style={{ width: "90%", margin: "6.5rem auto 2rem auto" }}>
+          <Breadcrumb
+            items={[{
+              title: (
+                <Link href="/">
+                  <Flex align="center" gap="0.5rem">
+                    <HomeOutlined />
+                    <span>Homepage</span>
+                  </Flex>
+                </Link>
+              )
+            },
+            { title: 'List routes', }
+            ]}
+            style={{ paddingLeft: "0.5rem" }}
+          />
+          <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
+            <Form
+              initialValues={{ remember: true }}
+              style={{
+                width: responsive ? "60%" : "28rem",
+                borderRadius: "1rem",
+                backgroundColor: COLOR.BACKGROUNDBODY,
+                textAlign: "left",
+                marginBottom: "0",
+              }}
+              onFinish={handleSubmit(onFinish)}
+            >
+              <Form.Item
+                name="search"
+                style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                help={
+                  errors.search && (
+                    <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
+                  )
+                }
               >
-                <Form.Item
+                <Controller
                   name="search"
-                  style={{ paddingBottom: errors.search ? "1rem" : 0 }}
-                  help={
-                    errors.search && (
-                      <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
-                    )
-                  }
-                >
-                  <Controller
-                    name="search"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        key="search"
-                        {...field}
-                        placeholder={responsive ? "Search for location" : "Search for route name, departure, arrival"}
-                        prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
-                        style={{ borderRadius: "0.4rem", height: "3rem", background: "white" }}
-                      />
-                    )}
-                  />
-                </Form.Item>
-              </Form>
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      key="search"
+                      {...field}
+                      placeholder={responsive ? "Search for location" : "Search for route name, departure, arrival"}
+                      prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                      style={{ borderRadius: "0.4rem", height: "3rem", background: "white" }}
+                    />
+                  )}
+                />
+              </Form.Item>
+            </Form>
 
-              <Tag color="geekblue"
-                style={{
-                  padding: "0 1rem",
-                  height: "3rem",
-                  borderRadius: "0.4rem",
-                  paddingTop: 0,
-                  display: "flex", alignItems: "center",
-                  marginBottom: responsive ? "1.5rem" : 0,
-                }}
-              >
-                <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
-              </Tag>
+            <Tag color="geekblue"
+              style={{
+                padding: "0 1rem",
+                height: "3rem",
+                borderRadius: "0.4rem",
+                paddingTop: 0,
+                display: "flex", alignItems: "center",
+                marginBottom: responsive ? "1.5rem" : 0,
+              }}
+            >
+              <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
+            </Tag>
 
-            </Flex>
+          </Flex>
 
-            <Table
-              rowKey={(record) => record.id}
-              className={styles['table-striped-rows']}
-              columns={columns}
-              pagination={tableParams.pagination}
-              loading={loading}
-              onChange={handleTableChange}
-              dataSource={data}
-              scroll={{ x: 'max-content' }}
-            />
-          </div>
-        </Suspense>
+          <Table
+            rowKey={(record) => record.id}
+            className={styles['table-striped-rows']}
+            columns={columns}
+            pagination={tableParams.pagination}
+            loading={loading}
+            onChange={handleTableChange}
+            dataSource={data}
+            scroll={responsive ? { x: 'max-content' } : undefined}
+          />
+        </div>
       )}
 
       {data && data.length !== 0 && departure.length != 0 && arrival.length != 0 && (
