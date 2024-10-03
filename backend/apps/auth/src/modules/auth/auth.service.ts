@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './types';
@@ -42,13 +42,9 @@ export class AuthService {
       const expiredIn = 1;
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // day
 
-      // const expiredIn = 5; //5s
-      // const expiresAt = new Date(Date.now() + 5000).toISOString(); // 5s
-
       const payload: PayloadType = { email: user.email, userId: user.id };
       await this.refreshTokenService.createRefreshToken(payload);
       const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}d` });
-      // const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}s` });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
 
     } else {
@@ -68,7 +64,7 @@ export class AuthService {
 
       const user = await this.userRepository.findOne({
         where: { email: tokenInfo.email },
-        relations: ['roles'], // Include the roles relation
+        relations: ['roles'],
       });
 
       let userAfterCreate: UserEntity;
@@ -78,13 +74,9 @@ export class AuthService {
       }
 
       const expiredIn = 1;
-      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // day
-
-      // const expiredIn = 5; //5s
-      // const expiresAt = new Date(Date.now() + 5000).toISOString(); // 5s
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
       const payload: PayloadType = { email: tokenInfo.email, userId: user ? user.id : userAfterCreate.id };
-      console.log("payload", payload);
       await this.refreshTokenService.createRefreshToken(payload);
       const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}d` });
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);

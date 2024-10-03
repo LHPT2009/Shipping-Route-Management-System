@@ -1,5 +1,5 @@
-import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
-import { Field, InputType, ID } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdatePermissionDto {

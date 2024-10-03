@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthResolver } from './auth.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -19,7 +18,7 @@ import { RefreshTokenModule } from '../refreshtoken/refreshtoken.module';
     }),
   ],
   providers: [AuthService, AuthResolver],
-  controllers: [AuthController],
+  controllers: [],
   exports: [AuthService],
 })
 export class AuthModule { }

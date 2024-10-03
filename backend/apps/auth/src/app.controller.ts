@@ -1,7 +1,7 @@
-import { Controller, Get, Inject, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { GrpcMethod } from '@nestjs/microservices';
-import { Metadata, ServerUnaryCall } from '@grpc/grpc-js'; // Add this import
+import { Metadata, ServerUnaryCall } from '@grpc/grpc-js';
 import { UserId, UserRole } from './protos/auth';
 import { UserService } from './modules/user/user.service';
 import { instanceToPlain } from 'class-transformer';
@@ -26,13 +26,10 @@ export class AppController {
   async findOne(data: UserId, metadata: Metadata, call: ServerUnaryCall<any, any>): Promise<UserRole> {
 
     const userFromRedis: UserRole | null = await this.cacheManager.get(data.id);
-    console.log('userFromRedis: ', userFromRedis);
     if (userFromRedis !== null) {
-      console.log("get in redis");
       return userFromRedis;
 
     } else {
-      console.log("get in db");
       const getUserInfo = instanceToPlain(await this.userService.findInfoByID(data.id));
       const getPermission = instanceToPlain(await this.roleService.findOne(getUserInfo.data.roles.id));
 

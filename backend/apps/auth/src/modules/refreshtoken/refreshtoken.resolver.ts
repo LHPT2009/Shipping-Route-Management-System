@@ -5,10 +5,10 @@ import { RefreshToken } from './type/refreshtoken.type';
 
 @Resolver(() => RefreshToken)
 export class RefreshTokenResolver {
-    constructor(private refreshTokenService: RefreshTokenService) { }
+  constructor(private refreshTokenService: RefreshTokenService) { }
 
-    @Query(() => ResponseDto<{}>)
-    async getRefreshAccessToken(@Context() context: any): Promise<ResponseDto<{}>> {
-        return this.refreshTokenService.refreshAccessToken(context);
-    }
+  @Query(() => ResponseDto<{}>)
+  async getRefreshAccessToken(@Context() context: any): Promise<ResponseDto<{}>> {
+    return this.refreshTokenService.refreshAccessToken(context);
+  }
 }

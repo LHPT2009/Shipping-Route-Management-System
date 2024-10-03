@@ -1,12 +1,8 @@
 import {
-  IsString,
   IsNotEmpty,
   IsNumber,
-  IsDate,
-  IsEnum,
 } from 'class-validator';
-import { Field, InputType, ID } from '@nestjs/graphql';
-import { Role } from '../../role/type/role.type';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class FilterUsersDto {

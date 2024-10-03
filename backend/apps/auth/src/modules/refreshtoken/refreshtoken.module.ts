@@ -7,10 +7,10 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenResolver } from './refreshtoken.resolver';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([RefreshTokenEntity])
-    ],
-    providers: [RefreshTokenService, RefreshTokenResolver, RefreshTokenRepository, JwtService],
-    exports: [RefreshTokenService],
+  imports: [
+    TypeOrmModule.forFeature([RefreshTokenEntity])
+  ],
+  providers: [RefreshTokenService, RefreshTokenResolver, RefreshTokenRepository, JwtService],
+  exports: [RefreshTokenService],
 })
 export class RefreshTokenModule { }

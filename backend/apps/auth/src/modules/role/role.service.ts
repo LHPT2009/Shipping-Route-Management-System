@@ -75,7 +75,6 @@ export class RoleService {
     Object.assign(role, updateRoleDto);
     await this.roleRepository.save(role);
 
-    //Update redis cache
     const usersInRedisAffected: string[] | null = await this.usersInRedisAffectedByRole(id);
     if (usersInRedisAffected.length > 0) {
       const permissionNames = role.permissions.map(permission => permission.name);
@@ -126,7 +125,6 @@ export class RoleService {
 
     await this.roleRepository.delete(id);
 
-    //Update redis cache
     const usersInRedisAffected: string[] | null = await this.usersInRedisAffectedByRole(id);
     if (usersInRedisAffected.length > 0) {
       await Promise.all(usersInRedisAffected.map(async (userId) => {
@@ -156,7 +154,6 @@ export class RoleService {
 
     await this.roleRepository.save(role);
 
-    //Update redis cache
     const usersInRedisAffected: string[] | null = await this.usersInRedisAffectedByRole(roleId);
     if (usersInRedisAffected.length > 0) {
 

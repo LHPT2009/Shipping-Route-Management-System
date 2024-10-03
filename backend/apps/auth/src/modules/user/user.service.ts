@@ -120,7 +120,7 @@ export class UserService {
         throw new CustomValidationError('Validation failed', { email: ['Username or email already exists'] });
       } else {
         const verifyToken = crypto.randomBytes(32).toString('base64url');
-        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);//24 hours
+        const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
         const user = new UserEntity(
           userDTO.username,
           userDTO.email,
@@ -266,12 +266,12 @@ export class UserService {
     if (validEmail(data.email)) {
       user = await this.userRepository.findOne({
         where: { email: data.email },
-        relations: ['roles'], // Include the roles relation
+        relations: ['roles'],
       });
     } else {
       user = await this.userRepository.findOne({
         where: { username: data.email },
-        relations: ['roles'], // Include the roles relation
+        relations: ['roles'],
       });
     }
     if (!user) {
