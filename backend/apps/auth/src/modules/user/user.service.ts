@@ -94,7 +94,6 @@ export class UserService {
       }, []);
 
     } catch (error) {
-      console.log(error)
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { user: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
@@ -422,14 +421,11 @@ export class UserService {
       Object.assign(user, userUpdateRoleDto);
       await this.userRepository.save(user);
 
-      //Update redis
       const usersInRedis: string[] | null = await this.cacheManager.store.keys();
 
       const userInRedisAffected: string | null = usersInRedis.find(
         redisUserId => user.id.toString() === redisUserId
       );
-
-      console.log("userInRedisAffected", userInRedisAffected);
 
       if (userInRedisAffected) {
         const role: RoleEntity = await this.roleRepository.findOne({
@@ -450,7 +446,6 @@ export class UserService {
           permissions: permissionNames,
         };
 
-        console.log("result", result);
         await this.cacheManager.set(userInRedisAffected, result);
       }
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
