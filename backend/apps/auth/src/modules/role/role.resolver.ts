@@ -19,14 +19,17 @@ import { PERMISSION } from '../../../../../common/constants/permission';
 export class RoleResolver {
   constructor(private roleService: RoleService) { }
 
-  @Query(() => ResponseDto<RoleEntity[]>)
   @Roles(ROLE.ADMIN)
   @Permissions(PERMISSION.READ_LIST_ROLE)
   @UseGuards(AuthGuard, RoleGuard)
+  @Query(() => ResponseDto<RoleEntity[]>)
   async getRoles(): Promise<ResponseDto<RoleEntity[]>> {
     return this.roleService.findAll();
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_DETAIL_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<RoleEntity>, { nullable: true })
   async getRole(
     @Args('id', { type: () => ID }) id: string,
@@ -34,6 +37,9 @@ export class RoleResolver {
     return this.roleService.findOne(id);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.CREATE_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<RoleEntity>)
   async createRole(
     @Args('input') input: CreateRoleDto,
@@ -41,6 +47,9 @@ export class RoleResolver {
     return this.roleService.create(input);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.UPDATE_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<RoleEntity>)
   async updateRole(
     @Args('id', { type: () => ID }) id: string,
@@ -49,6 +58,9 @@ export class RoleResolver {
     return this.roleService.update(id, input);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.DELETE_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<RoleEntity>, { nullable: true })
   async removeRole(
     @Args('id', { type: () => ID }) id: string,
@@ -56,6 +68,9 @@ export class RoleResolver {
     return this.roleService.remove(id);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.ASSIGN_PERMISSION_TO_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<RoleEntity>)
   async addPermissionToRole(
     @Args('input') input: PermissionToRoleDto,

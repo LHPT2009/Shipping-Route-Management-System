@@ -5,10 +5,10 @@ import { RefreshTokenEntity } from './entity/refreshtoken.entity';
 
 @Injectable()
 export class RefreshTokenRepository extends Repository<RefreshTokenEntity> {
-    constructor(
-        @InjectRepository(RefreshTokenEntity)
-        repository: Repository<RefreshTokenEntity>,
-    ) {
-        super(repository.target, repository.manager, repository.queryRunner);
-    }
+  constructor(
+    @InjectRepository(RefreshTokenEntity)
+    repository: Repository<RefreshTokenEntity>,
+  ) {
+    super(repository.target, repository.manager, repository.queryRunner);
+  }
 }

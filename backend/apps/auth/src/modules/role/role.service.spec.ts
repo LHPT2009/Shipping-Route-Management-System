@@ -3,7 +3,6 @@ import { RoleService } from './role.service';
 import { RoleRepository } from './role.repository';
 import { UserRepository } from '../user/user.repository';
 import { PermissionRepository } from '../permission/permission.repository';
-import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CreateRoleDto } from './dto/role-create.dto';
 import { UpdateRoleDto } from './dto/role-update.dto';
@@ -15,238 +14,231 @@ import { CustomValidationError } from '../../../../../common/exception/validatio
 import { PermissionEntity } from '../permission/entity/permission.entity';
 
 describe('RoleService', () => {
-    let service: RoleService;
+  let service: RoleService;
 
-    const mockRoleRepository = {
-        find: jest.fn(),
-        findOne: jest.fn(),
-        findOneBy: jest.fn(),
-        create: jest.fn(),
-        save: jest.fn(),
-        delete: jest.fn(),
-        count: jest.fn(),
-    };
+  const mockRoleRepository = {
+    find: jest.fn(),
+    findOne: jest.fn(),
+    findOneBy: jest.fn(),
+    create: jest.fn(),
+    save: jest.fn(),
+    delete: jest.fn(),
+    count: jest.fn(),
+  };
 
-    const mockUserRepository = {
-        find: jest.fn(),
-    };
+  const mockUserRepository = {
+    find: jest.fn(),
+  };
 
-    const mockPermissionRepository = {
-        findBy: jest.fn(),
-    };
+  const mockPermissionRepository = {
+    findBy: jest.fn(),
+  };
 
-    const mockCacheManager = {
-        set: jest.fn(),
-        del: jest.fn(),
-        store: {
-            keys: jest.fn(),
+  const mockCacheManager = {
+    set: jest.fn(),
+    del: jest.fn(),
+    store: {
+      keys: jest.fn(),
+    },
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        RoleService,
+        {
+          provide: RoleRepository,
+          useValue: mockRoleRepository,
         },
-    };
+        {
+          provide: UserRepository,
+          useValue: mockUserRepository,
+        },
+        {
+          provide: PermissionRepository,
+          useValue: mockPermissionRepository,
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
+        },
+      ],
+    }).compile();
 
-    beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [
-                RoleService,
-                {
-                    provide: RoleRepository,
-                    useValue: mockRoleRepository,
-                },
-                {
-                    provide: UserRepository,
-                    useValue: mockUserRepository,
-                },
-                {
-                    provide: PermissionRepository,
-                    useValue: mockPermissionRepository,
-                },
-                {
-                    provide: CACHE_MANAGER,
-                    useValue: mockCacheManager,
-                },
-            ],
-        }).compile();
+    service = module.get<RoleService>(RoleService);
+  });
 
-        service = module.get<RoleService>(RoleService);
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('findAll', () => {
+    it('should return a list of roles', async () => {
+      const roles = [{ id: '1', name: 'Admin', permissions: [] }];
+      mockRoleRepository.find.mockResolvedValue(roles);
+
+      expect(await service.findAll()).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, roles, []));
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
+    it('should handle errors', async () => {
+      mockRoleRepository.find.mockRejectedValue(new Error('error'));
+
+      expect(await service.findAll()).toEqual(new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null));
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a role by id', async () => {
+      const role = { id: '1', name: 'Admin', permissions: [] };
+      mockRoleRepository.findOne.mockResolvedValue(role);
+
+      expect(await service.findOne('1')).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, []));
     });
 
-    describe('findAll', () => {
-        it('should return a list of roles', async () => {
-            const roles = [{ id: '1', name: 'Admin', permissions: [] }];
-            mockRoleRepository.find.mockResolvedValue(roles);
+    it('should handle errors', async () => {
+      mockRoleRepository.findOne.mockRejectedValue(new Error('error'));
 
-            expect(await service.findAll()).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, roles, []));
-        });
+      expect(await service.findOne('1')).toEqual(new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null));
+    });
+  });
 
-        it('should handle errors', async () => {
-            mockRoleRepository.find.mockRejectedValue(new Error('error'));
+  describe('create', () => {
+    it('should create a role', async () => {
+      const createRoleDto: CreateRoleDto = { name: 'Admin' };
+      const role = { id: '1', ...createRoleDto };
 
-            expect(await service.findAll()).toEqual(new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null));
-        });
+      mockRoleRepository.findOne.mockResolvedValue(null);
+      mockRoleRepository.create.mockReturnValue(role);
+      mockRoleRepository.save.mockResolvedValue(role);
+
+      expect(await service.create(createRoleDto)).toEqual(new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, role, []));
     });
 
-    describe('findOne', () => {
-        it('should return a role by id', async () => {
-            const role = { id: '1', name: 'Admin', permissions: [] };
-            mockRoleRepository.findOne.mockResolvedValue(role);
+    it('should handle validation error when role name exists', async () => {
+      const createRoleDto: CreateRoleDto = { name: 'Admin' };
+      const existingRole = { id: '1', name: 'Admin' };
 
-            expect(await service.findOne('1')).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, []));
-        });
+      mockRoleRepository.findOne.mockResolvedValue(existingRole);
 
-        it('should handle errors', async () => {
-            mockRoleRepository.findOne.mockRejectedValue(new Error('error'));
+      await expect(service.create(createRoleDto)).rejects.toThrowError(
+        new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Name already exists'] })
+      );
+    });
+  });
 
-            expect(await service.findOne('1')).toEqual(new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null));
-        });
+  describe('update', () => {
+    it('should successfully update a role and refresh the cache', async () => {
+      const roleId = '1';
+      const updateRoleDto: UpdateRoleDto = { name: 'Updated Role' };
+      const existingRole = null;
+
+      const roleToUpdate = new RoleEntity(roleId, 'Old Role');
+      roleToUpdate.permissions = [new PermissionEntity()];
+      roleToUpdate.permissions[0].name = 'VIEW_USERS';
+
+      const usersAffected = ['user1', 'user2'];
+
+      mockRoleRepository.findOne
+        .mockResolvedValueOnce(existingRole)
+        .mockResolvedValueOnce(roleToUpdate);
+
+      jest.spyOn(service, 'usersInRedisAffectedByRole').mockResolvedValue(usersAffected);
+
+      mockCacheManager.store.keys.mockResolvedValueOnce(usersAffected);
+
+      const result = await service.update(roleId, updateRoleDto);
+
+      expect(mockRoleRepository.findOne).toHaveBeenCalledWith({ where: { name: updateRoleDto.name } });
+      expect(mockRoleRepository.save).toHaveBeenCalledWith(expect.objectContaining({ name: updateRoleDto.name }));
+      expect(mockCacheManager.set).toHaveBeenCalledTimes(usersAffected.length);
+
+      usersAffected.forEach(userId => {
+        expect(mockCacheManager.set).toHaveBeenCalledWith(userId, expect.objectContaining({ role: updateRoleDto.name }));
+      });
+
+      expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, roleToUpdate, []));
     });
 
-    describe('create', () => {
-        it('should create a role', async () => {
-            const createRoleDto: CreateRoleDto = { name: 'Admin' };
-            const role = { id: '1', ...createRoleDto };
+    it('should throw an error if the role name already exists', async () => {
+      const roleId = '1';
+      const updateRoleDto: UpdateRoleDto = { name: 'Existing Role' };
 
-            mockRoleRepository.findOne.mockResolvedValue(null);
-            mockRoleRepository.create.mockReturnValue(role);
-            mockRoleRepository.save.mockResolvedValue(role);
+      const existingRole = new RoleEntity(roleId, 'Existing Role');
 
-            expect(await service.create(createRoleDto)).toEqual(new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, role, []));
-        });
+      mockRoleRepository.findOne.mockResolvedValueOnce(existingRole);
 
-        it('should handle validation error when role name exists', async () => {
-            const createRoleDto: CreateRoleDto = { name: 'Admin' };
-            const existingRole = { id: '1', name: 'Admin' };
+      await expect(service.update(roleId, updateRoleDto)).rejects.toThrow(CustomValidationError);
+    });
+  });
 
-            mockRoleRepository.findOne.mockResolvedValue(existingRole);
+  describe('remove', () => {
+    it('should remove a role successfully', async () => {
+      mockUserRepository.find.mockResolvedValue([]);
+      mockRoleRepository.findOne.mockResolvedValue({ id: '1', permissions: [] });
+      mockRoleRepository.delete.mockResolvedValue({ affected: 1 });
+      mockCacheManager.del.mockResolvedValue(undefined);
+      jest.spyOn(service, 'usersInRedisAffectedByRole').mockResolvedValue(['1', '2']);
 
-            await expect(service.create(createRoleDto)).rejects.toThrowError(
-                new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Name already exists'] })
-            );
-        });
+      const result = await service.remove('1');
+
+      expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null));
+    });
+  });
+
+  describe('addPermissionToRole', () => {
+    it('should add permissions to a role', async () => {
+      const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
+      const role = { id: '1', name: 'Admin', permissions: [] };
+      const permissions = [
+        { id: '101', name: 'Permission1' },
+        { id: '102', name: 'Permission2' },
+      ];
+
+      mockRoleRepository.findOne.mockResolvedValue(role);
+      mockPermissionRepository.findBy.mockResolvedValue(permissions);
+      mockRoleRepository.save.mockResolvedValue({ ...role, permissions });
+
+      mockCacheManager.store.keys.mockResolvedValue(['1', '2']);
+      mockUserRepository.find.mockResolvedValue([{ id: '1', roles: role }]);
+      mockCacheManager.set.mockResolvedValue(undefined);
+
+      expect(await service.addPermissionToRole(input)).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { ...role, permissions }, null));
     });
 
-    describe('update', () => {
-        it('should successfully update a role and refresh the cache', async () => {
-            const roleId = '1';
-            const updateRoleDto: UpdateRoleDto = { name: 'Updated Role' };
-            const existingRole = null; // No existing role with the same name
+    it('should handle not found error when role does not exist', async () => {
+      const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
+      mockRoleRepository.findOne.mockResolvedValue(null);
 
-            // Mock the role to update
-            const roleToUpdate = new RoleEntity(roleId, 'Old Role'); // Set ID and current name
-            roleToUpdate.permissions = [new PermissionEntity()]; // Mock existing permissions
-            roleToUpdate.permissions[0].name = 'VIEW_USERS'; // Add permission details
-
-            const usersAffected = ['user1', 'user2']; // Mock affected users in Redis
-
-            // Mock repository methods
-            mockRoleRepository.findOne
-                .mockResolvedValueOnce(existingRole) // No existing role with the same name
-                .mockResolvedValueOnce(roleToUpdate); // Returning the role to be updated
-
-            // Mock the usersInRedisAffectedByRole method to return the affected users
-            jest.spyOn(service, 'usersInRedisAffectedByRole').mockResolvedValue(usersAffected);
-
-            // Mocking keys in Redis store
-            mockCacheManager.store.keys.mockResolvedValueOnce(usersAffected); // Mocking users in Redis
-
-            const result = await service.update(roleId, updateRoleDto); // Call the update method
-
-            // Expectations
-            expect(mockRoleRepository.findOne).toHaveBeenCalledWith({ where: { name: updateRoleDto.name } });
-            expect(mockRoleRepository.save).toHaveBeenCalledWith(expect.objectContaining({ name: updateRoleDto.name }));
-            expect(mockCacheManager.set).toHaveBeenCalledTimes(usersAffected.length);
-
-            usersAffected.forEach(userId => {
-                expect(mockCacheManager.set).toHaveBeenCalledWith(userId, expect.objectContaining({ role: updateRoleDto.name }));
-            });
-
-            expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, roleToUpdate, []));
-        });
-
-        it('should throw an error if the role name already exists', async () => {
-            const roleId = '1';
-            const updateRoleDto: UpdateRoleDto = { name: 'Existing Role' };
-
-            // Mock existing role entity with the same name and provide id
-            const existingRole = new RoleEntity(roleId, 'Existing Role'); // Pass id and name
-
-            // Simulate existing role with the same name
-            mockRoleRepository.findOne.mockResolvedValueOnce(existingRole);
-
-            await expect(service.update(roleId, updateRoleDto)).rejects.toThrow(CustomValidationError);
-        });
+      expect(await service.addPermissionToRole(input)).toEqual(
+        new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: 'Role with ID 1 not found' })
+      );
     });
 
-    describe('remove', () => {
-        it('should remove a role successfully', async () => {
-            mockUserRepository.find.mockResolvedValue([]);
-            mockRoleRepository.findOne.mockResolvedValue({ id: '1', permissions: [] });
-            mockRoleRepository.delete.mockResolvedValue({ affected: 1 });
-            mockCacheManager.del.mockResolvedValue(undefined);
-            jest.spyOn(service, 'usersInRedisAffectedByRole').mockResolvedValue(['1', '2']);
+    it('should handle not found error when some permissions do not exist', async () => {
+      const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
+      const role = { id: '1', name: 'Admin', permissions: [] };
+      const permissions = [{ id: '101', name: 'Permission1' }];
 
-            const result = await service.remove('1');
+      mockRoleRepository.findOne.mockResolvedValue(role);
+      mockPermissionRepository.findBy.mockResolvedValue(permissions);
 
-            expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null));
-        });
+      expect(await service.addPermissionToRole(input)).toEqual(
+        new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: 'Some permissions were not found' })
+      );
+    });
+  });
+
+  describe('roleStatistics', () => {
+    it('should return the total count of roles', async () => {
+      mockRoleRepository.count.mockResolvedValue(5);
+
+      expect(await service.roleStatistics()).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, 5, []));
     });
 
-    describe('addPermissionToRole', () => {
-        it('should add permissions to a role', async () => {
-            const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
-            const role = { id: '1', name: 'Admin', permissions: [] };
-            const permissions = [
-                { id: '101', name: 'Permission1' },
-                { id: '102', name: 'Permission2' },
-            ];
+    it('should handle errors', async () => {
+      mockRoleRepository.count.mockRejectedValue(new Error('error'));
 
-            mockRoleRepository.findOne.mockResolvedValue(role);
-            mockPermissionRepository.findBy.mockResolvedValue(permissions);
-            mockRoleRepository.save.mockResolvedValue({ ...role, permissions });
-
-            mockCacheManager.store.keys.mockResolvedValue(['1', '2']);
-            mockUserRepository.find.mockResolvedValue([{ id: '1', roles: role }]);
-            mockCacheManager.set.mockResolvedValue(undefined);
-
-            expect(await service.addPermissionToRole(input)).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { ...role, permissions }, null));
-        });
-
-        it('should handle not found error when role does not exist', async () => {
-            const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
-            mockRoleRepository.findOne.mockResolvedValue(null);
-
-            expect(await service.addPermissionToRole(input)).toEqual(
-                new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: 'Role with ID 1 not found' })
-            );
-        });
-
-        it('should handle not found error when some permissions do not exist', async () => {
-            const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
-            const role = { id: '1', name: 'Admin', permissions: [] };
-            const permissions = [{ id: '101', name: 'Permission1' }];
-
-            mockRoleRepository.findOne.mockResolvedValue(role);
-            mockPermissionRepository.findBy.mockResolvedValue(permissions);
-
-            expect(await service.addPermissionToRole(input)).toEqual(
-                new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: 'Some permissions were not found' })
-            );
-        });
+      expect(await service.roleStatistics()).toEqual(new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null));
     });
-
-    describe('roleStatistics', () => {
-        it('should return the total count of roles', async () => {
-            mockRoleRepository.count.mockResolvedValue(5);
-
-            expect(await service.roleStatistics()).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, 5, []));
-        });
-
-        it('should handle errors', async () => {
-            mockRoleRepository.count.mockRejectedValue(new Error('error'));
-
-            expect(await service.roleStatistics()).toEqual(new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null));
-        });
-    });
+  });
 });

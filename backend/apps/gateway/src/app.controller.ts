@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Inject, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
-import { UserId, UserRole } from './protos/auth';
+import { UserRole } from './protos/auth';
 import { Observable } from 'rxjs';
 
 @Controller()

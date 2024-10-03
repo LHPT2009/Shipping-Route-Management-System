@@ -91,13 +91,12 @@ export class SeedService implements OnApplicationBootstrap {
     const password = await bcrypt.hash("admin", salt);
     const passwordUser = await bcrypt.hash("aB123789#", salt);
     const verifyToken = crypto.randomBytes(32).toString('base64url');
-    const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);//24 hours
+    const verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     if (userCount === 0) {
 
       const users = Array.from({ length: 100 }, (_, index = 0) => {
         const username = `user${index + 1}`;
         return {
-          // id: (index + 1).toString(),
           fullname: `User ${index + 1}`,
           username: username,
           email: `${username}@example.com`,
@@ -105,7 +104,7 @@ export class SeedService implements OnApplicationBootstrap {
           address: `Address ${index + 1}`,
           password: passwordUser,
           active: true,
-          roles: { id: "1", name: ROLE.CUSTOMER }, // Assuming ROLE.USER corresponds to role id 1
+          roles: { id: "1", name: ROLE.CUSTOMER },
           verify_token: verifyToken,
           verify_token_expires: verifyTokenExpires,
           img: ''
