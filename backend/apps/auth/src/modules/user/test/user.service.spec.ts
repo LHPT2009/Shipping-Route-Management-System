@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
-import { UserRepository } from './user.repository';
+import { UserService } from '../user.service';
+import { UserRepository } from '../user.repository';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { ProducerService } from '../kafka/producer.service';
+import { ProducerService } from '../../kafka/producer.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { RoleRepository } from '../role/role.repository';
-import { SignupInput } from './dto/signup.input';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS_CODE, STATUS } from '../../../../../common/constants/status';
+import { RoleRepository } from '../../role/role.repository';
+import { SignupInput } from '../dto/signup.input';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS_CODE, STATUS } from '../../../../../../common/constants/status';
 import * as bcrypt from 'bcryptjs';
-import { UserEntity } from './entity/user.entity';
-import { RoleEntity } from '../role/entity/role.entity';
-import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
-import { ResetPasswordInput } from '../auth/dto/reset_password.input';
-import { UserUpdateRoleDto } from './dto/user-update-role';
+import { UserEntity } from '../entity/user.entity';
+import { RoleEntity } from '../../role/entity/role.entity';
+import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
+import { ResetPasswordInput } from '../../auth/dto/reset_password.input';
+import { UserUpdateRoleDto } from '../dto/user-update-role';
 
 describe('UserService', () => {
   let service: UserService;

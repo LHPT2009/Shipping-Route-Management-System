@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PermissionService } from './permission.service';
-import { PermissionRepository } from './permission.repository';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from "../../../../../common/constants/status";
+import { PermissionService } from '../permission.service';
+import { PermissionRepository } from '../permission.repository';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from "../../../../../../common/constants/status";
 
 describe('PermissionService', () => {
   let service: PermissionService;

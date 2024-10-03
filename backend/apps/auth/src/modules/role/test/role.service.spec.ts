@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoleService } from './role.service';
-import { RoleRepository } from './role.repository';
-import { UserRepository } from '../user/user.repository';
-import { PermissionRepository } from '../permission/permission.repository';
+import { RoleService } from '../role.service';
+import { RoleRepository } from '../role.repository';
+import { UserRepository } from '../../user/user.repository';
+import { PermissionRepository } from '../../permission/permission.repository';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { CreateRoleDto } from './dto/role-create.dto';
-import { UpdateRoleDto } from './dto/role-update.dto';
-import { PermissionToRoleDto } from './dto/permission-to-role.dto';
-import { RoleEntity } from './entity/role.entity';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
-import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
-import { PermissionEntity } from '../permission/entity/permission.entity';
+import { CreateRoleDto } from '../dto/role-create.dto';
+import { UpdateRoleDto } from '../dto/role-update.dto';
+import { PermissionToRoleDto } from '../dto/permission-to-role.dto';
+import { RoleEntity } from '../entity/role.entity';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
+import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
+import { PermissionEntity } from '../../permission/entity/permission.entity';
 
 describe('RoleService', () => {
   let service: RoleService;

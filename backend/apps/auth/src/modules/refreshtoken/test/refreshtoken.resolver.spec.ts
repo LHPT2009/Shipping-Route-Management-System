@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RefreshTokenResolver } from './refreshtoken.resolver';
-import { RefreshTokenService } from './refreshtoken.service';
-import { ResponseDto } from '../../../../../common/response/responseDto';
+import { RefreshTokenResolver } from '../refreshtoken.resolver';
+import { RefreshTokenService } from '../refreshtoken.service';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
 
 describe('RefreshTokenResolver', () => {
   let resolver: RefreshTokenResolver;

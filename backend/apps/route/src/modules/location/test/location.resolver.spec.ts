@@ -5,6 +5,7 @@ import { ResponseDto } from '../../../../../../common/response/responseDto';
 import { listLocations } from './mock/list-locations';
 import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
 import { totalLocations } from './mock/total-locations';
+import { JwtModule } from '@nestjs/jwt';
 
 describe('LocationsResolver', () => {
   let resolver: LocationsResolver;
@@ -12,6 +13,11 @@ describe('LocationsResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        JwtModule.register({
+          secret: process.env.JWT_SECRET || 'secret'
+        }),
+      ],
       providers: [
         LocationsResolver,
         {

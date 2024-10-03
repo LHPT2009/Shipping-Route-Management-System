@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PermissionResolver } from './permission.resolver';
-import { PermissionService } from './permission.service';
-import { PermissionEntity } from './entity/permission.entity';
-import { ResponseDto } from '../../../../../common/response/responseDto';
+import { PermissionResolver } from '../permission.resolver';
+import { PermissionService } from '../permission.service';
+import { PermissionEntity } from '../entity/permission.entity';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { JwtModule } from '@nestjs/jwt';
 
 describe('PermissionResolver', () => {
   let resolver: PermissionResolver;
@@ -10,6 +11,11 @@ describe('PermissionResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        JwtModule.register({
+          secret: process.env.JWT_SECRET || 'secret'
+        }),
+      ],
       providers: [
         PermissionResolver,
         {

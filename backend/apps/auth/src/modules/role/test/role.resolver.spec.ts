@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoleResolver } from './role.resolver';
-import { RoleService } from './role.service';
-import { CreateRoleDto } from './dto/role-create.dto';
-import { UpdateRoleDto } from './dto/role-update.dto';
-import { PermissionToRoleDto } from './dto/permission-to-role.dto';
-import { RoleEntity } from './entity/role.entity';
-import { ResponseDto } from '../../../../../common/response/responseDto';
+import { RoleResolver } from '../role.resolver';
+import { RoleService } from '../role.service';
+import { CreateRoleDto } from '../dto/role-create.dto';
+import { UpdateRoleDto } from '../dto/role-update.dto';
+import { PermissionToRoleDto } from '../dto/permission-to-role.dto';
+import { RoleEntity } from '../entity/role.entity';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
 import { JwtService } from '@nestjs/jwt';
 
 describe('RoleResolver', () => {

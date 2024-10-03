@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RefreshTokenService } from './refreshtoken.service';
-import { RefreshTokenRepository } from './refreshtoken.repository';
+import { RefreshTokenService } from '../refreshtoken.service';
+import { RefreshTokenRepository } from '../refreshtoken.repository';
 import { JwtService } from '@nestjs/jwt';
-import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
-import { STATUS } from '../../../../../common/constants/status';
-import { PayloadType } from '../auth/types';
+import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
+import { STATUS } from '../../../../../../common/constants/status';
+import { PayloadType } from '../../auth/types';
 
 describe('RefreshTokenService', () => {
   let service: RefreshTokenService;

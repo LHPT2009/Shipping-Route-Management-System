@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserResolver } from './user.resolver';
-import { UserService } from './user.service';
-import { ResponseDto } from '../../../../../common/response/responseDto';
-import { UserEntity } from './entity/user.entity';
-import { FilterUsersDto } from './dto/user-filter.dto';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { UserUpdateDto } from './dto/user-update.dto';
-import { UserUpdateRoleDto } from './dto/user-update-role';
-import { UpdateStatusUserDto } from './dto/user-update-status';
+import { UserResolver } from '../user.resolver';
+import { UserService } from '../user.service';
+import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { UserEntity } from '../entity/user.entity';
+import { FilterUsersDto } from '../dto/user-filter.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
+import { UserUpdateRoleDto } from '../dto/user-update-role';
+import { UpdateStatusUserDto } from '../dto/user-update-status';
 import { JwtService } from '@nestjs/jwt';
 
 describe('UserResolver', () => {

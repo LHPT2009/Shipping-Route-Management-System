@@ -3,13 +3,13 @@ import { PermissionService } from './permission.service';
 import { Permission } from './type/permission.type';
 import { ResponseDto } from '../../../../../common/response/responseDto';
 import { PermissionEntity } from './entity/permission.entity';
-import { Roles } from 'common/exception/guards/decorator/roles.decorator';
-import { ROLE } from 'common/constants/role';
-import { PERMISSION } from 'common/constants/permission';
-import { Permissions } from 'common/exception/guards/decorator/permissions.decorator';
+import { Roles } from '../../../../../common/exception/guards/decorator/roles.decorator';
+import { ROLE } from '../../../../../common/constants/role';
+import { PERMISSION } from '../../../../../common/constants/permission';
+import { Permissions } from '../../../../../common/exception/guards/decorator/permissions.decorator';
 import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'common/exception/guards/auth.guard';
-import { RoleGuard } from 'common/exception/guards/role.guard';
+import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
+import { RoleGuard } from '../../../../../common/exception/guards/role.guard';
 
 @Resolver(() => Permission)
 export class PermissionResolver {
