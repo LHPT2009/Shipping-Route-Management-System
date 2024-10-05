@@ -10,18 +10,11 @@ export const dataSourceOptions: DataSourceOptions = {
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
-    synchronize: true, // env develop
+    synchronize: false,
     entities: [
-        'apps/auth/src/modules/user/entity/*.{ts,js}',
-        'apps/auth/src/modules/permission/entity/*.{ts,js}',
-        'apps/auth/src/modules/role/entity/*.{ts,js}',
-        'apps/auth/src/modules/refreshtoken/entity/*.{ts,js}',
-
-        'apps/route/src/modules/location/entity/*.{ts,js}',
-        'apps/route/src/modules/route/entity/*.{ts,js}',
-        'apps/route/src/modules/transport/entity/*.{ts,js}',
+        'apps/**/entity/*.{ts,js}',
     ],
-    migrations: ['apps/migrations/src/*.{ts,js}'],
+    migrations: ['db/migrations/*.{ts,js}'],
     migrationsTableName: "history-migrations",
     migrationsRun: true,
 };
