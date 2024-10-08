@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styles from "./homepage.module.css";
 
 import { Button, Flex, Typography } from "antd";
@@ -18,7 +18,6 @@ import RouteDescription from "../../public/images/homepage/routing.jpg";
 import RightArrow from "../../public/svg/homepage/right_arrow.svg";
 import Tung from "../../public/images/homepage/tung_2.jpg";
 import Huy from "../../public/images/homepage/huy.jpg";
-import Social from "../../public/images/footer/social.png";
 import PhoneIcon from "../../public/svg/homepage/phone.svg";
 import EmailIcon from "../../public/svg/homepage/email.svg";
 import BuildingIcon from "../../public/svg/homepage/building.svg";
@@ -47,6 +46,10 @@ const HompageComponent: React.FC = () => {
 
   const screenWidth = UseScreenWidth();
   const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className={styles["wrapper"]}>

@@ -19,7 +19,6 @@ import { useAppDispatch } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU } from "@/constant";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import AnimationLeftComponent from "@/components/animation/left";
 
 const ContactPage = () => {
 
@@ -76,7 +75,6 @@ const ContactPage = () => {
   const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
   return (
-    <AnimationLeftComponent>
     <Flex vertical align="center" justify="center"
       style={{
         width: responsive ? "95%" : "60rem",
@@ -278,7 +276,6 @@ const ContactPage = () => {
         </div>
       </div>
     </Flex>
-    </AnimationLeftComponent>
   );
 };
 
