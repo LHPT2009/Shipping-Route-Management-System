@@ -10,7 +10,7 @@ export const UseScreenWidth = (): number | null => {
       }
     };
 
-    updateWidth(); // Set initial width
+    updateWidth();
     window.addEventListener("resize", updateWidth);
 
     return () => {
@@ -19,6 +19,27 @@ export const UseScreenWidth = (): number | null => {
   }, []);
 
   return screenWidth;
+};
+
+export const UseScreenHeight = (): number | null => {
+  const [screenHeight, setScreenHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (typeof window !== "undefined") {
+        setScreenHeight(window.innerHeight);
+      }
+    };
+
+    updateHeight(); // Đặt chiều cao ban đầu
+    window.addEventListener("resize", updateHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
+
+  return screenHeight;
 };
 
 export const GetValueFromScreen = (

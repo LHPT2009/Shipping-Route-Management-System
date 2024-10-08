@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styles from "./homepage.module.css";
 
 import { Button, Flex, Typography } from "antd";
@@ -18,7 +18,6 @@ import RouteDescription from "../../public/images/homepage/routing.jpg";
 import RightArrow from "../../public/svg/homepage/right_arrow.svg";
 import Tung from "../../public/images/homepage/tung_2.jpg";
 import Huy from "../../public/images/homepage/huy.jpg";
-import Social from "../../public/images/footer/social.png";
 import PhoneIcon from "../../public/svg/homepage/phone.svg";
 import EmailIcon from "../../public/svg/homepage/email.svg";
 import BuildingIcon from "../../public/svg/homepage/building.svg";
@@ -29,6 +28,7 @@ import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { URL } from "@/constant/url";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { GithubOutlined } from "@ant-design/icons";
+import ScrollAnimationComponent from "../animation/dynamic";
 
 const { Title, Paragraph } = Typography;
 
@@ -47,9 +47,14 @@ const HompageComponent: React.FC = () => {
   const screenWidth = UseScreenWidth();
   const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className={styles["wrapper"]}>
       {/* Title */}
+      <ScrollAnimationComponent direction="up" threshold={responsive?0:0}>
       <div className={styles["title-container"]}>
         <h5 className={styles["for-top-title-header"]}>
           For shipping route management services
@@ -95,8 +100,10 @@ const HompageComponent: React.FC = () => {
           Get started
         </Button>
       </div>
+      </ScrollAnimationComponent>
 
       {/* Routing images */}
+      <ScrollAnimationComponent direction="up" threshold={responsive?0:0}>
       <Flex
         vertical={responsive}
         gap={responsive ? "2.5rem" : "0"}
@@ -127,8 +134,9 @@ const HompageComponent: React.FC = () => {
           alt="route-3"
         />
       </Flex>
+      </ScrollAnimationComponent>
 
-      {/* Similar websites */}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 1300:550}>
       <div className={styles["similar-website-container"]}>
         <Title
           style={{
@@ -178,8 +186,10 @@ const HompageComponent: React.FC = () => {
           />
         </Flex>
       </div>
+      </ScrollAnimationComponent>
 
       {/* Description customers*/}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 1600:700}>
       <div
         className={styles["description-container"]}
         style={{
@@ -309,8 +319,10 @@ const HompageComponent: React.FC = () => {
         }
 
       </div>
-
+      </ScrollAnimationComponent>
+      
       {/* Description managers*/}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 2400:1400}>
       <div
         className={styles["description-container"]}
         style={{
@@ -442,8 +454,10 @@ const HompageComponent: React.FC = () => {
         }
 
       </div>
-
+      </ScrollAnimationComponent>
+      
       {/* Support */}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 3300:2200}>
       <div className={styles["support-container"]}>
         <div className={styles["support-content"]}>
           <Title
@@ -527,8 +541,10 @@ const HompageComponent: React.FC = () => {
           </Flex>
         </div>
       </div>
+      </ScrollAnimationComponent>
 
       {/* Our team */}
+      <ScrollAnimationComponent direction="up" threshold={responsive?4100:2700}>
       <div className={styles["team-container"]}>
         <Title
           style={{
@@ -613,8 +629,10 @@ const HompageComponent: React.FC = () => {
           </div>
         </Flex>
       </div>
+      </ScrollAnimationComponent>
 
       {/* Get started */}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 5900:3600}>
       <div className={styles["get-started-container"]}>
         <Flex
           vertical={responsive}
@@ -657,6 +675,7 @@ const HompageComponent: React.FC = () => {
           </Button>
         </Flex>
       </div>
+      </ScrollAnimationComponent>
     </div>
   );
 };
