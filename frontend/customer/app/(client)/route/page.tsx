@@ -553,7 +553,7 @@ const RoutePage = () => {
 
           <Table
             rowKey={(record) => record.id}
-            className={styles['table-striped-rows']}
+            className={responsive ? styles['table-striped-rows-responsive'] : styles['table-striped-rows']}
             columns={columns}
             pagination={tableParams.pagination}
             loading={loading}

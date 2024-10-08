@@ -1,3 +1,7 @@
-.table-striped-rows tr:nth-child(2n+1) td {
+.table-striped-rows-responsive tr:nth-child(2n+1) td {
+  background-color: #f4f8ff;
+}
+
+.table-striped-rows tr:nth-child(2n) td {
   background-color: #f4f8ff;
 }
