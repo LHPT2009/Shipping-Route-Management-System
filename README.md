@@ -45,15 +45,6 @@ This system will facilitate efficient management of shipping routes in the sea, 
 |                           | - Email verification                                        |
 |                           | - Logout                                                    |
 
-## USE CASE
-### Customer
-![usecase_customer](https://github.com/user-attachments/assets/a34cb138-704b-4ef1-9d0a-0113a326ff62)
-
-### Admin
-![usecase_admin](https://github.com/user-attachments/assets/7a1e2e6b-9464-4521-8e88-0b3f1dcc0a5d)
-
-## ARCHITECTURE
-![architecture](https://github.com/user-attachments/assets/984fd7bf-3e27-43f5-aed4-91e94b2a2f78)
 
 ## TECHNOLOGIES
 ### Frontend
@@ -69,6 +60,9 @@ This system will facilitate efficient management of shipping routes in the sea, 
 ### Database
 - PostgresSQL
 - DBeaver
+
+## ARCHITECTURE
+![architecture](https://github.com/user-attachments/assets/984fd7bf-3e27-43f5-aed4-91e94b2a2f78)
 
 ## LOCAL INSTALLATIONS
 
