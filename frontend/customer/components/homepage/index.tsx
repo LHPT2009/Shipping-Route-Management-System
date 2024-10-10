@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import styles from "./homepage.module.css";
 
 import { Button, Flex, Typography } from "antd";
@@ -29,6 +29,7 @@ import { URL } from "@/constant/url";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { GithubOutlined } from "@ant-design/icons";
 import ScrollAnimationComponent from "../animation/dynamic";
+import useAntNotification from "@/lib/hooks/notification";
 
 const { Title, Paragraph } = Typography;
 
@@ -47,6 +48,8 @@ const HompageComponent: React.FC = () => {
   const screenWidth = UseScreenWidth();
   const responsive = GetValueFromScreen(screenWidth, true, true, true, true);
 
+  const { openNotificationWithIcon } = useAntNotification();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -54,325 +57,196 @@ const HompageComponent: React.FC = () => {
   return (
     <div className={styles["wrapper"]}>
       {/* Title */}
-      <ScrollAnimationComponent direction="up" threshold={responsive?0:0}>
-      <div className={styles["title-container"]}>
-        <h5 className={styles["for-top-title-header"]}>
-          For shipping route management services
-        </h5>
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 0 : 0}>
+        <div className={styles["title-container"]}>
+          <h5 className={styles["for-top-title-header"]}>
+            For shipping route management services
+          </h5>
 
-        <Title
-          style={{
-            fontSize: responsive ? "2.2rem" : "4.5rem",
-            marginTop: "2rem",
-            fontWeight: 700,
-            color: COLOR.TEXT,
-          }}
-        >
-          Be the best route management business in your area
-        </Title>
+          <Title
+            style={{
+              fontSize: responsive ? "2.2rem" : "4.5rem",
+              marginTop: "2rem",
+              fontWeight: 700,
+              color: COLOR.TEXT,
+            }}
+          >
+            Be the best route management business in your area
+          </Title>
 
-        <Paragraph
-          style={{
-            fontSize: responsive ? "1rem" : "1.3rem",
-            marginTop: "2.2rem",
-          }}
-        >
-          Offering advanced shipping route planning and tracking for efficient
-          deliveries
-        </Paragraph>
+          <Paragraph
+            style={{
+              fontSize: responsive ? "1rem" : "1.3rem",
+              marginTop: "2.2rem",
+            }}
+          >
+            Offering advanced shipping route planning and tracking for efficient
+            deliveries
+          </Paragraph>
 
-        <Button
-          onClick={clickHandler}
-          type="primary"
-          style={responsive ? {
-            margin: "2rem",
-            fontSize: "1rem",
-            padding: "1.5rem 2.3rem",
-            border: "none",
-          } : {
-            margin: "2rem",
-            fontSize: "1.2rem",
-            padding: "1.8rem 2.7rem",
-            border: "none",
-          }
-          }
-        >
-          Get started
-        </Button>
-      </div>
+          <Button
+            onClick={clickHandler}
+            type="primary"
+            style={responsive ? {
+              margin: "2rem",
+              fontSize: "1rem",
+              padding: "1.5rem 2.3rem",
+              border: "none",
+            } : {
+              margin: "2rem",
+              fontSize: "1.2rem",
+              padding: "1.8rem 2.7rem",
+              border: "none",
+            }
+            }
+          >
+            Get started
+          </Button>
+        </div>
       </ScrollAnimationComponent>
 
       {/* Routing images */}
-      <ScrollAnimationComponent direction="up" threshold={responsive?0:0}>
-      <Flex
-        vertical={responsive}
-        gap={responsive ? "2.5rem" : "0"}
-        justify="space-between"
-        align="center"
-        style={responsive ? {
-          margin: "0 auto",
-          width: "100%",
-          padding: "2rem"
-        } : {
-          margin: "3.5rem auto 0 auto",
-          width: "66rem",
-        }}
-      >
-        <img
-          className={styles["img-routing"]}
-          src={Route_1.src}
-          alt="route-1"
-        />
-        <img
-          className={styles["img-routing"]}
-          src={Route_4.src}
-          alt="route-4"
-        />
-        <img
-          className={styles["img-routing"]}
-          src={Route_3.src}
-          alt="route-3"
-        />
-      </Flex>
-      </ScrollAnimationComponent>
-
-      <ScrollAnimationComponent direction="up" threshold={responsive ? 1300:550}>
-      <div className={styles["similar-website-container"]}>
-        <Title
-          style={{
-            fontSize: responsive ? "1.8rem" : "2rem",
-            marginTop: responsive ? "3rem" : "6rem",
-            fontWeight: 700,
-            color: COLOR.TEXT,
-          }}
-        >
-          {" "}
-          Similar websites
-        </Title>
-
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 0 : 0}>
         <Flex
-          justify="center"
+          vertical={responsive}
+          gap={responsive ? "2.5rem" : "0"}
+          justify="space-between"
           align="center"
-          style={{
-            marginTop: "3rem",
-            gap: "3rem",
-            flexWrap: responsive ? "wrap" : "nowrap",
+          style={responsive ? {
+            margin: "0 auto",
+            width: "100%",
+            padding: "2rem"
+          } : {
+            margin: "3.5rem auto 0 auto",
+            width: "66rem",
           }}
         >
           <img
-            className={styles["img-website"]}
-            src={Shipday.src}
-            alt="shipday"
+            className={styles["img-routing"]}
+            src={Route_1.src}
+            alt="route-1"
           />
           <img
-            className={styles["img-website"]}
-            src={Circuit.src}
-            alt="circuit"
+            className={styles["img-routing"]}
+            src={Route_4.src}
+            alt="route-4"
           />
           <img
-            className={styles["img-website"]}
-            src={Routific.src}
-            alt="routific"
-          />
-          <img
-            className={styles["img-website"]}
-            src={Clickup.src}
-            alt="clickup"
-          />
-          <img
-            className={styles["img-website"]}
-            src={RouteManager.src}
-            alt="route-manager"
+            className={styles["img-routing"]}
+            src={Route_3.src}
+            alt="route-3"
           />
         </Flex>
-      </div>
+      </ScrollAnimationComponent>
+
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 1300 : 550}>
+        <div className={styles["similar-website-container"]}>
+          <Title
+            style={{
+              fontSize: responsive ? "1.8rem" : "2rem",
+              marginTop: responsive ? "3rem" : "6rem",
+              fontWeight: 700,
+              color: COLOR.TEXT,
+            }}
+          >
+            {" "}
+            Similar websites
+          </Title>
+
+          <Flex
+            justify="center"
+            align="center"
+            style={{
+              marginTop: "3rem",
+              gap: "3rem",
+              flexWrap: responsive ? "wrap" : "nowrap",
+            }}
+          >
+            <img
+              className={styles["img-website"]}
+              src={Shipday.src}
+              alt="shipday"
+              onClick={() => window.open("https://shipday.com/")}
+            />
+            <img
+              className={styles["img-website"]}
+              src={Circuit.src}
+              alt="circuit"
+              onClick={() => window.open("https://getcircuit.com/")}
+            />
+            <img
+              className={styles["img-website"]}
+              src={Routific.src}
+              alt="routific"
+              onClick={() => window.open("https://routific.com/v3")}
+            />
+            <img
+              className={styles["img-website"]}
+              src={Clickup.src}
+              alt="clickup"
+              onClick={() => window.open("https://clickup.com/")}
+            />
+            <img
+              className={styles["img-website"]}
+              src={RouteManager.src}
+              alt="route-manager"
+              onClick={() => window.open("https://route-manager.com/")}
+            />
+          </Flex>
+        </div>
       </ScrollAnimationComponent>
 
       {/* Description customers*/}
-      <ScrollAnimationComponent direction="up" threshold={responsive ? 1600:700}>
-      <div
-        className={styles["description-container"]}
-        style={{
-          marginTop: "5rem",
-          padding: "1rem"
-        }}
-      >
-        {responsive ?
-          <div style={{
-            border: responsive ? "2px solid #dee2e6" : "none",
-            borderRadius: "1.5rem",
-            paddingBottom: "1rem"
-          }}>
-            <img
-              className={styles["img-container"]}
-              src={Map.src}
-              alt="route-description"
-            />
-            <div className={styles["content-container"]}>
-              <div className={styles["for-customer-container"]}>
-                <h5 className={styles["for-customer-header"]}>For customers</h5>
-              </div>
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 1600 : 700}>
+        <div
+          className={styles["description-container"]}
+          style={{
+            marginTop: "5rem",
+            padding: "1rem"
+          }}
+        >
+          {responsive ?
+            <div style={{
+              border: responsive ? "2px solid #dee2e6" : "none",
+              borderRadius: "1.5rem",
+              paddingBottom: "1rem"
+            }}>
+              <img
+                className={styles["img-container"]}
+                src={Map.src}
+                alt="route-description"
+              />
+              <div className={styles["content-container"]}>
+                <div className={styles["for-customer-container"]}>
+                  <h5 className={styles["for-customer-header"]}>For customers</h5>
+                </div>
 
-              <Title
-                style={{
-                  fontSize: "1.8rem",
-                  fontWeight: 700,
-                  color: COLOR.TEXT,
-                  textAlign: "left",
-                  marginTop: "2rem",
-                }}
-              >
-                {" "}
-                Simplified shipping route discovery through our website
-              </Title>
-
-              <Paragraph
-                style={{
-                  fontSize: "1rem",
-                  marginTop: "2rem",
-                  textAlign: "left",
-                }}
-              >
-                Instead of researching locations and estimating delivery times on
-                mutiple platforms, you can now get everything through the website
-                with complete information.
-              </Paragraph>
-
-              <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem", cursor: "pointer" }} onClick={clickHandler}>
                 <Title
-                  level={5}
                   style={{
-                    fontSize: "1.1rem",
-                    marginBottom: "0.3rem",
+                    fontSize: "1.8rem",
+                    fontWeight: 700,
+                    color: COLOR.TEXT,
                     textAlign: "left",
-                    color: COLOR.PRIMARY,
+                    marginTop: "2rem",
                   }}
                 >
-                  Start viewing routes
+                  {" "}
+                  Simplified shipping route discovery through our website
                 </Title>
-                <img
-                  style={{ width: "0.9rem" }}
-                  src={RightArrow.src}
-                  alt="right-arrow"
-                />
-              </Flex>
 
-            </div>
-          </div> :
-          <div style={{ display: "flex", border: "2px solid #dee2e6", borderRadius: "1.7rem" }}>
-            <img
-              className={styles["img-container-customer"]}
-              src={Map.src}
-              alt="route-description"
-            />
-            <div className={styles["content-container-customer"]}>
-              <div className={styles["for-customer-container"]}>
-                <h5 className={styles["for-customer-header"]}>For customers</h5>
-              </div>
-
-              <Title
-                style={{
-                  fontSize: "2.6rem",
-                  fontWeight: 700,
-                  color: COLOR.TEXT,
-                  textAlign: "left",
-                  marginTop: "2rem",
-                }}
-              >
-                {" "}
-                Simplified shipping route discovery through our website
-              </Title>
-
-              <Paragraph
-                style={{
-                  fontSize: "1.2rem",
-                  marginTop: "2rem",
-                  textAlign: "left",
-                }}
-              >
-                Instead of researching locations and estimating delivery times on
-                mutiple platforms, you can now get everything through the website
-                with complete information.
-              </Paragraph>
-
-
-              <Flex align="center" style={{ gap: "1rem", marginTop: "4rem", cursor: "pointer" }} onClick={clickHandler}>
-                <Title
-                  level={5}
+                <Paragraph
                   style={{
-                    fontSize: "1.2rem",
-                    marginBottom: "0.3rem",
+                    fontSize: "1rem",
+                    marginTop: "2rem",
                     textAlign: "left",
-                    color: COLOR.PRIMARY,
                   }}
                 >
-                  Start viewing routes
-                </Title>
-                <img
-                  style={{ width: "1rem" }}
-                  src={RightArrow.src}
-                  alt="right-arrow"
-                />
-              </Flex>
-            </div>
-          </div>
-        }
+                  Instead of researching locations and estimating delivery times on
+                  mutiple platforms, you can now get everything through the website
+                  with complete information.
+                </Paragraph>
 
-      </div>
-      </ScrollAnimationComponent>
-      
-      {/* Description managers*/}
-      <ScrollAnimationComponent direction="up" threshold={responsive ? 2400:1400}>
-      <div
-        className={styles["description-container"]}
-        style={{
-          marginTop: responsive ? "2rem" : "6rem",
-          padding: "1rem",
-        }}
-      >
-        {responsive ?
-          <div style={{
-            border: responsive ? "2px solid #dee2e6" : "none",
-            borderRadius: "1.5rem",
-            paddingBottom: "1rem"
-          }}>
-            <img
-              className={styles["img-container"]}
-              src={RouteDescription.src}
-              alt="route-description"
-            />
-            <div className={styles["content-container"]}>
-              <div className={styles["for-customer-container"]}>
-                <h5 className={styles["for-customer-header"]}>For managers</h5>
-              </div>
-
-              <Title
-                style={{
-                  fontSize: "1.8rem",
-                  fontWeight: 700,
-                  color: COLOR.TEXT,
-                  textAlign: "left",
-                  marginTop: "2rem",
-                }}
-              >
-                {" "}
-                Streamlined route planning with user-friendly creation tools
-              </Title>
-
-              <Paragraph
-                style={{
-                  fontSize: "1rem",
-                  marginTop: "2rem",
-                  textAlign: "left",
-                }}
-              >
-                Effortlessly design and manage routes with our intuitive and
-                accessible tools, crafted to simplify your planning process and
-                improve operational efficiency.
-              </Paragraph>
-
-              <Link href={"http://localhost:4000"}>
-                <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem" }}>
+                <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem", cursor: "pointer" }} onClick={clickHandler}>
                   <Title
                     level={5}
                     style={{
@@ -382,7 +256,7 @@ const HompageComponent: React.FC = () => {
                       color: COLOR.PRIMARY,
                     }}
                   >
-                    Start creating routes
+                    Start viewing routes
                   </Title>
                   <img
                     style={{ width: "0.9rem" }}
@@ -390,42 +264,47 @@ const HompageComponent: React.FC = () => {
                     alt="right-arrow"
                   />
                 </Flex>
-              </Link>
-            </div>
-          </div> :
-          <div style={{ display: "flex", border: "2px solid #dee2e6", borderRadius: "1.7rem" }}>
-            <div className={styles["content-container"]}>
-              <div className={styles["for-customer-container"]}>
-                <h5 className={styles["for-customer-header"]}>For managers</h5>
+
               </div>
+            </div> :
+            <div style={{ display: "flex", border: "2px solid #dee2e6", borderRadius: "1.7rem" }}>
+              <img
+                className={styles["img-container-customer"]}
+                src={Map.src}
+                alt="route-description"
+              />
+              <div className={styles["content-container-customer"]}>
+                <div className={styles["for-customer-container"]}>
+                  <h5 className={styles["for-customer-header"]}>For customers</h5>
+                </div>
 
-              <Title
-                style={{
-                  fontSize: "2.6rem",
-                  fontWeight: 700,
-                  color: COLOR.TEXT,
-                  textAlign: "left",
-                  marginTop: "2rem",
-                }}
-              >
-                {" "}
-                Streamlined route planning with user-friendly creation tools
-              </Title>
+                <Title
+                  style={{
+                    fontSize: "2.6rem",
+                    fontWeight: 700,
+                    color: COLOR.TEXT,
+                    textAlign: "left",
+                    marginTop: "2rem",
+                  }}
+                >
+                  {" "}
+                  Simplified shipping route discovery through our website
+                </Title>
 
-              <Paragraph
-                style={{
-                  fontSize: "1.2rem",
-                  marginTop: "2rem",
-                  textAlign: "left",
-                }}
-              >
-                Effortlessly design and manage routes with our intuitive and
-                accessible tools, crafted to simplify your planning process and
-                improve operational efficiency.
-              </Paragraph>
+                <Paragraph
+                  style={{
+                    fontSize: "1.2rem",
+                    marginTop: "2rem",
+                    textAlign: "left",
+                  }}
+                >
+                  Instead of researching locations and estimating delivery times on
+                  mutiple platforms, you can now get everything through the website
+                  with complete information.
+                </Paragraph>
 
-              <Link href={"http://localhost:4000"}>
-                <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
+
+                <Flex align="center" style={{ gap: "1rem", marginTop: "4rem", cursor: "pointer" }} onClick={clickHandler}>
                   <Title
                     level={5}
                     style={{
@@ -435,7 +314,7 @@ const HompageComponent: React.FC = () => {
                       color: COLOR.PRIMARY,
                     }}
                   >
-                    Start creating routes
+                    Start viewing routes
                   </Title>
                   <img
                     style={{ width: "1rem" }}
@@ -443,31 +322,259 @@ const HompageComponent: React.FC = () => {
                     alt="right-arrow"
                   />
                 </Flex>
-              </Link>
+              </div>
             </div>
-            <img
-              className={styles["img-container"]}
-              src={RouteDescription.src}
-              alt="route-description"
-            />
-          </div>
-        }
+          }
 
-      </div>
+        </div>
       </ScrollAnimationComponent>
-      
+
+      {/* Description managers*/}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 2400 : 1400}>
+        <div
+          className={styles["description-container"]}
+          style={{
+            marginTop: responsive ? "2rem" : "6rem",
+            padding: "1rem",
+          }}
+        >
+          {responsive ?
+            <div style={{
+              border: responsive ? "2px solid #dee2e6" : "none",
+              borderRadius: "1.5rem",
+              paddingBottom: "1rem"
+            }}>
+              <img
+                className={styles["img-container"]}
+                src={RouteDescription.src}
+                alt="route-description"
+              />
+              <div className={styles["content-container"]}>
+                <div className={styles["for-customer-container"]}>
+                  <h5 className={styles["for-customer-header"]}>For managers</h5>
+                </div>
+
+                <Title
+                  style={{
+                    fontSize: "1.8rem",
+                    fontWeight: 700,
+                    color: COLOR.TEXT,
+                    textAlign: "left",
+                    marginTop: "2rem",
+                  }}
+                >
+                  {" "}
+                  Streamlined route planning with user-friendly creation tools
+                </Title>
+
+                <Paragraph
+                  style={{
+                    fontSize: "1rem",
+                    marginTop: "2rem",
+                    textAlign: "left",
+                  }}
+                >
+                  Effortlessly design and manage routes with our intuitive and
+                  accessible tools, crafted to simplify your planning process and
+                  improve operational efficiency.
+                </Paragraph>
+
+                <Link href={"http://localhost:4000"}>
+                  <Flex align="center" style={{ gap: "1rem", marginTop: "2.5rem" }}>
+                    <Title
+                      level={5}
+                      style={{
+                        fontSize: "1.1rem",
+                        marginBottom: "0.3rem",
+                        textAlign: "left",
+                        color: COLOR.PRIMARY,
+                      }}
+                    >
+                      Start creating routes
+                    </Title>
+                    <img
+                      style={{ width: "0.9rem" }}
+                      src={RightArrow.src}
+                      alt="right-arrow"
+                    />
+                  </Flex>
+                </Link>
+              </div>
+            </div> :
+            <div style={{ display: "flex", border: "2px solid #dee2e6", borderRadius: "1.7rem" }}>
+              <div className={styles["content-container"]}>
+                <div className={styles["for-customer-container"]}>
+                  <h5 className={styles["for-customer-header"]}>For managers</h5>
+                </div>
+
+                <Title
+                  style={{
+                    fontSize: "2.6rem",
+                    fontWeight: 700,
+                    color: COLOR.TEXT,
+                    textAlign: "left",
+                    marginTop: "2rem",
+                  }}
+                >
+                  {" "}
+                  Streamlined route planning with user-friendly creation tools
+                </Title>
+
+                <Paragraph
+                  style={{
+                    fontSize: "1.2rem",
+                    marginTop: "2rem",
+                    textAlign: "left",
+                  }}
+                >
+                  Effortlessly design and manage routes with our intuitive and
+                  accessible tools, crafted to simplify your planning process and
+                  improve operational efficiency.
+                </Paragraph>
+
+                <Link href={"http://localhost:4000"}>
+                  <Flex align="center" style={{ gap: "1rem", marginTop: "4rem" }}>
+                    <Title
+                      level={5}
+                      style={{
+                        fontSize: "1.2rem",
+                        marginBottom: "0.3rem",
+                        textAlign: "left",
+                        color: COLOR.PRIMARY,
+                      }}
+                    >
+                      Start creating routes
+                    </Title>
+                    <img
+                      style={{ width: "1rem" }}
+                      src={RightArrow.src}
+                      alt="right-arrow"
+                    />
+                  </Flex>
+                </Link>
+              </div>
+              <img
+                className={styles["img-container"]}
+                src={RouteDescription.src}
+                alt="route-description"
+              />
+            </div>
+          }
+
+        </div>
+      </ScrollAnimationComponent>
+
       {/* Support */}
-      <ScrollAnimationComponent direction="up" threshold={responsive ? 3300:2200}>
-      <div className={styles["support-container"]}>
-        <div className={styles["support-content"]}>
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 3300 : 2200}>
+        <div className={styles["support-container"]}>
+          <div className={styles["support-content"]}>
+            <Title
+              style={{
+                fontSize: responsive ? "1.6rem" : "3rem",
+                fontWeight: 700,
+                color: COLOR.TEXT,
+              }}
+            >
+              Always-Available Support
+            </Title>
+
+            <Paragraph
+              style={{
+                fontSize: responsive ? "1.1rem" : "1.2rem",
+                marginTop: "2rem",
+                marginBottom: "0",
+              }}
+            >
+              {" "}
+              24/7 Support Across All Channels: Reliable Assistance Anytime, Anywhere.
+            </Paragraph>
+
+            <Flex
+              vertical={responsive}
+              justify="center"
+              align="center"
+              style={{ margin: responsive ? "3.5rem auto 0 auto" : "4.5rem auto 0 auto" }}
+            >
+              <div className={styles["team-card"]} onClick={() => {
+                navigator.clipboard.writeText('0602249017').then(() => {
+                  openNotificationWithIcon('success', "Success", "Phone number copied to clipboard");
+                })
+              }}>
+                <img
+                  style={{ width: "11%" }}
+                  className={styles["icon-support"]}
+                  src={PhoneIcon.src}
+                  alt="tung"
+                />
+                <Title
+                  level={5}
+                  style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
+                >
+                  Phone support
+                </Title>
+                <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>0602249017</Paragraph>
+              </div>
+
+              <div className={styles["team-card"]} onClick={() => {
+                navigator.clipboard.writeText('support.srouting@gmail.com').then(() => {
+                  openNotificationWithIcon('success', "Success", "Email copied to clipboard");
+                })
+              }}>
+                <img
+                  style={{ width: "12%" }}
+                  className={styles["icon-support"]}
+                  src={EmailIcon.src}
+                  alt="tung"
+                />
+                <Title
+                  level={5}
+                  style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
+                >
+                  Email support
+                </Title>
+                <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>
+                  support.srouting@gmail.com
+                </Paragraph>
+              </div>
+
+              <div className={styles["team-card"]} onClick={() => {
+                navigator.clipboard.writeText('1234 Main Street, Suite 567').then(() => {
+                  openNotificationWithIcon('success', "Success", "Address copied to clipboard");
+                })
+              }}>
+                <img
+                  style={{ width: "9%" }}
+                  className={styles["icon-support"]}
+                  src={BuildingIcon.src}
+                  alt="tung"
+                />
+                <Title
+                  level={5}
+                  style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
+                >
+                  Meet at the office
+                </Title>
+                <Paragraph style={{ margin: 0 }}>
+                  1234 Main Street, Suite 567
+                </Paragraph>
+              </div>
+            </Flex>
+          </div>
+        </div>
+      </ScrollAnimationComponent>
+
+      {/* Our team */}
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 4100 : 2700}>
+        <div className={styles["team-container"]}>
           <Title
             style={{
-              fontSize: responsive ? "1.6rem" : "3rem",
+              fontSize: responsive ? "2rem" : "3rem",
+              marginTop: responsive ? "4rem" : "6rem",
               fontWeight: 700,
               color: COLOR.TEXT,
             }}
           >
-            Always-Available Support
+            Our Amazing Team
           </Title>
 
           <Paragraph
@@ -478,203 +585,116 @@ const HompageComponent: React.FC = () => {
             }}
           >
             {" "}
-            24/7 Support Across All Channels: Reliable Assistance Anytime, Anywhere.
+            Welcome to the team! We are a group of passionate individuals working
+            together to achieve our goals.
           </Paragraph>
 
+          <Paragraph
+            style={{
+              fontSize: responsive ? "1.1rem" : "1.2rem",
+            }}
+          >
+            Get to know the faces behind our project.
+          </Paragraph>
+
+          {/* Team members */}
           <Flex
             vertical={responsive}
             justify="center"
-            align="center"
-            style={{ margin: responsive ? "3.5rem auto 0 auto" : "4.5rem auto 0 auto" }}
+            align={responsive ? "center" : "flex-start"}
+            style={{ marginTop: responsive ? "3.5rem" : "4.5rem", gap: responsive ? "4rem" : "8rem" }}
           >
-            <div className={styles["team-card"]}>
-              <img
-                style={{ width: "11%" }}
-                className={styles["icon-support"]}
-                src={PhoneIcon.src}
-                alt="tung"
-              />
-              <Title
-                level={5}
-                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
-              >
-                Phone support
+            <div className={styles["team-card"]} onClick={() => window.open("https://github.com/LHPT2009")}>
+              <img className={styles["avatar"]} src={Tung.src} alt="tung" />
+              <Title level={5} style={{ marginTop: "2rem", color: COLOR.TEXT }}>
+                Le Huynh Phuong Tung
               </Title>
-              <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>0602249017</Paragraph>
+              <Paragraph
+                style={{ marginTop: "0", fontSize: "1rem", color: "grey" }}
+              >
+                Lead Developer
+              </Paragraph>
+              <Paragraph>
+                Tung is a software engineer with a passion for creating innovative
+                and efficient solutions to complex problem.
+              </Paragraph>
+              <Flex justify="center" align="center" gap="0.5rem" style={{ marginTop: "1.5rem" }}>
+                <GithubOutlined style={{ fontSize: "1.8rem" }} />
+                <Paragraph style={{ color: COLOR.PRIMARY, padding: 0, margin: 0 }}>
+                  LHPT2009
+                </Paragraph>
+              </Flex>
             </div>
 
-            <div className={styles["team-card"]}>
-              <img
-                style={{ width: "12%" }}
-                className={styles["icon-support"]}
-                src={EmailIcon.src}
-                alt="tung"
-              />
-              <Title
-                level={5}
-                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
-              >
-                Email support
+            <div className={styles["team-card"]} onClick={() => window.open("https://github.com/giahuy200202")}>
+              <img className={styles["avatar"]} src={Huy.src} alt="tung" />
+              <Title level={5} style={{ marginTop: "2rem", color: COLOR.TEXT }}>
+                Tran Dam Gia Huy
               </Title>
-              <Paragraph style={{ marginBottom: responsive ? "3rem" : "0" }}>
-                support.srouting@gmail.com
-              </Paragraph>
-            </div>
-
-            <div className={styles["team-card"]}>
-              <img
-                style={{ width: "9%" }}
-                className={styles["icon-support"]}
-                src={BuildingIcon.src}
-                alt="tung"
-              />
-              <Title
-                level={5}
-                style={{ color: COLOR.TEXT, marginTop: responsive ? "1rem" : "1.5rem" }}
+              <Paragraph
+                style={{ marginTop: "0", fontSize: "1rem", color: "grey" }}
               >
-                Meet at the office
-              </Title>
-              <Paragraph style={{ margin: 0 }}>
-                1234 Main Street, Suite 567
+                Fullstack Website Developer
               </Paragraph>
+              <Paragraph>
+                Huy is a full-stack website developer skilled in building both
+                intuitive front-end interfaces and scalable back-end solutions.
+              </Paragraph>
+              <Flex justify="center" align="center" gap="0.5rem" style={{ marginTop: "1.5rem" }}>
+                <GithubOutlined style={{ fontSize: "1.8rem" }} />
+                <Paragraph style={{ color: COLOR.PRIMARY, padding: 0, margin: 0 }}>
+                  giahuy200202
+                </Paragraph>
+              </Flex>
             </div>
           </Flex>
         </div>
-      </div>
-      </ScrollAnimationComponent>
-
-      {/* Our team */}
-      <ScrollAnimationComponent direction="up" threshold={responsive?4100:2700}>
-      <div className={styles["team-container"]}>
-        <Title
-          style={{
-            fontSize: responsive ? "2rem" : "3rem",
-            marginTop: responsive ? "4rem" : "6rem",
-            fontWeight: 700,
-            color: COLOR.TEXT,
-          }}
-        >
-          Our Amazing Team
-        </Title>
-
-        <Paragraph
-          style={{
-            fontSize: responsive ? "1.1rem" : "1.2rem",
-            marginTop: "2rem",
-            marginBottom: "0",
-          }}
-        >
-          {" "}
-          Welcome to the team! We are a group of passionate individuals working
-          together to achieve our goals.
-        </Paragraph>
-
-        <Paragraph
-          style={{
-            fontSize: responsive ? "1.1rem" : "1.2rem",
-          }}
-        >
-          Get to know the faces behind our project.
-        </Paragraph>
-
-        {/* Team members */}
-        <Flex
-          vertical={responsive}
-          justify="center"
-          align={responsive ? "center" : "flex-start"}
-          style={{ marginTop: responsive ? "3.5rem" : "4.5rem", gap: responsive ? "4rem" : "8rem" }}
-        >
-          <div className={styles["team-card"]}>
-            <img className={styles["avatar"]} src={Tung.src} alt="tung" />
-            <Title level={5} style={{ marginTop: "2rem", color: COLOR.TEXT }}>
-              Le Huynh Phuong Tung
-            </Title>
-            <Paragraph
-              style={{ marginTop: "0", fontSize: "1rem", color: "grey" }}
-            >
-              Lead Developer
-            </Paragraph>
-            <Paragraph>
-              Tung is a software engineer with a passion for creating innovative
-              and efficient solutions to complex problem.
-            </Paragraph>
-            <Flex justify="center" align="center" gap="0.5rem" style={{marginTop: "1.5rem"}}>
-              <GithubOutlined style={{ fontSize: "1.8rem" }} />
-              <Link href="https://github.com/LHPT2009" style={{color: COLOR.PRIMARY}}>
-                LHPT2009
-              </Link>
-            </Flex>
-          </div>
-
-          <div className={styles["team-card"]}>
-            <img className={styles["avatar"]} src={Huy.src} alt="tung" />
-            <Title level={5} style={{ marginTop: "2rem", color: COLOR.TEXT }}>
-              Tran Dam Gia Huy
-            </Title>
-            <Paragraph
-              style={{ marginTop: "0", fontSize: "1rem", color: "grey" }}
-            >
-              Fullstack Website Developer
-            </Paragraph>
-            <Paragraph>
-              Huy is a full-stack website developer skilled in building both
-              intuitive front-end interfaces and scalable back-end solutions.
-            </Paragraph>
-            <Flex justify="center" align="center" gap="0.5rem" style={{marginTop: "1.5rem"}}>
-              <GithubOutlined style={{ fontSize: "1.8rem" }} />
-              <Link href="https://github.com/giahuy200202" style={{color: COLOR.PRIMARY}}>
-                giahuy200202
-              </Link>
-            </Flex>
-          </div>
-        </Flex>
-      </div>
       </ScrollAnimationComponent>
 
       {/* Get started */}
-      <ScrollAnimationComponent direction="up" threshold={responsive ? 5900:3600}>
-      <div className={styles["get-started-container"]}>
-        <Flex
-          vertical={responsive}
-          justify="space-between"
-          align="center"
-          style={{ gap: "2rem", width: responsive ? "90%" : "85%" }}
-        >
-          <div>
-            <h1 className={styles["get-started-header"]}>
-              Ready to get started?
-            </h1>
-            <Paragraph
+      <ScrollAnimationComponent direction="up" threshold={responsive ? 5900 : 3600}>
+        <div className={styles["get-started-container"]}>
+          <Flex
+            vertical={responsive}
+            justify="space-between"
+            align="center"
+            style={{ gap: "2rem", width: responsive ? "90%" : "85%" }}
+          >
+            <div>
+              <h1 className={styles["get-started-header"]}>
+                Ready to get started?
+              </h1>
+              <Paragraph
+                style={{
+                  fontSize: responsive ? "1.1rem" : "1.3rem",
+                  marginTop: "1.5rem",
+                  textAlign: "left",
+                  color: "white",
+                }}
+              >
+                Set up your account, then oversee and monitor your routes
+              </Paragraph>
+            </div>
+
+            <Button
+              onClick={clickHandler}
+              type="primary"
               style={{
-                fontSize: responsive ? "1.1rem" : "1.3rem",
-                marginTop: "1.5rem",
-                textAlign: "left",
-                color: "white",
+                fontSize: responsive ? "1.1rem" : "1.2rem",
+                padding: responsive ? "1.55rem 2.2rem" : "2rem 2.7rem",
+                width: responsive ? "100%" : "auto",
+                marginBottom: responsive ? "1rem" : "0",
+                border: "none",
+                color: COLOR.TEXT,
+                fontWeight: 600,
+                background:
+                  "linear-gradient(90deg, hsla(191, 88%, 81%, 1) 0%, hsla(260, 72%, 82%, 1) 50%, hsla(247, 73%, 69%, 1) 100%)",
               }}
             >
-              Set up your account, then oversee and monitor your routes
-            </Paragraph>
-          </div>
-
-          <Button
-            onClick={clickHandler}
-            type="primary"
-            style={{
-              fontSize: responsive ? "1.1rem" : "1.2rem",
-              padding: responsive ? "1.55rem 2.2rem" : "2rem 2.7rem",
-              width: responsive ? "100%" : "auto",
-              marginBottom: responsive ? "1rem" : "0",
-              border: "none",
-              color: COLOR.TEXT,
-              fontWeight: 600,
-              background:
-                "linear-gradient(90deg, hsla(191, 88%, 81%, 1) 0%, hsla(260, 72%, 82%, 1) 50%, hsla(247, 73%, 69%, 1) 100%)",
-            }}
-          >
-            Get started
-          </Button>
-        </Flex>
-      </div>
+              Get started
+            </Button>
+          </Flex>
+        </div>
       </ScrollAnimationComponent>
     </div>
   );

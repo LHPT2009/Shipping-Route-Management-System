@@ -65,7 +65,6 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   const [getRouteById, { data, loading }] = useLazyQuery(GET_ROUTE_BY_ID, {
     onCompleted: async (data) => {
       setRoute(data.getRoute.data);
-      console.log("route", route);
     },
     onError: async (error: ApolloError) => {
       await handleError(error);
