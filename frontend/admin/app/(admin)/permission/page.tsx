@@ -32,6 +32,11 @@ const PermissionPage = () => {
 
   const columns: TableColumnsType<DataType> = [
     {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
