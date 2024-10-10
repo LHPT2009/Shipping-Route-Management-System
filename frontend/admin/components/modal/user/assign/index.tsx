@@ -73,8 +73,8 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
   useEffect(() => {
     const role = findRoleByName(listItem, roleName);
     setItemId(role?.id)
-  },[open])
-  
+  }, [open])
+
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
@@ -113,10 +113,12 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
     }
   });
 
-  const options = listItem.map((value) => ({
-    value: value.id,
-    label: value.name
-  }));
+  const options = listItem
+    .filter((value) => value.name !== "ADMIN")
+    .map((value) => ({
+      value: value.id,
+      label: value.name
+    }));
 
   return (
     <Modal

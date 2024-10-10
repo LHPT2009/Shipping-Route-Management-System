@@ -131,7 +131,7 @@ const HeaderComponent = () => {
                   }}
                 >
                   <Flex justify="end" align="end" gap="1.5rem">
-                    <img src={NotiIcon.src} alt="logout" style={{ width: "1.35rem", cursor: "pointer" }} />
+                    {/* <img src={NotiIcon.src} alt="logout" style={{ width: "1.35rem", cursor: "pointer" }} /> */}
                     <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />
                   </Flex>
                 </div>
@@ -154,7 +154,7 @@ const HeaderComponent = () => {
                           color: COLOR.TEXT
                         }}
                       >
-                        Lê Huỳnh Phương Tùng
+                        Welcome to Team 6
                       </Paragraph>
                       <Paragraph
                         style={{
@@ -167,9 +167,7 @@ const HeaderComponent = () => {
                       </Paragraph>
                     </Flex>
 
-                    <Link href="/profile">
-                      <img style={{ width: "3rem", borderRadius: "50%" }} src={Male.src} alt="tung" />
-                    </Link>
+                    <img style={{ width: "3rem", borderRadius: "50%" }} src={Male.src} alt="tung" />
 
                   </Flex>
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ContentComponent from "@/components/content";
-import { Col, Flex, Row, theme, Button, Table, Breadcrumb } from "antd";
+import { Col, Flex, Row, theme, Button, Table, Breadcrumb, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import CreateRoleModal from "@/components/modal/role/create";
@@ -68,6 +68,11 @@ const RolePage = () => {
 
   const columns: TableColumnsType<DataType> = [
     {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
@@ -84,14 +89,28 @@ const RolePage = () => {
           >
             Detail
           </Button>
-
-          <Button
-            type="primary"
-            onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
-            style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem" }}
-          >
-            Assign permission
-          </Button>
+          {
+            record.name !== 'ADMIN' ? (<>
+              <Button
+                type="primary"
+                onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
+                style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem" }}
+              >
+                Assign permission
+              </Button>
+            </>) : (<>
+              <Tooltip title="Assign to admin disabled">
+                <Button
+                  type="primary"
+                  onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
+                  style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem" }}
+                  disabled
+                >
+                  Assign permission
+                </Button>
+              </Tooltip>
+            </>)
+          }
         </Flex>
       ),
     },
