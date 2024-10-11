@@ -21,7 +21,7 @@ import { LOCATION_STATISTIC, PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATIST
 import { useHandleError } from "@/lib/hooks/error";
 import styles from "./page.module.css";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, EnvironmentOutlined, TeamOutlined, UnlockOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { get } from "http";
@@ -53,6 +53,7 @@ function Home() {
     textColor: string;
     tagColor: string;
     href: string;
+    icon: any;
   }[] | null>(null);
 
   const { handleError } = useHandleError();
@@ -72,7 +73,7 @@ function Home() {
 
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Routes", count: data.routeStatistics.data.totalRoutes, textColor: "#d48806", tagColor: "gold", href: "/route" },
+        { name: "Routes", count: data.routeStatistics.data.totalRoutes, textColor: "#d48806", tagColor: "gold", href: "/route", icon: <EnvironmentOutlined style={{ color: "#d48806", fontSize: "1.2rem" }} /> },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
@@ -84,7 +85,7 @@ function Home() {
       console.log("get data user", data);
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Users", count: data.userStatistics.data, textColor: "#08979c", tagColor: "cyan", href: "/user" },
+        { name: "Users", count: data.userStatistics.data, textColor: "#08979c", tagColor: "cyan", href: "/user", icon: <UserOutlined style={{ color: "#08979c", fontSize: "1.2rem" }} /> },
       ])
     },
     onError: async (error: ApolloError) => { console.log(error); await handleError(error); }
@@ -95,7 +96,7 @@ function Home() {
     onCompleted: async (data) => {
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Roles", count: data.roleStatistics.data, textColor: "#0958d9", tagColor: "blue", href: "/role" },
+        { name: "Roles", count: data.roleStatistics.data, textColor: "#0958d9", tagColor: "blue", href: "/role", icon: <TeamOutlined style={{ color: "#0958d9", fontSize: "1.1rem" }} /> },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
@@ -106,7 +107,7 @@ function Home() {
     onCompleted: async (data) => {
       setDataStatistics([
         ...(dataStatistics || []),
-        { name: "Permissions", count: data.permissionStatistics.data, textColor: "#531dab", tagColor: "purple", href: "/permission" },
+        { name: "Permissions", count: data.permissionStatistics.data, textColor: "#531dab", tagColor: "purple", href: "/permission", icon: <UnlockOutlined style={{ color: "#531dab", fontSize: "1.2rem" }} /> },
       ])
     },
     onError: async (error: ApolloError) => { await handleError(error); }
@@ -149,7 +150,10 @@ function Home() {
             {dataStatistics?.map((data, index) => (
               <Tag color={data.tagColor} className={styles['tag-container']} style={{ width: responsive ? "80%" : "20%" }} key={index}>
                 <Link href={data.href}>
-                  <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
+                  <Flex gap="0.5rem" align="center">
+                    {data.icon}
+                    <Title level={4} style={{ color: data.textColor, fontWeight: 500, margin: 0, fontSize: "1.1rem" }}>{data.name}</Title>
+                  </Flex>
                   <Title level={4} style={{ color: data.textColor, fontWeight: 700, marginTop: "0.5rem", fontSize: "1.8rem" }}>{data.count}</Title>
                 </Link>
               </Tag>

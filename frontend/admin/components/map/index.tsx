@@ -32,7 +32,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
     const res = await fetch(url);
     const data = await res.json();
     const coords = data.routes[0].geometry.coordinates;
-    console.log("coords", coords);
     setCoords(coords);
     setViewState({
       longitude: departure[0],

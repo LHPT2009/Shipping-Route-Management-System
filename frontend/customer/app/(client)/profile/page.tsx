@@ -14,17 +14,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useAntNotification from "@/lib/hooks/notification";
 import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useMutation } from "@apollo/client";
-import { CHANGE_PASSWORD } from "@/apollo/mutations/auth";
 import { NOTIFICATION } from "@/constant/notification";
 import Male from "../../../public/images/homepage/male.png";
 import { UPDATE_PROFILE } from "@/apollo/mutations/user";
 import { usernameRegex } from "@/utils/validation/username.regex";
-import { phoneRegex } from "@/utils/validation/phone.regex";
 import ChangePasswordModal from "@/components/modal/profile";
 import { CldUploadWidget } from "next-cloudinary";
 import { CloseOutlined, CloudUploadOutlined, HomeOutlined } from "@ant-design/icons";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import Link from "next/link";
+import { phoneProfileRegex } from "@/utils/validation/phone-profile.regex";
 
 const ProfilePage = () => {
   const user: UserState = useAppSelector((state) => state.user);
@@ -38,7 +37,7 @@ const ProfilePage = () => {
 
       phone: yup
         .string()
-        .matches(phoneRegex, { message: "Please enter a valid phone number" }),
+        .matches(phoneProfileRegex, { message: "Please enter a valid phone number" }),
 
       email: yup.string(),
 

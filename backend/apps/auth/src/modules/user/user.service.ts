@@ -196,7 +196,7 @@ export class UserService {
     }
     const user = await this.userRepository.findOneBy({ email: userDTO.email });
     if (!user) {
-      throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
+      throw new CustomValidationError('Not found', { email: ['User not found. Please try again.'] });
     }
     const isGoogleAccount = await bcrypt.compare(
       "google-account-password",
