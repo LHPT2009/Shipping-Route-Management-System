@@ -262,7 +262,7 @@ const UserPage = () => {
           </Button>
           <Button
             type="primary"
-            onClick={() => handleOpenModalAssign(String(record.id))}
+            onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
             style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
           >
             <UsergroupAddOutlined />
@@ -356,9 +356,9 @@ const UserPage = () => {
     setOpenModalDelete(false);
   };
 
-  const handleOpenModalAssign = (userId: string) => {
+  const handleOpenModalAssign = (userId: string, role: string) => {
     setUserId(userId);
-    setRoleName(roleName);
+    setRoleName(role);
     setOpenModalAssign(true);
   };
 

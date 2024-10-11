@@ -65,7 +65,7 @@ const LoginPage = () => {
 
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
-  const dispatch = useAppDispatch();  
+  const dispatch = useAppDispatch();
 
   const [loginMutation] = useMutation(LOGIN, {
     onCompleted: async (data) => {

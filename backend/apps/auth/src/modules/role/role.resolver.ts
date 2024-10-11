@@ -28,6 +28,16 @@ export class RoleResolver {
   }
 
   @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.READ_LIST_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Query(() => ResponseDto<RoleEntity[]>)
+  async getAllRoleExceptOrther(
+    @Args('arrayExceptRole', { type: () => [String] }) input: string[]
+  ): Promise<ResponseDto<RoleEntity[]>> {
+    return this.roleService.getAllRoleExceptOrther(input);
+  }
+
+  @Roles(ROLE.ADMIN)
   @Permissions(PERMISSION.READ_DETAIL_ROLE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<RoleEntity>, { nullable: true })

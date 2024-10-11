@@ -17,10 +17,10 @@ import { AuthGuard } from '../../../../../common/exception/guards/auth.guard';
 import { ResetPasswordInput } from './dto/reset_password.input';
 import { ResetPasswordVerifyEmailInput } from './dto/reset_password_verify_email.input';
 import { LoginGoogleInput } from './dto/login_google.input';
-import { CustomErrorInterceptor } from '../../../../../common/exception/interceptor/gql-errors.interceptor';
+// import { CustomErrorInterceptor } from '../../../../../common/exception/interceptor/gql-errors.interceptor';
 
 @Resolver()
-@UseInterceptors(CustomErrorInterceptor)
+// @UseInterceptors(CustomErrorInterceptor)
 export class AuthResolver {
   constructor(
     private userService: UserService,
