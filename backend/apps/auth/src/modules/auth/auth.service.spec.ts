@@ -52,7 +52,7 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should return login response with accessToken when credentials are valid', async () => {
       const loginDTO: LoginInput = { email: 'test@example.com', password: 'password' };
-      const user: UserEntity = {
+      const user = {
         id: '1',
         email: 'test@example.com',
         password: 'hashedpassword',
