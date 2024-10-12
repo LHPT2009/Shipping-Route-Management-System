@@ -5,8 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import * as yup from "yup";
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
-import { GET_ROLES } from "@/apollo/query/role";
+import { ApolloError, useMutation } from "@apollo/client";
 import { UPDATE_ROLE_FOR_USER } from "@/apollo/mutations/user";
 import { NOTIFICATION } from "@/constant/notification";
 import useAntNotification from "@/lib/hooks/notification";
@@ -14,6 +13,7 @@ import { useHandleError } from "@/lib/hooks/error";
 import Title from "antd/es/typography/Title";
 import { COLOR } from "@/constant/color";
 import Paragraph from "antd/es/typography/Paragraph";
+import getAllRoleExceptOrther from "@/lib/hooks/role/getAllRoleExceptOrther";
 
 interface CustomModalProps {
   userId: string;
@@ -35,7 +35,6 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
   onClose,
   refetch,
 }) => {
-  const [listItem, setListItem] = useState<Role[]>([]);
   const [itemId, setItemId] = useState<string | undefined>("");
 
   // Validate Yup
@@ -71,9 +70,9 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
   };
 
   useEffect(() => {
-    const role = findRoleByName(listItem, roleName);
+    const role = findRoleByName(roles, roleName);
     setItemId(role?.id)
-  }, [open])
+  }, [open, roleName])
 
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
@@ -104,18 +103,10 @@ const AssignUserModal: React.FC<CustomModalProps> = ({
     });
   };
 
-  useQuery(GET_ROLES, {
-    onCompleted: async (data) => {
-      const list = data?.getRoles?.data
-      if (list) {
-        setListItem(list);
-      }
-    }
-  });
+  const { roles } = getAllRoleExceptOrther(["ADMIN"]);
 
-  const options = listItem
-    .filter((value) => value.name !== "ADMIN")
-    .map((value) => ({
+  const options = roles
+    .map((value: Role) => ({
       value: value.id,
       label: value.name
     }));

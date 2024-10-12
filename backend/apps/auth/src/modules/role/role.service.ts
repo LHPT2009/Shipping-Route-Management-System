@@ -32,6 +32,17 @@ export class RoleService {
       return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
     }
   }
+
+  async getAllRoleExceptOrther(item: string[]): Promise<ResponseDto<RoleEntity[]>> {
+    try {
+      const roles = await this.roleRepository.find();
+      const filteredRoles = roles.filter(role => !item.includes(role.name));
+      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, filteredRoles, []);
+    } catch (error) {
+      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+    }
+  }
+
   async findOne(id: string): Promise<ResponseDto<RoleEntity>> {
     try {
       const item = await this.roleRepository.findOne({
@@ -141,13 +152,17 @@ export class RoleService {
     const role = await this.roleRepository.findOne({ where: { id: roleId }, relations: ['permissions'] });
 
     if (!role) {
-      return new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: `Role with ID ${roleId} not found` });
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: [`Role with ID ${roleId} not found`] });
+    }
+
+    if (role.name === 'ADMIN') {
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['Cannot modify permissions for ADMIN role'] });
     }
 
     const permissions = await this.permissionRepository.findBy({ id: In(permissionIds) });
 
     if (permissions.length !== permissionIds.length) {
-      return new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: `Some permissions were not found` });
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: [`Some permissions were not found`] });
     }
 
     role.permissions = permissions;

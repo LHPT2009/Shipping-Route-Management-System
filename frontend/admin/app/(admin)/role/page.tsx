@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import CreateRoleModal from "@/components/modal/role/create";
 import UpdateRoleModal from "@/components/modal/role/update";
 import AssginPermissionToRoleModal from "@/components/modal/role/assign";
-import useRoles from "@/lib/hooks/role/useRoles";
+import getAllRoleExceptOrther from "@/lib/hooks/role/getAllRoleExceptOrther";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import styles from "./role.module.css";
@@ -22,7 +22,7 @@ interface DataType {
 }
 
 const RolePage = () => {
-  const { roles, loading, refetch } = useRoles();
+  const { roles, loading, refetch } = getAllRoleExceptOrther([]);
 
   const dispatch = useAppDispatch();
 

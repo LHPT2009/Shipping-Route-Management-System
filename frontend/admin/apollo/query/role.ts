@@ -21,3 +21,14 @@ query ($id: ID!) {
   }
 }
 `;
+
+export const GET_ALL_ROLE_EXCEPT_ORTHER = gql`
+query ($arrayExceptRole: [String!]!) {
+    getAllRoleExceptOrther(arrayExceptRole: $arrayExceptRole) {
+        status
+        message
+        data
+        error
+    }
+  }
+`;
