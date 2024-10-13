@@ -53,7 +53,6 @@ const ForgotPasswordPage = () => {
   });
 
   const onFinish = async (values: any) => {
-    console.log("123")
     setIsCountdown(true);
     await resetPasswordVerifyMutation({
       variables: {

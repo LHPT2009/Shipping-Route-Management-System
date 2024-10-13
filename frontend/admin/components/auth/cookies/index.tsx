@@ -43,7 +43,6 @@ export default function CookiesComponent() {
   useEffect(() => {
     const fetchCurrentCookies = async () => {
       const { accessToken, expiresIn } = await fetchCookies();
-      console.log("accessToken", accessToken);
       if (accessToken && expiresIn) {
         if (new Date(expiresIn).getTime() <= Date.now()) {
           await getNewAccessToken({

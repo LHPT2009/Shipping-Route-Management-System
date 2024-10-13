@@ -18,6 +18,9 @@ export class FilterUsersDto {
   limit?: number;
 
   @Field({ nullable: true })
+  search?: string;
+
+  @Field({ nullable: true })
   username?: string;
 
   @Field({ nullable: true })

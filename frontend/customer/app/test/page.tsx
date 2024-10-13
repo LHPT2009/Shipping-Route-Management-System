@@ -21,7 +21,6 @@ export default function Home() {
   const getErrorMessage = (error: any) => {
     if (error.graphQLErrors && error.graphQLErrors.length > 0) {
       const validationError = error.graphQLErrors[0].extensions.originalError;
-      console.log('validationError', validationError);
     }
     return error.message;
   };
@@ -29,7 +28,6 @@ export default function Home() {
   if (loading) return <p>Loading ...</p>;
   if (error) {
     const errorMessage = getErrorMessage(error);
-    console.log('error', errorMessage);
     return <p>Error: {errorMessage}</p>;
   }
 

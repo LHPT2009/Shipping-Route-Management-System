@@ -23,7 +23,6 @@ const langComponent = () => {
         defaultValue="vn"
         style={{ width: 80, height: 50, top: "12px" }}
         onChange={(value) => {
-          console.log(value);
         }}
       >
         {Object.keys(listLanguage).map((lng) => (

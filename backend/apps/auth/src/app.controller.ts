@@ -27,11 +27,11 @@ export class AppController {
 
     const userFromRedis: UserRole | null = await this.cacheManager.get(data.id);
     if (userFromRedis !== null) {
-      console.log("User in redis: ", userFromRedis);
+      // console.log("User in redis: ", userFromRedis);
       return userFromRedis;
 
     } else {
-      console.log("User not in redis: ", userFromRedis);
+      // console.log("User not in redis: ", userFromRedis);
       const getUserInfo = instanceToPlain(await this.userService.findInfoByID(data.id));
       const getPermission = instanceToPlain(await this.roleService.findOne(getUserInfo.data.roles.id));
 

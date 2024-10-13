@@ -52,6 +52,9 @@ export class UserService {
         .leftJoinAndSelect('user.roles', 'roles')
         .leftJoinAndSelect('roles.permissions', 'permissions');
 
+      if (filterUsersDto.search) {
+        queryBuilder.andWhere('(LOWER(user.username) LIKE LOWER(:search) OR LOWER(user.email) LIKE LOWER(:search))', { search: `%${filterUsersDto.search.toLowerCase()}%` });
+      }
       if (filterUsersDto.username) {
         queryBuilder.andWhere('LOWER(user.username) LIKE LOWER(:username)', { username: `%${filterUsersDto.username.toLowerCase()}%` });
       }

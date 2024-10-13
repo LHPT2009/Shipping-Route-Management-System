@@ -13,6 +13,8 @@ import { UserRepository } from '../user/user.repository';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { UserEntity } from '../user/entity/user.entity';
+import { CreateMutipleRoleDto } from './dto/mutiple-role-create.dto';
+import { PERMISSION } from '../../../../../common/constants/permission';
 
 @Injectable()
 export class RoleService {
@@ -67,6 +69,33 @@ export class RoleService {
     const item = this.roleRepository.create(createRoleDto);
     await this.roleRepository.save(item);
     return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, item, []);
+  }
+
+  async createMutipleRole(createRoleDto: CreateMutipleRoleDto): Promise<ResponseDto<RoleEntity[]>> {
+
+    const { names } = createRoleDto;
+    const currentRoles: RoleEntity[] = await this.roleRepository.find();
+    const newNames: string[] = names.filter(name => !currentRoles.some(role => role.name === name));
+
+    if (newNames.length === 0) {
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { name: ['All roles already exist'] });
+    }
+
+    else {
+      const allPermissions = await this.permissionRepository.find();
+      const readListRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_LIST_ROUTE);
+      const readDetailRoute = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_ROUTE);
+      const readDetailUser = allPermissions.find(permission => permission.name === PERMISSION.READ_DETAIL_USER);
+      const updateDetailUser = allPermissions.find(permission => permission.name === PERMISSION.UPDATE_USER);
+
+      const newRoles = newNames.map(name => {
+        return { name, permissions: [readListRoute, readDetailRoute, readDetailUser, updateDetailUser] };
+      });
+
+      const savedRoles = await this.roleRepository.save(newRoles);
+
+      return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, savedRoles, []);
+    }
   }
 
   async update(
