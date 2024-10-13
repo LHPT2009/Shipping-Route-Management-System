@@ -12,7 +12,7 @@ import { GET_ROUTES } from "@/apollo/query/route"
 import { FilterDropdownProps } from "antd/es/table/interface";
 import type { SorterResult } from 'antd/es/table/interface';
 import { useRouter, useSearchParams } from "next/navigation";
-import { DeleteOutlined, EditOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, ExportOutlined, InfoCircleFilled, InfoCircleOutlined, InfoOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 import { REMOVE_ROUTE } from "@/apollo/mutations/route";
 import { menuActions, MenuState } from "@/lib/store/menu";
@@ -25,6 +25,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Content } from "antd/es/layout/layout";
+import * as XLSX from 'xlsx';
 
 type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -40,12 +41,16 @@ interface DataType {
   name: string;
   departure: string;
   arrival: string;
+  departure_time: string;
+  arrival_time: string;
   shipping_type: string;
+  vehicle_type: string;
+  license_plate: string;
   status: string;
-  departureLongitude: number,
-  departureLatitude: number,
-  arrivalLongitude: number,
-  arrivalLatitude: number,
+  departure_longitude: number,
+  departure_latitude: number,
+  arrival_longitude: number,
+  arrival_latitude: number,
 }
 
 interface TableParams {
@@ -316,6 +321,27 @@ const RoutePage = () => {
   const { openNotificationWithIcon, contextHolder } = useAntNotification();
   const { handleError } = useHandleError();
 
+  const exportToExcel = (data: DataType[], fileName: string) => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const headers = data.length > 0 ? Object.keys(data[0]) : [];
+    const maxWidths = data.reduce((widths: number[], row: any) => {
+      headers.forEach((header, index) => {
+        widths[index] = Math.max(widths[index] || 0, header.length);
+      });
+      Object.keys(row).forEach((key: string, index: number) => {
+        const value = row[key as keyof DataType] ? row[key as keyof DataType].toString() : '';
+        widths[index] = Math.max(widths[index] || 10, value.length + 2);
+      });
+      return widths;
+    }, []);
+
+    // Set column widths
+    worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Routes');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
+
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
@@ -505,11 +531,11 @@ const RoutePage = () => {
               />
             </Content>
             <ContentComponent>
-              <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.5rem" }}>
+              <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.25rem" }}>
                 <Form
                   initialValues={{ remember: true }}
                   style={{
-                    width: "28rem",
+                    width: "26rem",
                     borderRadius: "1rem",
                   }}
                   onFinish={handleSubmit(onFinish)}
@@ -525,7 +551,7 @@ const RoutePage = () => {
                         <Input
                           key="search"
                           {...field}
-                          placeholder={"Search for route name, departure, arrival"}
+                          placeholder={"Search for route name, departure and arrival"}
                           prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
                           style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
                         />
@@ -533,18 +559,28 @@ const RoutePage = () => {
                     />
                   </Form.Item>
                 </Form>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    router.push(`/route/create`);
-                  }}
-                  style={{ padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
-                >
-                  <PlusOutlined />
-                  New route
-                </Button>
-              </Flex>
+                <Flex gap="1rem">
+                  <Button
+                    type="default"
+                    onClick={() => {
+                      router.push(`/route/create`);
+                    }}
+                    style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                  >
+                    <PlusOutlined />
+                    New route
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={() => exportToExcel(data, 'routes')}
+                    style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+                  >
+                    <ExportOutlined />
+                    Export to Excel
+                  </Button>
 
+                </Flex>
+              </Flex>
               <Table
                 rowKey={(record) => record.name}
                 className={styles['table-striped-rows']}
