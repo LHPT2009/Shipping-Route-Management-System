@@ -21,6 +21,7 @@ import { LocationModule } from './modules/location/location.module';
 import { TransportModule } from './modules/transport/transport.module';
 import { SeedService } from './seed/seed.service';
 import { dataSourceOptions } from 'db/data-source';
+import { OpenaiModule } from './modules/openai/openai.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { dataSourceOptions } from 'db/data-source';
     RouteModule,
     LocationModule,
     TransportModule,
+    OpenaiModule
   ],
   controllers: [],
   providers: [SeedService],
