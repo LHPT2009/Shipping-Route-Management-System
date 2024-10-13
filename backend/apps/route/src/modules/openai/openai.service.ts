@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ChatHistoryManager } from './dto/chat-history-manager';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { GetChatCompletionAnswerInputDTO, GetChatCompletionAnswerOutputDTO } from './dto/chat-completion-answer.dto';
 import { ResponseDto } from 'common/response/responseDto';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
+import { RoutesService } from '../route/route.service';
 
 const DEFAULT_TEMPERATURE = 1
-// const DEFAULT_MODEL = 'gpt-3.5-turbo'
 const DEFAULT_MODEL = 'gpt-4o-mini'
 
 @Injectable()
-export class OpenaiService {
+export class OpenaiService implements OnModuleInit {
     private readonly chatHistory: ChatHistoryManager;
     private readonly chat: ChatOpenAI;
+    private cachedRoutesData: object[] = null;
 
-    constructor() {
+    constructor(
+        private readonly routesService: RoutesService
+    ) {
         this.chatHistory = new ChatHistoryManager("Đây là hệ thống chat vào bạn cho tên là lily");
         this.chat = new ChatOpenAI({
             temperature: DEFAULT_TEMPERATURE,
             openAIApiKey: process.env.OPENAI_API_KEY,
             modelName: DEFAULT_MODEL,
         })
+    }
+
+    async onModuleInit() {
+        if (!this.cachedRoutesData) {
+            this.cachedRoutesData = await this.routesService.findAllRouteForAi();
+        }
+        const formattedData = JSON.stringify(this.cachedRoutesData);
+        this.chatHistory.addAiMessage(`Dữ liệu từ RoutesService: ${formattedData}`);
     }
 
     async getAiModelAnswer(data: GetChatCompletionAnswerInputDTO): Promise<ResponseDto<GetChatCompletionAnswerOutputDTO>> {

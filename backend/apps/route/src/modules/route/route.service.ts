@@ -17,6 +17,11 @@ export class RoutesService {
     private routeRepository: RouteRepository,
   ) { }
 
+  async findAllRouteForAi(): Promise<object[]> {
+    const data: object[] = await this.routeRepository.find();
+    return data
+  }
+
   async findAll(filterRoutesDto: FilterRoutesDto): Promise<ResponseDto<{
     routes: FilterRouteType[];
     total: number;
@@ -138,7 +143,7 @@ export class RoutesService {
     if (new Date(updateRoutesDto.departure_time) > new Date(updateRoutesDto.arrival_time)) {
       throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { arrival_time: ['Arrival time must be later than departure time'] });
     }
-    
+
     const routeResponse = await this.findOne(id);
 
     const route = routeResponse.data as Route;
