@@ -64,7 +64,9 @@ export default function RootLayout({
                   borderRadius: 8,
                 },
                 Input: {
-                  colorTextDisabled: "#868e96"
+                  colorTextDisabled: "#868e96",
+                  colorTextPlaceholder: "#868e96",
+                  colorBorder: "#ced4da",
                 },
                 Tooltip: {
                   borderRadius: 5,

@@ -5,7 +5,8 @@ import FooterComponent from "../../footer";
 
 import { FloatButton, Layout } from "antd";
 import { ChildrenComponentProps } from "@/types/children";
-import { ArrowUpOutlined, CommentOutlined, OpenAIOutlined, UpOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, CommentOutlined } from "@ant-design/icons";
+import ChatComponent from "@/components/chat";
 
 const { Content } = Layout;
 
@@ -17,8 +18,9 @@ const LayoutComponent: React.FC<ChildrenComponentProps> = ({
       <HeaderComponent />
       <Content>{children}</Content>
       <FooterComponent />
-      <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "2.8rem", width: "2.8rem", insetBlockEnd: 110 }} />
-      <FloatButton type="primary" icon={<OpenAIOutlined />} style={{ height: "2.8rem", width: "2.8rem" }}/>
+      <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "3rem", width: "3rem", insetBlockEnd: 95 }} />
+      <FloatButton type="primary" icon={<CommentOutlined />} style={{ height: "3rem", width: "3rem", insetBlockEnd: 30 }} />
+      <ChatComponent />
     </Layout>
   );
 };
