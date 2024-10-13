@@ -18,11 +18,11 @@ export class Route {
   @Field(() => Location)
   departure: Location;
 
-  @Field()
-  departure_time: Date;
-
   @Field(() => Location)
   arrival: Location;
+
+  @Field()
+  departure_time: Date;
 
   @Field()
   arrival_time: Date;

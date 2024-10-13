@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb } from "antd";
 import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
@@ -9,7 +9,7 @@ import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_ROUTES } from "@/apollo/query/route";
 import { FilterDropdownProps } from "antd/es/table/interface";
-import { HomeOutlined, SearchOutlined } from "@ant-design/icons";
+import { ExportOutlined, HomeOutlined, SearchOutlined } from "@ant-design/icons";
 import type { SorterResult } from 'antd/es/table/interface';
 import { useRouter, useSearchParams } from "next/navigation";
 import MapIcon from "@/public/svg/route/map.svg";
@@ -25,7 +25,7 @@ import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import LoadingComponent from "@/components/loading";
+import * as XLSX from 'xlsx';;
 
 const { Search } = Input;
 
@@ -43,12 +43,16 @@ interface DataType {
   name: string;
   departure: string;
   arrival: string;
+  departure_time: string;
+  arrival_time: string;
   shipping_type: string;
+  vehicle_type: string;
+  license_plate: string;
   status: string;
-  departureLongitude: number,
-  departureLatitude: number,
-  arrivalLongitude: number,
-  arrivalLatitude: number,
+  departure_longitude: number,
+  departure_latitude: number,
+  arrival_longitude: number,
+  arrival_latitude: number,
 }
 
 interface TableParams {
@@ -313,8 +317,8 @@ const RoutePage = () => {
                 onClick={() => {
                   const getDataById = data.find((item, index) => item.id === record.id)
                   if (getDataById) {
-                    setDeparture([getDataById?.departureLongitude!, getDataById?.departureLatitude!])
-                    setArrival([getDataById?.arrivalLongitude!, getDataById?.arrivalLatitude!])
+                    setDeparture([getDataById?.departure_longitude!, getDataById?.departure_latitude!])
+                    setArrival([getDataById?.arrival_longitude!, getDataById?.arrival_latitude!])
                   }
                   handleOpen();
                 }}
@@ -328,8 +332,8 @@ const RoutePage = () => {
             onClick={() => {
               const getDataById = data.find((item, index) => item.id === record.id)
               if (getDataById) {
-                setDeparture([getDataById?.departureLongitude!, getDataById?.departureLatitude!])
-                setArrival([getDataById?.arrivalLongitude!, getDataById?.arrivalLatitude!])
+                setDeparture([getDataById?.departure_longitude!, getDataById?.departure_latitude!])
+                setArrival([getDataById?.arrival_longitude!, getDataById?.arrival_latitude!])
               }
               handleOpen();
             }}
@@ -351,6 +355,28 @@ const RoutePage = () => {
   const handleClose = () => setOpen(false);
 
   const [search, setSearch] = useState<string>(searchParams.get("search") || "");
+
+  const exportToExcel = (data: DataType[], fileName: string) => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const headers = data.length > 0 ? Object.keys(data[0]) : [];
+    const maxWidths = data.reduce((widths: number[], row: any) => {
+      headers.forEach((header, index) => {
+        widths[index] = Math.max(widths[index] || 0, header.length);
+      });
+      Object.keys(row).forEach((key: string, index: number) => {
+        const value = row[key as keyof DataType] ? row[key as keyof DataType].toString() : '';
+        widths[index] = Math.max(widths[index] || 10, value.length + 2);
+      });
+      return widths;
+    }, []);
+
+    // Set column widths
+    worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Routes');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
 
   const [getRoutes, { loading }] = useLazyQuery(GET_ROUTES, {
     fetchPolicy: "cache-and-network",
@@ -536,18 +562,29 @@ const RoutePage = () => {
               </Form.Item>
             </Form>
 
-            <Tag color="geekblue"
-              style={{
-                padding: "0 1rem",
-                height: "3rem",
-                borderRadius: "0.4rem",
-                paddingTop: 0,
-                display: "flex", alignItems: "center",
-                marginBottom: responsive ? "1.5rem" : 0,
-              }}
-            >
-              <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
-            </Tag>
+            <Flex gap="0.5rem">
+              <Tag color="geekblue"
+                style={{
+                  padding: "0 1rem",
+                  height: "3rem",
+                  borderRadius: "0.4rem",
+                  paddingTop: 0,
+                  display: "flex", alignItems: "center",
+                  marginBottom: responsive ? "1.5rem" : 0,
+                }}
+              >
+                <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
+              </Tag>
+              <Button
+                type="primary"
+                onClick={() => exportToExcel(data, 'routes')}
+                style={{ color: "white", borderRadius: "0.4rem", height: "3rem" }}
+              >
+                <ExportOutlined />
+                Export to Excel
+              </Button>
+            </Flex>
+
 
           </Flex>
 

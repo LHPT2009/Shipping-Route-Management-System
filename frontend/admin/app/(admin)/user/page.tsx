@@ -1,18 +1,17 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb } from "antd";
-import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
+import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb, Tooltip } from "antd";
+import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
 import { COLOR } from "@/constant/color";
 import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import type { SorterResult } from 'antd/es/table/interface';
-import { useRouter } from "next/navigation";
-import { InfoCircleOutlined, SearchOutlined, SyncOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ExportOutlined, InfoCircleOutlined, SearchOutlined, SyncOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import ContentComponent from "@/components/content";
 import { GET_USERS } from "@/apollo/query/user";
 import AssignUserModal from "@/components/modal/user/assign";
@@ -22,6 +21,10 @@ import { KEYMENU, LABELMENU } from "@/constant/menu";
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Content } from "antd/es/layout/layout";
+import * as XLSX from 'xlsx';
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const { Search } = Input;
 
@@ -46,7 +49,7 @@ interface DataType {
   username: string;
   email: string;
   roles: string;
-  permissions: string;
+  permissions: string[];
   status: string;
 }
 
@@ -71,10 +74,16 @@ const UserPage = () => {
   const searchInput = useRef<InputRef>(null);
 
   const [data, setData] = useState<DataType[]>([]);
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState<string>(searchParams.get("search") || "");
   const [tableParams, setTableParams] = useState<TableParams>({
+    filters: {
+      username: [searchParams.get("username") || ""],
+      email: [searchParams.get("email") || ""],
+    },
     pagination: {
-      current: 1,
-      pageSize: 20,
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("page-size")) || 20,
     },
   });
 
@@ -253,27 +262,35 @@ const UserPage = () => {
       width: "15%",
       render: (_, record, index) => (
         <Flex align="center" gap="1rem">
-          <Button
-            type="primary"
-            onClick={() => { router.push(`/user/${record.id}`) }}
-            style={{ width: "2.3rem", borderRadius: "0.3rem" }}
-          >
-            <InfoCircleOutlined />
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
-            style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
-          >
-            <UsergroupAddOutlined />
-          </Button>
-          <Button
-            type="primary"
-            style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#22b8cf" }}
-            onClick={() => handleOpenModalDelete(String(record.id), String(record.status))}
-          >
-            <SyncOutlined />
-          </Button>
+          <Tooltip placement="bottom" title="User details">
+            <Button
+              type="primary"
+              onClick={() => { router.push(`/user/${record.id}`) }}
+              style={{ width: "2.3rem", borderRadius: "0.3rem" }}
+            >
+              <InfoCircleOutlined />
+            </Button>
+          </Tooltip>
+
+          <Tooltip placement="bottom" title="Assign roles to user">
+            <Button
+              type="primary"
+              onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
+              style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
+            >
+              <UsergroupAddOutlined />
+            </Button>
+          </Tooltip>
+
+          <Tooltip placement="bottom" title="Change account status">
+            <Button
+              type="primary"
+              style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#22b8cf" }}
+              onClick={() => handleOpenModalDelete(String(record.id), String(record.status))}
+            >
+              <SyncOutlined />
+            </Button>
+          </Tooltip>
 
         </Flex>
       ),
@@ -288,6 +305,32 @@ const UserPage = () => {
   const [roleName, setRoleName] = useState("");
 
   const { handleError } = useHandleError();
+
+  const exportToExcel = (data: DataType[], fileName: string) => {
+    const modifiedData = data.map((item: DataType) => ({
+      ...item,
+      permissions: item.permissions.join('\r\n'),
+    }));
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(modifiedData);
+    const headers = data.length > 0 ? Object.keys(data[0]) : [];
+    const maxWidths = modifiedData.reduce((widths: number[], row: any) => {
+      headers.forEach((header, index) => {
+        widths[index] = Math.max(widths[index] || 0, header.length);
+      });
+      Object.keys(row).forEach((key: string, index: number) => {
+        const value = row[key as keyof DataType] ? row[key as keyof DataType].toString() : '';
+        widths[index] = Math.max(widths[index] || 10, value.length + 4);
+      });
+      return widths;
+    }, []);
+
+    // Set column widths
+    worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
 
   const [getUsers, { loading, refetch }] = useLazyQuery(GET_USERS, {
     fetchPolicy: 'cache-and-network',
@@ -313,6 +356,7 @@ const UserPage = () => {
         input: {
           page: tableParams.pagination?.current,
           limit: tableParams.pagination?.pageSize,
+          search: search,
           username: tableParams.filters?.username?.[0],
           email: tableParams.filters?.email?.[0],
           status: tableParams.filters?.status?.[0],
@@ -324,8 +368,17 @@ const UserPage = () => {
   };
 
   useEffect(() => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      search: searchParams.get("search") || "",
+    });
+  }, []);
+
+  useEffect(() => {
     fetchUsers();
   }, [
+    search,
     tableParams.pagination?.current,
     tableParams.pagination?.pageSize,
     tableParams?.sortOrder,
@@ -334,13 +387,27 @@ const UserPage = () => {
   ]);
 
   const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
-    setTableParams({
+    setTableParams((prevParams) => ({
       pagination,
       filters,
-      sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-      sortField: Array.isArray(sorter) ? undefined : sorter.field,
+      sortOrder: Array.isArray(sorter) ? prevParams.sortOrder : sorter.order,
+      sortField: Array.isArray(sorter) ? prevParams.sortField : sorter.field,
+    }));
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', String(pagination.current));
+    newSearchParams.set('page-size', String(pagination.pageSize));
+    newSearchParams.set('username', String(filters.username?.[0] || ''));
+    newSearchParams.set('email', String(filters.email?.[0] || ''));
+
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
     });
 
+    router.replace(`?${newSearchParams.toString()}`);
+    // `data Source` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
@@ -394,6 +461,45 @@ const UserPage = () => {
     extraExtraLarge
   );
 
+  // Validate Yup
+  const schema = yup
+    .object({
+      search: yup.string()
+    })
+    .required();
+
+  //useFrom hook
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    getValues
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onFinish = async (values: any) => {
+    setSearch(values.search);
+    setTableParams({
+      ...tableParams,
+      pagination: {
+        ...tableParams.pagination,
+        current: 1,
+        pageSize: 20
+      },
+    });
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('search', String(values.search));
+    newSearchParams.set('page', String(1));
+    newSearchParams.set('page-size', String(20));
+
+    Array.from(newSearchParams.entries()).forEach(([key, value]) => {
+      if (!value) {
+        newSearchParams.delete(key);
+      }
+    });
+    router.replace(`?${newSearchParams.toString()}`);
+  };
+
   return (
     <div >
       {!checkStatusBackground ? (
@@ -413,7 +519,45 @@ const UserPage = () => {
           </Content>
 
           <ContentComponent>
+            <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.25rem" }}>
+              <Form
+                initialValues={{ remember: true }}
+                style={{
+                  width: "26rem",
+                  borderRadius: "1rem",
+                }}
+                onFinish={handleSubmit(onFinish)}
+              >
+                <Form.Item
+                  name="search"
+                  style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                >
+                  <Controller
+                    name="search"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        key="search"
+                        {...field}
+                        placeholder={"Search for username and email"}
+                        prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
+                        style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
+                      />
+                    )}
+                  />
+                </Form.Item>
+              </Form>
 
+              <Button
+                type="primary"
+                onClick={() => exportToExcel(data, 'users')}
+                style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+              >
+                <ExportOutlined />
+                Export to Excel
+              </Button>
+
+            </Flex>
             <Table
               rowKey={(record) => record.id}
               className={styles['table-striped-rows']}

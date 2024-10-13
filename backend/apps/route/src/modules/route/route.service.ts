@@ -7,10 +7,10 @@ import { ResponseDto } from '../../../../../common/response/responseDto';
 import { STATUS, STATUS_CODE } from '../../../../../common/constants/status';
 import { FilterRoutesDto } from './dto/route-filter.dto';
 import { CustomValidationError } from '../../../../../common/exception/validation/custom-validation-error';
-import { ShippingTypeEnum } from '../transport/interface/transports.interface';
+import { ShippingTypeEnum, VehicleTypeEnum } from '../transport/interface/transports.interface';
 import { StatusEnum } from './interface/routes.interface';
 import { FilterRouteType } from './type/route-filter.type';
-
+import * as moment from 'moment';
 @Injectable()
 export class RoutesService {
   constructor(
@@ -73,13 +73,17 @@ export class RoutesService {
           name: route.name,
           departure: route.departure.name,
           arrival: route.arrival.name,
+          departure_time: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
+          arrival_time: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
           shipping_type: ShippingTypeEnum[route.transport.shipping_type],
+          vehicle_type: VehicleTypeEnum[route.transport.vehicle_type],
+          license_plate: route.transport.license_plate,
           distance: `${route.distance} km`,
           status: StatusEnum[route.status],
-          departureLongitude: route.departure.longitude,
-          departureLatitude: route.departure.latitude,
-          arrivalLongitude: route.arrival.longitude,
-          arrivalLatitude: route.arrival.latitude,
+          departure_longitude: route.departure.longitude,
+          departure_latitude: route.departure.latitude,
+          arrival_longitude: route.arrival.longitude,
+          arrival_latitude: route.arrival.latitude,
         };
       });
 

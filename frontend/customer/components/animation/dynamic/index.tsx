@@ -23,7 +23,6 @@ const ScrollAnimationComponent: React.FC<AnimatedComponentProps> = ({ direction,
     handleScroll();
 
     return () => {
-      console.log("scrollY: "+ window.scrollY)
       window.removeEventListener("scroll", handleScroll);
     };
   }, [threshold, screenHeight]);

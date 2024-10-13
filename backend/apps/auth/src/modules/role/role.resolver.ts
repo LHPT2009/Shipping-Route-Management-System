@@ -14,6 +14,7 @@ import { Roles } from '../../../../../common/exception/guards/decorator/roles.de
 import { Permissions } from '../../../../../common/exception/guards/decorator/permissions.decorator';
 import { ROLE } from '../../../../../common/constants/role';
 import { PERMISSION } from '../../../../../common/constants/permission';
+import { CreateMutipleRoleDto } from './dto/mutiple-role-create.dto';
 
 @Resolver(() => Role)
 export class RoleResolver {
@@ -55,6 +56,16 @@ export class RoleResolver {
     @Args('input') input: CreateRoleDto,
   ): Promise<ResponseDto<RoleEntity>> {
     return this.roleService.create(input);
+  }
+
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.CREATE_ROLE)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Mutation(() => ResponseDto<RoleEntity>)
+  async createMutipleRoles(
+    @Args('input') input: CreateMutipleRoleDto,
+  ): Promise<ResponseDto<RoleEntity[]>> {
+    return this.roleService.createMutipleRole(input);
   }
 
   @Roles(ROLE.ADMIN)

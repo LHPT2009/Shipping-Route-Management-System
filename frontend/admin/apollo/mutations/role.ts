@@ -43,3 +43,14 @@ mutation ($id: ID!) {
   }
 }
 `;
+
+export const CREATE_MUTIPLE_ROLES = gql`
+mutation createMutipleRoles($input: CreateMutipleRoleDto!){
+  createMutipleRoles(input: $input){
+      status
+      message
+      data
+      error
+  }
+}
+`;

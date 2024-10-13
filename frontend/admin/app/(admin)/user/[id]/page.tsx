@@ -53,7 +53,6 @@ const UserInformationPage = ({ params }: { params: { id: string } }) => {
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-first',
     onCompleted: async (data) => {
-      console.log("data: ", data);
       reset({
         username: data.getUserById.data.username,
         email: data.getUserById.data.email,

@@ -20,7 +20,19 @@ export class FilterRouteType {
   arrival: string;
 
   @Field()
+  departure_time: string;
+
+  @Field()
+  arrival_time: string;
+
+  @Field()
   shipping_type: string;
+
+  @Field()
+  vehicle_type: string;
+
+  @Field()
+  license_plate: string;
 
   @Field()
   distance: string;
@@ -29,14 +41,15 @@ export class FilterRouteType {
   status: string;
 
   @Field()
-  departureLongitude: number;
+  departure_longitude: number;
 
   @Field()
-  departureLatitude: number;
+  departure_latitude: number;
 
   @Field()
-  arrivalLongitude: number;
+  arrival_longitude: number;
 
   @Field()
-  arrivalLatitude: number;
+  arrival_latitude: number;
+
 }
