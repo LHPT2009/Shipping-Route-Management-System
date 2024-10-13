@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb } from "antd";
-import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
+import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb, Tooltip } from "antd";
+import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
 import styles from "./route.module.css";
 import { COLOR } from "@/constant/color";
 import { useHandleError } from "@/lib/hooks/error";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import type { SorterResult } from 'antd/es/table/interface';
 import { useRouter, useSearchParams } from "next/navigation";
@@ -263,27 +262,35 @@ const UserPage = () => {
       width: "15%",
       render: (_, record, index) => (
         <Flex align="center" gap="1rem">
-          <Button
-            type="primary"
-            onClick={() => { router.push(`/user/${record.id}`) }}
-            style={{ width: "2.3rem", borderRadius: "0.3rem" }}
-          >
-            <InfoCircleOutlined />
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
-            style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
-          >
-            <UsergroupAddOutlined />
-          </Button>
-          <Button
-            type="primary"
-            style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#22b8cf" }}
-            onClick={() => handleOpenModalDelete(String(record.id), String(record.status))}
-          >
-            <SyncOutlined />
-          </Button>
+          <Tooltip placement="bottom" title="User details">
+            <Button
+              type="primary"
+              onClick={() => { router.push(`/user/${record.id}`) }}
+              style={{ width: "2.3rem", borderRadius: "0.3rem" }}
+            >
+              <InfoCircleOutlined />
+            </Button>
+          </Tooltip>
+
+          <Tooltip placement="bottom" title="Assign roles to user">
+            <Button
+              type="primary"
+              onClick={() => handleOpenModalAssign(String(record.id), String(record.roles))}
+              style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#f08c00" }}
+            >
+              <UsergroupAddOutlined />
+            </Button>
+          </Tooltip>
+
+          <Tooltip placement="bottom" title="Change account status">
+            <Button
+              type="primary"
+              style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#22b8cf" }}
+              onClick={() => handleOpenModalDelete(String(record.id), String(record.status))}
+            >
+              <SyncOutlined />
+            </Button>
+          </Tooltip>
 
         </Flex>
       ),
@@ -302,7 +309,7 @@ const UserPage = () => {
   const exportToExcel = (data: DataType[], fileName: string) => {
     const modifiedData = data.map((item: DataType) => ({
       ...item,
-      permissions: item.permissions.join('\r\n'), 
+      permissions: item.permissions.join('\r\n'),
     }));
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(modifiedData);

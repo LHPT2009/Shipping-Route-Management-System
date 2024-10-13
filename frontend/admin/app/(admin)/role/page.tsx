@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ContentComponent from "@/components/content";
-import { Col, Flex, Row, theme, Button, Table, Breadcrumb, Tooltip } from "antd";
+import { Flex, Button, Table, Breadcrumb, Tooltip } from "antd";
 import type { TableColumnsType } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import CreateRoleModal from "@/components/modal/role/create";
@@ -11,10 +11,11 @@ import getAllRoleExceptOrther from "@/lib/hooks/role/getAllRoleExceptOrther";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import styles from "./role.module.css";
-import { PlusOutlined } from "@ant-design/icons";
+import { ExportOutlined, PlusOutlined, RetweetOutlined, UploadOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Content } from "antd/es/layout/layout";
+import * as XLSX from 'xlsx';
 
 interface DataType {
   id: string;
@@ -96,16 +97,18 @@ const RolePage = () => {
                 onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
                 style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem" }}
               >
+                <RetweetOutlined style={{fontSize: "1.1rem"}}/>
                 Assign permission
               </Button>
             </>) : (<>
-              <Tooltip title="Assign to admin disabled">
+              <Tooltip placement="bottom" title="Assign to admin is disabled">
                 <Button
                   type="primary"
                   onClick={() => handleOpenModalAssignPermissionToRole(record.id)}
                   style={{ padding: "1.1rem 1.2rem", borderRadius: "0.3rem" }}
                   disabled
                 >
+                  <RetweetOutlined style={{fontSize: "1.1rem"}}/>
                   Assign permission
                 </Button>
               </Tooltip>
@@ -139,6 +142,27 @@ const RolePage = () => {
     extraExtraLarge
   );
 
+  const exportToExcel = (data: DataType[], fileName: string) => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const headers = data.length > 0 ? Object.keys(data[0]) : [];
+    const maxWidths = data.reduce((widths: number[], row: any) => {
+      headers.forEach((header, index) => {
+        widths[index] = Math.max(widths[index] || 0, header.length);
+      });
+      Object.keys(row).forEach((key: string, index: number) => {
+        const value = row[key as keyof DataType] ? row[key as keyof DataType].toString() : '';
+        widths[index] = Math.max(widths[index] || 10, value.length + 4);
+      });
+      return widths;
+    }, []);
+
+    // Set column widths
+    worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Roles');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
+
   return (
     <>
       {!checkStatusBackground ? (
@@ -156,14 +180,34 @@ const RolePage = () => {
               />
             </Content>
             <ContentComponent>
-              <Button
-                type="primary"
-                onClick={handleOpenModalCreate}
-                style={{ padding: "1.2rem 1.2rem", borderRadius: "0.3rem", marginBottom: "1.5rem" }}
-              >
-                <PlusOutlined />
-                New role
-              </Button>
+              <Flex justify="space-between" style={{marginBottom: "1.5rem"}}>
+                <Button
+                  type="default"
+                  onClick={handleOpenModalCreate}
+                  style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                >
+                  <PlusOutlined />
+                  New role
+                </Button>
+                <Flex gap="1rem">
+                  <Button
+                    type="default"
+                    onClick={() => {}}
+                    style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                  >
+                    <UploadOutlined style={{fontSize: "1.2rem"}}/>
+                    Import roles
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={() => exportToExcel(roles, 'roles')}
+                    style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+                  >
+                    <ExportOutlined />
+                    Export to Excel
+                  </Button>
+                </Flex>
+              </Flex>
               <Table
                 columns={columns}
                 dataSource={roles}

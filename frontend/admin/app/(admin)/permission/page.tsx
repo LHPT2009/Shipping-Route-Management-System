@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import ContentComponent from "@/components/content";
-import { theme, Table, Breadcrumb } from "antd";
+import { theme, Table, Breadcrumb, Button } from "antd";
 import type { TableColumnsType } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import usePermissions from "@/lib/hooks/permission/usePermissions";
@@ -11,6 +11,8 @@ import styles from "./permission.module.css";
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Content } from "antd/es/layout/layout";
+import { ExportOutlined } from "@ant-design/icons";
+import * as XLSX from 'xlsx';
 
 interface DataType {
   id: string;
@@ -54,22 +56,28 @@ const PermissionPage = () => {
 
   const screenWidth = UseScreenWidth();
 
-  const extraSmall = true;
-  const small = true;
-  const medium = false;
-  const large = false;
-  const extraLarge = false;
-  const extraExtraLarge = false;
+  const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
 
-  const responsive = GetValueFromScreen(
-    screenWidth,
-    extraSmall,
-    small,
-    medium,
-    large,
-    extraLarge,
-    extraExtraLarge
-  );
+  const exportToExcel = (data: DataType[], fileName: string) => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const headers = data.length > 0 ? Object.keys(data[0]) : [];
+    const maxWidths = data.reduce((widths: number[], row: any) => {
+      headers.forEach((header, index) => {
+        widths[index] = Math.max(widths[index] || 0, header.length);
+      });
+      Object.keys(row).forEach((key: string, index: number) => {
+        const value = row[key as keyof DataType] ? row[key as keyof DataType].toString() : '';
+        widths[index] = Math.max(widths[index] || 10, value.length + 4);
+      });
+      return widths;
+    }, []);
+
+    // Set column widths
+    worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Permissions');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
 
   return (
     <>
@@ -92,6 +100,14 @@ const PermissionPage = () => {
             </Content>
 
             <ContentComponent>
+              <Button
+                type="primary"
+                onClick={() => exportToExcel(permissions, 'permissions')}
+                style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem", marginBottom: "1.5rem" }}
+              >
+                <ExportOutlined />
+                Export to Excel
+              </Button>
               <Table
                 columns={columns}
                 dataSource={permissions}

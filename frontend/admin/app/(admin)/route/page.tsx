@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb } from "antd";
+import { Col, Flex, Row, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb, Tooltip } from "antd";
 import type { GetProp, InputRef, TableColumnsType, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import styles from "./route.module.css";
@@ -295,22 +295,27 @@ const RoutePage = () => {
       width: "11%",
       render: (_, record, index) => (
         <Flex align="center" gap="1rem">
-          <Button
-            type="primary"
-            onClick={() => {
-              router.push(`/route/${record.id}/information`);
-            }}
-            style={{ width: "2.3rem", borderRadius: "0.3rem" }}
-          >
-            <InfoCircleOutlined />
-          </Button>
-          <Button
-            type="primary"
-            style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
-            onClick={() => { setRouteId(record.id); setOpenModalDelete(true); }}
-          >
-            <DeleteOutlined />
-          </Button>
+          <Tooltip placement="bottom" title="Route details">
+            <Button
+              type="primary"
+              onClick={() => {
+                router.push(`/route/${record.id}/information`);
+              }}
+              style={{ width: "2.3rem", borderRadius: "0.3rem" }}
+            >
+              <InfoCircleOutlined />
+            </Button>
+          </Tooltip>
+
+          <Tooltip placement="bottom" title="Delete route">
+            <Button
+              type="primary"
+              style={{ width: "2.3rem", borderRadius: "0.3rem", background: "#e03131" }}
+              onClick={() => { setRouteId(record.id); setOpenModalDelete(true); }}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Tooltip>
 
         </Flex>
       ),
