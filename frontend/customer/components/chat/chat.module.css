@@ -1,0 +1,16 @@
+.header {
+    height: 3.5rem;
+    background: #4f46e5;
+    border-top-left-radius: 0.7rem;
+    border-top-right-radius: 0.7rem;
+    padding: 0.5rem 1rem;
+}
+
+.content {
+    height: 21.5rem;
+    padding: 0.5rem 1rem;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin;
+}

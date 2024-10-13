@@ -16,7 +16,7 @@ const LayoutAdminComponent: React.FC<ChildrenComponentProps> = ({
         <Layout>
           {children}
         </Layout>
-        <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "2.8rem", width: "2.8rem" }} />
+        <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "3rem", width: "3rem", insetBlockEnd: 30 }} />
       </Layout>
     </>
   );
