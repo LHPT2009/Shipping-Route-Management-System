@@ -11,7 +11,7 @@ import getAllRoleExceptOrther from "@/lib/hooks/role/getAllRoleExceptOrther";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import styles from "./role.module.css";
-import { ExportOutlined, PlusOutlined, RetweetOutlined, UploadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, ExportOutlined, PlusOutlined, RetweetOutlined, UploadOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { Content } from "antd/es/layout/layout";
@@ -44,8 +44,6 @@ const RolePage = () => {
   const [openModalAssignPermissionToRole, setOpenModalAssignPermissionToRole] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [selectedRolename, setSelectedRolename] = useState<string | null>(null);
-  // const [importedData, setImportedData] = useState<DataType[]>([]);
-  // console.log("importedData", importedData);
   const handleOpenModalCreate = () => {
     setOpenModalCreate(true);
   };
@@ -132,7 +130,7 @@ const RolePage = () => {
 
   const responsive = GetValueFromScreen(screenWidth, true, true, false, false, false, false);
   const { handleError } = useHandleError();
-  
+
   const [createMutipleRoles] = useMutation(CREATE_MUTIPLE_ROLES, {
     onCompleted: async (data) => {
       refetch();
@@ -151,13 +149,22 @@ const RolePage = () => {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const jsonData: DataType[] = XLSX.utils.sheet_to_json(worksheet);
-      createMutipleRoles({
-        variables: {
-          input: {
-            names: jsonData.map((item) => item.name),
+      const isValidFormat = jsonData.length !== 0 && jsonData.every(data => {
+        const keys = Object.keys(data);
+        return keys.length === 1 && keys[0] === 'name';
+      });
+      if (!isValidFormat) {
+        openNotificationWithIcon('error', NOTIFICATION.ERROR, "Invalid format of file. Please follow the template file to import roles!");
+        return;
+      } else {
+        createMutipleRoles({
+          variables: {
+            input: {
+              names: jsonData.map((item) => item.name),
+            },
           },
-        },
-      })
+        })
+      }
     };
     reader.readAsArrayBuffer(file);
   };
@@ -178,25 +185,31 @@ const RolePage = () => {
     maxCount: 1,
   };
 
-  const exportToExcel = (data: DataType[], fileName: string) => {
+  const exportToExcel = (data: DataType[] | { name: string }[], fileName: string) => {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(data);
     const headers = data.length > 0 ? Object.keys(data[0]) : [];
     const maxWidths = data.reduce((widths: number[], row: any) => {
       headers.forEach((header, index) => {
-        widths[index] = Math.max(widths[index] || 0, header.length);
+        widths[index] = Math.max(widths[index] || 0, header.length + 2);
       });
       Object.keys(row).forEach((key: string, index: number) => {
         const value = row[key as keyof DataType] ? row[key as keyof DataType].toString() : '';
-        widths[index] = Math.max(widths[index] || 10, value.length + 4);
+        widths[index] = Math.max(widths[index] || 10, value.length + 3);
       });
       return widths;
     }, []);
 
     // Set column widths
     worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
+
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Roles');
     XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  };
+
+  const downloadTemplate = () => {
+    const templateData: { name: string }[] = [{ name: '' }]; // Template with one column "name"
+    exportToExcel(templateData, 'template');
   };
 
   return (
@@ -226,10 +239,17 @@ const RolePage = () => {
                   New role
                 </Button>
                 <Flex gap="1rem">
+                  <Button
+                    type="default"
+                    onClick={downloadTemplate}
+                    style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                  >
+                    <DownloadOutlined style={{ fontSize: "1.2rem" }} />
+                    Download template
+                  </Button>
                   <Upload {...uploadProps} showUploadList={false}>
                     <Button
                       type="default"
-                      onClick={() => { }}
                       style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
                     >
                       <UploadOutlined style={{ fontSize: "1.2rem" }} />
