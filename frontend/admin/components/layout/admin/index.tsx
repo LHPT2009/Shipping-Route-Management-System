@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
 
-import { Layout } from "antd";
+import { FloatButton, Layout } from "antd";
 import { ChildrenComponentProps } from "@/types/children";
 import SiderComponent from "@/components/side";
+import { ArrowUpOutlined } from "@ant-design/icons";
 
 const LayoutAdminComponent: React.FC<ChildrenComponentProps> = ({
   children,
@@ -15,6 +16,7 @@ const LayoutAdminComponent: React.FC<ChildrenComponentProps> = ({
         <Layout>
           {children}
         </Layout>
+        <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "2.8rem", width: "2.8rem" }} />
       </Layout>
     </>
   );

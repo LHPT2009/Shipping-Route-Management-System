@@ -69,6 +69,9 @@ export default function RootLayout({
                 Tooltip: {
                   borderRadius: 5,
                 },
+                FloatButton:{
+                  colorText: COLOR.PRIMARY,
+                }
               },
             }}
           >

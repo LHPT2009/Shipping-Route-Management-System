@@ -7,6 +7,7 @@ import { useAppDispatch } from "@/lib/hooks/hooks";
 import { useEffect } from "react";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU } from "@/constant";
+import { FloatButton } from 'antd';
 
 export default function Home() {
   const dispatch = useAppDispatch();
