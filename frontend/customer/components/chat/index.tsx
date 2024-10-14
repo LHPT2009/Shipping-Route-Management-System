@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./chat.module.css";
-import { AudioOutlined, CloseOutlined, SendOutlined } from "@ant-design/icons";
-import { Flex, Form, Input, Button } from "antd";
+import { CloseOutlined, LoadingOutlined, SendOutlined, SmileOutlined } from "@ant-design/icons";
+import { Flex, Form, Input, Button, Spin } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import LogoDefault from "@/public/logo/logoImage.png";
 import * as yup from "yup";
@@ -14,6 +14,10 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { chatActions } from "@/lib/store/chat";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useHandleError } from "@/lib/hooks/error";
+import { ApolloError, useMutation } from "@apollo/client";
+import { GET_CHAT_COMPLETION_MESSAGE } from "@/apollo/mutations/openai";
+import Picker from '@emoji-mart/react'
 
 const ChatComponent: React.FC = () => {
 
@@ -50,11 +54,41 @@ const ChatComponent: React.FC = () => {
     scrollToBottom();
   }, [chatMessage]);
 
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+
+  const addEmoji = (emoji: any) => {
+    const currentValues = getValues();
+    reset({
+      ...currentValues,
+      chat: currentValues.chat + emoji.native,
+    });
+    setShowEmojiPicker(false);
+  };
+
+  const { handleError } = useHandleError();
+
+  const [getChatCompletionMessage, { loading }] = useMutation(GET_CHAT_COMPLETION_MESSAGE, {
+    onCompleted: async (data) => {
+      const aiMessage: string = data.getChatCompletionMessage.data.aiMessage;
+      dispatch(chatActions.addMessage({ message: aiMessage, isAi: true }));
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
+
   const onFinish = async (values: any) => {
     dispatch(chatActions.addMessage({ message: values.chat, isAi: false }));
-
-    const aiMessage: string = "Hello from gPT";
-    dispatch(chatActions.addMessage({ message: aiMessage, isAi: true }));
+    reset({
+      chat: ""
+    });
+    await getChatCompletionMessage({
+      variables: {
+        input: {
+          message: values.chat,
+        }
+      },
+    });
   };
 
   return (
@@ -76,7 +110,7 @@ const ChatComponent: React.FC = () => {
           <img src={LogoDefault.src} style={{ width: "1.8rem" }} />
           <Flex justify="space-between" align="flex-start" style={{ width: "100%" }}>
             <div>
-              <Paragraph style={{ fontWeight: 500, margin: 0 }}>S-Routing Customer Service</Paragraph>
+              <Paragraph style={{ fontWeight: 500, margin: 0 }}>AI Chatbox Assistant</Paragraph>
               <Paragraph style={{ color: "#495057", fontSize: "0.9rem", margin: 0 }}>Chat with us</Paragraph>
             </div>
             <CloseOutlined
@@ -87,10 +121,11 @@ const ChatComponent: React.FC = () => {
         </Flex>
       </div>
       <div className={styles['content']}>
+
         {chatMessage.map((item, index) => {
           return (
             item.isAi ?
-              <Flex gap="0.5rem" align="flex-end" style={{margin: "0.5rem 0"}}>
+              <Flex gap="0.5rem" align="flex-end" style={{ margin: "0.5rem 0" }}>
                 <img src={LogoDefault.src} style={{ width: "1.8rem", height: "1.8rem", borderRadius: "50%" }} />
                 <Paragraph style={{ maxWidth: "70%", background: "#e9ecef", borderRadius: "0.5rem", margin: "0", padding: "0.5rem 0.8rem" }}>
                   <ReactMarkdown remarkPlugins={[remarkGfm]} className={styles['reactMarkDown']}>
@@ -103,7 +138,20 @@ const ChatComponent: React.FC = () => {
               </Paragraph>
           );
         })}
+
         <div ref={messagesEndRef} />
+
+        {
+          loading ?
+            <Spin
+              indicator={<LoadingOutlined spin />}
+              style={{
+                margin: "1rem auto",
+                color: COLOR.PRIMARY,
+              }}></Spin>
+            : null
+        }
+
       </div>
       <Flex align="flex-start" style={{ padding: "0.5rem 1rem", height: "4rem" }} >
         <Form
@@ -127,13 +175,25 @@ const ChatComponent: React.FC = () => {
               name="chat"
               control={control}
               render={({ field }) => (
-                <Input
-                  key="chat"
-                  {...field}
-                  placeholder="Type a message"
-                  suffix={<AudioOutlined style={{ color: COLOR.PRIMARY, fontSize: "1rem", cursor: "pointer" }} />}
-                  style={{ borderRadius: "0.6rem", height: "2.5rem", background: "white", margin: 0 }}
-                />
+                <div style={{ position: 'relative' }}>
+                  <Input
+                    key="chat"
+                    {...field}
+                    placeholder="Type a message..."
+                    suffix={
+                      <SmileOutlined
+                        style={{ color: COLOR.PRIMARY, fontSize: "1.2rem", cursor: "pointer" }}
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      />
+                    }
+                    style={{ borderRadius: "0.6rem", height: "2.5rem", background: "white", margin: 0, paddingLeft: "1rem" }}
+                  />
+                  {showEmojiPicker && (
+                    <div style={{ position: 'absolute', bottom: '100%', right: -20 }}>
+                     <Picker onEmojiSelect={addEmoji} />
+                    </div>
+                  )}
+                </div>
               )}
             />
           </Form.Item>
