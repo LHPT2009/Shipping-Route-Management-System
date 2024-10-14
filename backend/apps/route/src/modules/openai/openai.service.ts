@@ -13,7 +13,6 @@ const DEFAULT_MODEL = 'gpt-4o-mini'
 export class OpenaiService implements OnModuleInit {
     private readonly chatHistory: ChatHistoryManager;
     private readonly chat: ChatOpenAI;
-    private cachedRoutesData: object[] = null;
 
     constructor(
         private readonly routesService: RoutesService
@@ -27,10 +26,9 @@ export class OpenaiService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        if (!this.cachedRoutesData) {
-            this.cachedRoutesData = await this.routesService.findAllRouteForAi();
-        }
-        const formattedData = JSON.stringify(this.cachedRoutesData);
+
+        const data = (await this.routesService.findAllRouteForAi());
+        const formattedData = JSON.stringify(data);
         this.chatHistory.addAiMessage(`Dữ liệu từ RoutesService: ${formattedData}`);
     }
 

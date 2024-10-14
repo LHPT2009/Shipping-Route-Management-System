@@ -17,9 +17,46 @@ export class RoutesService {
     private routeRepository: RouteRepository,
   ) { }
 
-  async findAllRouteForAi(): Promise<object[]> {
-    const data: object[] = await this.routeRepository.find();
-    return data
+  // async findAllRouteForAi(): Promise<object[]> {
+  //   const data: object[] = await this.routeRepository.find();
+  //   return data
+  // }
+
+  async findAllRouteForAi(): Promise<{
+    routes: FilterRouteType[];
+    total: number;
+  }> {
+    const queryBuilder = this.routeRepository.createQueryBuilder('route')
+      .leftJoinAndSelect('route.departure', 'departure')
+      .leftJoinAndSelect('route.arrival', 'arrival')
+      .leftJoinAndSelect('route.transport', 'transport');
+
+    const [routes, total] = await queryBuilder.getManyAndCount();
+
+    let routesResponse = routes.map((route) => {
+      return {
+        id: route.id,
+        name: route.name,
+        departure: route.departure.name,
+        arrival: route.arrival.name,
+        departure_time: moment(route.departure_time).format('HH:mm - DD/MM/YYYY'),
+        arrival_time: moment(route.arrival_time).format('HH:mm - DD/MM/YYYY'),
+        shipping_type: ShippingTypeEnum[route.transport.shipping_type],
+        vehicle_type: VehicleTypeEnum[route.transport.vehicle_type],
+        license_plate: route.transport.license_plate,
+        distance: `${route.distance} km`,
+        status: StatusEnum[route.status],
+        departure_longitude: route.departure.longitude,
+        departure_latitude: route.departure.latitude,
+        arrival_longitude: route.arrival.longitude,
+        arrival_latitude: route.arrival.latitude,
+      };
+    });
+
+    return {
+      total,
+      routes: routesResponse,
+    };
   }
 
   async findAll(filterRoutesDto: FilterRoutesDto): Promise<ResponseDto<{
