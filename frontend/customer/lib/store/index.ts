@@ -1,4 +1,3 @@
-'use client';
 
 import { configureStore } from '@reduxjs/toolkit';
 import AuthReducer from './auth';
@@ -6,6 +5,7 @@ import UserReducer from './user';
 import ResponsiveReducer from './responsive';
 import MenuReducer from './menu';
 import LoadingReducer from './loading';
+import ChatReducer from './chat';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +14,7 @@ export const store = configureStore({
     responsive: ResponsiveReducer,
     menu: MenuReducer,
     loading: LoadingReducer,
+    chat: ChatReducer,
   }
 })
 

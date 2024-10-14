@@ -13,17 +13,15 @@ export default function Home() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const value : MenuState ={
+    const value: MenuState = {
       keyMenu: KEYMENU.HOME,
     }
     dispatch(menuActions.changeInfoMenu(value))
   }, [dispatch]);
-  
+
   return (
-    <LayoutComponent>
-      <BodyComponent>
-        <HompageComponent />
-      </BodyComponent>
-    </LayoutComponent>
+    <BodyComponent>
+      <HompageComponent />
+    </BodyComponent>
   );
 }
