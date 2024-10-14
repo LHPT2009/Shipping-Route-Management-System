@@ -7,10 +7,19 @@
 }
 
 .content {
-    height: 21.5rem;
+    height: 22.5rem;
     padding: 0.5rem 1rem;
     overflow: auto;
     display: flex;
     flex-direction: column;
     scrollbar-width: thin;
+}
+
+.reactMarkDown {
+    padding: 0 !important;
+}
+
+.reactMarkDown p {
+    margin: 0 !important;
+    padding: 0 !important;
 }

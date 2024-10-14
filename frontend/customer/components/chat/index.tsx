@@ -12,6 +12,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { COLOR } from "@/constant";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { chatActions } from "@/lib/store/chat";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const ChatComponent: React.FC = () => {
 
@@ -88,10 +90,12 @@ const ChatComponent: React.FC = () => {
         {chatMessage.map((item, index) => {
           return (
             item.isAi ?
-              <Flex gap="0.5rem" align="flex-end">
-                <img src={LogoDefault.src} style={{ width: "1.7rem", height: "1.7rem", borderRadius: "50%", marginBottom: "0.5rem" }} />
-                <Paragraph style={{ maxWidth: "70%", background: "#e9ecef", borderRadius: "0.4rem", margin: "0.5rem 0", padding: "0.4rem 0.8rem" }}>
-                  {item.message}
+              <Flex gap="0.5rem" align="flex-end" style={{margin: "0.5rem 0"}}>
+                <img src={LogoDefault.src} style={{ width: "1.8rem", height: "1.8rem", borderRadius: "50%" }} />
+                <Paragraph style={{ maxWidth: "70%", background: "#e9ecef", borderRadius: "0.4rem", margin: "0", padding: "0.5rem 0.8rem" }}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} className={styles['reactMarkDown']}>
+                    {item.message}
+                  </ReactMarkdown>
                 </Paragraph>
               </Flex>
               : <Paragraph style={{ maxWidth: "70%", alignSelf: "flex-end", background: COLOR.PRIMARY, color: "white", borderRadius: "0.4rem", margin: "0.5rem 0", padding: "0.4rem 0.8rem" }}>
@@ -101,7 +105,7 @@ const ChatComponent: React.FC = () => {
         })}
         <div ref={messagesEndRef} />
       </div>
-      <Flex align="center" style={{ padding: "0.5rem 1rem", height: "5rem" }} >
+      <Flex align="flex-start" style={{ padding: "0.5rem 1rem", height: "4rem" }} >
         <Form
           initialValues={{ remember: true }}
           style={{
