@@ -18,9 +18,6 @@ const LayoutComponent: React.FC<ChildrenComponentProps> = ({
       <HeaderComponent />
       <Content>{children}</Content>
       <FooterComponent />
-      <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "3rem", width: "3rem", insetBlockEnd: 95 }} />
-      <FloatButton type="primary" icon={<CommentOutlined />} style={{ height: "3rem", width: "3rem", insetBlockEnd: 30 }} />
-      <ChatComponent />
     </Layout>
   );
 };

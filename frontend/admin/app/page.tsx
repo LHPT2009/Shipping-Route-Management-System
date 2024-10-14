@@ -11,21 +11,17 @@ import { COLOR, KEYMENU, LABELMENU } from "@/constant";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import useLoading from "@/lib/hooks/useLoading";
-import { ROLE } from "@/constant/role";
 import { AdminPermissions, AdminRoles } from "@/lib/permissions/admin";
 import LineGraph from "@/components/chart";
 import { Flex, Tag } from "antd";
 import Title from "antd/es/typography/Title";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { LOCATION_STATISTIC, PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATISTIC, TRANSPORT_STATISTIC, USER_STATISTIC } from "@/apollo/query/statistic";
+import { PERMISSION_STATISTIC, ROLE_STATISTIC, ROUTE_STATISTIC, TRANSPORT_STATISTIC, USER_STATISTIC } from "@/apollo/query/statistic";
 import { useHandleError } from "@/lib/hooks/error";
 import styles from "./page.module.css";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import { ArrowRightOutlined, EnvironmentOutlined, TeamOutlined, UnlockOutlined, UserOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, TeamOutlined, UnlockOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { get } from "http";
-import { fetchCookies } from "@/utils/token/fetch_cookies.token";
 
 function Home() {
   const dispatch = useAppDispatch();
