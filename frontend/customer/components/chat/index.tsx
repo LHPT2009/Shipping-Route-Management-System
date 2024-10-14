@@ -92,13 +92,13 @@ const ChatComponent: React.FC = () => {
             item.isAi ?
               <Flex gap="0.5rem" align="flex-end" style={{margin: "0.5rem 0"}}>
                 <img src={LogoDefault.src} style={{ width: "1.8rem", height: "1.8rem", borderRadius: "50%" }} />
-                <Paragraph style={{ maxWidth: "70%", background: "#e9ecef", borderRadius: "0.4rem", margin: "0", padding: "0.5rem 0.8rem" }}>
+                <Paragraph style={{ maxWidth: "70%", background: "#e9ecef", borderRadius: "0.5rem", margin: "0", padding: "0.5rem 0.8rem" }}>
                   <ReactMarkdown remarkPlugins={[remarkGfm]} className={styles['reactMarkDown']}>
                     {item.message}
                   </ReactMarkdown>
                 </Paragraph>
               </Flex>
-              : <Paragraph style={{ maxWidth: "70%", alignSelf: "flex-end", background: COLOR.PRIMARY, color: "white", borderRadius: "0.4rem", margin: "0.5rem 0", padding: "0.4rem 0.8rem" }}>
+              : <Paragraph style={{ maxWidth: "70%", alignSelf: "flex-end", background: COLOR.PRIMARY, color: "white", borderRadius: "0.5rem", margin: "0.5rem 0", padding: "0.4rem 0.8rem" }}>
                 {item.message}
               </Paragraph>
           );
