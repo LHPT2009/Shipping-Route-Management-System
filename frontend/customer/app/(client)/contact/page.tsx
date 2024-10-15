@@ -19,6 +19,9 @@ import { useAppDispatch } from "@/lib/hooks/hooks";
 import { menuActions, MenuState } from "@/lib/store/menu";
 import { KEYMENU } from "@/constant";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
+import { ApolloError, useMutation } from "@apollo/client";
+import { CREATE_CONTACT } from "@/apollo/mutations/contact";
+import { useHandleError } from "@/lib/hooks/error";
 
 const ContactPage = () => {
 
@@ -61,14 +64,42 @@ const ContactPage = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const { openNotificationWithIcon } = useAntNotification();
+  const { handleError } = useHandleError();
+  
+  const [createContact, { loading }] = useMutation(CREATE_CONTACT, {
+    onCompleted: async (data) => {
+      reset({
+        fullname: "",
+        phone: "",
+        email: "",
+        title: "",
+        description: ""
+      });
+      openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "We have received your information and will get in touch with you as soon as possible.");
+    },
+    onError: async (error: ApolloError) => {
+      await handleError(error);
+    }
+  });
 
   const onFinish = async (values: any) => {
-    openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "We have received your information and will get in touch with you as soon as possible.");
+    await createContact({
+      variables: {
+        input: {
+          fullname: values.fullname,
+          phone_number: values.phone,
+          email: values.email,
+          title: values.title,
+          description: values.description
+        }
+      },
+    });
   };
 
   const screenWidth = UseScreenWidth();
@@ -262,6 +293,7 @@ const ContactPage = () => {
               {/* Button register*/}
               <Form.Item>
                 <Button
+                  loading={loading}
                   type="primary"
                   htmlType="submit"
                   className="login-form-button"
