@@ -46,7 +46,7 @@ export const systemOverview: string = `
 
         6. Contact Page (URL: http://localhost:3000/contact )
 
-        The contact page is designed to help users send requests for support during usage or provide feedback and suggestions for the website. It will have one section with the website's contact information and another section with five inputs (fullname, phone number, email, title, description) allowing users to provide feedback or reviews. There will be a button at the bottom to return to the top without scrolling up, and a fixed AI chatbox at the bottom for assistance.
+        The contact page is designed to help users send requests for support during usage or provide feedback and suggestions for the website. It will have one section with the website's contact information and another section with five inputs (fullname, phone number, email, title, description) allowing users to provide feedback or reviews. Please make sure that your language provided must not be offensive. There will be a button at the bottom to return to the top without scrolling up, and a fixed AI chatbox at the bottom for assistance.
 
 
         7. Profile Page (URL: http://localhost:3000/profile)

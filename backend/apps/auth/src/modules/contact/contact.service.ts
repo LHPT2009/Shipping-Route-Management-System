@@ -40,7 +40,6 @@ export class ContactService {
     }
 
     // Filter rude comments by openAI
-    // -----------------
     const checkAi = await this.openaiService.checkInfoContact(createContactDto);
     const parts = checkAi.aiMessage.split('//');
     const firstPart = parts[0].trim();
@@ -48,17 +47,18 @@ export class ContactService {
     if (firstPart === 'INAPPROPRIATE') {
       throw new CustomValidationError('Feedback have wrong', { description: [secondPart] });
     }
-    // ------------------
 
     // After filter by openAI, we will check if the email has been sent in the last 24 hours and save it to database
     const getContactByEmail: ContactEntity = await this.contactRepository.createQueryBuilder("contact")
       .where("contact.email = :email", { email: createContactDto.email })
       .getOne();
 
-    if (getContactByEmail) {
-      if (new Date().getTime() - getContactByEmail.created_at.getTime() < 86400000) {
-        throw new CustomValidationError('Validation failed', { email: ['You have already sent the contact. Please be patient, we’ll reach out to you soon.'] });
-      }
+    console.log(new Date());
+    console.log(getContactByEmail.created_at);
+    console.log(new Date().getTime() - getContactByEmail.created_at.getTime());
+    if (getContactByEmail && new Date().getTime() - getContactByEmail.created_at.getTime() < 86400000) {
+      console.log("123")
+      throw new CustomValidationError('Validation failed', { email: ['You have already sent the contact. Please be patient, we’ll reach out to you soon.'] });
     } else {
       const contact = new ContactEntity(
         createContactDto.fullname,
@@ -68,10 +68,11 @@ export class ContactService {
         createContactDto.description,
         new Date(),
       );
+
+      await this.contactRepository.delete({ email: createContactDto.email });
       await this.contactRepository.save(contact);
 
       // Send email to admin by Kafka
-      // -----------------
       const infoAdmin = await this.userService.findInfoByID("1")
       const item = {
         title: "FEEDBACK FROM USER",
@@ -100,10 +101,8 @@ export class ContactService {
           }
         ]
       });
-      // ----------------
 
       // Send email to user by Kafka
-      // -----------------
       const itemmail2 = {
         title: "THANKS YOU FOR FEEDBACK",
         content: `Thanks you for sharing, your problem will be solved soon.<br><br>
@@ -131,7 +130,6 @@ export class ContactService {
           }
         ]
       });
-      // // ----------------
 
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, contact, []);
     }

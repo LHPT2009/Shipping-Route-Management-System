@@ -281,7 +281,7 @@ const ContactPage = () => {
                   render={({ field }) => (
                     <TextArea
                       showCount
-                      maxLength={200}
+                      maxLength={1000}
                       key="description"
                       {...field}
                       style={{ borderRadius: "0.5rem", height: "10rem", background: "white", resize: "none", padding: "0.5rem 0.17rem 1rem 0.17rem" }}
