@@ -144,6 +144,7 @@ export class UserService {
           email: userDTO.email,
           username: userDTO.username,
           url: url,
+          typemail: "confirm"
         };
 
         const itemString = JSON.stringify(item);
@@ -227,6 +228,7 @@ export class UserService {
       email: user.email,
       username: user.username,
       url: url,
+      typemail: "confirm"
     };
 
     const itemString = JSON.stringify(item);
