@@ -110,7 +110,7 @@ const ChatComponent: React.FC = () => {
           <img src={LogoDefault.src} style={{ width: "1.8rem" }} />
           <Flex justify="space-between" align="flex-start" style={{ width: "100%" }}>
             <div>
-              <Paragraph style={{ fontWeight: 500, margin: 0 }}>AI Chatbox Assistant</Paragraph>
+              <Paragraph style={{ fontWeight: 500, margin: 0 }}>AI Chatbot Assistant</Paragraph>
               <Paragraph style={{ color: "#495057", fontSize: "0.9rem", margin: 0 }}>Chat with us</Paragraph>
             </div>
             <CloseOutlined
