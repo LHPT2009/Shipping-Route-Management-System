@@ -53,11 +53,7 @@ export class ContactService {
       .where("contact.email = :email", { email: createContactDto.email })
       .getOne();
 
-    console.log(new Date());
-    console.log(getContactByEmail.created_at);
-    console.log(new Date().getTime() - getContactByEmail.created_at.getTime());
     if (getContactByEmail && new Date().getTime() - getContactByEmail.created_at.getTime() < 86400000) {
-      console.log("123")
       throw new CustomValidationError('Validation failed', { email: ['You have already sent the contact. Please be patient, we’ll reach out to you soon.'] });
     } else {
       const contact = new ContactEntity(
