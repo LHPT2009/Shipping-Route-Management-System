@@ -24,7 +24,7 @@ const ClientLayout: React.FC<ChildrenComponentProps> = ({ children }) => {
         <FloatButton.BackTop icon={<ArrowUpOutlined />} style={{ height: "3rem", width: "3rem", insetBlockEnd: 95 }} />
       </Tooltip>
 
-      <Tooltip placement="bottom" title="AI Chatbox Assistant">
+      <Tooltip placement="bottom" title="AI Chatbot Assistant">
         <FloatButton
           onClick={() => dispatch(chatActions.openChat())}
           type="primary"

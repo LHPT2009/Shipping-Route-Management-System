@@ -14,7 +14,6 @@ export class OpenaiService implements OnModuleInit {
     private readonly chatHistory: ChatHistoryManager;
     private readonly chat: ChatOpenAI;
 
-
     constructor(
     ) {
         this.chatHistory = new ChatHistoryManager("You will be a virtual assistant named S-Routing AI Chatbot Assistant.");
