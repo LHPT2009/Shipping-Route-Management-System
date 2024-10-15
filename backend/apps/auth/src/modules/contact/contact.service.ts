@@ -100,9 +100,8 @@ export class ContactService {
 
       // Send email to user by Kafka
       const itemmail2 = {
-        title: "THANKS YOU FOR FEEDBACK",
-        content: `Thanks you for sharing, your problem will be solved soon.<br><br>
-        Your Content:<br>
+        title: "THANK YOU FOR FEEDBACK",
+        content: `Thank you for sharing, your problem will be solved soon.<br><br>
         Title: ${contact.title}<br>
         Name: ${contact.fullname}<br>
         Phone number: ${contact.phone_number}<br>
