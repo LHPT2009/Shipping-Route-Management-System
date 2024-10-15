@@ -4,7 +4,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { GetChatCompletionAnswerInputDTO, GetChatCompletionAnswerOutputDTO } from './dto/chat-completion-answer.dto';
 import { ResponseDto } from 'common/response/responseDto';
 import { STATUS, STATUS_CODE } from 'common/constants/status';
-import { RoutesService } from '../route/route.service';
+import { systemOverview } from './openai.training';
 
 const DEFAULT_TEMPERATURE = 1
 const DEFAULT_MODEL = 'gpt-4o-mini'
@@ -14,22 +14,21 @@ export class OpenaiService implements OnModuleInit {
     private readonly chatHistory: ChatHistoryManager;
     private readonly chat: ChatOpenAI;
 
+
     constructor(
-        private readonly routesService: RoutesService
     ) {
-        this.chatHistory = new ChatHistoryManager("Đây là hệ thống chat vào bạn cho tên là lily");
+        this.chatHistory = new ChatHistoryManager("You will be a virtual assistant named S-Routing AI Chatbot Assistant.");
         this.chat = new ChatOpenAI({
             temperature: DEFAULT_TEMPERATURE,
             openAIApiKey: process.env.OPENAI_API_KEY,
             modelName: DEFAULT_MODEL,
         })
+
+        this.chatHistory.addAiMessage(systemOverview);
     }
 
     async onModuleInit() {
 
-        const data = (await this.routesService.findAllRouteForAi());
-        const formattedData = JSON.stringify(data);
-        this.chatHistory.addAiMessage(`Dữ liệu từ RoutesService: ${formattedData}`);
     }
 
     async getAiModelAnswer(data: GetChatCompletionAnswerInputDTO): Promise<ResponseDto<GetChatCompletionAnswerOutputDTO>> {

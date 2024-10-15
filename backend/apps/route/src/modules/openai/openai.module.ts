@@ -1,12 +1,8 @@
 import { OpenaiService } from './openai.service';
 import { OpenaiResolver } from './openai.resolver';
-import { forwardRef, Module } from '@nestjs/common';
-import { RouteModule } from '../route/route.module';
+import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [
-    forwardRef(() => RouteModule),
-  ],
   providers: [OpenaiService, OpenaiResolver]
 })
 export class OpenaiModule { }
