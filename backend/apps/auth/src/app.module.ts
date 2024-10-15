@@ -37,6 +37,8 @@ import { KafkaModule } from './modules/kafka/kafka.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 import { dataSourceOptions } from 'db/data-source';
+import { ContactModule } from './modules/contact/contact.module';
+import { ContactEntity } from './modules/contact/entity/contact.entity';
 
 @Module({
   imports: [
@@ -59,7 +61,7 @@ import { dataSourceOptions } from 'db/data-source';
     TypeOrmModule.forRoot(
       {
         ...dataSourceOptions,
-        entities: [UserEntity, RoleEntity, PermissionEntity, RefreshTokenEntity]
+        entities: [UserEntity, RoleEntity, PermissionEntity, RefreshTokenEntity, ContactEntity]
       }
     ),
 
@@ -70,6 +72,7 @@ import { dataSourceOptions } from 'db/data-source';
     PermissionModule,
     RefreshTokenModule,
     KafkaModule,
+    ContactModule,
 
     forwardRef(() => RoleModule),
 
