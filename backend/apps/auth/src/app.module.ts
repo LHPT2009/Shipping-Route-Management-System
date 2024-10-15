@@ -39,6 +39,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { dataSourceOptions } from 'db/data-source';
 import { ContactModule } from './modules/contact/contact.module';
 import { ContactEntity } from './modules/contact/entity/contact.entity';
+import { OpenaiModule } from './modules/openai/openai.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { ContactEntity } from './modules/contact/entity/contact.entity';
     RefreshTokenModule,
     KafkaModule,
     ContactModule,
+    OpenaiModule,
 
     forwardRef(() => RoleModule),
 

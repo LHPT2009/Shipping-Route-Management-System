@@ -12,6 +12,7 @@ type EmailItem = {
   email: string;
   username: string;
   url: string;
+  typemail: string;
 };
 
 @Injectable()
@@ -21,8 +22,8 @@ export class SendMailConsumer implements OnModuleInit {
     private readonly emailService: EmailService,
   ) { }
 
-  email_template(title: string, content: string, button: string, url: string, username: string): string {
-    const templatePath = path.resolve(process.cwd(), 'apps/notification/src/email/email_template.html');
+  email_template(title: string, content: string, button: string, url: string, username: string, typemail: string): string {
+    const templatePath = path.resolve(process.cwd(), typemail === "confirm" ? 'apps/notification/src/email/email_template.html' : 'apps/notification/src/email/email_template_contact.html');
     let htmlContent = fs.readFileSync(templatePath, 'utf-8');
     htmlContent = htmlContent.replace('{{url}}', url)
       .replace('{{username}}', username)
@@ -34,12 +35,12 @@ export class SendMailConsumer implements OnModuleInit {
     return htmlContent;
   }
 
-  sendMail(title: string, content: string, button: string, verifyToken: string, email: string, username: string, url: string) {
+  sendMail(title: string, content: string, button: string, verifyToken: string, email: string, username: string, url: string, typemail: string) {
     try {
-      const emailHtml = this.email_template(title, content, button, url, username);
+      const emailHtml = this.email_template(title, content, button, url, username, typemail);
       this.emailService.sendEmail(
         email,
-        'Verify a new account',
+        typemail === "confirm" ? 'Verify a new account' : 'Information Reception System',
         emailHtml
       );
     } catch (error) {
@@ -53,7 +54,7 @@ export class SendMailConsumer implements OnModuleInit {
       {
         eachMessage: async ({ message }) => {
           const info: EmailItem = JSON.parse(message.value.toString());
-          this.sendMail(info.title, info.content, info.button, info.verifyToken, info.email, info.username, info.url)
+          this.sendMail(info.title, info.content, info.button, info.verifyToken, info.email, info.username, info.url, info.typemail)
         }
       }
     );
