@@ -65,7 +65,7 @@ const MenuComponent: React.FC<MenuComponentProps> = ({
         setMENULIST([...menuInit]);
       }
     }
-  }, [user.role, user.permissions]);
+  }, [isLogin, user]);
 
   const onClickDrawer: MenuProps["onClick"] = (e) => {
     setOpen(false);
