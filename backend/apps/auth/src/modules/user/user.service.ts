@@ -31,7 +31,15 @@ import { instanceToPlain } from 'class-transformer';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
+import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { Socket } from "socket.io";
+
 @Injectable()
+@WebSocketGateway({
+  cors: {
+    origin: "*"
+  }
+})
 export class UserService {
   constructor(
     private userRepository: UserRepository,
@@ -41,6 +49,10 @@ export class UserService {
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache
   ) { }
+
+  @WebSocketServer()
+  socket: Socket
+
   async findAll(filterUsersDto: FilterUsersDto): Promise<ResponseDto<{
     users: FilterUsersType[];
     total: number;
@@ -420,6 +432,7 @@ export class UserService {
     return validationErrors;
   }
 
+  @SubscribeMessage("message")
   async updateRoleForUser(id: string, userUpdateRoleDto: UserUpdateRoleDto): Promise<ResponseDto<UserEntity>> {
     try {
       const user = await this.userRepository.findOneBy({ id });
@@ -453,6 +466,7 @@ export class UserService {
 
         await this.cacheManager.set(userInRedisAffected, result);
       }
+      this.socket.emit("message", { id: 1 })
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
 
     } catch (error) {
