@@ -28,7 +28,8 @@ export default function CookiesComponent() {
         fullname: data.getUserByToken.data.fullname,
         address: data.getUserByToken.data.address,
         phone: data.getUserByToken.data.phone_number,
-        role: data.getUserByToken.data.roles.name.charAt(0).toUpperCase() + data.getUserByToken.data.roles.name.slice(1).toLowerCase(),
+        role: data.getUserByToken.data.roles.name,
+        permissions: data.getUserByToken.data.roles.permissions.map((permission: any) => permission.name),
         img: data.getUserByToken.data.img,
       }
       dispatch(userActions.setUserInformation(userData));

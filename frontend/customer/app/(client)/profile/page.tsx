@@ -71,6 +71,7 @@ const ProfilePage = () => {
         address: data.updateUserByToken.data.address,
         phone: data.updateUserByToken.data.phone_number,
         role: user.role,
+        permissions: user.permissions,
         img: user.img,
       }
       dispatch(userActions.setUserInformation(userData));
