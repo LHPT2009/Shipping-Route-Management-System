@@ -44,7 +44,7 @@ export class UserResolver {
   }
 
   @Query(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.DRIVER)
   @Permissions(PERMISSION.READ_DETAIL_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async getUserByToken(

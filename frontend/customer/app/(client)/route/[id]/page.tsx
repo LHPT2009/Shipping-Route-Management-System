@@ -19,6 +19,7 @@ import Link from "next/link";
 import { HomeOutlined } from "@ant-design/icons";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import { RouteDetailPermissions, RouteDetailRoles } from "@/lib/permissions/route-detail";
+import { useAppSelector } from "@/lib/hooks/hooks";
 
 const { Text } = Typography;
 
@@ -54,6 +55,19 @@ const RouteDetailPage = ({ params }: { params: { id: string } }) => {
   const onFinish = async (values: any) => {
     console.log(values);
   };
+
+  const user = useAppSelector((state) => state.user);
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
+
+  useEffect(() => {
+    if (isLogin) {
+      const nameRole: string = user.role;
+      const namePermission: string[] = user.permissions;
+      if (!RouteDetailRoles.includes(nameRole) || !RouteDetailPermissions.some((permission) => namePermission.includes(permission))) {
+        router.push('/unauthorized');
+      }
+    }
+  }, [user.role, user.permissions]);
 
   const [route, setRoute] = useState<RouteInterface>();
 

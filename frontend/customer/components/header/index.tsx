@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Col, Button } from "antd";
 import DrawerComponent from "../drawer";
 import logoFull from "@/public/logo/logoFull.png";
@@ -61,6 +61,14 @@ const HeaderComponent = () => {
       }
     });
   };
+
+  useEffect(() => {
+    if (isLogin) {
+      if (!user.active) {
+        logoutHandler();
+      }
+    }
+  }, [user.active]);
 
   const clickHandler = async () => {
     const { accessToken, expiresIn } = await fetchCookies();
@@ -138,7 +146,7 @@ const HeaderComponent = () => {
                   {user.role}
                 </Paragraph>
               </div>
-              <Link href="/profile" onClick={() => {dispatch(menuActions.changeInfoMenu({keyMenu: ""}))}}>
+              <Link href="/profile" onClick={() => { dispatch(menuActions.changeInfoMenu({ keyMenu: "" })) }}>
                 <img style={{ width: "3rem", height: "3rem", borderRadius: "50%" }} src={user.img !== "" ? user.img : Male.src} alt="tung" />
               </Link>
               <img onClick={logoutHandler} src={LogoutIcon.src} alt="logout" style={{ width: "1.5rem", cursor: "pointer" }} />

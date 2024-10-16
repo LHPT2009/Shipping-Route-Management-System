@@ -15,9 +15,20 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { UserEntity } from '../user/entity/user.entity';
 import { CreateMutipleRoleDto } from './dto/mutiple-role-create.dto';
 import { PERMISSION } from '../../../../../common/constants/permission';
+import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Socket } from "socket.io";
 
 @Injectable()
+@WebSocketGateway({
+  cors: {
+    origin: "*"
+  }
+})
 export class RoleService {
+
+  @WebSocketServer()
+  socket: Socket
+  
   constructor(
     private userRepository: UserRepository,
     private roleRepository: RoleRepository,
@@ -175,6 +186,7 @@ export class RoleService {
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null);
   }
 
+  @SubscribeMessage("message")
   async addPermissionToRole(input: PermissionToRoleDto): Promise<ResponseDto<RoleEntity>> {
     const { roleId, permissionIds } = input;
 
@@ -216,6 +228,19 @@ export class RoleService {
         await this.cacheManager.set(userId, value);
       }));
     }
+
+    const users: UserEntity[] = await this.userRepository.find({
+      where: { roles: { id: roleId } },
+      relations: ['roles']
+    });
+
+    users.forEach(user => {
+      this.socket.emit(`message_${user.id}`, JSON.stringify({
+        role: role.name,
+        permissions: role.permissions.map(permission => permission.name),
+      }));
+    });
+
     return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, role, null);
   }
 

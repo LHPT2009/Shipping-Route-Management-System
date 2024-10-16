@@ -1,8 +1,10 @@
 "use client";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 export interface UserState {
+  id: string;
   username: string;
   email: string;
   fullname: string;
@@ -11,9 +13,11 @@ export interface UserState {
   role: string;
   permissions: string[];
   img: string;
+  active: boolean;
 }
 
 const initialState: UserState = {
+  id: "",
   username: "",
   email: "",
   fullname: "",
@@ -22,6 +26,7 @@ const initialState: UserState = {
   role: "",
   permissions: [],
   img: "",
+  active: true,
 };
 
 export const userSlice = createSlice({
@@ -29,6 +34,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserInformation(state, action: PayloadAction<UserState>) {
+      state.id = action.payload.id;
       state.username = action.payload.username;
       state.email = action.payload.email;
       state.fullname = action.payload.fullname;
@@ -37,8 +43,10 @@ export const userSlice = createSlice({
       state.role = action.payload.role;
       state.permissions = [...action.payload.permissions];
       state.img = action.payload.img;
+      state.active = action.payload.active;
     },
     clearUserInformation(state, action: PayloadAction) {
+      state.id = "";
       state.username = "";
       state.email = "";
       state.fullname = "";
@@ -46,6 +54,8 @@ export const userSlice = createSlice({
       state.phone = "";
       state.role = "";
       state.permissions = [];
+      state.img = "";
+      state.active = true;
     },
     setUserImg(state, action: PayloadAction<string>) {
       state.img = action.payload;
@@ -53,6 +63,9 @@ export const userSlice = createSlice({
     setUserRolePermissions(state, action: PayloadAction<{ role: string; permissions: string[] }>) {
       state.role = action.payload.role;
       state.permissions = [...action.payload.permissions];
+    },
+    setUserStatus(state, action: PayloadAction<boolean>) {
+      state.active = action.payload
     }
   },
 });
