@@ -2,12 +2,8 @@
 
 import { useEffect } from "react";
 import { fetchCookies } from "@/utils/token/fetch_cookies.token";
-import { setCookies } from "@/utils/cookies/handle.cookies";
-import { ApolloError, useLazyQuery, useQuery } from "@apollo/client";
-import { GET_NEW_ACCESS_TOKEN, GET_USER_BY_TOKEN } from "@/apollo/query/auth";
-import { extractErrorMessages } from "@/utils/error/format.error";
-import { getErrorMessage } from "@/utils/error/apollo.error";
-import { useGetNewAccessToken } from "@/lib/hooks/token";
+import { ApolloError, useLazyQuery, } from "@apollo/client";
+import { GET_USER_BY_TOKEN } from "@/apollo/query/auth";
 import { userActions, UserState } from "@/lib/store/user";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { useHandleError } from "@/lib/hooks/error";
@@ -23,6 +19,7 @@ export default function CookiesComponent() {
   const [getUserByToken] = useLazyQuery(GET_USER_BY_TOKEN, {
     onCompleted: async (data) => {
       const userData: UserState = {
+        id: data.getUserByToken.data.id,
         username: data.getUserByToken.data.username,
         email: data.getUserByToken.data.email,
         fullname: data.getUserByToken.data.fullname,
@@ -31,6 +28,7 @@ export default function CookiesComponent() {
         role: data.getUserByToken.data.roles.name,
         permissions: data.getUserByToken.data.roles.permissions.map((permission: any) => permission.name),
         img: data.getUserByToken.data.img,
+        active: data.getUserByToken.data.active,
       }
       dispatch(userActions.setUserInformation(userData));
       dispatch(authActions.setIsLogin(true));

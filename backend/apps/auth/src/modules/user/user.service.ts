@@ -445,14 +445,15 @@ export class UserService {
         redisUserId => user.id.toString() === redisUserId
       );
 
-      if (userInRedisAffected) {
-        const role: RoleEntity = await this.roleRepository.findOne({
-          where: { id: userUpdateRoleDto.roles },
-          relations: ['permissions'],
-        });
+      const role: RoleEntity = await this.roleRepository.findOne({
+        where: { id: userUpdateRoleDto.roles },
+        relations: ['permissions'],
+      });
 
-        const roleName = instanceToPlain(role).name;
-        const permissionNames = instanceToPlain(role).permissions.map(permission => permission.name);
+      const roleName = instanceToPlain(role).name;
+      const permissionNames = instanceToPlain(role).permissions.map(permission => permission.name);
+
+      if (userInRedisAffected) {
 
         const result: {
           id: string;
@@ -466,7 +467,12 @@ export class UserService {
 
         await this.cacheManager.set(userInRedisAffected, result);
       }
-      this.socket.emit("message", { id: 1 })
+
+      this.socket.emit(`message_${id}`, JSON.stringify({
+        role: roleName,
+        permissions: permissionNames,
+      }));
+
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
 
     } catch (error) {
@@ -474,16 +480,22 @@ export class UserService {
     }
   }
 
+  @SubscribeMessage("message")
   async updateStatusUser(id: string, updateStatusUserDto: UpdateStatusUserDto): Promise<ResponseDto<UserEntity>> {
     try {
       const user = await this.userRepository.findOneBy({ id });
 
       Object.assign(user, updateStatusUserDto);
+
+      this.socket.emit(`message_${id}`, JSON.stringify({
+        active: updateStatusUserDto.active,
+      }));
+
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.CREATE, STATUS.CREATE, user, []);
 
     } catch (error) {
-      return new ResponseDto(STATUS_CODE.ERR_INTERNAL_SERVER, STATUS.ERR_INTERNAL_SERVER, null, null);
+      throw new CustomValidationError(STATUS.ERR_INTERNAL_SERVER, { user: [STATUS.ERR_INTERNAL_SERVER] });
     }
   }
 

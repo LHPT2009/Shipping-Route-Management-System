@@ -18,7 +18,7 @@ import { FilterRouteType } from './type/route-filter.type';
 export class RoutesResolver {
   constructor(private routesService: RoutesService) { }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.DRIVER)
   @Permissions(PERMISSION.READ_LIST_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route[]>)

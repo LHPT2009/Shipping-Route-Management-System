@@ -7,7 +7,7 @@ import { ArrowUpOutlined, CommentOutlined } from "@ant-design/icons";
 import ChatComponent from "@/components/chat";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import { chatActions } from "@/lib/store/chat";
-import { UserState } from "@/lib/store/user";
+import { userActions, UserState } from "@/lib/store/user";
 import io, { Socket } from "socket.io-client";
 
 const ClientLayout: React.FC<ChildrenComponentProps> = ({ children }) => {
@@ -16,34 +16,41 @@ const ClientLayout: React.FC<ChildrenComponentProps> = ({ children }) => {
 
   const isOpen: boolean = useAppSelector((state) => state.chat.isOpen);
   const user: UserState = useAppSelector((state) => state.user);
+  const isLogin: boolean = useAppSelector((state) => state.auth.isLogin);
 
   const [socket, setSocket] = useState<Socket | null>(null);
 
   // initialize the socket
   useEffect(() => {
-    const socketInstance = io("http://localhost:5010");
-    setSocket(socketInstance);
+    if (isLogin) {
+      const socketInstance = io("http://localhost:5010");
+      setSocket(socketInstance);
 
-    return () => {
-      socketInstance.disconnect();
-    };
-  }, []);
+      return () => {
+        socketInstance.disconnect();
+      };
+    }
+  }, [isLogin]);
 
   // get data from socket (2-way communication)
   useEffect(() => {
-    if (socket) {
-      console.log("Socket initialized");
-      socket.on("message", (message: string) => {
-        const data = JSON.parse(message);
-        console.log("data from socket", data);
+    if (socket && isLogin) {
+      socket.on(`message_${user.id}`, (message: string) => {
+        const parsedMessage = JSON.parse(message);
+        if (parsedMessage.hasOwnProperty("role") && parsedMessage.hasOwnProperty("permissions")) {
+          dispatch(userActions.setUserRolePermissions({ role: parsedMessage.role, permissions: parsedMessage.permissions }));
+        }
+        if (parsedMessage.hasOwnProperty("active")) {
+          dispatch(userActions.setUserStatus(parsedMessage.active));
+        }
       });
 
       // Clean up the event listener when the component unmounts or socket changes
       return () => {
-        socket.off("message");
+        socket.off(`message_${user.id}`);
       };
     }
-  }, [socket]);
+  }, [socket, isLogin, user]);
 
   return (
     <div>

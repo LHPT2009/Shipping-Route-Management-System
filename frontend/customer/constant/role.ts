@@ -2,4 +2,5 @@ export const ROLE = {
   CUSTOMER: "CUSTOMER",
   ADMIN: "ADMIN",
   SUPERADMIN: "SUPERADMIN",
+  DRIVER: "DRIVER"
 };

@@ -25,7 +25,7 @@ import { RoutePermissions, RouteRoles } from "@/lib/permissions/route";
 import Link from "next/link";
 import Paragraph from "antd/es/typography/Paragraph";
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
-import * as XLSX from 'xlsx';;
+import * as XLSX from 'xlsx'; import { LOGOUT } from "@/apollo/query/auth";
 
 const { Search } = Input;
 
@@ -72,6 +72,19 @@ const RoutePage = () => {
   const router = useRouter();
 
   const dispatch = useAppDispatch();
+
+  const user = useAppSelector((state) => state.user);
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
+
+  useEffect(() => {
+    if (isLogin) {
+      const nameRole: string = user.role;
+      const namePermission: string[] = user.permissions;
+      if (!RouteRoles.includes(nameRole) || !RoutePermissions.some((permission) => namePermission.includes(permission))) {
+        router.push('/unauthorized');
+      }
+    }
+  }, [user.role, user.permissions]);
 
   useEffect(() => {
     const value: MenuState = {

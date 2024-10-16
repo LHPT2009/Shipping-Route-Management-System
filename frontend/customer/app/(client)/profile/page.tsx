@@ -24,6 +24,7 @@ import { CloseOutlined, CloudUploadOutlined, HomeOutlined } from "@ant-design/ic
 import { GetValueFromScreen, UseScreenWidth } from "@/utils/screenUtils";
 import Link from "next/link";
 import { phoneProfileRegex } from "@/utils/validation/phone-profile.regex";
+import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const user: UserState = useAppSelector((state) => state.user);
@@ -59,12 +60,27 @@ const ProfilePage = () => {
   });
 
   const dispatch = useAppDispatch();
+
+  const router = useRouter();
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
+
+  useEffect(() => {
+    if (isLogin) {
+      const nameRole: string = user.role;
+      const namePermission: string[] = user.permissions;
+      if (!UserProfileRoles.includes(nameRole) || !UserProfilePermissions.some((permission) => namePermission.includes(permission))) {
+        router.push('/unauthorized');
+      }
+    }
+  }, [user.role, user.permissions]);
+
   const { openNotificationWithIcon } = useAntNotification();
   const { handleError } = useHandleError();
 
   const [updateUserByToken, { loading }] = useMutation(UPDATE_PROFILE, {
     onCompleted: async (data) => {
       const userData: UserState = {
+        id: user.id,
         username: data.updateUserByToken.data.username,
         email: user.email,
         fullname: data.updateUserByToken.data.fullname,
@@ -73,6 +89,7 @@ const ProfilePage = () => {
         role: user.role,
         permissions: user.permissions,
         img: user.img,
+        active: user.active,
       }
       dispatch(userActions.setUserInformation(userData));
       openNotificationWithIcon('success', NOTIFICATION.CONGRATS, "User information was updated successfully");
