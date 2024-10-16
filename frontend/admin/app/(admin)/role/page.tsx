@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ContentComponent from "@/components/content";
-import { Flex, Button, Table, Breadcrumb, Tooltip, Upload } from "antd";
+import { Flex, Button, Table, Breadcrumb, Tooltip, Upload, Row, Col } from "antd";
 import type { TableColumnsType, UploadFile } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import CreateRoleModal from "@/components/modal/role/create";
@@ -229,43 +229,85 @@ const RolePage = () => {
               />
             </Content>
             <ContentComponent>
-              <Flex justify="space-between" style={{ marginBottom: "1.5rem" }}>
-                <Button
-                  type="default"
-                  onClick={handleOpenModalCreate}
-                  style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
-                >
-                  <PlusOutlined />
-                  New role
-                </Button>
-                <Flex gap="1rem">
-                  <Button
-                    type="default"
-                    onClick={downloadTemplate}
-                    style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
-                  >
-                    <DownloadOutlined style={{ fontSize: "1.2rem" }} />
-                    Download template
-                  </Button>
-                  <Upload {...uploadProps} showUploadList={false}>
+              {responsive ? <>
+                <Row gutter={[16, 16]} style={{ marginBottom: "1.5rem", marginLeft: "2px" }}>
+                  <Flex justify="flex-start" wrap gap="1rem">
                     <Button
                       type="default"
+                      onClick={handleOpenModalCreate}
                       style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
                     >
-                      <UploadOutlined style={{ fontSize: "1.2rem" }} />
-                      Import roles
+                      <PlusOutlined />
+                      New role
                     </Button>
-                  </Upload>
-                  <Button
-                    type="primary"
-                    onClick={() => exportToExcel(roles, 'roles')}
-                    style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
-                  >
-                    <ExportOutlined />
-                    Export to Excel
-                  </Button>
+                    <Button
+                      type="default"
+                      onClick={downloadTemplate}
+                      style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                    >
+                      <DownloadOutlined style={{ fontSize: "1.2rem" }} />
+                      Download template
+                    </Button>
+                    <Upload {...uploadProps} showUploadList={false}>
+                      <Button
+                        type="default"
+                        style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                      >
+                        <UploadOutlined style={{ fontSize: "1.2rem" }} />
+                        Import roles
+                      </Button>
+                    </Upload>
+                    <Button
+                      type="primary"
+                      onClick={() => exportToExcel(roles, 'roles')}
+                      style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+                    >
+                      <ExportOutlined />
+                      Export to Excel
+                    </Button>
+                  </Flex>
+                </Row>
+              </> : <>
+                <Flex justify="space-between" style={{ marginBottom: "1.5rem" }}>
+                  <Flex justify="flex-start" wrap gap="1rem">
+                    <Button
+                      type="default"
+                      onClick={handleOpenModalCreate}
+                      style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                    >
+                      <PlusOutlined />
+                      New role
+                    </Button>
+                  </Flex>
+                  <Flex justify="flex-end" wrap gap="1rem">
+                    <Button
+                      type="default"
+                      onClick={downloadTemplate}
+                      style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                    >
+                      <DownloadOutlined style={{ fontSize: "1.2rem" }} />
+                      Download template
+                    </Button>
+                    <Upload {...uploadProps} showUploadList={false}>
+                      <Button
+                        type="default"
+                        style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                      >
+                        <UploadOutlined style={{ fontSize: "1.2rem" }} />
+                        Import roles
+                      </Button>
+                    </Upload>
+                    <Button
+                      type="primary"
+                      onClick={() => exportToExcel(roles, 'roles')}
+                      style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+                    >
+                      <ExportOutlined />
+                      Export to Excel
+                    </Button>
+                  </Flex>
                 </Flex>
-              </Flex>
+              </>}
               <Table
                 columns={columns}
                 dataSource={roles}
@@ -273,9 +315,10 @@ const RolePage = () => {
                 loading={loading}
               />
             </ContentComponent>
-          </div>
+          </div >
         </>
-      )}
+      )
+      }
       <CreateRoleModal
         open={openModalCreate}
         onClose={handleCloseModalCreate}

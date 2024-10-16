@@ -536,7 +536,62 @@ const RoutePage = () => {
               />
             </Content>
             <ContentComponent>
-              <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.25rem" }}>
+              <Row style={{ marginBottom: "10px" }}>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Flex justify="flex-start">
+                    <Form
+                      initialValues={{ remember: true }}
+                      style={{
+                        width: "26rem",
+                        borderRadius: "1rem",
+                      }}
+                      onFinish={handleSubmit(onFinish)}
+                    >
+                      <Form.Item
+                        name="search"
+                        style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                      >
+                        <Controller
+                          name="search"
+                          control={control}
+                          render={({ field }) => (
+                            <Input
+                              key="search"
+                              {...field}
+                              placeholder={"Search for route name, departure and arrival"}
+                              prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
+                              style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
+                            />
+                          )}
+                        />
+                      </Form.Item>
+                    </Form>
+                  </Flex>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Flex justify="flex-end" gap="1rem">
+                    <Button
+                      type="default"
+                      onClick={() => {
+                        router.push(`/route/create`);
+                      }}
+                      style={{ color: COLOR.PRIMARY, border: "1px solid #4f46e5", padding: "0 1.2rem", height: "2.8rem", borderRadius: "0.4rem" }}
+                    >
+                      <PlusOutlined />
+                      New route
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => exportToExcel(data, 'routes')}
+                      style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+                    >
+                      <ExportOutlined />
+                      Export to Excel
+                    </Button>
+                  </Flex>
+                </Col>
+              </Row>
+              {/* <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.25rem" }}>
                 <Form
                   initialValues={{ remember: true }}
                   style={{
@@ -585,7 +640,7 @@ const RoutePage = () => {
                   </Button>
 
                 </Flex>
-              </Flex>
+              </Flex> */}
               <Table
                 rowKey={(record) => record.name}
                 className={styles['table-striped-rows']}

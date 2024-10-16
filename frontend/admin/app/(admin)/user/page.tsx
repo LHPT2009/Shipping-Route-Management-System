@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb, Tooltip } from "antd";
+import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Breadcrumb, Tooltip, Col, Row } from "antd";
 import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 // import RouteModal from "@/components/modal/route";
@@ -519,45 +519,51 @@ const UserPage = () => {
           </Content>
 
           <ContentComponent>
-            <Flex justify="space-between" align="flex-start" style={{ marginTop: "0.25rem" }}>
-              <Form
-                initialValues={{ remember: true }}
-                style={{
-                  width: "26rem",
-                  borderRadius: "1rem",
-                }}
-                onFinish={handleSubmit(onFinish)}
-              >
-                <Form.Item
-                  name="search"
-                  style={{ paddingBottom: errors.search ? "1rem" : 0 }}
-                >
-                  <Controller
-                    name="search"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        key="search"
-                        {...field}
-                        placeholder={"Search for username and email"}
-                        prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
-                        style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
+            <Row>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                <Flex justify="flex-start">
+                  <Form
+                    initialValues={{ remember: true }}
+                    style={{
+                      width: "26rem",
+                      borderRadius: "1rem",
+                    }}
+                    onFinish={handleSubmit(onFinish)}
+                  >
+                    <Form.Item
+                      name="search"
+                      style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                    >
+                      <Controller
+                        name="search"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            key="search"
+                            {...field}
+                            placeholder={"Search for username and email"}
+                            prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.5rem" }} />}
+                            style={{ borderRadius: "0.4rem", height: "2.9rem", background: "white", margin: "0 !important" }}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </Form.Item>
-              </Form>
-
-              <Button
-                type="primary"
-                onClick={() => exportToExcel(data, 'users')}
-                style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
-              >
-                <ExportOutlined />
-                Export to Excel
-              </Button>
-
-            </Flex>
+                    </Form.Item>
+                  </Form>
+                </Flex>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                <Flex justify="flex-end">
+                  <Button
+                    type="primary"
+                    onClick={() => exportToExcel(data, 'users')}
+                    style={{ color: "white", borderRadius: "0.4rem", height: "2.8rem" }}
+                  >
+                    <ExportOutlined />
+                    Export to Excel
+                  </Button>
+                </Flex>
+              </Col>
+            </Row>
             <Table
               rowKey={(record) => record.id}
               className={styles['table-striped-rows']}
