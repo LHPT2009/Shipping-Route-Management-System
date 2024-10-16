@@ -17,6 +17,7 @@ export default function CookiesComponent() {
   const { handleError } = useHandleError();
 
   const [getUserByToken] = useLazyQuery(GET_USER_BY_TOKEN, {
+    fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
       const userData: UserState = {
         id: data.getUserByToken.data.id,

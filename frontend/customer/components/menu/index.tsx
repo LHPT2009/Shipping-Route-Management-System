@@ -37,21 +37,6 @@ const MenuComponent: React.FC<MenuComponentProps> = ({
 
   const [MENULIST, setMENULIST] = useState<MenuItem[]>(menuInit);
 
-  // const MENULIST: MenuItem[] = [
-  //   {
-  //     key: KEYMENU.HOME,
-  //     label: LABELMENU.HOME,
-  //   },
-  //   {
-  //     key: KEYMENU.ROUTE,
-  //     label: LABELMENU.ROUTE,
-  //   },
-  //   {
-  //     key: KEYMENU.CONTACT,
-  //     label: LABELMENU.CONTACT,
-  //   },
-  // ];
-
   const user = useAppSelector((state) => state.user);
   const isLogin = useAppSelector((state) => state.auth.isLogin);
 
