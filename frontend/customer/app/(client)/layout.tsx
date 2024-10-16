@@ -23,19 +23,28 @@ const ClientLayout: React.FC<ChildrenComponentProps> = ({ children }) => {
   useEffect(() => {
     const socketInstance = io("http://localhost:5010");
     setSocket(socketInstance);
+
+    return () => {
+      socketInstance.disconnect();
+    };
   }, []);
 
-    // get data from socket (2-way communication)
-    useEffect(() => {
-      if (socket) {
-        console.log("Socket initialized");
-        socket.on("message", (message: string) => {
-          const data = JSON.parse(message);
-          console.log("data from socket", data);
-        });
-      }
-    }, [socket]);
-  
+  // get data from socket (2-way communication)
+  useEffect(() => {
+    if (socket) {
+      console.log("Socket initialized");
+      socket.on("message", (message: string) => {
+        const data = JSON.parse(message);
+        console.log("data from socket", data);
+      });
+
+      // Clean up the event listener when the component unmounts or socket changes
+      return () => {
+        socket.off("message");
+      };
+    }
+  }, [socket]);
+
   return (
     <div>
       <LayoutComponent>
