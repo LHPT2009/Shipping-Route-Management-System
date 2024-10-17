@@ -54,7 +54,7 @@ export class UserResolver {
   }
 
   @Mutation(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER)
+  @Roles(ROLE.CUSTOMER, ROLE.DRIVER)
   @Permissions(PERMISSION.UPDATE_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async updateUserByToken(
@@ -65,7 +65,7 @@ export class UserResolver {
   }
 
   @Mutation(() => ResponseDto<UserEntity>, { nullable: true })
-  @Roles(ROLE.CUSTOMER)
+  @Roles(ROLE.CUSTOMER, ROLE.DRIVER)
   @Permissions(PERMISSION.UPDATE_USER)
   @UseGuards(AuthGuard, RoleGuard)
   async changePassword(
