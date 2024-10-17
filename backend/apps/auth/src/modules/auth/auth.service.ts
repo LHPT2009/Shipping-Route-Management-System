@@ -55,6 +55,9 @@ export class AuthService {
 
   async login(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
     const user = await this.userService.findOne(loginDTO);
+    if (user.roles.name === 'ADMIN') {
+      throw new CustomValidationError(STATUS.ERR_ACTIVE, { username: ['You do not have permission to access this page.'] });
+    }
     return await this.handleLogin(loginDTO, user);
   }
 
