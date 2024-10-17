@@ -8,17 +8,17 @@ This system will facilitate efficient management of shipping routes in the sea, 
 |----------------------------|--------------------------------------------------------------|
 | **1. Dashboard**           | - Route, user, location, transport statistics               |
 |                            | - Chart showing most traveled routes                         |
-| **2. User management**     | - View list of users                                         |
+| **2. User management**     | - View list of users, export to excel                                         |
 |                            | - View user information                                      |
 |                            | - Assign role to specific users                              |
 |                            | - Ban/unban specific users                                   |
-| **3. Route management**    | - View list of routes                                        |
+| **3. Route management**    | - View list of routes, export to excel                                        |
 |                            | - View, edit, create, delete route                          |
 |                            | - View direction between two locations on map by coordinates |
-| **4. Role management**     | - View list of roles                                         |
+| **4. Role management**     | - View list of roles, export to excel, import from excel      |
 |                            | - View, edit, create, delete information                    |
 |                            | - Assign permissions to role                                 |
-| **5. Permission management**| - View list of permissions                                   |
+| **5. Permission management**| - View list of permissions, export to excel                                   |
 | **6. Authentication**      | - Login by system (with access token and refresh token)     |
 |                            | - Logout                                                    |
 
@@ -31,7 +31,7 @@ This system will facilitate efficient management of shipping routes in the sea, 
 | **1. Homepage**           | - Display system goals                                       |
 |                           | - Introduce the services provided                            |
 |                           | - Group information                                         |
-| **2. Contact page**       | - Form to enter personal information to contact              |
+| **2. Contact page**       | - Form to enter personal information to comment with AI               |
 | **3. Route page**         | - View list of routes                                        |
 |                           | - View route information                                      |
 |                           | - View direction between two locations on map by coordinates  |
@@ -44,6 +44,7 @@ This system will facilitate efficient management of shipping routes in the sea, 
 |                           | - Forgot password                                           |
 |                           | - Email verification                                        |
 |                           | - Logout                                                    |
+| **6. Assistance**         | - Chat system supports users                                |
 
 
 ## TECHNOLOGIES
@@ -52,9 +53,17 @@ This system will facilitate efficient management of shipping routes in the sea, 
 - Redux Toolkit
 - CSS modules, Ant design
 - Mapbox for directions
+- Socket.io
+- Cloudinary for uploading user image
+- Oauth2 with Google Authentication
 
 ### Backend
-- NestJS with Typescript
+- NestJS with Typescript, TypeORM and Microservices
+- Graphql Federation Monorepo
+- Redis, gRPC, NestJS Socket
+- Nodemailer, Kafka
+- OpenAI GPT 4o mini
+- Oauth2 with Google Authentication
 - OOP Design pattern
 
 ### Database
@@ -62,7 +71,8 @@ This system will facilitate efficient management of shipping routes in the sea, 
 - DBeaver
 
 ## ARCHITECTURE
-![architecture](https://github.com/user-attachments/assets/984fd7bf-3e27-43f5-aed4-91e94b2a2f78)
+![architecture](https://github.com/user-attachments/assets/a6f658fa-a13b-4ce5-9ee6-6049a905cf19)
+
 
 ## LOCAL INSTALLATIONS
 
