@@ -75,6 +75,9 @@ export class UserResolver {
     return this.userService.changePassword(context, input);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.UPDATE_USER)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<UserEntity>)
   async updateRoleForUser(
     @Args('id', { type: () => ID }) id: string,
@@ -83,6 +86,9 @@ export class UserResolver {
     return this.userService.updateRoleForUser(id, userUpdateRoleDto);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.UPDATE_USER)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<UserEntity>)
   async updateStatusUser(
     @Args('id', { type: () => ID }) id: string,
@@ -91,6 +97,9 @@ export class UserResolver {
     return this.userService.updateStatusUser(id, updateStatusUserDto);
   }
 
+  @Roles(ROLE.ADMIN)
+  @Permissions(PERMISSION.DELETE_USER)
+  @UseGuards(AuthGuard, RoleGuard)
   @Mutation(() => ResponseDto<UserEntity>, { nullable: true })
   async removeUser(
     @Args('id', { type: () => ID }) id: string,
