@@ -75,7 +75,7 @@ export class AuthService {
       userAfterCreate = await this.userService.createGoogleAccount(tokenInfo.email);
     }
 
-    if (user.roles.name === 'ADMIN') {
+    if (user && user.roles.name === 'ADMIN') {
       throw new CustomValidationError(STATUS.ERR_ACTIVE, { username: ['You do not have permission to access this page.'] });
     }
 
