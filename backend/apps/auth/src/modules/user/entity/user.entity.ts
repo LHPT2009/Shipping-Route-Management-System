@@ -62,11 +62,12 @@ export class UserEntity implements UserInterface {
     password: string,
     verify_token: string,
     verify_token_expires: Date,
-    roles: RoleEntity
+    roles: RoleEntity,
+    active: boolean = false
   ) {
     this.username = username;
     this.email = email;
-    this.active = false;
+    this.active = active;
     this.password = password;
     this.verify_token = verify_token;
     this.verify_token_expires = verify_token_expires;

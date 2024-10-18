@@ -64,7 +64,7 @@ export class AuthService {
   async loginWithGoogle(loginDTO: LoginGoogleInput): Promise<ResponseDto<{}>> {
     try {
       const tokenInfo = await this.oauthClient.getTokenInfo(loginDTO.token);
-
+      
       const user = await this.userRepository.findOne({
         where: { email: tokenInfo.email },
         relations: ['roles'],

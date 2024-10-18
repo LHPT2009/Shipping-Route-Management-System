@@ -183,7 +183,8 @@ export class UserService {
       "google-account-password",
       null,
       null,
-      role
+      role,
+      true
     );
     await this.userRepository.save(user);
     return user;
