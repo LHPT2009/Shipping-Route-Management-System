@@ -33,7 +33,7 @@ export class RoutesResolver {
     return this.routesService.findAll(input);
   }
 
-  @Roles(ROLE.CUSTOMER, ROLE.ADMIN)
+  @Roles(ROLE.CUSTOMER, ROLE.ADMIN, ROLE.DRIVER)
   @Permissions(PERMISSION.READ_DETAIL_ROUTE)
   @UseGuards(AuthGuard, RoleGuard)
   @Query(() => ResponseDto<Route>, { nullable: true })
