@@ -237,6 +237,7 @@ const ProfilePage = () => {
                       <Input
                         key="username"
                         {...field}
+                        disabled
                         style={{ borderRadius: "0.5rem", height: "2.8rem", background: "white", }}
                       />
                     )}
