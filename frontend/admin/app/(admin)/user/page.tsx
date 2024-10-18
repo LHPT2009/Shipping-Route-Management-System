@@ -231,7 +231,6 @@ const UserPage = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      // width: '10%',
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
           <Menu
@@ -325,7 +324,6 @@ const UserPage = () => {
       return widths;
     }, []);
 
-    // Set column widths
     worksheet['!cols'] = maxWidths.map((width: any) => ({ wch: width }));
 
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
@@ -407,7 +405,6 @@ const UserPage = () => {
     });
 
     router.replace(`?${newSearchParams.toString()}`);
-    // `data Source` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
@@ -519,7 +516,7 @@ const UserPage = () => {
           </Content>
 
           <ContentComponent>
-            <Row>
+            <Row style={{ marginBottom: responsive ? "30px" : "0px" }}>
               <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                 <Flex justify="flex-start">
                   <Form

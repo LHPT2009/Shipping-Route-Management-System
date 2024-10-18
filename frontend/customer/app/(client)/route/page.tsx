@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb } from "antd";
+import { Flex, theme, Button, Input, Table, Form, Space, Menu, Tag, Tooltip, Breadcrumb, Row, Col } from "antd";
 import type { GetProp, InputRef, TableColumnType, TableProps } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
 import styles from "./route.module.css";
@@ -538,7 +538,73 @@ const RoutePage = () => {
             ]}
             style={{ paddingLeft: "0.5rem" }}
           />
-          <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
+          <Row style={{ marginTop: "20px" }}>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+              <Flex justify="start">
+                <Form
+                  initialValues={{ remember: true }}
+                  style={{
+                    // width: responsive ? "60%" : "28rem",
+                    width: "28rem",
+                    borderRadius: "1rem",
+                    backgroundColor: COLOR.BACKGROUNDBODY,
+                    textAlign: "left",
+                    marginBottom: "0",
+                  }}
+                  onFinish={handleSubmit(onFinish)}
+                >
+                  <Form.Item
+                    name="search"
+                    style={{ paddingBottom: errors.search ? "1rem" : 0 }}
+                    help={
+                      errors.search && (
+                        <span style={{ color: "red", fontSize: "0.9rem" }}>{errors.search?.message}</span>
+                      )
+                    }
+                  >
+                    <Controller
+                      name="search"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          key="search"
+                          {...field}
+                          placeholder={responsive ? "Search for location" : "Search for route name, departure, arrival"}
+                          prefix={<SearchOutlined style={{ padding: "0 0.5rem 0 0.25rem" }} />}
+                          style={{ borderRadius: "0.4rem", height: "3rem", background: "white" }}
+                        />
+                      )}
+                    />
+                  </Form.Item>
+                </Form>
+              </Flex>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+              <Flex justify="end">
+                <Tag color="geekblue"
+                  style={{
+                    padding: "0 1rem",
+                    height: "3rem",
+                    borderRadius: "0.4rem",
+                    paddingTop: 0,
+                    display: "flex", alignItems: "center",
+                    marginBottom: responsive ? "1.5rem" : 0,
+                  }}
+                >
+                  <Paragraph style={{ color: COLOR.PRIMARY, fontWeight: 500, margin: 0 }}>{`Total routes: ${tableParams.pagination?.total}`} </Paragraph>
+                </Tag>
+                <Button
+                  type="primary"
+                  onClick={() => exportToExcel(data, 'routes')}
+                  style={{ color: "white", borderRadius: "0.4rem", height: "3rem" }}
+                >
+                  <ExportOutlined />
+                  Export to Excel
+                </Button>
+              </Flex>
+            </Col>
+          </Row>
+          {/* <Flex justify="space-between" align="flex-start" style={{ marginTop: "1.5rem" }}>
             <Form
               initialValues={{ remember: true }}
               style={{
@@ -597,9 +663,7 @@ const RoutePage = () => {
                 Export to Excel
               </Button>
             </Flex>
-
-
-          </Flex>
+          </Flex> */}
 
           <Table
             rowKey={(record) => record.id}
@@ -611,17 +675,19 @@ const RoutePage = () => {
             dataSource={data}
             scroll={responsive ? { x: 'max-content' } : undefined}
           />
-        </div>
+        </div >
       )}
 
-      {data && data.length !== 0 && departure.length != 0 && arrival.length != 0 && (
-        <CustomModal
-          open={open}
-          onClose={handleClose}
-          departure={departure}
-          arrival={arrival}
-        />
-      )}
+      {
+        data && data.length !== 0 && departure.length != 0 && arrival.length != 0 && (
+          <CustomModal
+            open={open}
+            onClose={handleClose}
+            departure={departure}
+            arrival={arrival}
+          />
+        )
+      }
     </>
   );
 };

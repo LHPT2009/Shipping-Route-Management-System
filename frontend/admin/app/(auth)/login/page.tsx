@@ -100,7 +100,7 @@ const LoginPage = () => {
       justify="center"
       align="center"
       style={{
-        minHeight: !responsive ? "100vh" : "auto",
+        minHeight: "100vh",
         width: "100vw",
         padding: "15px",
       }}
