@@ -86,7 +86,7 @@ Step 1: Change directory to backend directory
 cd backend
 ```
 
-Step 2: Start postgresdb by docker
+Step 2: Start postgresdb, zookeeper, kafka, redis by docker
 ```console
 docker-compose up --build
 ```
@@ -119,20 +119,14 @@ npm run start:dev
 ### Frontend
 
 #### 1. Admin
-Open new terminal
-Step 1: Change directory to frontend directory
+Step 1: Change directory to frontend directory (Open new terminal)
 ```console
 cd frontend/admin
 ```
 
-Step 2: Install all packages and dependencies of each service
+Step 2:  Start app by docker
 ```console
-npm i
-```
-
-Step 3: Run next.js app
-```console
-npm run dev
+docker-compose up --build
 ```
 
 #### 2. Customer
@@ -141,14 +135,9 @@ Step 1: Change directory to frontend directory (Open new terminal)
 cd frontend/customer
 ```
 
-Step 2: Install all packages and dependencies of each service
+Step 2:  Start app by docker
 ```console
-npm i
-```
-
-Step 3: Run next.js app
-```console
-npm run dev
+docker-compose up --build
 ```
 
 ## GROUP MEMBERS
