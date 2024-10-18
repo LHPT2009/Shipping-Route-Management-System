@@ -86,7 +86,7 @@ Step 1: Change directory to backend directory
 cd backend
 ```
 
-Step 2: Start postgresdb by docker
+Step 2: Start postgresdb, zookeeper, kafka, redis by docker
 ```console
 docker-compose up --build
 ```
