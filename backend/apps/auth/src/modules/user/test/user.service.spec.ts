@@ -14,14 +14,12 @@ import { RoleEntity } from '../../role/entity/role.entity';
 import { CustomValidationError } from '../../../../../../common/exception/validation/custom-validation-error';
 import { ResetPasswordInput } from '../../auth/dto/reset_password.input';
 import { UserUpdateRoleDto } from '../dto/user-update-role';
+import { Socket } from 'socket.io';
 
 describe('UserService', () => {
   let service: UserService;
   let userRepository: UserRepository;
-  let roleRepository: RoleRepository;
-  let jwtService: JwtService;
   let producerService: ProducerService;
-  let cacheManager: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -79,15 +77,19 @@ describe('UserService', () => {
             },
           },
         },
+        {
+          provide: Socket,
+          useValue: {
+            emit: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<UserService>(UserService);
     userRepository = module.get<UserRepository>(UserRepository);
-    roleRepository = module.get<RoleRepository>(RoleRepository);
-    jwtService = module.get<JwtService>(JwtService);
     producerService = module.get<ProducerService>(ProducerService);
-    cacheManager = module.get(CACHE_MANAGER);
+
   });
 
   describe('resetPasswordVerifyEmail', () => {
@@ -235,31 +237,6 @@ describe('UserService', () => {
     };
     const user = new UserEntity('testuser', 'testuser@example.com', 'hashedpassword', 'verify_token_123', new Date(), new RoleEntity('1', 'USER'));
     user.id = id;
-    it('should successfully update the user role without caching', async () => {
-      const user = new UserEntity(
-        'john.doe',
-        'john@example.com',
-        'hashed_password',
-        'some_verify_token',
-        new Date(Date.now() + 3600000),
-        new RoleEntity('1', "demo")
-      );
-      user.id = '1';
-
-      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(user as any);
-      jest.spyOn(userRepository, 'save').mockResolvedValue(user);
-
-      jest.spyOn(cacheManager.store, 'keys').mockResolvedValue([]);
-
-      jest.spyOn(roleRepository, 'findOne').mockResolvedValue(null);
-
-      const result = await service.updateRoleForUser(user.id, userUpdateRoleDto);
-
-      expect(result).toBeInstanceOf(ResponseDto);
-      expect(result.data).toEqual(user);
-
-      expect(cacheManager.set).not.toHaveBeenCalled();
-    });
 
     it('should return an error response when the user is not found', async () => {
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);

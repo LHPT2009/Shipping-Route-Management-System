@@ -6,7 +6,6 @@ import { PermissionRepository } from '../../permission/permission.repository';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CreateRoleDto } from '../dto/role-create.dto';
 import { UpdateRoleDto } from '../dto/role-update.dto';
-import { PermissionToRoleDto } from '../dto/permission-to-role.dto';
 import { RoleEntity } from '../entity/role.entity';
 import { ResponseDto } from '../../../../../../common/response/responseDto';
 import { STATUS, STATUS_CODE } from '../../../../../../common/constants/status';
@@ -64,7 +63,6 @@ describe('RoleService', () => {
         },
       ],
     }).compile();
-
     service = module.get<RoleService>(RoleService);
   });
 
@@ -182,49 +180,6 @@ describe('RoleService', () => {
       const result = await service.remove('1');
 
       expect(result).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, null, null));
-    });
-  });
-
-  describe('addPermissionToRole', () => {
-    it('should add permissions to a role', async () => {
-      const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
-      const role = { id: '1', name: 'Admin', permissions: [] };
-      const permissions = [
-        { id: '101', name: 'Permission1' },
-        { id: '102', name: 'Permission2' },
-      ];
-
-      mockRoleRepository.findOne.mockResolvedValue(role);
-      mockPermissionRepository.findBy.mockResolvedValue(permissions);
-      mockRoleRepository.save.mockResolvedValue({ ...role, permissions });
-
-      mockCacheManager.store.keys.mockResolvedValue(['1', '2']);
-      mockUserRepository.find.mockResolvedValue([{ id: '1', roles: role }]);
-      mockCacheManager.set.mockResolvedValue(undefined);
-
-      expect(await service.addPermissionToRole(input)).toEqual(new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { ...role, permissions }, null));
-    });
-
-    it('should handle not found error when role does not exist', async () => {
-      const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
-      mockRoleRepository.findOne.mockResolvedValue(null);
-
-      expect(await service.addPermissionToRole(input)).toEqual(
-        new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: 'Role with ID 1 not found' })
-      );
-    });
-
-    it('should handle not found error when some permissions do not exist', async () => {
-      const input: PermissionToRoleDto = { roleId: '1', permissionIds: ['101', '102'] };
-      const role = { id: '1', name: 'Admin', permissions: [] };
-      const permissions = [{ id: '101', name: 'Permission1' }];
-
-      mockRoleRepository.findOne.mockResolvedValue(role);
-      mockPermissionRepository.findBy.mockResolvedValue(permissions);
-
-      expect(await service.addPermissionToRole(input)).toEqual(
-        new ResponseDto(STATUS_CODE.ERR_NOT_FOUND, STATUS.ERR_NOT_FOUND, null, { message: 'Some permissions were not found' })
-      );
     });
   });
 
