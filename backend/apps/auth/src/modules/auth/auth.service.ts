@@ -62,31 +62,30 @@ export class AuthService {
   }
 
   async loginWithGoogle(loginDTO: LoginGoogleInput): Promise<ResponseDto<{}>> {
-    try {
-      const tokenInfo = await this.oauthClient.getTokenInfo(loginDTO.token);
-      
-      const user = await this.userRepository.findOne({
-        where: { email: tokenInfo.email },
-        relations: ['roles'],
-      });
+    const tokenInfo = await this.oauthClient.getTokenInfo(loginDTO.token);
 
-      let userAfterCreate: UserEntity;
+    const user = await this.userRepository.findOne({
+      where: { email: tokenInfo.email },
+      relations: ['roles'],
+    });
 
-      if (!user) {
-        userAfterCreate = await this.userService.createGoogleAccount(tokenInfo.email);
-      }
+    let userAfterCreate: UserEntity;
 
-      const expiredIn = 1;
-      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-
-      const payload: PayloadType = { email: tokenInfo.email, userId: user ? user.id : userAfterCreate.id };
-      await this.refreshTokenService.createRefreshToken(payload);
-      const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}d` });
-      return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
-
-    } catch (error) {
-      console.log(error);
+    if (!user) {
+      userAfterCreate = await this.userService.createGoogleAccount(tokenInfo.email);
     }
+
+    if (user.roles.name === 'ADMIN') {
+      throw new CustomValidationError(STATUS.ERR_ACTIVE, { username: ['You do not have permission to access this page.'] });
+    }
+
+    const expiredIn = 1;
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    const payload: PayloadType = { email: tokenInfo.email, userId: user ? user.id : userAfterCreate.id };
+    await this.refreshTokenService.createRefreshToken(payload);
+    const accessToken = this.jwtService.sign(payload, { expiresIn: `${expiredIn}d` });
+    return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, { accessToken: accessToken, expiresIn: expiresAt }, []);
   }
 
   async loginAdmin(loginDTO: LoginInput): Promise<ResponseDto<{}>> {
