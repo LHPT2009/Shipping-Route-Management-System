@@ -13,8 +13,7 @@ The general binding principles of the system to determine that content is inappr
 - Use of offensive or inappropriate language
 - Violates cultural or ethical standards
 - Contains sensitive information
-- The content is unclear and does not address the issue requiring support.
-- Statements that are unclear in purpose and unrelated to the system ( This is a system called S-Routing. The purpose of this system is to assist users in viewing a list of routes and detailed information about each journey. Additionally, it includes functions that allow users to view and edit their profiles (including deleting and uploading images) and change their passwords.)
+- Meaningless and spam content
 
 Note: 
 - If there are no violations of the binding principles, the default will be APPROPRIATE.
