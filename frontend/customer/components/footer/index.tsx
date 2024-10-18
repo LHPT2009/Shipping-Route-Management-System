@@ -13,32 +13,32 @@ const FooterComponent = () => {
       <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>About us</strong>
         <div className={classes.footer_nav}>
-          <Link href='/about'>Introduction</Link>
-          <Link href='#news'>News</Link>
-          <Link href='#contact'>Contact</Link>
+          <Link href='/'>Introduction</Link>
+          <Link href='/'>News</Link>
+          <Link href='/'>Contact</Link>
         </div>
       </div>
       <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>Support</strong>
         <div className={classes.footer_nav}>
-          <Link href='#help_booking'>Import Route Instructions</Link>
-          <Link href='#searching_order'>Register Instructions</Link>
-          <Link href='#questions'>Frequently Asked Questions</Link>
+          <Link href='/'>Import Route Instructions</Link>
+          <Link href='/r'>Register Instructions</Link>
+          <Link href='/'>Frequently Asked Questions</Link>
         </div>
       </div>
       <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>Policy</strong>
         <div className={classes.footer_nav}>
-          <Link href='#policy'>Terms of Use</Link>
-          <Link href='#info_policy'>Privacy Policy</Link>
+          <Link href='/'>Terms of Use</Link>
+          <Link href='/'>Privacy Policy</Link>
         </div>
       </div>
       <div className={classes.footer_content} style={{ marginBottom: responsive ? "3rem" : "0" }}>
         <strong>Contact us</strong>
         <div className={classes.footer_nav}>
-          <Link href='#email'>support.srouting@gmail.com</Link>
-          <Link href='#call'>Call us 0602249017</Link>
-          <Link href='#call'>1234 Main Street, Suite 567</Link>
+          <Link href='/'>support.srouting@gmail.com</Link>
+          <Link href='/'>Call us 0602249017</Link>
+          <Link href='/'>1234 Main Street, Suite 567</Link>
         </div>
         <img style={{ marginTop: responsive ? "1rem" : "0" }} className={classes.cert} width={190} alt='credit_cert' src={Social.src} />
       </div>
