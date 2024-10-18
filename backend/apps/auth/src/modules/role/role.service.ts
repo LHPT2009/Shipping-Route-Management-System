@@ -28,7 +28,7 @@ export class RoleService {
 
   @WebSocketServer()
   socket: Socket
-  
+
   constructor(
     private userRepository: UserRepository,
     private roleRepository: RoleRepository,

@@ -7,6 +7,7 @@ import { SignupInput } from '../dto/signup.input';
 import { LoginInput } from '../dto/login.input';
 import { UserEntity } from '../../user/entity/user.entity';
 import { ResponseDto } from '../../../../../../common/response/responseDto';
+import { JwtModule } from '@nestjs/jwt';
 
 describe('AuthResolver', () => {
   let authResolver: AuthResolver;
@@ -15,6 +16,14 @@ describe('AuthResolver', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        JwtModule.register({
+          secret: process.env.JWT_SECRET || 'secret',
+          signOptions: {
+            expiresIn: '1d',
+          },
+        }),
+      ],
       providers: [
         AuthResolver,
         {

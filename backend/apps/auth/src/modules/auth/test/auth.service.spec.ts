@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../auth.service';
 import { UserService } from '../../user/user.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from '../../refreshtoken/refreshtoken.service';
 import { UserRepository } from '../../user/user.repository';
 import { STATUS_CODE, STATUS } from '../../../../../../common/constants/status';
@@ -21,6 +21,14 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      // imports: [
+      //   JwtModule.register({
+      //     secret: process.env.JWT_SECRET || 'secret',
+      //     signOptions: {
+      //       expiresIn: '1d',
+      //     },
+      //   }),
+      // ],
       providers: [
         AuthService,
         {
@@ -56,6 +64,7 @@ describe('AuthService', () => {
         id: '1',
         email: 'test@example.com',
         password: 'hashedpassword',
+        roles: { name: "CUSTOMER" },
         active: true
       } as UserEntity;
 
@@ -76,7 +85,7 @@ describe('AuthService', () => {
 
     it('should throw validation error if password is incorrect', async () => {
       const loginDTO: LoginInput = { email: 'test@example.com', password: 'wrongpassword' };
-      const user: UserEntity = { id: '1', email: 'test@example.com', password: 'hashedpassword', active: true } as UserEntity;
+      const user: UserEntity = { id: '1', email: 'test@example.com', password: 'hashedpassword', active: true, roles: { name: "ADMIN" } } as UserEntity;
 
       jest.spyOn(userService, 'findOne').mockResolvedValue(user);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
