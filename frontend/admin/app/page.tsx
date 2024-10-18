@@ -78,7 +78,6 @@ function Home() {
   const [getUser] = useLazyQuery(USER_STATISTIC, {
     // fetchPolicy: 'cache-and-network',
     onCompleted: async (data) => {
-      console.log("get data user", data);
       setDataStatistics([
         ...(dataStatistics || []),
         { name: "Users", count: data.userStatistics.data, textColor: "#08979c", tagColor: "cyan", href: "/user", icon: <UserOutlined style={{ color: "#08979c", fontSize: "1.2rem" }} /> },
