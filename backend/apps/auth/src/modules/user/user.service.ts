@@ -177,6 +177,9 @@ export class UserService {
 
   async createGoogleAccount(email: string): Promise<UserEntity> {
     const role = new RoleEntity("1", ROLE.CUSTOMER)
+    if (!validUsername(email.split('@')[0])) {
+      throw new CustomValidationError('Invalid input', { username: ['Username is invalid. Please try another account.'] });
+    }
     const user = new UserEntity(
       email.split('@')[0],
       email,
