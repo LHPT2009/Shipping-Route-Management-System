@@ -112,7 +112,6 @@ const ProfilePage = () => {
   }, [user, reset]);
 
   const onFinish = async (values: any) => {
-
     await updateUserByToken({
       variables: {
         input: {

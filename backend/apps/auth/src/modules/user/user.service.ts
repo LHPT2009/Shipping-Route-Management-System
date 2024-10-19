@@ -33,6 +33,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Socket } from "socket.io";
+import { phoneProfileRegex } from 'utils/validation/phone-profile.regex';
 
 @Injectable()
 @WebSocketGateway({
@@ -339,7 +340,7 @@ export class UserService {
     if (!user) {
       throw new CustomValidationError('Not found', { email: ['User is not found. Please try again with another email.'] });
     } else {
-      if (userDTO.username) {
+      if (userDTO.username !== null) {
         const usernameIsExist = await this.userRepository.findOneBy({ username: userDTO.username });
         if (usernameIsExist && usernameIsExist.id !== id) {
           throw new CustomValidationError('Validation failed', { username: ['Username already exists'] });
@@ -351,20 +352,21 @@ export class UserService {
           }
         }
       }
-      if (userDTO.fullname) {
+      if (userDTO.fullname !== null) {
         user.fullname = userDTO.fullname;
       }
-      if (userDTO.phone_number) {
-        if (!validPhone(userDTO.phone_number)) {
+      if (userDTO.phone_number !== null) {
+        if (!phoneProfileRegex.test(userDTO.phone_number)) {
           throw new CustomValidationError('Invalid input', { phone_number: ['Phone number is invalid'] });
         } else {
           user.phone_number = userDTO.phone_number;
         }
       }
-      if (userDTO.address) {
+      if (userDTO.address !== null) {
         user.address = userDTO.address;
       }
       user.img = userDTO.img;
+
       await this.userRepository.save(user);
       return new ResponseDto(STATUS_CODE.SUCCESS, STATUS.SUCCESS, user, []);
     }
