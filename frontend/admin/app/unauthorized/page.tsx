@@ -15,7 +15,7 @@ const UnauthorizedPage = () => {
         You do not have permission to access this page
       </Paragraph>
       <Button
-        onClick={() => router.push("/")}
+        onClick={() => router.push("/login")}
         type="primary"
         style={{
           margin: "2rem",
@@ -23,7 +23,7 @@ const UnauthorizedPage = () => {
           border: "none",
         }}
       >
-        Go to homepage
+        Go to login
       </Button>
     </Flex>
   );
