@@ -142,5 +142,6 @@ docker-compose up --build
 
 ## GROUP MEMBERS
 ### Team 06 - JWAT Training Cyperlogitec Vietnam
-- Tran Dam Gia Huy
-- Le Huynh Phuong Tung
+![image](https://github.com/user-attachments/assets/566f3752-dc44-4f63-8786-a43ba01586f0)
+
+
