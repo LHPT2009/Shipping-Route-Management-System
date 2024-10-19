@@ -33,8 +33,7 @@ const ProfilePage = () => {
   const schema = yup
     .object({
       username: yup
-        .string()
-        .matches(usernameRegex, { message: "Please enter a valid username" }),
+        .string(),
 
       phone: yup
         .string()
