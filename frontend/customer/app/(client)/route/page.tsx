@@ -580,7 +580,7 @@ const RoutePage = () => {
               </Flex>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-              <Flex justify="end">
+              <Flex justify="end" gap="0.5rem">
                 <Tag color="geekblue"
                   style={{
                     padding: "0 1rem",
