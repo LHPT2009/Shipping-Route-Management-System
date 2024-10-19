@@ -31,15 +31,15 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
-    if (requiredRoles) {
+    if (requiredRoles && requiredRoles.length > 0) {
       const hasRole = requiredRoles.includes(userRole.role);
       if (!hasRole) {
         throw new CustomValidationError(STATUS.ERR_ROLE_USER, {});
       }
     }
 
-    if (requiredPermissions) {
-      if(!userRole.permissions) {
+    if (requiredPermissions && requiredPermissions.length > 0) {
+      if (!userRole.permissions) {
         throw new CustomValidationError(STATUS.ERR_PERMISSION_USER, {});
       }
 
