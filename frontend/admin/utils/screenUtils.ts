@@ -21,19 +21,40 @@ export const UseScreenWidth = (): number | null => {
   return screenWidth;
 };
 
+export const UseScreenHeight = (): number | null => {
+  const [screenHeight, setScreenHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (typeof window !== "undefined") {
+        setScreenHeight(window.innerHeight);
+      }
+    };
+
+    updateHeight(); // Đặt chiều cao ban đầu
+    window.addEventListener("resize", updateHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
+
+  return screenHeight;
+};
+
 export const GetValueFromScreen = (
   screenWidth: number | null,
-  extraSmall: boolean,
-  small: boolean,
-  medium: boolean,
-  large: boolean,
-  extraLarge: boolean,
-  extraExtraLarge: boolean
+  extraSmall: boolean = false,
+  small: boolean = false,
+  medium: boolean = false,
+  large: boolean = false,
+  extraLarge: boolean = false,
+  extraExtraLarge: boolean = false
 ): boolean => {
+  
   if (screenWidth === null) {
     return false; // or a default value
   }
-
   if (screenWidth < 576) {
     return extraSmall;
   } else if (screenWidth < 768) {
