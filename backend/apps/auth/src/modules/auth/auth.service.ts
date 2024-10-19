@@ -84,6 +84,10 @@ export class AuthService {
       throw new CustomValidationError(STATUS.ERR_ACTIVE, { username: ['You do not have permission to access this page.'] });
     }
 
+    if (user && !user.active) {
+      throw new CustomValidationError(STATUS.ERR_VALIDATION, { email: ['Your account has not been activated.'] });
+    }
+
     const expiredIn = 1;
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
