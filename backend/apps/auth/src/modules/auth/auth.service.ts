@@ -12,6 +12,7 @@ import { UserEntity } from '../user/entity/user.entity';
 import { LoginGoogleInput } from './dto/login_google.input';
 import { Auth, google } from 'googleapis';
 import { UserRepository } from '../user/user.repository';
+import { validUsername } from '../../../../../common/exception/validation/username.validation';
 
 @Injectable()
 export class AuthService {
@@ -64,6 +65,10 @@ export class AuthService {
   async loginWithGoogle(loginDTO: LoginGoogleInput): Promise<ResponseDto<{}>> {
     const tokenInfo = await this.oauthClient.getTokenInfo(loginDTO.token);
 
+    if (!validUsername(tokenInfo.email.split('@')[0])) {
+      throw new CustomValidationError('Invalid input', { username: ['Username is invalid. Please try another account.'] });
+    }
+
     const user = await this.userRepository.findOne({
       where: { email: tokenInfo.email },
       relations: ['roles'],
@@ -74,7 +79,7 @@ export class AuthService {
     if (!user) {
       userAfterCreate = await this.userService.createGoogleAccount(tokenInfo.email);
     }
-
+    
     if (user && user.roles.name === 'ADMIN') {
       throw new CustomValidationError(STATUS.ERR_ACTIVE, { username: ['You do not have permission to access this page.'] });
     }

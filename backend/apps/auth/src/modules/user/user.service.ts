@@ -19,7 +19,6 @@ import { ResetPasswordVerifyEmailInput } from '../auth/dto/reset_password_verify
 import { ROLE } from '../../../../../common/constants/role';
 import { PayloadType } from '../auth/types';
 import { UserUpdateDto } from './dto/user-update.dto';
-import { validPhone } from '../../../../../common/exception/validation/phone.validation';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { FilterUsersDto } from './dto/user-filter.dto';
 import { FilterUsersType } from './types/user-filter.types';
@@ -178,9 +177,6 @@ export class UserService {
 
   async createGoogleAccount(email: string): Promise<UserEntity> {
     const role = new RoleEntity("1", ROLE.CUSTOMER)
-    if (!validUsername(email.split('@')[0])) {
-      throw new CustomValidationError('Invalid input', { username: ['Username is invalid. Please try another account.'] });
-    }
     const user = new UserEntity(
       email.split('@')[0],
       email,
