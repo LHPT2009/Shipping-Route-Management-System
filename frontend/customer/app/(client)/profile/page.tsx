@@ -118,7 +118,7 @@ const ProfilePage = () => {
       variables: {
         input: {
           fullname: values.fullname,
-          username: values.username ? values.username : user.username,
+          username: user.username,
           phone_number: values.phone,
           address: values.address,
           img: user.img,
