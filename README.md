@@ -73,6 +73,11 @@ This system will facilitate efficient management of shipping routes in the sea, 
 ## ARCHITECTURE
 ![architecture](https://github.com/user-attachments/assets/a6f658fa-a13b-4ce5-9ee6-6049a905cf19)
 
+## DEMO
+- Customer: https://youtu.be/wSjJWdKgENI
+- Admin: https://youtu.be/KZkRGnqhZ04
+- Backup (Onedrive): https://ynh33-my.sharepoint.com/:f:/g/personal/giahuy200202_ynh33_onmicrosoft_com/EkaSEOAU0B1HjPYCHfrENtoBUIUrsYlEXZPqusDkzR34yw?e=lgDYOY
+
 
 ## LOCAL INSTALLATIONS
 
