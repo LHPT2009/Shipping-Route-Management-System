@@ -71,7 +71,7 @@ This system will facilitate efficient management of shipping routes in the sea, 
 - DBeaver
 
 ## ARCHITECTURE
-![architecture](https://github.com/LHPT2009/documents/architecture.png)
+![architecture](https://github.com/LHPT2009/Shipping-Route-Management-System/blob/main/documents/architecture.png)
 
 ## DEMO
 - Customer: https://youtu.be/wSjJWdKgENI
