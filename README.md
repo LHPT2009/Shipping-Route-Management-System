@@ -71,7 +71,7 @@ This system will facilitate efficient management of shipping routes in the sea, 
 - DBeaver
 
 ## ARCHITECTURE
-![architecture](https://github.com/user-attachments/assets/a6f658fa-a13b-4ce5-9ee6-6049a905cf19)
+![architecture](https://github.com/LHPT2009/documents/architecture.png)
 
 ## DEMO
 - Customer: https://youtu.be/wSjJWdKgENI
@@ -147,6 +147,6 @@ docker-compose up --build
 
 ## GROUP MEMBERS
 ### Team 06 - JWAT Training Cyperlogitec Vietnam
-![image](https://github.com/user-attachments/assets/566f3752-dc44-4f63-8786-a43ba01586f0)
+![image](https://github.com//LHPT2009/documents/architecture.png)
 
 
