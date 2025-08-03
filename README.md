@@ -147,6 +147,6 @@ docker-compose up --build
 
 ## GROUP MEMBERS
 ### Team 06 - JWAT Training Cyperlogitec Vietnam
-![image](https://github.com//LHPT2009/documents/architecture.png)
+![image](https://github.com/LHPT2009/Shipping-Route-Management-System/blob/main/documents/teammate.png)
 
 
